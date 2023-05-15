@@ -13,6 +13,7 @@ private:
 
 public:
 	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHICDESC & GraphicDesc, _Inout_ ID3D11Device * *ppDevice, _Inout_ ID3D11DeviceContext * *ppContext);
+	HRESULT	Reserve_Engine(_uint iNumLevels);
 	void Tick_Engine(_double dTimeDelta);
 	void Clear_LevelResources(_uint iLevelIndex);
 

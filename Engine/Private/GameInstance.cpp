@@ -26,8 +26,18 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHICDESC& Gr
 	FAILED_CHECK_RETURN_MSG(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iViewportSizeX, GraphicDesc.iViewportSizeY, ppDevice, ppContext), E_FAIL,
 		L"Failed Ready_Graphic_Device");
 
+	FAILED_CHECK_RETURN(Reserve_Engine(iNumLevels), E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CGameInstance::Reserve_Engine(_uint iNumLevels)
+{
 	FAILED_CHECK_RETURN_MSG(m_pObject_Manager->Reserve_Containers(iNumLevels), E_FAIL,
 		L"Failed Reserve_Containers");
+	FAILED_CHECK_RETURN_MSG(m_pComponent_Manager->Reserve_Containers(iNumLevels), E_FAIL,
+		L"Failed Reserve_Containers")
+
 	return S_OK;
 }
 
@@ -45,10 +55,12 @@ void CGameInstance::Tick_Engine(_double dTimeDelta)
 
 void CGameInstance::Clear_LevelResources(_uint iLevelIndex)
 {
-	if (nullptr == m_pObject_Manager)
+	if (nullptr == m_pObject_Manager ||
+		nullptr == m_pComponent_Manager)
 		return;
 
 	m_pObject_Manager->Clear_LevelResources(iLevelIndex);
+	m_pComponent_Manager->Clear_LevelResources(iLevelIndex);
 }
 
 HRESULT CGameInstance::Clear_BackBuffer_View(_float4 vClearColor)
