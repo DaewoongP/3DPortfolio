@@ -32,16 +32,16 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 
 		switch (m_eNextLevelID)
 		{
-		case LEVEL_LOGO:
+		case LEVELID::LEVEL_LOGO:
 			pLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 			break;
-		case LEVEL_GAMEPLAY:
+		case LEVELID::LEVEL_GAMEPLAY:
 			
 			break;
 		}
 		NULL_CHECK_MSG(pLevel, L"NULL Level");
 		
-		m_pGameInstance->Open_Level(m_eNextLevelID, pLevel);
+		m_pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pLevel);
 		return;
 	}
 #ifdef _DEBUG

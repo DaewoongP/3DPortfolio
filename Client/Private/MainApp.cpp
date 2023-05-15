@@ -11,7 +11,6 @@ CMainApp::CMainApp()
 HRESULT CMainApp::Initialize()
 {
 #ifdef _DEBUG
-
 	if (::AllocConsole() == TRUE)
 	{
 		FILE* nfp[3];
@@ -20,7 +19,6 @@ HRESULT CMainApp::Initialize()
 		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
 		std::ios::sync_with_stdio();
 	}
-
 #endif // _DEBUG
 
 	GRAPHICDESC		GraphicDesc;
@@ -31,10 +29,10 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iViewportSizeY = g_iWinSizeY;
 	GraphicDesc.eWinMode = GRAPHICDESC::WINMODE::WM_WIN;
 
-	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
+	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(static_cast<_uint>(LEVELID::LEVEL_END), GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
 		L"Failed Initialize_Engine");
 	
-	FAILED_CHECK_RETURN(Open_Level(LEVEL_LOGO), E_FAIL);
+	FAILED_CHECK_RETURN(Open_Level(LEVELID::LEVEL_LOGO), E_FAIL);
 	
 	return S_OK;
 }
@@ -62,7 +60,7 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelIndex)
 {
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
-	return m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
+	return m_pGameInstance->Open_Level(static_cast<_uint>(LEVELID::LEVEL_LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
 }
 
 CMainApp* CMainApp::Create()

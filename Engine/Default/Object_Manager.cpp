@@ -65,18 +65,24 @@ void CObject_Manager::Clear_LevelResources(_uint iLevelIndex)
 
 void CObject_Manager::Tick(_double dTimeDelta)
 {
-	for (auto& Pair : m_pLayers[0])
-		Pair.second->Tick(dTimeDelta);
-	for (auto& Pair : m_pLayers[m_iCurLevel])
-		Pair.second->Tick(dTimeDelta);
+	for (_uint i = 0; i < m_iNumLevels; ++i)
+	{
+		for (auto& Pair : m_pLayers[i])
+		{
+			Pair.second->Tick(dTimeDelta);
+		}
+	}
 }
 
 void CObject_Manager::Late_Tick(_double dTimeDelta)
 {
-	for (auto& Pair : m_pLayers[0])
-		Pair.second->Late_Tick(dTimeDelta);
-	for (auto& Pair : m_pLayers[m_iCurLevel])
-		Pair.second->Late_Tick(dTimeDelta);
+	for (_uint i = 0; i < m_iNumLevels; ++i)
+	{
+		for (auto& Pair : m_pLayers[i])
+		{
+			Pair.second->Late_Tick(dTimeDelta);
+		}
+	}
 }
 
 CGameObject* CObject_Manager::Find_Prototype(const _tchar* pPrototypeTag)

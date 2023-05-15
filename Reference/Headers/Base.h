@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CBase abstract
 {
 protected:
-	CBase();
+	explicit CBase();
 	virtual ~CBase() = default;
 
 public:

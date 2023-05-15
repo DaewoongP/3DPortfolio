@@ -6,7 +6,7 @@ BEGIN(Engine)
 class CLayer final : public CBase
 {
 private:
-	CLayer();
+	explicit CLayer();
 	virtual ~CLayer() = default;
 
 public:

@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
+
 BEGIN(Engine)
 class CGameInstance;
 END
@@ -10,7 +11,7 @@ BEGIN(Client)
 class CMainApp final : public CBase
 {
 private:
-	CMainApp();
+	explicit CMainApp();
 	virtual ~CMainApp() = default;
 
 public:
@@ -27,7 +28,6 @@ private:
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
-
 
 public:
 	static CMainApp* Create();

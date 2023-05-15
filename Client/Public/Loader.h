@@ -11,7 +11,7 @@ BEGIN(Client)
 class CLoader final : public CBase
 {
 private:
-	CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CLoader() = default;
 
 public:
@@ -33,7 +33,7 @@ private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 
 private:
-	LEVELID					m_eNextLevelID = { LEVEL_END };
+	LEVELID					m_eNextLevelID = { LEVELID::LEVEL_END };
 	_tchar					m_szLoading[MAX_STR] = TEXT("");
 	_bool					m_isFinished = { false };
 
