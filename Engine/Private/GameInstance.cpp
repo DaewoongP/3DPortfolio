@@ -26,7 +26,7 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHICDESC& Gr
 	FAILED_CHECK_RETURN_MSG(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iViewportSizeX, GraphicDesc.iViewportSizeY, ppDevice, ppContext), E_FAIL,
 		L"Failed Ready_Graphic_Device");
 
-	FAILED_CHECK_RETURN(Reserve_Engine(iNumLevels), E_FAIL);
+	FAILED_CHECK_RETURN_MSG(Reserve_Engine(iNumLevels), E_FAIL, TEXT("Failed Reserve_Engine"));
 
 	return S_OK;
 }

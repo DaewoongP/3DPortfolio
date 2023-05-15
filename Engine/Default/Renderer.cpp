@@ -23,6 +23,17 @@ HRESULT CRenderer::Initialize(void* pArg)
 
 void CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pGameObject)
 {
+	if (eRenderGroup < RENDERGROUP::RENDER_PRIORITY ||
+		eRenderGroup >= RENDERGROUP::RENDER_END ||
+		nullptr == pGameObject)
+	{
+		MSG_BOX("Failed Add RenderGroup");
+		return;
+	}
+	
+	Safe_AddRef(pGameObject);
+
+	m_RenderObjects[static_cast<_uint>(eRenderGroup)].emplace_back(pGameObject);
 }
 
 HRESULT CRenderer::Draw_RenderGroup()

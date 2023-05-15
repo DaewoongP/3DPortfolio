@@ -10,8 +10,11 @@ CComponent_Manager::CComponent_Manager()
 HRESULT CComponent_Manager::Reserve_Containers(_uint iNumLevels)
 {
 	if (nullptr != m_pPrototypes)
+	{
+		MSG_BOX("Failed CComponent_Manager Reserve Containers");
 		return E_FAIL;
-
+	}
+		
 	m_pPrototypes = new PROTOTYPES[iNumLevels];
 
 	m_iNumLevels = iNumLevels;
@@ -22,7 +25,10 @@ HRESULT CComponent_Manager::Reserve_Containers(_uint iNumLevels)
 HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, CComponent* pPrototype)
 {
 	if (nullptr != Find_Prototype(iLevelIndex, pPrototypeTag))
+	{
+		MSG_BOX("Already have Protorype In CComponent_Manager");
 		return E_FAIL;
+	}
 
 	m_pPrototypes[iLevelIndex].emplace(pPrototypeTag, pPrototype);
 
@@ -32,12 +38,20 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 CComponent* CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg)
 {
 	CComponent* pPrototype = Find_Prototype(iLevelIndex, pPrototypeTag);
+
 	if (nullptr == pPrototype)
+	{
+		MSG_BOX("Failed Find Protorype");
 		return nullptr;
+	}
+		
 
 	CComponent* pComponent = pPrototype->Clone(pArg);
 	if (nullptr == pComponent)
+	{
+		MSG_BOX("Failed Clone Protorype");
 		return nullptr;
+	}
 
 	return pComponent;
 }
@@ -45,7 +59,10 @@ CComponent* CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar*
 void CComponent_Manager::Clear_LevelResources(_uint iLevelIndex)
 {
 	if (iLevelIndex >= m_iNumLevels)
+	{
+		MSG_BOX("Out of LevelIndex");
 		return;
+	}
 
 	for (auto& Pair : m_pPrototypes[iLevelIndex])
 		Safe_Release(Pair.second);

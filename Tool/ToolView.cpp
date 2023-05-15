@@ -99,7 +99,7 @@ void CToolView::OnInitialUpdate()
 	_float	fRowFrm = _float(rcWnd.right - rcMainView.right);
 	_float	fColFrm = _float(rcWnd.bottom - rcMainView.bottom);
 
-	pMainFrm->SetWindowPos(nullptr, 0, 0, int(g_iWinSizeX + fRowFrm), int(g_iWinSizeY + fColFrm), SWP_NOZORDER);
+	pMainFrm->SetWindowPos(nullptr, 0, 0, _int(g_iWinSizeX + fRowFrm), _int(g_iWinSizeY + fColFrm), SWP_NOZORDER);
 
 	g_hWnd = m_hWnd;
 	//////////////////////// 디바이스 초기화 /////////////////////////

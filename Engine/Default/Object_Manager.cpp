@@ -12,7 +12,10 @@ CObject_Manager::CObject_Manager()
 HRESULT CObject_Manager::Reserve_Containers(_uint iNumLevels)
 {
 	if (nullptr != m_pLayers)
+	{
+		MSG_BOX("Failed CObject_Manager Reserve Containers");
 		return E_FAIL;
+	}
 
 	m_pLayers = new LAYERS[iNumLevels];
 
@@ -24,7 +27,10 @@ HRESULT CObject_Manager::Reserve_Containers(_uint iNumLevels)
 HRESULT CObject_Manager::Add_Prototype(const _tchar* pPrototypeTag, CGameObject* pPrototype)
 {
 	if (nullptr != Find_Prototype(pPrototypeTag))
+	{
+		MSG_BOX("Already have Protorype In CObject_Manager");
 		return E_FAIL;
+	}
 
 	m_Prototypes.emplace(pPrototypeTag, pPrototype);
 
