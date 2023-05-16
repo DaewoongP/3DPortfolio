@@ -8,13 +8,13 @@ CGraphic_Device::CGraphic_Device()
 {
 }
 
-HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHICDESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut)
+HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHICDESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY, _Inout_ ID3D11Device** ppDeviceOut, _Inout_ ID3D11DeviceContext** ppDeviceContextOut)
 {
 	_uint		iFlag = 0;
 
 #ifdef _DEBUG
 	iFlag = D3D11_CREATE_DEVICE_DEBUG;
-#endif
+#endif //_DEBUG
 	D3D_FEATURE_LEVEL			FeatureLV;
 	FAILED_CHECK_RETURN_MSG(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr, 0, D3D11_SDK_VERSION, 
 			&m_pDevice, &FeatureLV, &m_pDeviceContext), E_FAIL, L"Failed Create Device");
