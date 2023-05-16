@@ -46,6 +46,7 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
+
 #pragma endregion
 
 
