@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 class CToolDoc;
-BEGIN(Engine)
-class CGameInstance;
+BEGIN(Engine9)
+class CGameInstance9;
 
 END
 class CToolView : public CView
@@ -42,11 +42,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 	afx_msg void OnDestroy();
 private:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-	CGameInstance* m_pGameInstance = { nullptr };
+	LPDIRECT3DDEVICE9	m_pDevice = { nullptr };
+	CGameInstance9* m_pGameInstance = { nullptr };
+	
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전
