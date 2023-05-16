@@ -37,6 +37,8 @@
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
+    <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_Rect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp" />
@@ -50,6 +52,8 @@
     <ClCompile Include="..\Private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
+    <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Object_Manager.cpp" />
   </ItemGroup>

@@ -31,6 +31,8 @@ HRESULT CMainApp::Initialize()
 
 	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(static_cast<_uint>(LEVELID::LEVEL_END), GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
 		L"Failed Initialize_Engine");
+
+	FAILED_CHECK_RETURN(Ready_Prototype_Component_For_Static(), E_FAIL);
 	
 	FAILED_CHECK_RETURN(Open_Level(LEVELID::LEVEL_LOGO), E_FAIL);
 	
@@ -51,7 +53,22 @@ HRESULT CMainApp::Render()
 
 	FAILED_CHECK_RETURN(m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f)), E_FAIL);
 	FAILED_CHECK_RETURN(m_pGameInstance->Clear_DepthStencil_View(), E_FAIL);
+	FAILED_CHECK_RETURN(m_pRenderer->Draw_RenderGroup(), E_FAIL);
 	FAILED_CHECK_RETURN(m_pGameInstance->Present(), E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_Component_For_Static()
+{
+	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+	
+	/* Prototype_Component_Renderer */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Renderer"),
+		m_pRenderer = CRenderer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	Safe_AddRef(m_pRenderer);
 
 	return S_OK;
 }
@@ -78,6 +95,7 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	FreeConsole();
+	Safe_Release(m_pRenderer);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 

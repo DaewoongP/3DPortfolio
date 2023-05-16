@@ -43,13 +43,13 @@ HRESULT CGameInstance::Reserve_Engine(_uint iNumLevels)
 
 void CGameInstance::Tick_Engine(_double dTimeDelta)
 {
-	if (nullptr == m_pLevel_Manager)
+	if (nullptr == m_pLevel_Manager ||
+		nullptr == m_pObject_Manager)
 		return;
 
 	m_pLevel_Manager->Tick(dTimeDelta);
+
 	m_pObject_Manager->Tick(dTimeDelta);
-
-
 	m_pObject_Manager->Late_Tick(dTimeDelta);
 }
 

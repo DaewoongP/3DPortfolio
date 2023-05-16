@@ -142,6 +142,8 @@ CComponent* CRenderer::Clone(void* pArg)
 
 void CRenderer::Free()
 {
+	__super::Free();
+
 	for (auto& RenderList : m_RenderObjects)
 	{
 		for (auto& pGameObject : RenderList)

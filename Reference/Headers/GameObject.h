@@ -22,6 +22,13 @@ protected:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 
+protected:
+	unordered_map<const _tchar*, class CComponent*>		m_Components;
+
+protected:
+	HRESULT Add_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pComponentTag, _Inout_ CComponent * *ppOut, void* pArg = nullptr);
+
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual void Free() override;

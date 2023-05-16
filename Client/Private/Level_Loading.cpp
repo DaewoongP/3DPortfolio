@@ -44,6 +44,7 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 		m_pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pLevel);
 		return;
 	}
+
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
 #endif //_DEBUG

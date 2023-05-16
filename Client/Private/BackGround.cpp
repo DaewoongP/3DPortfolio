@@ -33,6 +33,9 @@ void CBackGround::Tick(_double TimeDelta)
 void CBackGround::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_PRIORITY, this);
 }
 
 HRESULT CBackGround::Render()
@@ -44,6 +47,11 @@ HRESULT CBackGround::Render()
 
 HRESULT CBackGround::Add_Components()
 {
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Renderer"),
+		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -74,5 +82,5 @@ CGameObject* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pRendererCom);
 }

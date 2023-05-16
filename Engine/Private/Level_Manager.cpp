@@ -12,7 +12,8 @@ HRESULT CLevel_Manager::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 	Safe_AddRef(pGameInstance);
 
 	/* 이전 레벨에서 사용되던 자원을 날린다. */
-	pGameInstance->Clear_LevelResources(m_iLevelIndex);
+	if (nullptr != m_pCurrentLevel)
+		pGameInstance->Clear_LevelResources(m_iLevelIndex);
 
 	Safe_Release(pGameInstance);
 

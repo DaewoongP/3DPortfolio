@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CRenderer;
 class CGameInstance;
 END
 
@@ -20,6 +21,7 @@ public:
 	HRESULT Render();
 
 public:
+	HRESULT Ready_Prototype_Component_For_Static();
 	HRESULT Open_Level(LEVELID eLevelIndex);
 
 private:
@@ -28,6 +30,7 @@ private:
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
+	CRenderer*				m_pRenderer = { nullptr };
 
 public:
 	static CMainApp* Create();
