@@ -106,11 +106,6 @@ void CToolView::OnInitialUpdate()
 
 }
 
-void CToolView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
-{
-	
-}
-
 // CToolView 그리기
 
 void CToolView::OnDraw(CDC* /*pDC*/)
@@ -120,6 +115,10 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	if (!pDoc)
 		return;
 	m_pGameInstance->Render_Begin(D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
+
+
+
+
 	m_pGameInstance->Render_End();
 }
 

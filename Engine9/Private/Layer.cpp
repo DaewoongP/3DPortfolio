@@ -1,5 +1,5 @@
 #include "..\Public\Layer.h"
-#include "..\Public\GameObject.h"
+#include "GameObject.h"
 
 CLayer::CLayer()
 {

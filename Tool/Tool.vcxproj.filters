@@ -28,6 +28,9 @@
     <Filter Include="97. Resource">
       <UniqueIdentifier>{707c3f4b-8b15-460b-a521-a00a96be2b11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. ToolObjects">
+      <UniqueIdentifier>{3ede8a4c-ee51-42de-8ba0-0cc365fa2c1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">

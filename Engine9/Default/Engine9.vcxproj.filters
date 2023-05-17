@@ -19,6 +19,21 @@
     <Filter Include="01. Utility\00. GameInstance">
       <UniqueIdentifier>{7688c93e-5cf8-4257-88dd-9eb1af41cb1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\01. GameObject">
+      <UniqueIdentifier>{7c82d9d8-a279-4a60-b924-3cea46854dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\01. GameObject\Manager">
+      <UniqueIdentifier>{b68c7aac-c874-4d2d-8328-8694c34a01f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Component">
+      <UniqueIdentifier>{b89f578e-0548-4343-9ec6-d900aee49400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Component\Manager">
+      <UniqueIdentifier>{e402c2a8-164b-4ac7-80d1-2f353d9dee7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\01. GameObject\Layer">
+      <UniqueIdentifier>{8425cd33-9152-4051-a610-7ef5b1bf79bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device9.cpp">
@@ -29,6 +44,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\GameInstance9.cpp">
       <Filter>01. Utility\00. GameInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp">
+      <Filter>01. Utility\01. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Object_Manager.cpp">
+      <Filter>01. Utility\01. GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>01. Utility\01. GameObject\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component.cpp">
+      <Filter>01. Utility\02. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component_Manager.cpp">
+      <Filter>01. Utility\02. Component\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +85,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\GameInstance9.h">
       <Filter>01. Utility\00. GameInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>01. Utility\01. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Manager.h">
+      <Filter>01. Utility\01. GameObject\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>01. Utility\01. GameObject\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component.h">
+      <Filter>01. Utility\02. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component_Manager.h">
+      <Filter>01. Utility\02. Component\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

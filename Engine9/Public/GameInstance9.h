@@ -20,15 +20,8 @@ public: // Graphic_Device
 	void		Render_Begin(D3DXCOLOR Color);
 	void		Render_End(void);
 
-public: /* For.Timer_Manager */
-	HRESULT		Add_Timer(const _tchar * pTimerTag);
-	void		Tick_Timer(const _tchar * pTimerTag);
-	_double		Get_TimeDelta(const _tchar * pTimerTag);
-
-
 private:
 	class CGraphic_Device9* m_pGraphic_Device = { nullptr };
-	class CTimer_Manager* m_pTimer_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

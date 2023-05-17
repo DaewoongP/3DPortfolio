@@ -42,7 +42,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
-	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 	afx_msg void OnDestroy();
 private:
 	LPDIRECT3DDEVICE9	m_pDevice = { nullptr };

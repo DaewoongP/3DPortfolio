@@ -1,10 +1,10 @@
 #include "GameInstance9.h"
 #include "Graphic_Device9.h"
+
 IMPLEMENT_SINGLETON(CGameInstance9)
 
-
 CGameInstance9::CGameInstance9()
-	:m_pGraphic_Device{ CGraphic_Device9::GetInstance() }
+	: m_pGraphic_Device{ CGraphic_Device9::GetInstance() }
 {
 }
 
@@ -39,20 +39,6 @@ void CGameInstance9::Render_End(void)
 		return;
 
 	m_pGraphic_Device->Render_End();
-}
-
-HRESULT CGameInstance9::Add_Timer(const _tchar* pTimerTag)
-{
-	return S_OK;
-}
-
-void CGameInstance9::Tick_Timer(const _tchar* pTimerTag)
-{
-}
-
-_double CGameInstance9::Get_TimeDelta(const _tchar* pTimerTag)
-{
-	return _double();
 }
 
 void CGameInstance9::Release_Engine()
