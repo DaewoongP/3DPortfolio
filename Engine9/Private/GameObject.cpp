@@ -1,5 +1,6 @@
 #include "..\Public\GameObject.h"
 #include "GameInstance9.h"
+#include "Component.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pDevice)
 	: m_pDevice(pDevice)
@@ -38,10 +39,10 @@ HRESULT CGameObject::Render()
 
 HRESULT CGameObject::Add_Component(const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg)
 {
-	/*CGameInstance9* pGameInstance = CGameInstance9::GetInstance();
+	CGameInstance9* pGameInstance = CGameInstance9::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CComponent* pComponent = pGameInstance->Clone_Component(pPrototypeTag);
+	CComponent* pComponent = pGameInstance->Clone_Component(pPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -51,16 +52,16 @@ HRESULT CGameObject::Add_Component(const _tchar* pPrototypeTag, const _tchar* pC
 
 	Safe_AddRef(pComponent);
 
-	Safe_Release(pGameInstance);*/
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
 
 void CGameObject::Free()
 {
-	/*for (auto& Pair : m_Components)
+	for (auto& Pair : m_Components)
 		Safe_Release(Pair.second);
-	m_Components.clear();*/
+	m_Components.clear();
 
 	Safe_Release(m_pDevice);
 }

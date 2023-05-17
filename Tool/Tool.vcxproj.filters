@@ -75,6 +75,9 @@
     <ClInclude Include="Resource.h">
       <Filter>97. Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>04. ToolObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="FileInfo.cpp">
       <Filter>03. FileInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>04. ToolObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

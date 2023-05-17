@@ -12,7 +12,6 @@ private:
 	virtual ~CGameInstance9() = default;
 
 public:
-	HRESULT Initialize_Engine();
 	void Tick_Engine(_double dTimeDelta);
 
 public: // Graphic_Device
@@ -20,9 +19,24 @@ public: // Graphic_Device
 	void		Render_Begin(D3DXCOLOR Color);
 	void		Render_End(void);
 
-private:
-	class CGraphic_Device9* m_pGraphic_Device = { nullptr };
+public: /* For.Timer_Manager */
+	HRESULT		Add_Timer(const _tchar * pTimerTag);
+	void		Tick_Timer(const _tchar * pTimerTag);
+	_double		Get_TimeDelta(const _tchar * pTimerTag);
 
+public: /* For.Object_Manager */
+	HRESULT Add_Object_Prototype(const _tchar * pPrototypeTag, class CGameObject* pPrototype);
+	HRESULT Add_GameObject(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void* pArg = nullptr);
+
+public: /* For.Component_Manager*/
+	HRESULT Add_Component_Prototype(const _tchar * pPrototypeTag, class CComponent* pPrototype);
+	class CComponent* Clone_Component(const _tchar * pPrototypeTag, void* pArg = nullptr);
+
+private:
+	class CGraphic_Device9*		m_pGraphic_Device = { nullptr };
+	class CObject_Manager*		m_pObject_Manager = { nullptr };
+	class CComponent_Manager*	m_pComponent_Manager = { nullptr };
+	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 public:
 	static void Release_Engine();
 	virtual void Free() override;

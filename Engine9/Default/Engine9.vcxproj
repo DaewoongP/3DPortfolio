@@ -167,8 +167,10 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\GameInstance9.cpp" />
     <ClCompile Include="..\Private\GameObject.cpp" />
     <ClCompile Include="..\Private\Graphic_Device9.cpp" />
-    <ClCompile Include="..\Private\Layer.cpp" />
     <ClCompile Include="..\Private\Object_Manager.cpp" />
+    <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\Private\Timer.cpp" />
+    <ClCompile Include="..\Private\Timer_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h" />
@@ -182,8 +184,10 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\GameInstance9.h" />
     <ClInclude Include="..\Public\GameObject.h" />
     <ClInclude Include="..\Public\Graphic_Device9.h" />
-    <ClInclude Include="..\Public\Layer.h" />
     <ClInclude Include="..\Public\Object_Manager.h" />
+    <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\Timer.h" />
+    <ClInclude Include="..\Public\Timer_Manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

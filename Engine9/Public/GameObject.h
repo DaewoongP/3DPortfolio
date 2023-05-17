@@ -24,7 +24,7 @@ protected:
 	unordered_map<const _tchar*, class CComponent*>		m_Components;
 
 protected:
-	HRESULT Add_Component(const _tchar * pPrototypeTag, const _tchar * pComponentTag, _Inout_ CComponent * *ppOut, void* pArg = nullptr);
+	HRESULT Add_Component(const _tchar * pPrototypeTag, const _tchar * pComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
