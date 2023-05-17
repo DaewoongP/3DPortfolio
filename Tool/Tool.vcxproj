@@ -203,9 +203,11 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DynamicCamera.h" />
     <ClInclude Include="FileInfo.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MainTool.h" />
     <ClInclude Include="MyForm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -220,8 +222,10 @@
     <ClInclude Include="Tool_Macro.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DynamicCamera.cpp" />
     <ClCompile Include="FileInfo.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MainTool.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

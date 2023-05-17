@@ -10,7 +10,7 @@ BEGIN(Client)
 
 class CBackGround final : public CGameObject
 {
-protected:
+private:
 	explicit CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CBackGround(const CBackGround& rhs);
 	virtual ~CBackGround() = default;

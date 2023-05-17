@@ -1,10 +1,7 @@
 ﻿#pragma once
 
 class CToolDoc;
-BEGIN(Engine9)
-class CGameInstance9;
-class CRenderer;
-END
+
 class CToolView : public CView
 {
 protected: // serialization에서만 만들어집니다.
@@ -40,19 +37,10 @@ protected:
 // 생성된 메시지 맵 함수
 protected:
 	DECLARE_MESSAGE_MAP()
-public:
-	HRESULT Ready_Prototype_Component();
+
 public:
 	virtual void OnInitialUpdate();
-	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	afx_msg void OnDestroy();
-private:
-	LPDIRECT3DDEVICE9		m_pDevice = { nullptr };
-	CGameInstance9*			m_pGameInstance = { nullptr };
-	CRenderer*				m_pRenderer = { nullptr };
-	
-private:
-	_double					m_dTimerAcc = { 0.0 };
 };
 
 #ifndef _DEBUG  // ToolView.cpp의 디버그 버전

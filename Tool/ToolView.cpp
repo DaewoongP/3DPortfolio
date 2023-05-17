@@ -28,30 +28,14 @@ BEGIN_MESSAGE_MAP(CToolView, CView)
 END_MESSAGE_MAP()
 
 // CToolView 생성/소멸
-// 글로벌 변수처리
 HWND	g_hWnd;
 
 CToolView::CToolView() noexcept
-	: m_pGameInstance{ CGameInstance9::GetInstance() }
 {
 }
 
 CToolView::~CToolView()
 {
-}
-
-HRESULT CToolView::Ready_Prototype_Component()
-{
-	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
-
-	/* Prototype_Component_Renderer */
-	if (FAILED(m_pGameInstance->Add_Component_Prototype(
-		TEXT("Prototype_Component_Renderer"),
-		m_pRenderer = CRenderer::Create(m_pDevice))))
-		return E_FAIL;
-
-	Safe_AddRef(m_pRenderer);
-	return S_OK;
 }
 
 #pragma region Pass
@@ -114,34 +98,13 @@ void CToolView::OnInitialUpdate()
 
 	pMainFrm->SetWindowPos(nullptr, 0, 0, _int(g_iWinSizeX + fRowFrm), _int(g_iWinSizeY + fColFrm), SWP_NOZORDER);
 
+	/// <summary>
+	/// View의 핸들을 가져와서 direct X 로 처리한다.
+	/// </summary>
 	g_hWnd = m_hWnd;
-	//////////////////////// 디바이스 초기화 /////////////////////////
-	m_pGameInstance->Ready_Graphic_Device(g_hWnd, MODE_WIN, g_iWinSizeX, g_iWinSizeY, &m_pDevice);
-	Ready_Prototype_Component();
 }
 
 // CToolView 그리기
-
-BOOL CToolView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
-{
-	m_pGameInstance->Add_Timer(TEXT("Timer_Default"));
-	m_pGameInstance->Add_Timer(TEXT("Timer_60"));
-
-	m_pGameInstance->Tick_Timer(TEXT("Timer_Default"));
-	m_dTimerAcc += m_pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
-
-	if (m_dTimerAcc >= 1.0 / 60.0)
-	{
-		m_pGameInstance->Tick_Timer(TEXT("Timer_60"));
-
-		Invalidate(false);
-
-		m_pGameInstance->Tick_Engine(m_dTimerAcc);
-		m_dTimerAcc = { 0.0 };
-	}
-	
-	return CView::OnWndMsg(message, wParam, lParam, pResult);
-}
 
 void CToolView::OnDraw(CDC* /*pDC*/)
 {
@@ -149,21 +112,12 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
-	m_pGameInstance->Render_Begin(D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
-	
-	m_pRenderer->Draw_RenderGroup();
-
-	m_pGameInstance->Render_End();
 }
 
 
 void CToolView::OnDestroy()
 {
 	CView::OnDestroy();
-	Safe_Release(m_pRenderer);
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pGameInstance);
-	CGameInstance9::Release_Engine();
 }
 
 

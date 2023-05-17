@@ -51,8 +51,9 @@ void CGameInstance9::Render_End(void)
 
 HRESULT CGameInstance9::Add_Timer(const _tchar* pTimerTag)
 {
-	NULL_CHECK_RETURN(m_pTimer_Manager, E_FAIL);
-
+	if (nullptr == m_pTimer_Manager)
+		return E_FAIL;
+	
 	return m_pTimer_Manager->Add_Timer(pTimerTag);
 }
 
@@ -80,12 +81,12 @@ HRESULT CGameInstance9::Add_Object_Prototype(const _tchar* pPrototypeTag, CGameO
 	return m_pObject_Manager->Add_Prototype(pPrototypeTag, pPrototype);
 }
 
-HRESULT CGameInstance9::Add_GameObject(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg)
+HRESULT CGameInstance9::Add_GameObject(const _tchar* pPrototypeTag, const _tchar* pObjectTag, void* pArg)
 {
 	if (nullptr == m_pObject_Manager)
 		return E_FAIL;
 
-	return m_pObject_Manager->Add_GameObject(pPrototypeTag, pLayerTag, pArg);
+	return m_pObject_Manager->Add_GameObject(pPrototypeTag, pObjectTag, pArg);
 }
 
 HRESULT CGameInstance9::Add_Component_Prototype(const _tchar* pPrototypeTag, CComponent* pPrototype)
@@ -106,9 +107,9 @@ CComponent* CGameInstance9::Clone_Component(const _tchar* pPrototypeTag, void* p
 
 void CGameInstance9::Release_Engine()
 {
+	CTimer_Manager::GetInstance()->DestroyInstance();
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CObject_Manager::GetInstance()->DestroyInstance();
-	CTimer_Manager::GetInstance()->DestroyInstance();
 	CGraphic_Device9::GetInstance()->DestroyInstance();
 }
 

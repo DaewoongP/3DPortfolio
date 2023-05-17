@@ -37,7 +37,7 @@ protected:  // 컨트롤 모음이 포함된 멤버입니다.
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	DECLARE_MESSAGE_MAP()
-private:
+public:
 	CSplitterWnd				m_MainSplitter;
 };
 

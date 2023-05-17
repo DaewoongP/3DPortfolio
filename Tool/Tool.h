@@ -13,6 +13,13 @@
 // CToolApp:
 // 이 클래스의 구현에 대해서는 Tool.cpp을(를) 참조하세요.
 //
+BEGIN(Engine9)
+class CGameInstance9;
+END
+
+BEGIN(Tool)
+class CMainTool;
+END
 
 class CToolApp : public CWinApp
 {
@@ -28,6 +35,14 @@ public:
 // 구현입니다.
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+	virtual BOOL OnIdle(LONG lCount);
+	virtual BOOL InitApplication();
+
+
+private:
+	_double			m_dTimerAcc = { 0.0 };
+	CGameInstance9* m_pGameInstance = { nullptr };
+	CMainTool*		m_pMainApp = { nullptr };
 };
 
 extern CToolApp theApp;

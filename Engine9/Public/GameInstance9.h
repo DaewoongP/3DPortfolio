@@ -26,7 +26,7 @@ public: /* For.Timer_Manager */
 
 public: /* For.Object_Manager */
 	HRESULT Add_Object_Prototype(const _tchar * pPrototypeTag, class CGameObject* pPrototype);
-	HRESULT Add_GameObject(const _tchar * pPrototypeTag, const _tchar * pLayerTag, void* pArg = nullptr);
+	HRESULT Add_GameObject(const _tchar * pPrototypeTag, const _tchar * pObjectTag, void* pArg = nullptr);
 
 public: /* For.Component_Manager*/
 	HRESULT Add_Component_Prototype(const _tchar * pPrototypeTag, class CComponent* pPrototype);

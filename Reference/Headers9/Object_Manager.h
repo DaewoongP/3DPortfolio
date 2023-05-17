@@ -13,7 +13,7 @@ private:
 
 public:
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
-	HRESULT Add_GameObject(const _tchar* pPrototypeTag, const _tchar* pLayerTag, void* pArg);
+	HRESULT Add_GameObject(const _tchar* pPrototypeTag, const _tchar* pObjectTag, void* pArg);
 	
 public:
 	void	Tick(_double dTimeDelta);
@@ -21,7 +21,7 @@ public:
 
 private:
 	unordered_map<const _tchar*, class CGameObject*>	m_Prototypes;
-	unordered_map<const _tchar*, class CGameObject*>	m_Layers;
+	unordered_map<const _tchar*, class CGameObject*>	m_Objects;
 	
 private:
 	class CGameObject*	Find_Prototype(const _tchar* pPrototypeTag);

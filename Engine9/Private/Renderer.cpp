@@ -78,6 +78,7 @@ HRESULT CRenderer::Render_NonBlend()
 
 HRESULT CRenderer::Render_NonLight()
 {
+	m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	for (auto& pGameObject : m_RenderObjects[static_cast<_uint>(RENDERGROUP::RENDER_NONLIGHT)])
 	{
 		if (nullptr != pGameObject)
@@ -88,6 +89,7 @@ HRESULT CRenderer::Render_NonLight()
 
 	m_RenderObjects[static_cast<_uint>(RENDERGROUP::RENDER_NONLIGHT)].clear();
 
+	m_pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 	return S_OK;
 }
 
