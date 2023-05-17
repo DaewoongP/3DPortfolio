@@ -3,6 +3,7 @@
 #include "Object_Manager.h"
 #include "Component_Manager.h"
 #include "Timer_Manager.h"
+
 IMPLEMENT_SINGLETON(CGameInstance9)
 
 CGameInstance9::CGameInstance9()

@@ -1,14 +1,17 @@
 #pragma once
 #include "Base.h"
 #include "Tool_Defines.h"
+
 class CToolView;
 class CMainFrame;
+
 BEGIN(Engine9)
 class CGameInstance9;
 class CRenderer;
 END
 
 BEGIN(Tool)
+
 class CMainTool final : public CBase
 {
 private:

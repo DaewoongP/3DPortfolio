@@ -46,6 +46,9 @@
     <Filter Include="01. Utility\02. Component\VIBuffer\Rect">
       <UniqueIdentifier>{a815987e-578a-4986-922e-b6b3786faefd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. System\02. Input">
+      <UniqueIdentifier>{6e1a49cf-5fd6-4e75-bd99-ddee462a27a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Graphic_Device9.cpp">

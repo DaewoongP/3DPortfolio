@@ -24,7 +24,6 @@ HRESULT CMainTool::Initialize()
 	FAILED_CHECK_RETURN(Ready_Prototype_Component(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype_Object(), E_FAIL);
 
-	
 	return S_OK;
 }
 
@@ -32,6 +31,7 @@ void CMainTool::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
+
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 }
 
@@ -39,6 +39,7 @@ void CMainTool::Render(void)
 {
 	if (nullptr == m_pGameInstance)
 		return;
+
 	m_pView->Invalidate(false);
 
 	m_pGameInstance->Render_Begin(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f));
@@ -63,7 +64,6 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		TEXT("Prototype_Component_VIBuffer_RcCol"),
 		CVIBuffer_RcCol::Create(m_pDevice))))
 		return E_FAIL;
-
 	
 	return S_OK;
 }

@@ -32,7 +32,7 @@ HRESULT CDynamicCamera::Initialize_Prototype()
 	m_fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	m_fNear = 0.1f;
 	m_fFar = 1000.f;
-	m_fSpeed = 50.f;
+	m_fSpeed = 10.f;
 	return S_OK;
 }
 
