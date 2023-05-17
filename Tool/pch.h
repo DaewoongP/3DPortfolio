@@ -9,7 +9,7 @@
 
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
-#include "Engine_Defines.h"
+#include "Engine9_Defines.h"
 // 서순 중요 imgpath때문에
 #include "Tool_Defines.h"
 #include "Tool_Macro.h"

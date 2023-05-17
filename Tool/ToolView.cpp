@@ -12,7 +12,7 @@
 
 #include "ToolDoc.h"
 #include "ToolView.h"
-#include "GameInstance.h"
+#include "GameInstance9.h"
 #include "MainFrm.h"
 
 // CToolView
@@ -32,9 +32,8 @@ END_MESSAGE_MAP()
 HWND	g_hWnd;
 
 CToolView::CToolView() noexcept
-	: m_pGameInstance{ CGameInstance::GetInstance() }
+	: m_pGameInstance{ CGameInstance9::GetInstance() }
 {
-	Safe_AddRef(m_pGameInstance);
 }
 
 CToolView::~CToolView()
@@ -103,18 +102,15 @@ void CToolView::OnInitialUpdate()
 
 	g_hWnd = m_hWnd;
 	//////////////////////// 디바이스 초기화 /////////////////////////
-	GRAPHICDESC		GraphicDesc;
-	ZeroMemory(&GraphicDesc, sizeof GraphicDesc);
-
-	GraphicDesc.hWnd = g_hWnd;
-	GraphicDesc.iViewportSizeX = g_iWinSizeX;
-	GraphicDesc.iViewportSizeY = g_iWinSizeY;
-	GraphicDesc.eWinMode = GRAPHICDESC::WINMODE::WM_WIN;
-
-	if (FAILED(m_pGameInstance->Initialize_Engine(static_cast<_uint>(LEVELID::LEVEL_END), GraphicDesc, &m_pDevice, &m_pContext)))
-		AfxMessageBox(L"Failed Initialize_Engine");
+	m_pGameInstance->Ready_Graphic_Device(g_hWnd, MODE_WIN, g_iWinSizeX, g_iWinSizeY, &m_pDevice);
 
 }
+
+void CToolView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+{
+	
+}
+
 // CToolView 그리기
 
 void CToolView::OnDraw(CDC* /*pDC*/)
@@ -123,9 +119,8 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
-	m_pGameInstance->Clear_DepthStencil_View();
-	m_pGameInstance->Present();
+	m_pGameInstance->Render_Begin(D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
+	m_pGameInstance->Render_End();
 }
 
 
@@ -133,9 +128,7 @@ void CToolView::OnDestroy()
 {
 	CView::OnDestroy();
 
-	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
-
 	Safe_Release(m_pGameInstance);
-	CGameInstance::Release_Engine();
+	CGameInstance9::Release_Engine();
 }
