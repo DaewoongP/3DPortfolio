@@ -3,7 +3,9 @@
 #include "GameObject.h"
 
 BEGIN(Engine)
+class CShader;
 class CRenderer;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Tool)
@@ -23,11 +25,13 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	CShader*				m_pShaderCom = {nullptr};
 	CRenderer*				m_pRendererCom = { nullptr };
+	CVIBuffer_Rect*			m_pVIBufferCom = { nullptr };
 
-
-public:
+private:
 	HRESULT		Add_Components();
+	HRESULT		SetUp_ShaderResources();
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -49,11 +49,10 @@ void CMainTool::Render(void)
 
 	m_pView->Invalidate(false);
 
-	//m_pGameInstance->Render_Begin(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f));
-
+	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_DepthStencil_View();
 	m_pRenderer->Draw_RenderGroup();
-
-	//m_pGameInstance->Render_End();
+	m_pGameInstance->Present();
 }
 
 HRESULT CMainTool::Ready_Prototype_Component()
@@ -68,7 +67,16 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		return E_FAIL;
 	Safe_AddRef(m_pRenderer);
 
-	
+	/* Prototype_Component_Shader_Vtxtex */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Vtxtex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Client/Bin/ShaderFiles/Shader_Vtxtex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_VIBuffer_Rect */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
