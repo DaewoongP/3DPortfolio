@@ -182,5 +182,8 @@
     <ClCompile Include="..\Private\Object_Manager.cpp">
       <Filter>01. Utility\02. GameObjects\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Engine_Struct.cpp">
+      <Filter>99. Headers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

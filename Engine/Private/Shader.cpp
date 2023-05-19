@@ -9,11 +9,15 @@ CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CShader::CShader(const CShader& rhs)
 	: CComponent(rhs)
 	, m_pEffect(rhs.m_pEffect)
+	, m_iNumPasses(rhs.m_iNumPasses)
+	, m_InputLayouts(rhs.m_InputLayouts)
 {
+	for (auto& InputLayout : m_InputLayouts)
+		Safe_AddRef(InputLayout);
 	Safe_AddRef(m_pEffect);
 }
 
-HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath)
+HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 	_uint		iHlslFlag = { 0 };
 #ifdef _DEBUG
@@ -34,16 +38,25 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath)
 
 	pTechnique->GetDesc(&TechniqueDesc);
 
-	for (_uint i = 0; i < TechniqueDesc.Passes; ++i)
+	m_iNumPasses = TechniqueDesc.Passes;
+
+	for (_uint i = 0; i < m_iNumPasses; ++i)
 	{
+		ID3D11InputLayout* pInputLayout = { nullptr };
+
 		ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex(i);
 
 		D3DX11_PASS_DESC	PassDesc;
 		ZeroMemory(&PassDesc, sizeof PassDesc);
 		pPass->GetDesc(&PassDesc);
 
-		// PassDesc.pIAInputSignature
+		if (FAILED(m_pDevice->CreateInputLayout(pElements, iNumElements, 
+			PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pInputLayout)))
+			return E_FAIL;
+		if (nullptr == pInputLayout)
+			return E_FAIL;
 
+		m_InputLayouts.emplace_back(pInputLayout);
 	}
 
 
@@ -55,18 +68,27 @@ HRESULT CShader::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CShader::Begin()
+HRESULT CShader::Begin(_uint iPassIndex)
 {
-	m_pContext->IASetInputLayout(m_pInputLayout);
+	if (iPassIndex >= m_iNumPasses)
+		return E_FAIL;
+
+	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByIndex(0);
+	if (nullptr == pTechnique)
+		return E_FAIL;
+
+	pTechnique->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
+
+	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
 	return S_OK;
 }
 
-CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath)
+CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 	CShader* pInstance = new CShader(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(pShaderFilePath)))
+	if (FAILED(pInstance->Initialize_Prototype(pShaderFilePath, pElements, iNumElements)))
 	{
 		MSG_BOX("Failed to Created CShader");
 		Safe_Release(pInstance);
@@ -91,6 +113,9 @@ void CShader::Free()
 {
 	__super::Free();
 
+	for (auto& InputLayout : m_InputLayouts)
+		Safe_Release(InputLayout);
+	m_InputLayouts.clear();
+
 	Safe_Release(m_pEffect);
-	Safe_Release(m_pInputLayout);
 }

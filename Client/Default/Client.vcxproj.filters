@@ -31,6 +31,9 @@
     <Filter Include="02. GameObjects\BackGround">
       <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97. ShaderFiles">
+      <UniqueIdentifier>{c7122d60-1c37-4d7c-b690-fdfc286c14b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -53,7 +56,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_Logo.h">
       <Filter>01. Levels\00. Logo</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01. Levels\99. Loading</Filter>
     </ClInclude>
@@ -96,5 +99,10 @@
     <ClCompile Include="..\Private\BackGround.cpp">
       <Filter>02. GameObjects\BackGround</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Vtxtex.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

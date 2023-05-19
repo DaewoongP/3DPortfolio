@@ -234,7 +234,6 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
-ClientBin/
 ~$*
 *~
 *.dbmdl
@@ -401,3 +400,5 @@ FodyWeavers.xsd
 
 *.exp
 *.exe 
+
+![Bb]in/ShaderFiles/**/*.hlsl

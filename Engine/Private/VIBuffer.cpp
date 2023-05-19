@@ -14,9 +14,13 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_pIB(rhs.m_pIB)
 	, m_BufferDesc(rhs.m_BufferDesc)
 	, m_SubResourceData(rhs.m_SubResourceData)
+	, m_iNumVertices(rhs.m_iNumVertices)
 	, m_iStride(rhs.m_iStride)
+	, m_iNumVertexBuffers(rhs.m_iNumVertexBuffers)
 	, m_eFormat(rhs.m_eFormat)
 	, m_eTopology(rhs.m_eTopology)
+	, m_iIndexStride(rhs.m_iIndexStride)
+	, m_iNumIndices(rhs.m_iNumIndices)
 {
 
 }
@@ -51,8 +55,6 @@ HRESULT CVIBuffer::Render()
 	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pBuffers, iStrides, iOffset);
 	m_pContext->IASetIndexBuffer(m_pIB, m_eFormat, 0);
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
-
-
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
 
 	return S_OK;
