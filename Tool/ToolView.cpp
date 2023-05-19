@@ -28,7 +28,7 @@ BEGIN_MESSAGE_MAP(CToolView, CView)
 END_MESSAGE_MAP()
 
 // CToolView 생성/소멸
-HWND	g_hWnd;
+HWND	g_hViewWnd;
 
 CToolView::CToolView() noexcept
 {
@@ -98,10 +98,8 @@ void CToolView::OnInitialUpdate()
 
 	pMainFrm->SetWindowPos(nullptr, 0, 0, _int(g_iWinSizeX + fRowFrm), _int(g_iWinSizeY + fColFrm), SWP_NOZORDER);
 
-	/// <summary>
-	/// View의 핸들을 가져와서 direct X 로 처리한다.
-	/// </summary>
-	g_hWnd = m_hWnd;
+	// View 핸들을 전역변수로 땡겨준다.
+	g_hViewWnd = m_hWnd;
 }
 
 // CToolView 그리기

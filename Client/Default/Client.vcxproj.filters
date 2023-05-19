@@ -53,7 +53,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_Logo.h">
       <Filter>01. Levels\00. Logo</Filter>
-    </ClInclude>
+	</ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01. Levels\99. Loading</Filter>
     </ClInclude>

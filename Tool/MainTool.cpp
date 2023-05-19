@@ -17,7 +17,7 @@ CMainTool::CMainTool()
 
 HRESULT CMainTool::Initialize()
 {	
-	FAILED_CHECK_RETURN(m_pGameInstance->Ready_Graphic_Device(g_hWnd, WINMODE::MODE_WIN, g_iWinSizeX, g_iWinSizeY, &m_pDevice), E_FAIL);
+	FAILED_CHECK_RETURN(m_pGameInstance->Ready_Graphic_Device(g_hViewWnd, WINMODE::MODE_WIN, g_iWinSizeX, g_iWinSizeY, &m_pDevice), E_FAIL);
 	m_pMainFrm = static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	m_pView = static_cast<CToolView*>(m_pMainFrm->m_MainSplitter.GetPane(0, 0));
 

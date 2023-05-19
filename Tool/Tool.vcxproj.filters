@@ -40,6 +40,9 @@
     <Filter Include="00. MainTool">
       <UniqueIdentifier>{12c47897-1d79-4bdd-a18d-70da1b0b7b33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. ToolManager">
+      <UniqueIdentifier>{7d132b28-6ccb-4c77-ac1d-37cba798a74f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -93,6 +96,9 @@
     <ClInclude Include="MainTool.h">
       <Filter>00. MainTool</Filter>
     </ClInclude>
+    <ClInclude Include="FrameManager.h">
+      <Filter>06. ToolManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -130,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="MainTool.cpp">
       <Filter>00. MainTool</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameManager.cpp">
+      <Filter>06. ToolManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

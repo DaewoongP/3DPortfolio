@@ -5,6 +5,6 @@ namespace Tool
 	const unsigned int g_iWinSizeY = 720;
 }
 
-extern HWND g_hWnd;
+extern HWND g_hViewWnd;
 
 using namespace Tool;

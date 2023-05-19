@@ -171,7 +171,7 @@ void CDynamicCamera::Fix_Mouse(void)
 {
 	POINT	ptMouse{ g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
 
-	ClientToScreen(g_hWnd, &ptMouse);
+	ClientToScreen(g_hViewWnd, &ptMouse);
 	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 
