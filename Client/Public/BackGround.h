@@ -3,7 +3,9 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CShader;
 class CRenderer;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
@@ -23,10 +25,13 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	CShader*		m_pShaderCom = { nullptr };
 	CRenderer*		m_pRendererCom = { nullptr };
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-public:
-	HRESULT		Add_Components();
+private:
+	HRESULT Add_Components();
+	HRESULT SetUp_ShaderResources();
 
 public:
 	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

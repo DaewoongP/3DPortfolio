@@ -76,19 +76,17 @@ HRESULT CMainTool::Ready_Prototype_Object()
 		AfxMessageBox(TEXT("Failed Add Prototype CTerrain"));
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Terrain"), TEXT("GameObject_Terrain"))))
 	{
 		AfxMessageBox(TEXT("Failed Add GameObject CTerrain"));
 		return E_FAIL;
 	}
-
+	/* For.Prototype_GameObject_Camera */
 	if (FAILED(m_pGameInstance->Add_Object_Prototype(TEXT("Prototype_GameObject_Camera"), CDynamicCamera::Create(m_pDevice))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CCamera"));
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_GameObject(TEXT("Prototype_GameObject_Camera"), TEXT("GameObject_Camera"))))
 	{
 		AfxMessageBox(TEXT("Failed Add GameObject CCamera"));

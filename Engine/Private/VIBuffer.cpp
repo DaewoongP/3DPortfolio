@@ -22,7 +22,8 @@ CVIBuffer::CVIBuffer(const CVIBuffer& rhs)
 	, m_iIndexStride(rhs.m_iIndexStride)
 	, m_iNumIndices(rhs.m_iNumIndices)
 {
-
+	Safe_AddRef(m_pVB);
+	Safe_AddRef(m_pIB);
 }
 
 HRESULT CVIBuffer::Initialize_Prototype()

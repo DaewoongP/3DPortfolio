@@ -129,5 +129,4 @@ void CObject_Manager::Free()
 	}
 
 	m_Prototypes.clear();
-
 }

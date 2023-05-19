@@ -101,8 +101,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Vtxtex.hlsl">
+    <Text Include="..\Bin\ShaderFiles\Shader_Vtxtex.hlsl">
       <Filter>97. ShaderFiles</Filter>
-    </FxCompile>
+    </Text>
   </ItemGroup>
 </Project>

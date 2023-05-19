@@ -1,5 +1,6 @@
 #include "..\Public\BackGround.h"
 #include "GameInstance.h"
+
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -41,7 +42,11 @@ void CBackGround::Late_Tick(_double TimeDelta)
 HRESULT CBackGround::Render()
 {
 	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
-	
+	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+
+	m_pShaderCom->Begin(0);
+	m_pVIBufferCom->Render();
+
 	return S_OK;
 }
 
@@ -52,6 +57,21 @@ HRESULT CBackGround::Add_Components()
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 		return E_FAIL;
 
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Vtxtex"),
+		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CBackGround::SetUp_ShaderResources()
+{
 	return S_OK;
 }
 
@@ -82,5 +102,7 @@ CGameObject* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
 	__super::Free();
+	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
 }
