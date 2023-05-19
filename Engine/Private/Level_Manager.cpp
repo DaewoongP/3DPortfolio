@@ -29,8 +29,9 @@ HRESULT CLevel_Manager::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 
 void CLevel_Manager::Tick(_double dTimeDelta)
 {
-	NULL_CHECK(m_pCurrentLevel);
-
+	if (nullptr == m_pCurrentLevel)
+		return;
+	
 	m_pCurrentLevel->Tick(dTimeDelta);
 }
 

@@ -2,9 +2,8 @@
 #include "Tool_Defines.h"
 #include "GameObject.h"
 
-BEGIN(Engine9)
+BEGIN(Engine)
 class CRenderer;
-class CVIBuffer_RcCol;
 END
 
 BEGIN(Tool)
@@ -12,7 +11,7 @@ BEGIN(Tool)
 class CTerrain final : public CGameObject
 {
 private:
-	explicit CTerrain(LPDIRECT3DDEVICE9 pDevice);
+	explicit CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CTerrain(const CTerrain& rhs);
 	virtual ~CTerrain() = default;
 
@@ -25,13 +24,13 @@ public:
 
 private:
 	CRenderer*				m_pRendererCom = { nullptr };
-	CVIBuffer_RcCol*		m_pRcColCom = { nullptr };
+
 
 public:
 	HRESULT		Add_Components();
 
 public:
-	static CTerrain* Create(LPDIRECT3DDEVICE9 pDevice);
+	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

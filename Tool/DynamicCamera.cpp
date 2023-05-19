@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "DynamicCamera.h"
 
-CDynamicCamera::CDynamicCamera(LPDIRECT3DDEVICE9 pDevice)
-	:CGameObject(pDevice)
+CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	:CGameObject(pDevice, pContext)
 	, m_bFix(true)
 	, m_bClick(false)
 {
@@ -25,14 +25,14 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 
 HRESULT CDynamicCamera::Initialize_Prototype()
 {
-	m_vEye = _vec3(0.f, 0.f, -1.f);
+	/*m_vEye = _vec3(0.f, 0.f, -1.f);
 	m_vAt = _vec3(0.f, 0.f, 0.f);
 	m_vUp = _vec3(0.f, 1.f, 0.f);
 	m_fFov = D3DXToRadian(60.f);
 	m_fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	m_fNear = 0.1f;
 	m_fFar = 1000.f;
-	m_fSpeed = 10.f;
+	m_fSpeed = 10.f;*/
 	return S_OK;
 }
 
@@ -51,11 +51,11 @@ void CDynamicCamera::Tick(_double dTimeDelta)
 		Mouse_Move();
 	}*/
 
-	D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
+	/*D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
 	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
 
 	m_pDevice->SetTransform(D3DTS_VIEW, &m_matView);
-	m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);
+	m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);*/
 }
 
 HRESULT CDynamicCamera::Add_Components()
@@ -65,7 +65,7 @@ HRESULT CDynamicCamera::Add_Components()
 
 void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 {
-	_matrix		matCamWorld;
+	/*_matrix		matCamWorld;
 	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
 
 	if (GetAsyncKeyState('W') & 0x8000)
@@ -128,7 +128,7 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 		m_bClick = false;
 
 	if (false == m_bFix)
-		return;
+		return;*/
 }
 
 void CDynamicCamera::Mouse_Move(void)
@@ -175,9 +175,9 @@ void CDynamicCamera::Fix_Mouse(void)
 	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 
-CDynamicCamera* CDynamicCamera::Create(LPDIRECT3DDEVICE9 pDevice)
+CDynamicCamera* CDynamicCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CDynamicCamera* pInstance = new CDynamicCamera(pDevice);
+	CDynamicCamera* pInstance = new CDynamicCamera(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{

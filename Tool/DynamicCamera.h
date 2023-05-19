@@ -1,15 +1,12 @@
 #pragma once
 #include "GameObject.h"
 
-BEGIN(Engine9)
-END
-
 BEGIN(Tool)
 
 class CDynamicCamera final : public CGameObject
 {
 private:
-	explicit CDynamicCamera(LPDIRECT3DDEVICE9 pDevice);
+	explicit CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CDynamicCamera(const CDynamicCamera& rhs);
 	virtual ~CDynamicCamera() = default;
 
@@ -28,21 +25,21 @@ private:
 	void		Fix_Mouse(void);
 
 private:
-	_vec3		m_vEye;
-	_vec3		m_vAt;
-	_vec3		m_vUp;
+	_float3		m_vEye;
+	_float3		m_vAt;
+	_float3		m_vUp;
 	_float		m_fFov;
 	_float		m_fAspect;
 	_float		m_fNear;
 	_float		m_fFar;
-	_matrix		m_matView;
-	_matrix		m_matProj;
+	_float4x4	m_matView;
+	_float4x4	m_matProj;
 	_bool		m_bFix;
 	_bool		m_bClick;
 	_float		m_fSpeed;
 
 public:
-	static CDynamicCamera* Create(LPDIRECT3DDEVICE9 pDevice);
+	static CDynamicCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

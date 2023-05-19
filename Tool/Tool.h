@@ -13,8 +13,8 @@
 // CToolApp:
 // 이 클래스의 구현에 대해서는 Tool.cpp을(를) 참조하세요.
 //
-BEGIN(Engine9)
-class CGameInstance9;
+BEGIN(Engine)
+class CGameInstance;
 END
 
 BEGIN(Tool)
@@ -41,7 +41,7 @@ public:
 
 private:
 	_double			m_dTimerAcc = { 0.0 };
-	CGameInstance9* m_pGameInstance = { nullptr };
+	CGameInstance*  m_pGameInstance = { nullptr };
 	CMainTool*		m_pMainApp = { nullptr };
 };
 

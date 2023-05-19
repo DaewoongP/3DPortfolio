@@ -12,7 +12,6 @@
 
 #include "ToolDoc.h"
 #include "ToolView.h"
-#include "GameInstance9.h"
 #include "MainFrm.h"
 #include "Renderer.h"
 // CToolView

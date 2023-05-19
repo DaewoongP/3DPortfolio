@@ -5,8 +5,8 @@
 class CToolView;
 class CMainFrame;
 
-BEGIN(Engine9)
-class CGameInstance9;
+BEGIN(Engine)
+class CGameInstance;
 class CRenderer;
 END
 
@@ -30,11 +30,12 @@ private:
 private:
 	CMainFrame*					m_pMainFrm = { nullptr };
 	CToolView*					m_pView = { nullptr };
-	LPDIRECT3DDEVICE9			m_pDevice = { nullptr };
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
 	
 private:
-	CGameInstance9*	m_pGameInstance = { nullptr };
-	CRenderer*		m_pRenderer = { nullptr };
+	CGameInstance*				m_pGameInstance = { nullptr };
+	CRenderer*					m_pRenderer = { nullptr };
 
 public:
 	static CMainTool* Create();

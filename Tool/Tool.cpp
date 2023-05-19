@@ -12,7 +12,7 @@
 #include "ToolDoc.h"
 #include "ToolView.h"
 
-#include "GameInstance9.h"
+#include "GameInstance.h"
 #include "MainTool.h"
 
 #ifdef _DEBUG
@@ -131,7 +131,7 @@ BOOL CToolApp::InitInstance()
 
 	NULL_CHECK_RETURN_MSG(m_pMainApp, FALSE, L"Failed Create MainApp");
 
-	m_pGameInstance = CGameInstance9::GetInstance();
+	m_pGameInstance = CGameInstance::GetInstance();
 
 	if (FAILED(m_pGameInstance->Add_Timer(TEXT("Timer_Default"))))
 		return FALSE;
