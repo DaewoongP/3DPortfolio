@@ -31,7 +31,6 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
@@ -400,5 +399,3 @@ FodyWeavers.xsd
 
 *.exp
 *.exe 
-
-![Bb]in/ShaderFiles/*.hlsl
