@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "DynamicCamera.h"
+#include "GameInstance.h"
+
 _matrix g_mat;
 
 CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
 	, m_bFix(true)
 	, m_bClick(false)
+	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
 	m_matView = XMMatrixIdentity();
 	m_matProj = XMMatrixIdentity();
@@ -25,7 +28,9 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 	, m_fSpeed(rhs.m_fSpeed)
 	, m_bFix(rhs.m_bFix)
 	, m_bClick(rhs.m_bClick)
+	, m_pGameInstance(rhs.m_pGameInstance)
 {
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CDynamicCamera::Initialize_Prototype()
@@ -51,11 +56,11 @@ void CDynamicCamera::Tick(_double dTimeDelta)
 {
 	Key_Input(dTimeDelta);
 
-	/*if (m_bFix)
+	if (m_bFix)
 	{
 		Fix_Mouse();
 		Mouse_Move();
-	}*/
+	}
 
 	m_matView = XMMatrixLookAtLH(m_vEye, m_vAt, m_vUp);
 	m_matProj = XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar);
@@ -142,8 +147,8 @@ void CDynamicCamera::Mouse_Move(void)
 
 	_matrix		matCamWorld;
 	matCamWorld = XMMatrixInverse(nullptr, m_matView);
-
-	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
+	
+	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Y))
 	{
 		_vector	vRight;
 		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
@@ -157,7 +162,7 @@ void CDynamicCamera::Mouse_Move(void)
 		m_vAt = m_vEye + vLook;
 	}
 
-	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_X))
+	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 	{
 		_vector	vUp;
 		memcpy(&vUp, &matCamWorld.r[1], sizeof(_vector));
@@ -207,4 +212,5 @@ CGameObject* CDynamicCamera::Clone(void* pArg)
 void CDynamicCamera::Free()
 {
 	__super::Free();
+	Safe_Release(m_pGameInstance);
 }

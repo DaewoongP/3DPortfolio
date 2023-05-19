@@ -30,7 +30,7 @@ HRESULT CMainTool::Initialize()
 
 	FAILED_CHECK_RETURN(Ready_Prototype_Component(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype_Object(), E_FAIL);
-
+	FAILED_CHECK_RETURN(m_pGameInstance->Ready_DInput(AfxGetInstanceHandle(), g_hViewWnd), E_FAIL);
 	return S_OK;
 }
 
@@ -38,7 +38,7 @@ void CMainTool::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
-
+	m_pGameInstance->Update_DInput();
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 }
 

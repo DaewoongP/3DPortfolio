@@ -39,6 +39,13 @@ public: /* For.Component_Manager*/
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, class CComponent* pPrototype);
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void* pArg = nullptr);
 
+public: /* For.DInput_Manager*/
+	_byte		Get_DIKeyState(_ubyte ubyKeyID);
+	_byte		Get_DIMouseState(MOUSEKEYSTATE eMouseID);
+	_long		Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
+	HRESULT		Ready_DInput(HINSTANCE hInst, HWND hWnd);
+	void		Update_DInput(void);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -46,7 +53,7 @@ private:
 	class CObject_Manager*			m_pObject_Manager = { nullptr };
 	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
-
+	class CDInput_Manager*			m_pDInput_Manager = { nullptr };
 public:
 	static void Release_Engine();
 	virtual void Free() override;

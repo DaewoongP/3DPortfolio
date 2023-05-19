@@ -8,6 +8,9 @@
 #include <d3dcompiler.h>
 #include "fx11\d3dx11effect.h"
 
+#define DIRECTINPUT_VERSION		0x0800
+#include <dinput.h>
+
 #include <iostream>
 #include <vector>
 #include <list>
@@ -18,6 +21,7 @@
 using namespace std;
 using namespace DirectX;
 
+#include "Engine_Enums.h"
 #include "Engine_Function.h"
 #include "Engine_TypeDef.h"
 #include "Engine_Macro.h"
