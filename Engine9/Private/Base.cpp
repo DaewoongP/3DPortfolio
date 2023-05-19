@@ -2,16 +2,16 @@
 /// <summary>
 /// Engine9 Base
 /// </summary>
-CBase::CBase()
+Engine9::CBase::CBase()
 {
 }
 
-_ulong CBase::AddRef()
+Engine9::_ulong Engine9::CBase::AddRef()
 {
 	return ++m_dwRefCnt;
 }
 
-_ulong CBase::Release()
+Engine9::_ulong Engine9::CBase::Release()
 {
 	if (0 == m_dwRefCnt)
 	{

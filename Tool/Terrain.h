@@ -1,19 +1,20 @@
 #pragma once
+#include "Tool_Defines.h"
 #include "GameObject.h"
-#include "Client_Defines.h"
 
-BEGIN(Engine)
+BEGIN(Engine9)
 class CRenderer;
+class CVIBuffer_RcCol;
 END
 
-BEGIN(Client)
+BEGIN(Tool)
 
-class CBackGround final : public CGameObject
+class CTerrain final : public CGameObject
 {
 private:
-	explicit CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CBackGround(const CBackGround& rhs);
-	virtual ~CBackGround() = default;
+	explicit CTerrain(LPDIRECT3DDEVICE9 pDevice);
+	explicit CTerrain(const CTerrain& rhs);
+	virtual ~CTerrain() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -23,13 +24,14 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CRenderer*		m_pRendererCom = { nullptr };
+	CRenderer*				m_pRendererCom = { nullptr };
+	CVIBuffer_RcCol*		m_pRcColCom = { nullptr };
 
 public:
 	HRESULT		Add_Components();
 
 public:
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CTerrain* Create(LPDIRECT3DDEVICE9 pDevice);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

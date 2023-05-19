@@ -12,6 +12,9 @@
 #include "ToolDoc.h"
 #include "ToolView.h"
 
+#include "GameInstance9.h"
+#include "MainTool.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -115,25 +118,31 @@ BOOL CToolApp::InitInstance()
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 
-
-
 	// 명령줄에 지정된 명령을 디스패치합니다.
 	// 응용 프로그램이 /RegServer, /Register, /Unregserver 또는 /Unregister로 시작된 경우 FALSE를 반환합니다.
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
 
+	/// <summary>
+	/// ////////////////////////////////Init
+	/// </summary>
+
+	m_pMainApp = CMainTool::Create();
+
+	NULL_CHECK_RETURN_MSG(m_pMainApp, FALSE, L"Failed Create MainApp");
+
+	m_pGameInstance = CGameInstance9::GetInstance();
+
+	if (FAILED(m_pGameInstance->Add_Timer(TEXT("Timer_Default"))))
+		return FALSE;
+	if (FAILED(m_pGameInstance->Add_Timer(TEXT("Timer_60"))))
+		return FALSE;
+
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
+
 	return TRUE;
-}
-
-int CToolApp::ExitInstance()
-{
-	//TODO: 추가한 추가 리소스를 처리합니다.
-	AfxOleTerm(FALSE);
-
-	return CWinApp::ExitInstance();
 }
 
 // CToolApp 메시지 처리기
@@ -179,3 +188,37 @@ void CToolApp::OnAppAbout()
 }
 
 // CToolApp 메시지 처리기
+
+
+BOOL CToolApp::OnIdle(LONG lCount)
+{
+	m_pGameInstance->Tick_Timer(TEXT("Timer_Default"));
+	m_dTimerAcc += m_pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
+
+	/* MainApp 객체의 처리. */
+	if (m_dTimerAcc >= 1.0 / 60.0)
+	{
+		m_pGameInstance->Tick_Timer(TEXT("Timer_60"));
+		m_pMainApp->Tick(m_dTimerAcc);
+		m_pMainApp->Render();
+		m_dTimerAcc = { 0.0 };
+	}
+	return true;
+}
+
+
+BOOL CToolApp::InitApplication()
+{
+	return CWinApp::InitApplication();
+}
+
+int CToolApp::ExitInstance()
+{
+	//TODO: 추가한 추가 리소스를 처리합니다.
+	AfxOleTerm(FALSE);
+
+	Safe_Release(m_pGameInstance);
+	Safe_Release(m_pMainApp);
+
+	return CWinApp::ExitInstance();
+}

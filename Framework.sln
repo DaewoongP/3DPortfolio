@@ -6,14 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Default\Engine.vcxproj", "{65540D77-83D0-40E7-940D-9DD18CC13F77}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Default\Client.vcxproj", "{3EDD0C68-ED0A-48BC-95AD-9C426AB91B31}"
-	ProjectSection(ProjectDependencies) = postProject
-		{65540D77-83D0-40E7-940D-9DD18CC13F77} = {65540D77-83D0-40E7-940D-9DD18CC13F77}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tool", "Tool\Tool.vcxproj", "{2C30C542-E752-4678-9AFF-E12C1D107AF4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1406C57A-323C-49B3-809D-D5DEDA70AA61} = {1406C57A-323C-49B3-809D-D5DEDA70AA61}
-	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Tool", "01. Tool", "{991636A2-5BAD-42FE-8CB5-5DFEF54E18F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00. Client", "00. Client", "{C8B6B9F7-AB34-4F33-8F74-E9B3432003CE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine9", "Engine9\Default\Engine9.vcxproj", "{1406C57A-323C-49B3-809D-D5DEDA70AA61}"
 EndProject
@@ -60,6 +58,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{65540D77-83D0-40E7-940D-9DD18CC13F77} = {C8B6B9F7-AB34-4F33-8F74-E9B3432003CE}
+		{3EDD0C68-ED0A-48BC-95AD-9C426AB91B31} = {C8B6B9F7-AB34-4F33-8F74-E9B3432003CE}
+		{2C30C542-E752-4678-9AFF-E12C1D107AF4} = {991636A2-5BAD-42FE-8CB5-5DFEF54E18F9}
+		{1406C57A-323C-49B3-809D-D5DEDA70AA61} = {991636A2-5BAD-42FE-8CB5-5DFEF54E18F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2522DF36-D239-4C35-9AB9-62EE735131A8}

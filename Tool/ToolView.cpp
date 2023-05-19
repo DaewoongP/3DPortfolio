@@ -14,7 +14,7 @@
 #include "ToolView.h"
 #include "GameInstance9.h"
 #include "MainFrm.h"
-
+#include "Renderer.h"
 // CToolView
 
 IMPLEMENT_DYNCREATE(CToolView, CView)
@@ -28,11 +28,9 @@ BEGIN_MESSAGE_MAP(CToolView, CView)
 END_MESSAGE_MAP()
 
 // CToolView 생성/소멸
-// 글로벌 변수처리
-HWND	g_hWnd;
+HWND	g_hViewWnd;
 
 CToolView::CToolView() noexcept
-	: m_pGameInstance{ CGameInstance9::GetInstance() }
 {
 }
 
@@ -100,15 +98,8 @@ void CToolView::OnInitialUpdate()
 
 	pMainFrm->SetWindowPos(nullptr, 0, 0, _int(g_iWinSizeX + fRowFrm), _int(g_iWinSizeY + fColFrm), SWP_NOZORDER);
 
-	g_hWnd = m_hWnd;
-	//////////////////////// 디바이스 초기화 /////////////////////////
-	m_pGameInstance->Ready_Graphic_Device(g_hWnd, MODE_WIN, g_iWinSizeX, g_iWinSizeY, &m_pDevice);
-
-}
-
-void CToolView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
-{
-	
+	// View 핸들을 전역변수로 땡겨준다.
+	g_hViewWnd = m_hWnd;
 }
 
 // CToolView 그리기
@@ -119,16 +110,13 @@ void CToolView::OnDraw(CDC* /*pDC*/)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
-	m_pGameInstance->Render_Begin(D3DXCOLOR(0.f, 1.f, 0.f, 1.f));
-	m_pGameInstance->Render_End();
 }
 
 
 void CToolView::OnDestroy()
 {
 	CView::OnDestroy();
-
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pGameInstance);
-	CGameInstance9::Release_Engine();
 }
+
+
+

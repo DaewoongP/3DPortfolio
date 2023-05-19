@@ -1,5 +1,5 @@
-#include "..\Public\Component_Manager.h"
-#include "Component.h"
+#include "../Public/Component_Manager.h"
+#include "../Public/Component.h"
 
 IMPLEMENT_SINGLETON(CComponent_Manager)
 
@@ -82,13 +82,13 @@ CComponent* CComponent_Manager::Find_Prototype(_uint iLevelIndex, const _tchar* 
 
 void CComponent_Manager::Free()
 {
-	for (_uint i = 0; i < m_iNumLevels; ++i)
+	/*for (_uint i = 0; i < m_iNumLevels; ++i)
 	{
 		for (auto& Pair : m_pPrototypes[i])
 			Safe_Release(Pair.second);
 
 		m_pPrototypes[i].clear();
-	}
+	}*/
 
 	Safe_Delete_Array(m_pPrototypes);
 }
