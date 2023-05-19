@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "DynamicCamera.h"
+_matrix g_mat;
 
 CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
 	, m_bFix(true)
 	, m_bClick(false)
 {
+	m_matView = XMMatrixIdentity();
+	m_matProj = XMMatrixIdentity();
 }
 
 CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
@@ -17,6 +20,8 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 	, m_fAspect(rhs.m_fAspect)
 	, m_fNear(rhs.m_fNear)
 	, m_fFar(rhs.m_fFar)
+	, m_matView(rhs.m_matView)
+	, m_matProj(rhs.m_matProj)
 	, m_fSpeed(rhs.m_fSpeed)
 	, m_bFix(rhs.m_bFix)
 	, m_bClick(rhs.m_bClick)
@@ -25,14 +30,15 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 
 HRESULT CDynamicCamera::Initialize_Prototype()
 {
-	/*m_vEye = _vec3(0.f, 0.f, -1.f);
-	m_vAt = _vec3(0.f, 0.f, 0.f);
-	m_vUp = _vec3(0.f, 1.f, 0.f);
-	m_fFov = D3DXToRadian(60.f);
+	m_vEye = _vector{ 0.f, 0.f, -1.f };
+	m_vAt = _vector{ 0.f, 0.f, 0.f };
+	m_vUp = _vector{ 0.f, 1.f, 0.f };
+
+	m_fFov = XMConvertToRadians(60.f);
 	m_fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	m_fNear = 0.1f;
 	m_fFar = 1000.f;
-	m_fSpeed = 10.f;*/
+	m_fSpeed = 10.f;
 	return S_OK;
 }
 
@@ -51,11 +57,10 @@ void CDynamicCamera::Tick(_double dTimeDelta)
 		Mouse_Move();
 	}*/
 
-	/*D3DXMatrixPerspectiveFovLH(&m_matProj, m_fFov, m_fAspect, m_fNear, m_fFar);
-	D3DXMatrixLookAtLH(&m_matView, &m_vEye, &m_vAt, &m_vUp);
+	m_matView = XMMatrixLookAtLH(m_vEye, m_vAt, m_vUp);
+	m_matProj = XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar);
 
-	m_pDevice->SetTransform(D3DTS_VIEW, &m_matView);
-	m_pDevice->SetTransform(D3DTS_PROJECTION, &m_matProj);*/
+	g_mat = m_matView * m_matProj;
 }
 
 HRESULT CDynamicCamera::Add_Components()
@@ -65,26 +70,26 @@ HRESULT CDynamicCamera::Add_Components()
 
 void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 {
-	/*_matrix		matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
+	_matrix		matCamWorld;
+	matCamWorld = XMMatrixInverse(nullptr, m_matView);
 
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
-		_vec3		vLook;
-		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
+		_vector		vLook;
+		memcpy(&vLook, &matCamWorld.r[2], sizeof(_vector));
 
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * dTimeDelta * m_fSpeed;
-
+		_vector	vLength = XMVector3Normalize(vLook) * static_cast<_float>(dTimeDelta) * m_fSpeed;
+		
 		m_vEye += vLength;
 		m_vAt += vLength;
 	}
 
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
-		_vec3		vLook;
-		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
+		_vector		vLook;
+		memcpy(&vLook, &matCamWorld.r[2], sizeof(_vector));
 
-		_vec3	vLength = *D3DXVec3Normalize(&vLook, &vLook) * dTimeDelta * m_fSpeed;
+		_vector	vLength = XMVector3Normalize(vLook) * static_cast<_float>(dTimeDelta) * m_fSpeed;
 
 		m_vEye -= vLength;
 		m_vAt -= vLength;
@@ -92,10 +97,10 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		_vec3		vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+		_vector		vRight;
+		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
 
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * dTimeDelta * m_fSpeed;
+		_vector	vLength = XMVector3Normalize(vRight) * static_cast<_float>(dTimeDelta) * m_fSpeed;
 
 		m_vEye -= vLength;
 		m_vAt -= vLength;
@@ -103,10 +108,10 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
-		_vec3		vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+		_vector		vRight;
+		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
 
-		_vec3	vLength = *D3DXVec3Normalize(&vRight, &vRight) * dTimeDelta * m_fSpeed;
+		_vector	vLength = XMVector3Normalize(vRight) * static_cast<_float>(dTimeDelta) * m_fSpeed;
 
 		m_vEye += vLength;
 		m_vAt += vLength;
@@ -128,43 +133,43 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 		m_bClick = false;
 
 	if (false == m_bFix)
-		return;*/
+		return;
 }
 
 void CDynamicCamera::Mouse_Move(void)
 {
-	/*_long		dwMouseMove = 0;
+	_long		dwMouseMove = 0;
 
 	_matrix		matCamWorld;
-	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
+	matCamWorld = XMMatrixInverse(nullptr, m_matView);
 
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
 	{
-		_vec3	vRight;
-		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+		_vector	vRight;
+		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
 
 		_matrix		matRot;
-		D3DXMatrixRotationAxis(&matRot, &vRight, D3DXToRadian(dwMouseMove / 10.f));
+		matRot = XMMatrixRotationAxis(vRight, XMConvertToRadians(dwMouseMove / 10.f));
 
-		_vec3	vLook = m_vAt - m_vEye;
-		D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
+		_vector	vLook = m_vAt - m_vEye;
+		vLook = XMVector3TransformNormal(vLook, matRot);
 
 		m_vAt = m_vEye + vLook;
 	}
 
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_X))
 	{
-		_vec3	vUp;
-		memcpy(&vUp, &matCamWorld.m[1][0], sizeof(_vec3));
+		_vector	vUp;
+		memcpy(&vUp, &matCamWorld.r[1], sizeof(_vector));
 
 		_matrix		matRot;
-		D3DXMatrixRotationAxis(&matRot, &vUp, D3DXToRadian(dwMouseMove / 10.f));
+		matRot = XMMatrixRotationAxis(vUp, XMConvertToRadians(dwMouseMove / 10.f));
 
-		_vec3	vLook = m_vAt - m_vEye;
-		D3DXVec3TransformNormal(&vLook, &vLook, &matRot);
-
+		_vector	vLook = m_vAt - m_vEye;
+		vLook = XMVector3TransformNormal(vLook, matRot);
+		
 		m_vAt = m_vEye + vLook;
-	}*/
+	}
 }
 
 void CDynamicCamera::Fix_Mouse(void)

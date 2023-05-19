@@ -23,7 +23,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 {
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
     FAILED_CHECK_RETURN(Add_Components(), E_FAIL);
-    
+
     return S_OK;
 }
 
@@ -44,7 +44,7 @@ HRESULT CTerrain::Render()
 {
     FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
     FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
-
+    
     m_pShaderCom->Begin(0);
     m_pVIBufferCom->Render();
 
@@ -73,6 +73,8 @@ HRESULT CTerrain::Add_Components()
 
 HRESULT CTerrain::SetUp_ShaderResources()
 {
+    if (FAILED(m_pShaderCom->Set_WVPMatrix(g_mat)))
+        return E_FAIL;
     return S_OK;
 }
 

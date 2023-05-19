@@ -49,6 +49,9 @@
     <Filter Include="01. Main\01. Objects\DynamicCamera">
       <UniqueIdentifier>{9629db39-e6ba-4652-b87c-33a344486cdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98. ShaderFiles">
+      <UniqueIdentifier>{55d85534-a0ec-4b34-b90f-450225e0277a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -167,5 +170,10 @@
     <None Include="res\Tool.rc2">
       <Filter>00. Tools\98. Default</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="ShaderFiles\Shader_Test.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

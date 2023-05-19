@@ -120,6 +120,12 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -201,6 +207,12 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DynamicCamera.h" />
@@ -252,6 +264,9 @@
     <Image Include="res\Tool.ico" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\ToolDoc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="ShaderFiles\Shader_Test.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

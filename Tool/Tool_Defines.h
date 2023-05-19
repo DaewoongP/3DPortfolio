@@ -8,5 +8,6 @@ namespace Tool
 }
 
 extern HWND g_hViewWnd;
+extern XMMATRIX g_mat;
 
 using namespace Tool;

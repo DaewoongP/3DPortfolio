@@ -69,7 +69,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_Shader_Vtxtex */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Vtxtex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Client/Bin/ShaderFiles/Shader_Vtxtex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Test.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Rect */
