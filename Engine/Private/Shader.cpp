@@ -84,6 +84,15 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
+HRESULT CShader::Set_WVPMatrix(_matrix mat)
+{
+	m_pWVP = m_pEffect->GetVariableByName("g_WVPMatrix")->AsMatrix();
+	if (FAILED(m_pWVP->SetMatrix(reinterpret_cast<_float*>(&mat))))
+		return E_FAIL;
+	
+	return S_OK;
+}
+
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 	CShader* pInstance = new CShader(pDevice, pContext);

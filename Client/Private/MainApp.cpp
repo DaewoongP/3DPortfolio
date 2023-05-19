@@ -38,6 +38,7 @@ HRESULT CMainApp::Initialize()
 	
 	FAILED_CHECK_RETURN(Open_Level(LEVELID::LEVEL_LOGO), E_FAIL);
 	
+	FAILED_CHECK_RETURN(m_pGameInstance->Ready_DInput(g_hInst, g_hWnd), E_FAIL);
 	return S_OK;
 }
 
@@ -45,7 +46,7 @@ void CMainApp::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
-
+	m_pGameInstance->Update_DInput();
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 }
 

@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "Terrain.h"
-#include "Renderer.h"
-#include "VIBuffer_RcCol.h"
+#include "GameInstance.h"
 
-CTerrain::CTerrain(LPDIRECT3DDEVICE9 pDevice)
-    : CGameObject(pDevice)
+CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+    : CGameObject(pDevice, pContext)
 {
 }
 
@@ -24,7 +23,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 {
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
     FAILED_CHECK_RETURN(Add_Components(), E_FAIL);
-    
+
     return S_OK;
 }
 
@@ -44,27 +43,44 @@ void CTerrain::Late_Tick(_double TimeDelta)
 HRESULT CTerrain::Render()
 {
     FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
-
-    m_pRcColCom->Render();
+    FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+    
+    m_pShaderCom->Begin(0);
+    m_pVIBufferCom->Render();
 
     return S_OK;
 }
 
 HRESULT CTerrain::Add_Components()
 {
-    if (FAILED(__super::Add_Component(TEXT("Prototype_Component_Renderer"),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+        TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(TEXT("Prototype_Component_VIBuffer_RcCol"),
-        TEXT("Com_RcCol"), reinterpret_cast<CComponent**>(&m_pRcColCom))))
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+        TEXT("Prototype_Component_Shader_Vtxtex"),
+        TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+        return E_FAIL;
+
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+        TEXT("Prototype_Component_VIBuffer_Rect"),
+        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CTerrain::SetUp_ShaderResources()
+{
+    if (FAILED(m_pShaderCom->Set_WVPMatrix(g_mat)))
         return E_FAIL;
     return S_OK;
 }
 
-CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pDevice)
+CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-    CTerrain* pInstance = new CTerrain(pDevice);
+    CTerrain* pInstance = new CTerrain(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
     {
@@ -89,6 +105,7 @@ CGameObject* CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
     __super::Free();
-    Safe_Release(m_pRcColCom);
+    Safe_Release(m_pShaderCom);
+    Safe_Release(m_pVIBufferCom);
     Safe_Release(m_pRendererCom);
 }
