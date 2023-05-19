@@ -401,4 +401,4 @@ FodyWeavers.xsd
 *.exp
 *.exe 
 
-![Bb]in/ShaderFiles/**/*.hlsl
+![Bb]in/ShaderFiles/*.hlsl
