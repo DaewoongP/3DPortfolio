@@ -42,7 +42,7 @@ public:
 private:
 	_double			m_dTimerAcc = { 0.0 };
 	CGameInstance*  m_pGameInstance = { nullptr };
-	CMainTool*		m_pMainApp = { nullptr };
+	CMainTool*		m_pMainTool = { nullptr };
 };
 
 extern CToolApp theApp;

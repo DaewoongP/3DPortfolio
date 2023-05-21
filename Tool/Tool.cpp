@@ -127,9 +127,9 @@ BOOL CToolApp::InitInstance()
 	/// ////////////////////////////////Init
 	/// </summary>
 
-	m_pMainApp = CMainTool::Create();
+	m_pMainTool = CMainTool::Create();
 
-	NULL_CHECK_RETURN_MSG(m_pMainApp, FALSE, L"Failed Create MainApp");
+	NULL_CHECK_RETURN_MSG(m_pMainTool, FALSE, L"Failed Create MainApp");
 
 	m_pGameInstance = CGameInstance::GetInstance();
 
@@ -141,7 +141,7 @@ BOOL CToolApp::InitInstance()
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
-
+	
 	return TRUE;
 }
 
@@ -199,8 +199,8 @@ BOOL CToolApp::OnIdle(LONG lCount)
 	if (m_dTimerAcc >= 1.0 / 60.0)
 	{
 		m_pGameInstance->Tick_Timer(TEXT("Timer_60"));
-		m_pMainApp->Tick(m_dTimerAcc);
-		m_pMainApp->Render();
+		m_pMainTool->Tick(m_dTimerAcc);
+		m_pMainTool->Render();
 		m_dTimerAcc = { 0.0 };
 	}
 	return true;
@@ -218,7 +218,7 @@ int CToolApp::ExitInstance()
 	AfxOleTerm(FALSE);
 
 	Safe_Release(m_pGameInstance);
-	Safe_Release(m_pMainApp);
+	Safe_Release(m_pMainTool);
 
 	return CWinApp::ExitInstance();
 }

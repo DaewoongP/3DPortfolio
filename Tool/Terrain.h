@@ -19,6 +19,9 @@ private:
 	virtual ~CTerrain() = default;
 
 public:
+	void Set_WireFrame(_bool isWireFrame) { m_bIsWireFrame = isWireFrame; }
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
@@ -29,9 +32,11 @@ public:
 	HRESULT RemakeTerrain(_uint iSizeX, _uint iSizeY);
 
 private:
-	CShader*				m_pShaderCom = {nullptr};
+	CShader*				m_pShaderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
+
+	_bool					m_bIsWireFrame = { true };
 
 private:
 	CToolInstance*			m_pToolInstance = { nullptr };

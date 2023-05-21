@@ -25,9 +25,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButtonTerrainSizeApply();
-
+	afx_msg void OnBnClickedButtonWireframe();
 private:
 	CToolInstance*	m_pToolInstance = { nullptr };
+	_bool			m_bIsWireFrame = { true };
+
+private:
 	CEdit m_iTerrainSizeX;
 	CEdit m_iTerrainSizeZ;
+	CButton m_WireFrameBtn;
 };

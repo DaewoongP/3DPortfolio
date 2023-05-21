@@ -3,6 +3,9 @@
 #include "Terrain.h"
 #include "DynamicCamera.h"
 
+class CToolView;
+class CMainFrame;
+
 BEGIN(Engine)
 class CGameInstance;
 END
@@ -19,6 +22,10 @@ private:
 public:
 	CTerrain*			m_pTerrain = { nullptr };
 	CDynamicCamera*		m_pDynamicCamera = { nullptr };
+
+public:
+	CMainFrame*			m_pMainFrm = { nullptr };
+	CToolView*			m_pView = { nullptr };
 
 public:
 	virtual void Free() override;

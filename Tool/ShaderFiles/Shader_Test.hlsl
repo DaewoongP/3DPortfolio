@@ -1,5 +1,6 @@
 // matrix
 float4x4 g_WVPMatrix;
+RasterizerState g_rasterizer;
 
 struct VS_IN
 {
@@ -35,18 +36,11 @@ float4 PS_MAIN(PS_IN In) : SV_TARGET0
 	return vColor;
 }
 
-RasterizerState rsWireframe
-{
-	// CullMode Front, Back, None
-    CullMode = None;
-    FillMode = WireFrame;
-};
-
 technique11 DefaultTechnique
 {
 	pass Terrain
 	{
-        SetRasterizerState(rsWireframe);
+        SetRasterizerState(g_rasterizer);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
 		HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

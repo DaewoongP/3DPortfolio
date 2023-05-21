@@ -107,6 +107,17 @@ HRESULT CTerrain::SetUp_ShaderResources()
 {
     if (FAILED(m_pShaderCom->Set_WVPMatrix(m_pToolInstance->m_pDynamicCamera->m_matCam)))
         return E_FAIL;
+    D3D11_RASTERIZER_DESC rasterizer;
+    ZeroMemory(&rasterizer, sizeof rasterizer);
+    rasterizer.CullMode = D3D11_CULL_NONE;
+    if (m_bIsWireFrame)
+        rasterizer.FillMode = D3D11_FILL_WIREFRAME;
+    else
+        rasterizer.FillMode = D3D11_FILL_SOLID;
+
+    if (FAILED(m_pShaderCom->Set_Rasterizer(&rasterizer)))
+        return E_FAIL;
+
     return S_OK;
 }
 

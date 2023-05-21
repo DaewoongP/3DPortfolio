@@ -32,10 +32,14 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_EDIT_TERRAIN_SIZE_Z, m_iTerrainSizeZ);
 	m_iTerrainSizeZ.SetWindowTextW(_T("5"));
+
+	DDX_Control(pDX, IDC_BUTTON_WIREFRAME, m_WireFrameBtn);
+	m_WireFrameBtn.SetWindowTextW(TEXT("WireFrame"));
 }
 
 BEGIN_MESSAGE_MAP(CTerrainTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_TERRAIN_SIZE_APPLY, &CTerrainTab::OnBnClickedButtonTerrainSizeApply)
+	ON_BN_CLICKED(IDC_BUTTON_WIREFRAME, &CTerrainTab::OnBnClickedButtonWireframe)
 END_MESSAGE_MAP()
 
 
@@ -47,6 +51,24 @@ void CTerrainTab::OnBnClickedButtonTerrainSizeApply()
 	CString strTerrainX, strTerrainZ;
 	m_iTerrainSizeX.GetWindowTextW(strTerrainX);
 	m_iTerrainSizeZ.GetWindowTextW(strTerrainZ);
-	
+	if (nullptr == m_pToolInstance ||
+		nullptr == m_pToolInstance->m_pTerrain)
+		return;
 	m_pToolInstance->m_pTerrain->RemakeTerrain(_ttoi(strTerrainX), _ttoi(strTerrainZ));
+}
+
+
+void CTerrainTab::OnBnClickedButtonWireframe()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (nullptr == m_pToolInstance ||
+		nullptr == m_pToolInstance->m_pTerrain)
+		return;
+	m_bIsWireFrame = !m_bIsWireFrame;
+	if (m_bIsWireFrame)
+		m_WireFrameBtn.SetWindowTextW(TEXT("WireFrame"));
+	else
+		m_WireFrameBtn.SetWindowTextW(TEXT("Solid"));
+
+	m_pToolInstance->m_pTerrain->Set_WireFrame(m_bIsWireFrame);
 }

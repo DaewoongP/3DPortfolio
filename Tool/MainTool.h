@@ -31,6 +31,8 @@ private:
 	HRESULT Ready_Prototype_Component();
 	HRESULT	Ready_Prototype_Object();
 
+	void Render_FPS(_double dTimeDelta);
+
 private:
 	CMainFrame*					m_pMainFrm = { nullptr };
 	CToolView*					m_pView = { nullptr };
@@ -41,6 +43,11 @@ private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 	CToolInstance*				m_pToolInstance = { nullptr };
 	CRenderer*					m_pRenderer = { nullptr };
+
+private:
+	TCHAR						m_szFPS[MAX_STR];
+	_int						m_iFps = { 0 };
+	_double						m_dFpsTime = { 0.0 };
 
 public:
 	static CMainTool* Create();

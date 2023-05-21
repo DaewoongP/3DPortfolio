@@ -48,6 +48,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	else
 	{
 		pGameObject = pPrototype;
+		Safe_AddRef(pGameObject);
 		pGameObject->Initialize(pArg);
 	}
 		

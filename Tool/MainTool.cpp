@@ -14,6 +14,8 @@ CMainTool::CMainTool()
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pToolInstance);
+
+	ZeroMemory(m_szFPS, sizeof(TCHAR) * MAX_STR);
 }
 
 HRESULT CMainTool::Initialize()
@@ -30,7 +32,9 @@ HRESULT CMainTool::Initialize()
 		L"Failed Initialize_Engine");
 	m_pMainFrm = static_cast<CMainFrame*>(AfxGetApp()->GetMainWnd());
 	m_pView = static_cast<CToolView*>(m_pMainFrm->m_MainSplitter.GetPane(0, 0));
-
+	m_pToolInstance->m_pMainFrm = m_pMainFrm;
+	m_pToolInstance->m_pView = m_pView;
+	
 	FAILED_CHECK_RETURN(Ready_Prototype_Component(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype_Object(), E_FAIL);
 	FAILED_CHECK_RETURN(m_pGameInstance->Ready_DInput(AfxGetInstanceHandle(), g_hViewWnd), E_FAIL);
@@ -43,6 +47,8 @@ void CMainTool::Tick(_double dTimeDelta)
 		return;
 	m_pGameInstance->Update_DInput();
 	m_pGameInstance->Tick_Engine(dTimeDelta);
+	
+	Render_FPS(dTimeDelta);
 }
 
 void CMainTool::Render(void)
@@ -118,6 +124,19 @@ HRESULT CMainTool::Ready_Prototype_Object()
 	}
 
 	return S_OK;
+}
+
+void CMainTool::Render_FPS(_double dTimeDelta)
+{
+	m_dFpsTime += dTimeDelta;
+	++m_iFps;
+	if (1.0 <= m_dFpsTime)
+	{
+		swprintf_s(m_szFPS, L"FPS: %d", m_iFps);
+		SetWindowText(m_pMainFrm->m_hWnd, m_szFPS);
+		m_iFps = 0;
+		m_dFpsTime = 0.0;
+	}
 }
 
 CMainTool* CMainTool::Create()
