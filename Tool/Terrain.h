@@ -9,6 +9,7 @@ class CVIBuffer_Terrain;
 END
 
 BEGIN(Tool)
+class CToolInstance;
 
 class CTerrain final : public CGameObject
 {
@@ -24,10 +25,16 @@ public:
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	HRESULT RemakeTerrain(_uint iSizeX, _uint iSizeY);
+
 private:
 	CShader*				m_pShaderCom = {nullptr};
 	CRenderer*				m_pRendererCom = { nullptr };
 	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
+
+private:
+	CToolInstance*			m_pToolInstance = { nullptr };
 
 private:
 	HRESULT		Add_Components();

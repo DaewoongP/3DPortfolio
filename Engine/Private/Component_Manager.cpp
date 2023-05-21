@@ -80,6 +80,24 @@ CComponent* CComponent_Manager::Find_Prototype(_uint iLevelIndex, const _tchar* 
 	return iter->second;
 }
 
+HRESULT CComponent_Manager::Delete_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag)
+{
+	for (auto Pair = m_pPrototypes[iLevelIndex].begin(); Pair != m_pPrototypes[iLevelIndex].end();)
+	{
+		if (!lstrcmp(pPrototypeTag, Pair->first))
+		{
+			Safe_Release(Pair->second);
+			Pair = m_pPrototypes[iLevelIndex].erase(Pair);
+
+			return S_OK;
+		}
+		else
+			++Pair;
+	}
+
+	return E_FAIL;
+}
+
 void CComponent_Manager::Free()
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)

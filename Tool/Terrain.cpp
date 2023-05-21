@@ -1,15 +1,20 @@
 #include "pch.h"
 #include "Terrain.h"
 #include "GameInstance.h"
+#include "ToolInstance.h"
 
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
+    , m_pToolInstance{ CToolInstance::GetInstance() }
 {
+    Safe_AddRef(m_pToolInstance);
 }
 
 CTerrain::CTerrain(const CTerrain& rhs)
     : CGameObject(rhs)
+    , m_pToolInstance(rhs.m_pToolInstance)
 {
+    Safe_AddRef(m_pToolInstance);
 }
 
 HRESULT CTerrain::Initialize_Prototype()
@@ -51,6 +56,33 @@ HRESULT CTerrain::Render()
     return S_OK;
 }
 
+HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
+{
+    CGameInstance* pGameInstance = CGameInstance::GetInstance();
+    Safe_AddRef(pGameInstance);
+
+    // Delete Terrain Component
+    if (FAILED(pGameInstance->Delete_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"))))
+        return E_FAIL;
+    __super::Delete_Component(TEXT("Com_Terrain"));
+    Safe_Release(m_pTerrainCom);
+
+    // Remake terrain Component
+    /* Prototype_Component_VIBuffer_Terrain */
+    if (FAILED(pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"),
+        CVIBuffer_Terrain::Create(m_pDevice, m_pContext, iSizeX, iSizeY))))
+        return E_FAIL;
+
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+        TEXT("Prototype_Component_VIBuffer_Terrain"),
+        TEXT("Com_Terrain"), reinterpret_cast<CComponent**>(&m_pTerrainCom))))
+        return E_FAIL;
+
+    Safe_Release(pGameInstance);
+
+    return S_OK;
+}
+
 HRESULT CTerrain::Add_Components()
 {
     if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
@@ -73,7 +105,7 @@ HRESULT CTerrain::Add_Components()
 
 HRESULT CTerrain::SetUp_ShaderResources()
 {
-    if (FAILED(m_pShaderCom->Set_WVPMatrix(g_mat)))
+    if (FAILED(m_pShaderCom->Set_WVPMatrix(m_pToolInstance->m_pDynamicCamera->m_matCam)))
         return E_FAIL;
     return S_OK;
 }
@@ -105,6 +137,7 @@ CGameObject* CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
     __super::Free();
+    Safe_Release(m_pToolInstance);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pTerrainCom);
     Safe_Release(m_pRendererCom);

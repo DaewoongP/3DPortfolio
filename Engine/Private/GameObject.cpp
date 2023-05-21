@@ -61,6 +61,24 @@ HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTa
 	return S_OK;
 }
 
+HRESULT CGameObject::Delete_Component(const _tchar* pComponentTag)
+{
+	for (auto Pair = m_Components.begin(); Pair != m_Components.end();)
+	{
+		if (!lstrcmp(pComponentTag, Pair->first))
+		{
+			Safe_Release(Pair->second);
+			Pair = m_Components.erase(Pair);
+
+			return S_OK;
+		}
+		else
+			++Pair;
+	}
+
+	return E_FAIL;
+}
+
 void CGameObject::Free()
 {
 	for (auto& Pair : m_Components)

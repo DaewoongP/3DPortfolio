@@ -18,6 +18,7 @@ public:
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);
 	void Clear_LevelResources(_uint iLevelIndex);
+	HRESULT	Delete_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 private:
 	_uint	m_iNumLevels = { 0 };
@@ -27,7 +28,7 @@ private:
 	PROTOTYPES* m_pPrototypes = { nullptr };
 	
 private:
-	class CComponent* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
+	class CComponent*	Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 
 public:
 	virtual void Free() override;

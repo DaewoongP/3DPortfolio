@@ -11,6 +11,10 @@ class CRenderer;
 END
 
 BEGIN(Tool)
+class CToolInstance;
+END
+
+BEGIN(Tool)
 
 class CMainTool final : public CBase
 {
@@ -35,6 +39,7 @@ private:
 	
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
+	CToolInstance*				m_pToolInstance = { nullptr };
 	CRenderer*					m_pRenderer = { nullptr };
 
 public:

@@ -2,8 +2,6 @@
 #include "DynamicCamera.h"
 #include "GameInstance.h"
 
-_matrix g_mat;
-
 CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
 	, m_bFix(true)
@@ -12,6 +10,7 @@ CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 {
 	m_matView = XMMatrixIdentity();
 	m_matProj = XMMatrixIdentity();
+	m_matCam = XMMatrixIdentity();
 }
 
 CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
@@ -28,6 +27,7 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 	, m_fSpeed(rhs.m_fSpeed)
 	, m_bFix(rhs.m_bFix)
 	, m_bClick(rhs.m_bClick)
+	, m_matCam(rhs.m_matCam)
 	, m_pGameInstance(rhs.m_pGameInstance)
 {
 	Safe_AddRef(m_pGameInstance);
@@ -65,7 +65,7 @@ void CDynamicCamera::Tick(_double dTimeDelta)
 	m_matView = XMMatrixLookAtLH(m_vEye, m_vAt, m_vUp);
 	m_matProj = XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar);
 
-	g_mat = m_matView * m_matProj;
+	m_matCam = m_matView * m_matProj;
 }
 
 HRESULT CDynamicCamera::Add_Components()

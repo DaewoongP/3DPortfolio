@@ -3,14 +3,17 @@
 #include "MainFrm.h"
 #include "ToolView.h"
 #include "GameInstance.h"
+#include "ToolInstance.h"
 
 #include "Terrain.h"
 #include "DynamicCamera.h"
 
 CMainTool::CMainTool()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
+	, m_pToolInstance{ CToolInstance::GetInstance() }
 {
 	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pToolInstance);
 }
 
 HRESULT CMainTool::Initialize()
@@ -79,7 +82,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 3, 4))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 5, 5))))
 		return E_FAIL;
 
 	return S_OK;
@@ -88,25 +91,27 @@ HRESULT CMainTool::Ready_Prototype_Component()
 HRESULT CMainTool::Ready_Prototype_Object()
 {
 	/* For.Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), 
+		m_pToolInstance->m_pTerrain = CTerrain::Create(m_pDevice, m_pContext))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CTerrain"));
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-		TEXT("Prototype_GameObject_Terrain"), TEXT("GameObject_Terrain"))))
+		TEXT("Prototype_GameObject_Terrain"), TEXT("GameObject_Terrain"), nullptr, false)))
 	{
 		AfxMessageBox(TEXT("Failed Add GameObject CTerrain"));
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_Camera */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), CDynamicCamera::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), 
+		m_pToolInstance->m_pDynamicCamera = CDynamicCamera::Create(m_pDevice, m_pContext))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CCamera"));
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-		TEXT("Prototype_GameObject_Camera"), TEXT("GameObject_Camera"))))
+		TEXT("Prototype_GameObject_Camera"), TEXT("GameObject_Camera"), nullptr, false)))
 	{
 		AfxMessageBox(TEXT("Failed Add GameObject CCamera"));
 		return E_FAIL;
@@ -131,6 +136,8 @@ void CMainTool::Free()
 {
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pGameInstance);
+	Safe_Release(m_pToolInstance);
+	CToolInstance::DestroyInstance();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 	CGameInstance::Release_Engine();
