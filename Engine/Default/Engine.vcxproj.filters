@@ -141,6 +141,9 @@
     <ClInclude Include="..\Public\Engine_Enums.h">
       <Filter>99. Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h">
+      <Filter>01. Utility\03. Components\VIBuffer\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DInput_Manager.cpp">
       <Filter>00. System\02. DInput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
+      <Filter>01. Utility\03. Components\VIBuffer\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

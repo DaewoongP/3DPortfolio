@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "Tab1.h"
-#include "Tab2.h"
+#include "TerrainTab.h"
 // CMyForm 폼 보기
 class CMyForm : public CFormView
 {
@@ -31,8 +30,7 @@ public:
 	afx_msg void OnDestroy();
 private:
 	CTabCtrl	m_Tab;
-	CTab1*		m_pTab1;
-	CTab2*		m_pTab2;
+	CTerrainTab* m_pTerrainTab = { nullptr };
 };
 
 

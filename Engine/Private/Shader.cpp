@@ -89,7 +89,21 @@ HRESULT CShader::Set_WVPMatrix(_matrix mat)
 	m_pWVP = m_pEffect->GetVariableByName("g_WVPMatrix")->AsMatrix();
 	if (FAILED(m_pWVP->SetMatrix(reinterpret_cast<_float*>(&mat))))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CShader::Set_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
+{
+	ID3D11RasterizerState* pState = { nullptr };
+	m_pDevice->CreateRasterizerState(pRasterizer, &pState);
+	m_pContext->RSSetState(pState);
 	
+	m_test = m_pEffect->GetVariableByName("g_rasterizer")->AsRasterizer();
+	if (FAILED(m_test->SetRasterizerState(0, pState)))
+		return E_FAIL;
+
+	Safe_Release(pState);
 	return S_OK;
 }
 

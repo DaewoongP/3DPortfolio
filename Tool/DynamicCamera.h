@@ -22,7 +22,6 @@ public:
 public:
 	HRESULT		Add_Components();
 
-
 private:
 	void		Key_Input(const _double& dTimeDelta);
 	void		Mouse_Move(void);
@@ -41,6 +40,9 @@ private:
 	_bool		m_bFix = { 0 };
 	_bool		m_bClick = { 0 };
 	_float		m_fSpeed = { 0 };
+
+public:
+	_matrix		m_matCam;
 
 private:
 	CGameInstance*		m_pGameInstance = { nullptr };

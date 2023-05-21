@@ -9,8 +9,6 @@ IMPLEMENT_DYNCREATE(CMyForm, CFormView)
 
 CMyForm::CMyForm()
 	: CFormView(IDD_CMyForm)
-	, m_pTab1{ nullptr }
-	, m_pTab2{ nullptr }
 {
 
 }
@@ -59,18 +57,13 @@ void CMyForm::OnInitialUpdate()
 	
 	m_Tab.SetCurSel(0);
 	// 탭이름
-	m_Tab.InsertItem(0, L"test1");
+	m_Tab.InsertItem(0, L"Terrain");
 	m_Tab.InsertItem(1, L"test2");
 	// 탭 할당
-	m_pTab1 = new CTab1;
-	m_pTab1->Create(IDD_DIALOG1_TAB1, &m_Tab);
-	m_pTab1->MoveWindow(0, 20, rc.Width(), rc.Height());
-	m_pTab1->ShowWindow(true);
-
-	m_pTab2 = new CTab2;
-	m_pTab2->Create(IDD_DIALOG1_TAB2, &m_Tab);
-	m_pTab2->MoveWindow(0, 20, rc.Width(), rc.Height());
-	m_pTab2->ShowWindow(false);
+	m_pTerrainTab = new CTerrainTab;
+	m_pTerrainTab->Create(IDD_TAB_TERRAIN, &m_Tab);
+	m_pTerrainTab->MoveWindow(0, 20, rc.Width(), rc.Height());
+	m_pTerrainTab->ShowWindow(true);
 }
 
 void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
@@ -81,12 +74,11 @@ void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
 		switch (isel)
 		{
 		case 0:
-			m_pTab1->ShowWindow(true);
-			m_pTab2->ShowWindow(false);
+			m_pTerrainTab->ShowWindow(true);
+			//m_pTab2->ShowWindow(false);
 			break;
 		case 1:
-			m_pTab1->ShowWindow(false);
-			m_pTab2->ShowWindow(true);
+			m_pTerrainTab->ShowWindow(false);
 			break;
 		}
 	}
@@ -99,6 +91,5 @@ void CMyForm::OnDestroy()
 {
 	CFormView::OnDestroy();
 
-	Safe_Delete(m_pTab1);
-	Safe_Delete(m_pTab2);
+	Safe_Delete(m_pTerrainTab);
 }

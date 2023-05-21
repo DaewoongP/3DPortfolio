@@ -8,6 +8,7 @@ CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
 {
 	Safe_AddRef(m_pGameInstance);
+	ZeroMemory(m_szFPS, sizeof(TCHAR) * MAX_STR);
 }
 
 HRESULT CMainApp::Initialize()
@@ -48,6 +49,10 @@ void CMainApp::Tick(_double dTimeDelta)
 		return;
 	m_pGameInstance->Update_DInput();
 	m_pGameInstance->Tick_Engine(dTimeDelta);
+
+#ifdef _DEBUG
+	Render_FPS(dTimeDelta);
+#endif // _DEBUG
 }
 
 HRESULT CMainApp::Render()
@@ -90,6 +95,19 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelIndex)
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
 	return m_pGameInstance->Open_Level(static_cast<_uint>(LEVELID::LEVEL_LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
+}
+
+void CMainApp::Render_FPS(_double dTimeDelta)
+{
+	m_dFpsTime += dTimeDelta;
+	++m_iFps;
+	if (1.0 <= m_dFpsTime)
+	{
+		swprintf_s(m_szFPS, L"FPS: %d", m_iFps);
+		SetWindowText(g_hWnd, m_szFPS);
+		m_iFps = 0;
+		m_dFpsTime = 0.0;
+	}
 }
 
 CMainApp* CMainApp::Create()

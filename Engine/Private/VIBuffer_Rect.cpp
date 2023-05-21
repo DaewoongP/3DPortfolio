@@ -31,8 +31,8 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	m_BufferDesc.CPUAccessFlags = { 0 };
 	m_BufferDesc.MiscFlags = { 0 };
 
-	VTXPOSTEX* pVertices = new VTXPOSTEX[4];
-	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * 4);
+	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
 
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
 	pVertices[0].vTexCoord = _float2(0.f, 0.f);

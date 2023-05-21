@@ -72,12 +72,6 @@
     <ClInclude Include="MyForm.h">
       <Filter>00. Tools\02. View\MyForm</Filter>
     </ClInclude>
-    <ClInclude Include="Tab2.h">
-      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
-    </ClInclude>
-    <ClInclude Include="Tab1.h">
-      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
-    </ClInclude>
     <ClInclude Include="FileInfo.h">
       <Filter>00. Tools\04. FileInfo</Filter>
     </ClInclude>
@@ -87,7 +81,7 @@
     <ClInclude Include="MainTool.h">
       <Filter>01. Main\00. MainTool</Filter>
     </ClInclude>
-    <ClInclude Include="FrameManager.h">
+    <ClInclude Include="ToolInstance.h">
       <Filter>01. Main\02. ToolManager</Filter>
     </ClInclude>
     <ClInclude Include="DynamicCamera.h">
@@ -108,6 +102,9 @@
     <ClInclude Include="ToolView.h">
       <Filter>00. Tools\02. View</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainTab.h">
+      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -122,19 +119,13 @@
     <ClCompile Include="MyForm.cpp">
       <Filter>00. Tools\02. View\MyForm</Filter>
     </ClCompile>
-    <ClCompile Include="Tab1.cpp">
-      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
-    </ClCompile>
-    <ClCompile Include="Tab2.cpp">
-      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
-    </ClCompile>
     <ClCompile Include="FileInfo.cpp">
       <Filter>00. Tools\04. FileInfo</Filter>
     </ClCompile>
     <ClCompile Include="MainTool.cpp">
       <Filter>01. Main\00. MainTool</Filter>
     </ClCompile>
-    <ClCompile Include="FrameManager.cpp">
+    <ClCompile Include="ToolInstance.cpp">
       <Filter>01. Main\02. ToolManager</Filter>
     </ClCompile>
     <ClCompile Include="DynamicCamera.cpp">
@@ -148,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="ToolView.cpp">
       <Filter>00. Tools\02. View</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainTab.cpp">
+      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
