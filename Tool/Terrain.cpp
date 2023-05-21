@@ -46,7 +46,7 @@ HRESULT CTerrain::Render()
     FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
     
     m_pShaderCom->Begin(0);
-    m_pVIBufferCom->Render();
+    m_pTerrainCom->Render();
 
     return S_OK;
 }
@@ -64,8 +64,8 @@ HRESULT CTerrain::Add_Components()
         return E_FAIL;
 
     if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-        TEXT("Prototype_Component_VIBuffer_Rect"),
-        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+        TEXT("Prototype_Component_VIBuffer_Terrain"),
+        TEXT("Com_Terrain"), reinterpret_cast<CComponent**>(&m_pTerrainCom))))
         return E_FAIL;
 
     return S_OK;
@@ -106,6 +106,6 @@ void CTerrain::Free()
 {
     __super::Free();
     Safe_Release(m_pShaderCom);
-    Safe_Release(m_pVIBufferCom);
+    Safe_Release(m_pTerrainCom);
     Safe_Release(m_pRendererCom);
 }

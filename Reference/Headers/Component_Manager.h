@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Terrain.h"
 
 BEGIN(Engine)
 

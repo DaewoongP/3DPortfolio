@@ -5,7 +5,7 @@
 BEGIN(Engine)
 class CShader;
 class CRenderer;
-class CVIBuffer_Rect;
+class CVIBuffer_Terrain;
 END
 
 BEGIN(Tool)
@@ -27,7 +27,7 @@ public:
 private:
 	CShader*				m_pShaderCom = {nullptr};
 	CRenderer*				m_pRendererCom = { nullptr };
-	CVIBuffer_Rect*			m_pVIBufferCom = { nullptr };
+	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 
 private:
 	HRESULT		Add_Components();

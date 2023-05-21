@@ -30,34 +30,23 @@ struct PS_IN
 
 float4 PS_MAIN(PS_IN In) : SV_TARGET0
 {
-	float4 vColor = (float4) 0;
+    float4 vColor = float4(0.f, 1.f, 0.f, 1.f);
 
 	return vColor;
 }
 
+RasterizerState rsWireframe
+{
+	// CullMode Front, Back, None
+    CullMode = None;
+    FillMode = WireFrame;
+};
 
 technique11 DefaultTechnique
 {
-	pass BackGround
+	pass Terrain
 	{
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
-		HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
-		DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	pass UI
-	{
-		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
-		HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
-		DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
-		PixelShader = compile ps_5_0 PS_MAIN();
-	}
-
-	pass Effect
-	{
+        SetRasterizerState(rsWireframe);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
 		HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

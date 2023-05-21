@@ -49,7 +49,7 @@ void CMainTool::Render(void)
 
 	m_pView->Invalidate(false);
 
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_float4(0.5f, 0.5f, 0.5f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 	m_pRenderer->Draw_RenderGroup();
 	m_pGameInstance->Present();
@@ -75,6 +75,11 @@ HRESULT CMainTool::Ready_Prototype_Component()
 	/* Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Prototype_Component_VIBuffer_Terrain */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 3, 4))))
 		return E_FAIL;
 
 	return S_OK;

@@ -45,16 +45,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
-{
-	if( !CFrameWnd::PreCreateWindow(cs) )
-		return FALSE;
-	// TODO: CREATESTRUCT cs를 수정하여 여기에서
-	//  Window 클래스 또는 스타일을 수정합니다.
-
-	return TRUE;
-}
-
 // CMainFrame 진단
 
 #ifdef _DEBUG
@@ -82,8 +72,19 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	// CreateView: 분할 창에 표시할 view 창을 만드는 함수
 	//CreateView(배치할 행, 배치할 열, 배치할 view창을 새로 생성, 초기 크기, pContext)
 
-	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CToolView), CSize(g_iWinSizeX - 250, g_iWinSizeY), pContext);
-	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm), CSize(250, g_iWinSizeY), pContext);
+	m_MainSplitter.CreateView(0, 0, RUNTIME_CLASS(CToolView), CSize(g_iWinSizeX, g_iWinSizeY), pContext);
+	m_MainSplitter.CreateView(0, 1, RUNTIME_CLASS(CMyForm), CSize(600, g_iWinSizeY), pContext);
 	
+	return TRUE;
+}
+
+BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
+{
+	if (!CFrameWnd::PreCreateWindow(cs))
+		return FALSE;
+
+	cs.cx = g_iWinSizeX + 600;
+	cs.cy = g_iWinSizeY;
+
 	return TRUE;
 }
