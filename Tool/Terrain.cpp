@@ -118,6 +118,8 @@ HRESULT CTerrain::SetUp_ShaderResources()
     if (FAILED(m_pShaderCom->Set_Rasterizer(&rasterizer)))
         return E_FAIL;
 
+    m_pShaderCom->Set_Texture();
+
     return S_OK;
 }
 

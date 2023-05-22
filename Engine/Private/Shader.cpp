@@ -102,7 +102,7 @@ HRESULT CShader::Set_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 		return E_FAIL;
 
 	m_pContext->RSSetState(pState);
-	m_pRasterizer = m_pEffect->GetVariableByName("g_rasterizer")->AsRasterizer();
+	m_pRasterizer = m_pEffect->GetVariableByName("g_Rasterizer")->AsRasterizer();
 
 	if (FAILED(m_pRasterizer->SetRasterizerState(0, pState)))
 		return E_FAIL;
@@ -111,6 +111,47 @@ HRESULT CShader::Set_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 
 	return S_OK;
 }
+
+HRESULT CShader::Set_Texture()
+{
+	static const uint32_t s_pixel = 0xffc99aff;
+
+	D3D11_SUBRESOURCE_DATA initData = { &s_pixel, sizeof(uint32_t), 0 };
+
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = desc.Height = desc.MipLevels = desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	ID3D11Texture2D* tex;
+	// tex변수를 만들기위한 함수인데.
+	// 이 변수를 만드려면 D3D11_TEXTURE2D_DESC, D3D11_SUBRESOURCE_DATA 필요
+	m_pDevice->CreateTexture2D(&desc, &initData, &tex);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
+	SRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	SRVDesc.Texture2D.MipLevels = 1;
+
+	ID3D11ShaderResourceView* pSRV = { nullptr };
+
+	m_pDevice->CreateShaderResourceView(tex, &SRVDesc, &pSRV);
+
+	// 그 hlsl 변수 가져오기
+	m_pTexture = m_pEffect->GetVariableByName("g_Texture")->AsShaderResource();
+
+	// 텍스처 리소스세팅
+	m_pTexture->SetResource(pSRV);
+
+	Safe_Release(tex);
+	Safe_Release(pSRV);
+
+	return S_OK;
+}
+
+
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {

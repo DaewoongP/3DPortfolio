@@ -77,20 +77,16 @@ void CMyForm::OnInitialUpdate()
 	for (auto& pTab : m_vecTab)
 		pTab->MoveWindow(0, 20, rc.Width(), rc.Height());
 
-	m_vecTab[0]->ShowWindow(true);
+	m_vecTab[m_Tab.GetCurSel()]->ShowWindow(true);
 }
 
 void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	if (IDC_TAB_MAIN == pNMHDR->idFrom)
 	{
-		_uint iSel = m_Tab.GetCurSel();
 		for (auto& pTab : m_vecTab)
-		{
 			pTab->ShowWindow(false);
-		}
-		m_vecTab[iSel]->ShowWindow(true);
-
+		m_vecTab[m_Tab.GetCurSel()]->ShowWindow(true);
 	}
 	*pResult = 0;
 }

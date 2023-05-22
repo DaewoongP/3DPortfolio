@@ -1,6 +1,13 @@
 // matrix
-float4x4 g_WVPMatrix;
-RasterizerState g_rasterizer;
+float4x4		g_WVPMatrix;
+RasterizerState g_Rasterizer;
+
+Texture2D		g_Texture;
+
+sampler DefaultSampler = sampler_state
+{
+    texture = g_Texture;
+};
 
 struct VS_IN
 {
@@ -31,8 +38,9 @@ struct PS_IN
 
 float4 PS_MAIN(PS_IN In) : SV_TARGET0
 {
-    float4 vColor = float4(0.f, 1.f, 0.f, 1.f);
-
+    float4 vColor = (float4) 0;
+    vColor = g_Texture.Sample(DefaultSampler, In.vTexUV);
+	
 	return vColor;
 }
 
@@ -40,7 +48,7 @@ technique11 DefaultTechnique
 {
 	pass Terrain
 	{
-        SetRasterizerState(g_rasterizer);
+        SetRasterizerState(g_Rasterizer);
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
 		HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
