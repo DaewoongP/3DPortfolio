@@ -35,11 +35,15 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_BUTTON_WIREFRAME, m_WireFrameBtn);
 	m_WireFrameBtn.SetWindowTextW(TEXT("WireFrame"));
+
+	DDX_Control(pDX, IDC_EDIT_CAM_SPEED, m_CameraMoveSpeed);
+	m_CameraMoveSpeed.SetWindowTextW(_T("5"));
 }
 
 BEGIN_MESSAGE_MAP(CTerrainTab, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_TERRAIN_SIZE_APPLY, &CTerrainTab::OnBnClickedButtonTerrainSizeApply)
 	ON_BN_CLICKED(IDC_BUTTON_WIREFRAME, &CTerrainTab::OnBnClickedButtonWireframe)
+	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SPEED, &CTerrainTab::OnBnClickedButtonCameraSpeed)
 END_MESSAGE_MAP()
 
 
@@ -71,4 +75,17 @@ void CTerrainTab::OnBnClickedButtonWireframe()
 		m_WireFrameBtn.SetWindowTextW(TEXT("Solid"));
 
 	m_pToolInstance->m_pTerrain->Set_WireFrame(m_bIsWireFrame);
+}
+
+
+void CTerrainTab::OnBnClickedButtonCameraSpeed()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (nullptr == m_pToolInstance ||
+		nullptr == m_pToolInstance->m_pDynamicCamera)
+		return;
+	CString strCamSpeed;
+	m_CameraMoveSpeed.GetWindowTextW(strCamSpeed);
+	_float fSpeed = (_float)_ttof(strCamSpeed);
+	m_pToolInstance->m_pDynamicCamera->Set_CamSpeed(fSpeed);
 }

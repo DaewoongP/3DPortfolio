@@ -26,6 +26,8 @@ protected:
 public:
 	afx_msg void OnBnClickedButtonTerrainSizeApply();
 	afx_msg void OnBnClickedButtonWireframe();
+	afx_msg void OnBnClickedButtonCameraSpeed();
+
 private:
 	CToolInstance*	m_pToolInstance = { nullptr };
 	_bool			m_bIsWireFrame = { true };
@@ -34,4 +36,5 @@ private:
 	CEdit m_iTerrainSizeX;
 	CEdit m_iTerrainSizeZ;
 	CButton m_WireFrameBtn;
+	CEdit m_CameraMoveSpeed;
 };

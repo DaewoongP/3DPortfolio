@@ -15,6 +15,9 @@ private:
 	virtual ~CDynamicCamera() = default;
 
 public:
+	void Set_CamSpeed(_float fSpeed) { m_fSpeed = fSpeed; }
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
