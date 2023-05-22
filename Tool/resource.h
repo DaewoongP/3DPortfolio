@@ -9,6 +9,7 @@
 #define IDD_CMyForm                     311
 #define IDD_TAB_TERRAIN                 316
 #define IDD_TAB_MESH                    318
+#define IDD_TAB_CAMERA                  320
 #define IDC_TAB_MAIN                    1000
 #define IDC_EDIT_TERRAIN_SIZE_X         1001
 #define IDC_EDIT_TERRAIN_SIZE_Z         1002
@@ -23,7 +24,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        320
+#define _APS_NEXT_RESOURCE_VALUE        322
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           312

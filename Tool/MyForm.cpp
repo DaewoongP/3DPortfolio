@@ -54,39 +54,43 @@ void CMyForm::OnInitialUpdate()
 	CFormView::OnInitialUpdate();
 	CRect rc;
 	m_Tab.GetWindowRect(rc);
-	
 	m_Tab.SetCurSel(0);
+
 	// 탭이름
 	m_Tab.InsertItem(0, L"Terrain");
 	m_Tab.InsertItem(1, L"Mesh");
+	m_Tab.InsertItem(2, L"Camera");
+
 	// 탭 할당
 	m_pTerrainTab = new CTerrainTab;
 	m_pTerrainTab->Create(IDD_TAB_TERRAIN, &m_Tab);
-	m_pTerrainTab->MoveWindow(0, 20, rc.Width(), rc.Height());
-	m_pTerrainTab->ShowWindow(true);
+	m_vecTab.push_back(m_pTerrainTab);
 
 	m_pMeshTab = new CMeshTab;
 	m_pMeshTab->Create(IDD_TAB_MESH, &m_Tab);
-	m_pMeshTab->MoveWindow(0, 20, rc.Width(), rc.Height());
-	m_pMeshTab->ShowWindow(false);
+	m_vecTab.push_back(m_pMeshTab);
+
+	m_pCameraTab = new CCameraTab;
+	m_pCameraTab->Create(IDD_TAB_CAMERA, &m_Tab);
+	m_vecTab.push_back(m_pCameraTab);
+
+	for (auto& pTab : m_vecTab)
+		pTab->MoveWindow(0, 20, rc.Width(), rc.Height());
+
+	m_vecTab[0]->ShowWindow(true);
 }
 
 void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	if (IDC_TAB_MAIN == pNMHDR->idFrom)
 	{
-		_int isel = m_Tab.GetCurSel();
-		switch (isel)
+		_uint iSel = m_Tab.GetCurSel();
+		for (auto& pTab : m_vecTab)
 		{
-		case 0:
-			m_pTerrainTab->ShowWindow(true);
-			m_pMeshTab->ShowWindow(false);
-			break;
-		case 1:
-			m_pTerrainTab->ShowWindow(false);
-			m_pMeshTab->ShowWindow(true);
-			break;
+			pTab->ShowWindow(false);
 		}
+		m_vecTab[iSel]->ShowWindow(true);
+
 	}
 	*pResult = 0;
 }
@@ -96,6 +100,8 @@ void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
 void CMyForm::OnDestroy()
 {
 	CFormView::OnDestroy();
-	Safe_Delete(m_pMeshTab);
-	Safe_Delete(m_pTerrainTab);
+
+	for (auto& pTab : m_vecTab)
+		Safe_Delete(pTab);
+	m_vecTab.clear();
 }

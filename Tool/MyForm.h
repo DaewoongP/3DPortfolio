@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "TerrainTab.h"
 #include "MeshTab.h"
+#include "CameraTab.h"
 // CMyForm 폼 보기
 class CMyForm : public CFormView
 {
@@ -29,10 +30,14 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDestroy();
+
 private:
-	CTabCtrl		m_Tab;
-	CTerrainTab*	m_pTerrainTab = { nullptr };
-	CMeshTab*		m_pMeshTab = { nullptr };
+	CTabCtrl			m_Tab;
+	CTerrainTab*		m_pTerrainTab = { nullptr };
+	CMeshTab*			m_pMeshTab = { nullptr };
+	CCameraTab*			m_pCameraTab = { nullptr };
+
+	vector<CDialogEx*>	m_vecTab;
 };
 
 

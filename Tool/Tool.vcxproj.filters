@@ -58,6 +58,9 @@
     <Filter Include="01. Main\99. FileInfo">
       <UniqueIdentifier>{7763fd88-7246-446f-bda9-b3cd7ce9292e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Tools\02. View\MyForm\Tab\Camera">
+      <UniqueIdentifier>{d660fb40-b61a-44ff-b3fe-756eb15d3bdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -114,6 +117,9 @@
     <ClInclude Include="MeshTab.h">
       <Filter>00. Tools\02. View\MyForm\Tab\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="CameraTab.h">
+      <Filter>00. Tools\02. View\MyForm\Tab\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -154,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="MeshTab.cpp">
       <Filter>00. Tools\02. View\MyForm\Tab\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTab.cpp">
+      <Filter>00. Tools\02. View\MyForm\Tab\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
