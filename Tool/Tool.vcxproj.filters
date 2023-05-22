@@ -13,9 +13,6 @@
     <Filter Include="00. Tools\03. Document">
       <UniqueIdentifier>{ee984aa1-ce4e-4e45-84f6-368ee871ec05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. Tools\04. FileInfo">
-      <UniqueIdentifier>{7763fd88-7246-446f-bda9-b3cd7ce9292e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Tools\97. Resource">
       <UniqueIdentifier>{707c3f4b-8b15-460b-a521-a00a96be2b11}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,15 @@
     <Filter Include="98. ShaderFiles">
       <UniqueIdentifier>{55d85534-a0ec-4b34-b90f-450225e0277a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Tools\02. View\MyForm\Tab\Terrain">
+      <UniqueIdentifier>{62f9cd5c-518e-46bd-8856-499f5b512944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Tools\02. View\MyForm\Tab\Mesh">
+      <UniqueIdentifier>{96b5ead4-d787-4c12-beaa-a0740b8ff699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Main\99. FileInfo">
+      <UniqueIdentifier>{7763fd88-7246-446f-bda9-b3cd7ce9292e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -73,7 +79,7 @@
       <Filter>00. Tools\02. View\MyForm</Filter>
     </ClInclude>
     <ClInclude Include="FileInfo.h">
-      <Filter>00. Tools\04. FileInfo</Filter>
+      <Filter>01. Main\99. FileInfo</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>00. Tools\97. Resource</Filter>
@@ -103,7 +109,10 @@
       <Filter>00. Tools\02. View</Filter>
     </ClInclude>
     <ClInclude Include="TerrainTab.h">
-      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
+      <Filter>00. Tools\02. View\MyForm\Tab\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshTab.h">
+      <Filter>00. Tools\02. View\MyForm\Tab\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +129,7 @@
       <Filter>00. Tools\02. View\MyForm</Filter>
     </ClCompile>
     <ClCompile Include="FileInfo.cpp">
-      <Filter>00. Tools\04. FileInfo</Filter>
+      <Filter>01. Main\99. FileInfo</Filter>
     </ClCompile>
     <ClCompile Include="MainTool.cpp">
       <Filter>01. Main\00. MainTool</Filter>
@@ -141,7 +150,10 @@
       <Filter>00. Tools\02. View</Filter>
     </ClCompile>
     <ClCompile Include="TerrainTab.cpp">
-      <Filter>00. Tools\02. View\MyForm\Tab</Filter>
+      <Filter>00. Tools\02. View\MyForm\Tab\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshTab.cpp">
+      <Filter>00. Tools\02. View\MyForm\Tab\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

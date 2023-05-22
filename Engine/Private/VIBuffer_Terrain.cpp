@@ -15,9 +15,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 	m_iNumVertexBuffers = { 1 };
 	m_iStride = { sizeof(VTXPOSTEX) };
 	m_iNumVertices = { (iTerrainSizeX + 1) * (iTerrainSizeY + 1)};
-	m_iIndexStride = { sizeof(_ushort) };
+	m_iIndexStride = { sizeof(_uint) };
 	m_iNumIndices = { iTerrainSizeX * iTerrainSizeY * 6 };
-	m_eFormat = DXGI_FORMAT_R16_UINT;
+	m_eFormat = DXGI_FORMAT_R32_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	// VertexBuffer
@@ -63,8 +63,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 	m_BufferDesc.CPUAccessFlags = { 0 };
 	m_BufferDesc.MiscFlags = { 0 };
 
-	_ushort* pIndices = new _ushort[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumIndices);
+	_uint* pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
 	_uint iCurVertex = { 0 };
 	for (_uint iIndexY = 0; iIndexY < iTerrainSizeY; ++iIndexY)

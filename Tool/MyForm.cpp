@@ -58,12 +58,17 @@ void CMyForm::OnInitialUpdate()
 	m_Tab.SetCurSel(0);
 	// 탭이름
 	m_Tab.InsertItem(0, L"Terrain");
-	m_Tab.InsertItem(1, L"test2");
+	m_Tab.InsertItem(1, L"Mesh");
 	// 탭 할당
 	m_pTerrainTab = new CTerrainTab;
 	m_pTerrainTab->Create(IDD_TAB_TERRAIN, &m_Tab);
 	m_pTerrainTab->MoveWindow(0, 20, rc.Width(), rc.Height());
 	m_pTerrainTab->ShowWindow(true);
+
+	m_pMeshTab = new CMeshTab;
+	m_pMeshTab->Create(IDD_TAB_MESH, &m_Tab);
+	m_pMeshTab->MoveWindow(0, 20, rc.Width(), rc.Height());
+	m_pMeshTab->ShowWindow(false);
 }
 
 void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
@@ -75,10 +80,11 @@ void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
 		{
 		case 0:
 			m_pTerrainTab->ShowWindow(true);
-			//m_pTab2->ShowWindow(false);
+			m_pMeshTab->ShowWindow(false);
 			break;
 		case 1:
 			m_pTerrainTab->ShowWindow(false);
+			m_pMeshTab->ShowWindow(true);
 			break;
 		}
 	}
@@ -90,6 +96,6 @@ void CMyForm::OnSelchangeTabMain(NMHDR* pNMHDR, LRESULT* pResult)
 void CMyForm::OnDestroy()
 {
 	CFormView::OnDestroy();
-
+	Safe_Delete(m_pMeshTab);
 	Safe_Delete(m_pTerrainTab);
 }

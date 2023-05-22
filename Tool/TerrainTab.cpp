@@ -37,7 +37,7 @@ void CTerrainTab::DoDataExchange(CDataExchange* pDX)
 	m_WireFrameBtn.SetWindowTextW(TEXT("WireFrame"));
 
 	DDX_Control(pDX, IDC_EDIT_CAM_SPEED, m_CameraMoveSpeed);
-	m_CameraMoveSpeed.SetWindowTextW(_T("5"));
+	m_CameraMoveSpeed.SetWindowTextW(_T("5.0"));
 }
 
 BEGIN_MESSAGE_MAP(CTerrainTab, CDialogEx)

@@ -217,6 +217,7 @@
   <ItemGroup>
     <ClInclude Include="DynamicCamera.h" />
     <ClInclude Include="FileInfo.h" />
+    <ClInclude Include="MeshTab.h" />
     <ClInclude Include="ToolInstance.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -236,6 +237,7 @@
   <ItemGroup>
     <ClCompile Include="DynamicCamera.cpp" />
     <ClCompile Include="FileInfo.cpp" />
+    <ClCompile Include="MeshTab.cpp" />
     <ClCompile Include="ToolInstance.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MainTool.cpp" />
