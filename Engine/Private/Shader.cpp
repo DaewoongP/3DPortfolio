@@ -97,13 +97,18 @@ HRESULT CShader::Set_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 {
 	ID3D11RasterizerState* pState = { nullptr };
 	m_pDevice->CreateRasterizerState(pRasterizer, &pState);
+
+	if (nullptr == pState)
+		return E_FAIL;
+
 	m_pContext->RSSetState(pState);
-	
-	m_test = m_pEffect->GetVariableByName("g_rasterizer")->AsRasterizer();
-	if (FAILED(m_test->SetRasterizerState(0, pState)))
+	m_pRasterizer = m_pEffect->GetVariableByName("g_rasterizer")->AsRasterizer();
+
+	if (FAILED(m_pRasterizer->SetRasterizerState(0, pState)))
 		return E_FAIL;
 
 	Safe_Release(pState);
+
 	return S_OK;
 }
 
