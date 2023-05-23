@@ -37,11 +37,11 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 		HRESULT			hr = { 0 };
 
-		if (false == lstrcmp(szExt, TEXT(".dds")))
+		if (!lstrcmp(szExt, TEXT(".dds")))
 		{
 			hr = CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 		}
-		else if (false == lstrcmp(szExt, TEXT(".tga")))
+		else if (!lstrcmp(szExt, TEXT(".tga")))
 		{
 			MSG_BOX("Ext .tag not supported");
 			return E_FAIL;

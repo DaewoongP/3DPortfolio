@@ -9,6 +9,7 @@ class CVIBuffer_Line;
 END
 
 BEGIN(Tool)
+class CToolInstance;
 
 class CAxis final : public CGameObject
 {
@@ -29,6 +30,8 @@ private:
 	CRenderer*		m_pRendererCom = { nullptr };
 	CVIBuffer_Line* m_pLineCom = { nullptr };
 
+private:
+	CToolInstance*	m_pToolInstance = { nullptr };
 private:
 	HRESULT		Add_Components();
 	HRESULT		SetUp_ShaderResources();

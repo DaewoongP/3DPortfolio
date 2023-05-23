@@ -8,6 +8,11 @@ class ENGINE_DLL CVIBuffer_Line final : public CVIBuffer
 public:
 	struct Line_Desc
 	{
+		Line_Desc(_uint n, const _float3* p)
+		{
+			iNum = n;
+			pLines = p;
+		}
 		_uint iNum = { 0 };
 		const _float3* pLines = { nullptr };
 	};
@@ -21,7 +26,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	static CVIBuffer_Line* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iLineCnt, const _float3* pLocalPoints);
+	static CVIBuffer_Line* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

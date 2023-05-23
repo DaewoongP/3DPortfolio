@@ -5,9 +5,6 @@
 #include "GameInstance.h"
 #include "ToolInstance.h"
 
-#include "Terrain.h"
-#include "DynamicCamera.h"
-
 CMainTool::CMainTool()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
 	, m_pToolInstance{ CToolInstance::GetInstance() }
@@ -78,7 +75,12 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_Shader_Vtxtex */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Vtxtex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Test.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Texture.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_Nontex */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Nontex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_NonTex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Rect */
@@ -96,10 +98,10 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("Resources/ANA.png")))))
 		return E_FAIL;
 
-	/* Prototype_Component_VIBuffer_Terrain */
-	/*if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Line"),
+	/* Prototype_Component_VIBuffer_Line */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Line"),
 		CVIBuffer_Line::Create(m_pDevice, m_pContext))))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -132,7 +134,19 @@ HRESULT CMainTool::Ready_Prototype_Object()
 		AfxMessageBox(TEXT("Failed Add GameObject CCamera"));
 		return E_FAIL;
 	}
-
+	/* For.Prototype_GameObject_Axis */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Axis"),
+		m_pToolInstance->m_pAxis = CAxis::Create(m_pDevice, m_pContext))))
+	{
+		AfxMessageBox(TEXT("Failed Add Prototype CAxis"));
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+		TEXT("Prototype_GameObject_Axis"), TEXT("GameObject_Axis"), nullptr, false)))
+	{
+		AfxMessageBox(TEXT("Failed Add GameObject CAxis"));
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

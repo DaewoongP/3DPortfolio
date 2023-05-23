@@ -85,7 +85,7 @@ HRESULT CVIBuffer_Line::Initialize(void* pArg)
 	return S_OK;
 }
 
-CVIBuffer_Line* CVIBuffer_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iLineCnt, const _float3* pLocalPoints)
+CVIBuffer_Line* CVIBuffer_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CVIBuffer_Line* pInstance = new CVIBuffer_Line(pDevice, pContext);
 

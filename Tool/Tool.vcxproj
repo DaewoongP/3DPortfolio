@@ -270,7 +270,8 @@
     <Image Include="res\ToolDoc.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ShaderFiles\Shader_Test.hlsl" />
+    <FxCompile Include="ShaderFiles\Shader_NonTex.hlsl" />
+    <FxCompile Include="ShaderFiles\Shader_Texture.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

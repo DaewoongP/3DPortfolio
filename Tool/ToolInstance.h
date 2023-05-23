@@ -2,6 +2,7 @@
 #include "Base.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
+#include "Axis.h"
 
 class CToolView;
 class CMainFrame;
@@ -22,6 +23,7 @@ private:
 public:
 	CTerrain*			m_pTerrain = { nullptr };
 	CDynamicCamera*		m_pDynamicCamera = { nullptr };
+	CAxis*				m_pAxis = { nullptr };
 
 public:
 	CMainFrame*			m_pMainFrm = { nullptr };

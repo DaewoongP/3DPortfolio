@@ -196,7 +196,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ShaderFiles\Shader_Test.hlsl">
+    <FxCompile Include="ShaderFiles\Shader_Texture.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="ShaderFiles\Shader_NonTex.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
