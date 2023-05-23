@@ -1,3 +1,9 @@
+Texture2D g_Texture;
+
+sampler LinearSampler = sampler_state
+{
+    filter = MIN_MAG_MIP_LINEAR;
+};
 
 struct VS_IN
 {
@@ -16,7 +22,8 @@ VS_OUT VS_MAIN(VS_IN In)
 	VS_OUT Out = (VS_OUT) 0;
 
 	Out.vPosition = vector(In.vPosition, 1.f);
-
+    Out.vTexUV = In.vTexUV;
+	
 	return Out;
 }
 
@@ -29,6 +36,8 @@ struct PS_IN
 float4 PS_MAIN(PS_IN In) : SV_TARGET0
 {
 	float4 vColor = (float4) 0;
+	
+    vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
 
 	return vColor;
 }

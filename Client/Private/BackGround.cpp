@@ -67,11 +67,17 @@ HRESULT CBackGround::Add_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_LOGO), TEXT("Prototype_Component_Texture_Logo"),
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CBackGround::SetUp_ShaderResources()
 {
+	m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0);
 	return S_OK;
 }
 
@@ -102,6 +108,7 @@ CGameObject* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
 	__super::Free();
+	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);

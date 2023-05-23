@@ -24,7 +24,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 	m_iNumTextures = iNumTextures;
 
-	m_ppTextures = new ID3D11ShaderResourceView * [m_iNumTextures];
+	m_ppTextures = new ID3D11ShaderResourceView* [m_iNumTextures];
 
 	for (_uint i = 0; i < iNumTextures; ++i)
 	{
@@ -33,28 +33,29 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 		wsprintf(szTextureFilePath, pTextureFilePath, i);
 
 		_tchar			szExt[MAX_PATH] = TEXT("");
-
-		// ..\Á¤ÀÇÈÆ\135\Framework\Client\Bin\Resources\Textures\Test.png
-
 		_wsplitpath_s(szTextureFilePath, nullptr, 0, nullptr, 0, nullptr, 0, szExt, 256);
 
 		HRESULT			hr = { 0 };
 
 		if (false == lstrcmp(szExt, TEXT(".dds")))
 		{
-			hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+			hr = CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 		}
 		else if (false == lstrcmp(szExt, TEXT(".tga")))
 		{
-
+			MSG_BOX("Ext .tag not supported");
+			return E_FAIL;
 		}
 		else
 		{
-			hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+			hr = CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 		}
 
 		if (FAILED(hr))
+		{
+			MSG_BOX("Failed Create Texture");
 			return E_FAIL;
+		}
 
 		m_ppTextures[i] = pSRV;
 	}
@@ -109,11 +110,7 @@ void CTexture::Free()
 	__super::Free();
 
 	for (_uint i = 0; i < m_iNumTextures; ++i)
-	{
 		Safe_Release(m_ppTextures[i]);
-	}
-
-	Safe_Delete_Array(m_ppTextures);
-
-
+	
+	//Safe_Delete_Array(m_ppTextures);
 }

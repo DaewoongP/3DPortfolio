@@ -1,6 +1,7 @@
 #include "..\Public\Loader.h"
 #include "GameInstance.h"
 #include "BackGround.h"
+#include "Texture.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -67,7 +68,9 @@ HRESULT CLoader::Loading_For_Logo()
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
-
+	/* For.Prototype_GameObject_BackGround */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_LOGO), TEXT("Prototype_Component_Texture_Logo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 

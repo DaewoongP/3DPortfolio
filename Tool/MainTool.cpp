@@ -91,6 +91,11 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 5, 5))))
 		return E_FAIL;
 
+	/* Prototype_Component_Texture_Terrain */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("Resources/ANA.png")))))
+		return E_FAIL;
+
 	/* Prototype_Component_VIBuffer_Terrain */
 	/*if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Line"),
 		CVIBuffer_Line::Create(m_pDevice, m_pContext))))
@@ -127,6 +132,7 @@ HRESULT CMainTool::Ready_Prototype_Object()
 		AfxMessageBox(TEXT("Failed Add GameObject CCamera"));
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }

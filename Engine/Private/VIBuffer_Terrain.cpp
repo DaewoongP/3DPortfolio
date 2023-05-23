@@ -42,7 +42,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 			pVertices[iVertexX + ((iTerrainSizeX + 1) * iVertexY)].vTexCoord =
 				_float2(
 					(_float)iVertexX / iTerrainSizeX,
-					(_float)iVertexY / iTerrainSizeY);
+					(_float)(iTerrainSizeY - iVertexY) / iTerrainSizeY);
 		}
 	}
 

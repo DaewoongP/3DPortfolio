@@ -100,6 +100,11 @@ HRESULT CTerrain::Add_Components()
         TEXT("Com_Terrain"), reinterpret_cast<CComponent**>(&m_pTerrainCom))))
         return E_FAIL;
 
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+        TEXT("Prototype_Component_Texture_Terrain"),
+        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -116,6 +121,9 @@ HRESULT CTerrain::SetUp_ShaderResources()
         rasterizer.FillMode = D3D11_FILL_SOLID;
 
     if (FAILED(m_pShaderCom->Bind_Rasterizer(&rasterizer)))
+        return E_FAIL;
+
+    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
         return E_FAIL;
 
     return S_OK;
@@ -149,6 +157,7 @@ void CTerrain::Free()
 {
     __super::Free();
     Safe_Release(m_pToolInstance);
+    Safe_Release(m_pTextureCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pTerrainCom);
     Safe_Release(m_pRendererCom);
