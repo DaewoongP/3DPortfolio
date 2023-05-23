@@ -1,12 +1,11 @@
 // matrix
 float4x4		g_WVPMatrix;
 RasterizerState g_Rasterizer;
+texture2D g_Texture;
 
-Texture2D		g_Texture;
-
-sampler DefaultSampler = sampler_state
+sampler LinearSampler = sampler_state
 {
-    texture = g_Texture;
+    Filter = MIN_MAG_MIP_LINEAR;
 };
 
 struct VS_IN
@@ -39,7 +38,8 @@ struct PS_IN
 float4 PS_MAIN(PS_IN In) : SV_TARGET0
 {
     float4 vColor = (float4) 0;
-    vColor = g_Texture.Sample(DefaultSampler, In.vTexUV);
+    
+    vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
 	
 	return vColor;
 }

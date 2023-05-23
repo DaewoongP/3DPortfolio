@@ -61,6 +61,9 @@
     <Filter Include="00. Tools\02. View\MyForm\Tab\Camera">
       <UniqueIdentifier>{d660fb40-b61a-44ff-b3fe-756eb15d3bdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Main\01. Objects\Axis">
+      <UniqueIdentifier>{dd33aa4b-5d5d-452c-9ab2-d0b093fb1bc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="CameraTab.h">
       <Filter>00. Tools\02. View\MyForm\Tab\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Axis.h">
+      <Filter>01. Main\01. Objects\Axis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -163,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="CameraTab.cpp">
       <Filter>00. Tools\02. View\MyForm\Tab\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Axis.cpp">
+      <Filter>01. Main\01. Objects\Axis</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

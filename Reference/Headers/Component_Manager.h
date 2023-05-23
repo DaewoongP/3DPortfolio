@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_Line.h"
 
 BEGIN(Engine)
 

@@ -84,7 +84,43 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CShader::Set_WVPMatrix(_matrix mat)
+HRESULT CShader::Bind_ShaderResource(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	/* 해당하는 이름의 전역변수에 해당하는 컴객체를 얻어오낟. */
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable* pVariableShaderResource = pVariable->AsShaderResource();
+	if (nullptr == pVariableShaderResource)
+		return E_FAIL;
+
+	/* 해당 컴객체로 변수에 값을 던진다. */
+	return pVariableShaderResource->SetResource(pSRV);
+}
+
+HRESULT CShader::Bind_ShaderResources(const _char* pConstantName, ID3D11ShaderResourceView** ppSRVArray, _uint iNumTexture)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	/* 해당하는 이름의 전역변수에 해당하는 컴객체를 얻어오낟. */
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable* pVariableShaderResource = pVariable->AsShaderResource();
+	if (nullptr == pVariableShaderResource)
+		return E_FAIL;
+
+	/* 해당 컴객체로 변수에 값을 던진다. */
+	return pVariableShaderResource->SetResourceArray(ppSRVArray, 0, iNumTexture);
+}
+
+HRESULT CShader::Bind_WVPMatrix(_matrix mat)
 {
 	m_pWVP = m_pEffect->GetVariableByName("g_WVPMatrix")->AsMatrix();
 	if (FAILED(m_pWVP->SetMatrix(reinterpret_cast<_float*>(&mat))))
@@ -93,7 +129,7 @@ HRESULT CShader::Set_WVPMatrix(_matrix mat)
 	return S_OK;
 }
 
-HRESULT CShader::Set_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
+HRESULT CShader::Bind_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 {
 	ID3D11RasterizerState* pState = { nullptr };
 	m_pDevice->CreateRasterizerState(pRasterizer, &pState);
@@ -111,46 +147,6 @@ HRESULT CShader::Set_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 
 	return S_OK;
 }
-
-HRESULT CShader::Set_Texture()
-{
-	static const uint32_t s_pixel = 0xffc99aff;
-
-	D3D11_SUBRESOURCE_DATA initData = { &s_pixel, sizeof(uint32_t), 0 };
-
-	D3D11_TEXTURE2D_DESC desc = {};
-	desc.Width = desc.Height = desc.MipLevels = desc.ArraySize = 1;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.SampleDesc.Count = 1;
-	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-	ID3D11Texture2D* tex;
-	// tex변수를 만들기위한 함수인데.
-	// 이 변수를 만드려면 D3D11_TEXTURE2D_DESC, D3D11_SUBRESOURCE_DATA 필요
-	m_pDevice->CreateTexture2D(&desc, &initData, &tex);
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
-	SRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	SRVDesc.Texture2D.MipLevels = 1;
-
-	ID3D11ShaderResourceView* pSRV = { nullptr };
-
-	m_pDevice->CreateShaderResourceView(tex, &SRVDesc, &pSRV);
-
-	// 그 hlsl 변수 가져오기
-	m_pTexture = m_pEffect->GetVariableByName("g_Texture")->AsShaderResource();
-
-	// 텍스처 리소스세팅
-	m_pTexture->SetResource(pSRV);
-
-	Safe_Release(tex);
-	Safe_Release(pSRV);
-
-	return S_OK;
-}
-
 
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)

@@ -105,7 +105,7 @@ HRESULT CTerrain::Add_Components()
 
 HRESULT CTerrain::SetUp_ShaderResources()
 {
-    if (FAILED(m_pShaderCom->Set_WVPMatrix(m_pToolInstance->m_pDynamicCamera->m_matCam)))
+    if (FAILED(m_pShaderCom->Bind_WVPMatrix(m_pToolInstance->m_pDynamicCamera->m_matCam)))
         return E_FAIL;
     D3D11_RASTERIZER_DESC rasterizer;
     ZeroMemory(&rasterizer, sizeof rasterizer);
@@ -115,10 +115,8 @@ HRESULT CTerrain::SetUp_ShaderResources()
     else
         rasterizer.FillMode = D3D11_FILL_SOLID;
 
-    if (FAILED(m_pShaderCom->Set_Rasterizer(&rasterizer)))
+    if (FAILED(m_pShaderCom->Bind_Rasterizer(&rasterizer)))
         return E_FAIL;
-
-    m_pShaderCom->Set_Texture();
 
     return S_OK;
 }

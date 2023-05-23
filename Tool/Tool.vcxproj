@@ -215,6 +215,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Axis.h" />
     <ClInclude Include="CameraTab.h" />
     <ClInclude Include="DynamicCamera.h" />
     <ClInclude Include="FileInfo.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Tool_Macro.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Axis.cpp" />
     <ClCompile Include="CameraTab.cpp" />
     <ClCompile Include="DynamicCamera.cpp" />
     <ClCompile Include="FileInfo.cpp" />

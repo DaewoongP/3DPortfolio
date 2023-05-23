@@ -70,6 +70,12 @@
     <Filter Include="00. System\02. DInput">
       <UniqueIdentifier>{ac94b3ec-0079-46da-bdb9-95c2983571b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\VIBuffer\Line">
+      <UniqueIdentifier>{2e545b8c-0265-4238-8b60-bf0157395166}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Texture">
+      <UniqueIdentifier>{d15e9f88-a737-41f1-b81e-f791f7004158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -144,6 +150,12 @@
     <ClInclude Include="..\Public\VIBuffer_Terrain.h">
       <Filter>01. Utility\03. Components\VIBuffer\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Line.h">
+      <Filter>01. Utility\03. Components\VIBuffer\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>01. Utility\03. Components\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -202,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
       <Filter>01. Utility\03. Components\VIBuffer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Line.cpp">
+      <Filter>01. Utility\03. Components\VIBuffer\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>01. Utility\03. Components\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "..\Public\Level_Loading.h"
 #include "Loader.h"
 #include "Level_Logo.h"
+#include "GameInstance.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -40,8 +41,13 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 			break;
 		}
 		NULL_CHECK_MSG(pLevel, L"NULL Level");
-		
-		m_pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pLevel);
+
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pLevel);
+
+		Safe_Release(pGameInstance);
 		return;
 	}
 
