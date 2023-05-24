@@ -89,7 +89,6 @@ HRESULT CShader::Bind_ShaderResource(const _char* pConstantName, ID3D11ShaderRes
 	if (nullptr == m_pEffect)
 		return E_FAIL;
 
-	/* 해당하는 이름의 전역변수에 해당하는 컴객체를 얻어오낟. */
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
@@ -98,7 +97,6 @@ HRESULT CShader::Bind_ShaderResource(const _char* pConstantName, ID3D11ShaderRes
 	if (nullptr == pVariableShaderResource)
 		return E_FAIL;
 
-	/* 해당 컴객체로 변수에 값을 던진다. */
 	return pVariableShaderResource->SetResource(pSRV);
 }
 
@@ -107,7 +105,6 @@ HRESULT CShader::Bind_ShaderResources(const _char* pConstantName, ID3D11ShaderRe
 	if (nullptr == m_pEffect)
 		return E_FAIL;
 
-	/* 해당하는 이름의 전역변수에 해당하는 컴객체를 얻어오낟. */
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
@@ -116,7 +113,6 @@ HRESULT CShader::Bind_ShaderResources(const _char* pConstantName, ID3D11ShaderRe
 	if (nullptr == pVariableShaderResource)
 		return E_FAIL;
 
-	/* 해당 컴객체로 변수에 값을 던진다. */
 	return pVariableShaderResource->SetResourceArray(ppSRVArray, 0, iNumTexture);
 }
 

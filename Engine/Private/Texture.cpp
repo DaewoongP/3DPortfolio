@@ -111,6 +111,6 @@ void CTexture::Free()
 
 	for (_uint i = 0; i < m_iNumTextures; ++i)
 		Safe_Release(m_ppTextures[i]);
-	
-	//Safe_Delete_Array(m_ppTextures);
+	if (!m_bIsClone)
+		Safe_Delete_Array(m_ppTextures);
 }

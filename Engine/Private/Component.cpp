@@ -12,6 +12,7 @@ CComponent::CComponent(const CComponent& rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
 {
+	m_bIsClone = true;
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
