@@ -42,7 +42,7 @@ HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHICDESC::WINMODE eW
 
 	*ppDeviceOut = m_pDevice;
 	*ppDeviceContextOut = m_pDeviceContext;
-
+	
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pDeviceContext);
 

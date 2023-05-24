@@ -217,6 +217,7 @@
   <ItemGroup>
     <ClInclude Include="Axis.h" />
     <ClInclude Include="CameraTab.h" />
+    <ClInclude Include="DummyObject.h" />
     <ClInclude Include="DynamicCamera.h" />
     <ClInclude Include="FileInfo.h" />
     <ClInclude Include="MeshTab.h" />
@@ -239,6 +240,7 @@
   <ItemGroup>
     <ClCompile Include="Axis.cpp" />
     <ClCompile Include="CameraTab.cpp" />
+    <ClCompile Include="DummyObject.cpp" />
     <ClCompile Include="DynamicCamera.cpp" />
     <ClCompile Include="FileInfo.cpp" />
     <ClCompile Include="MeshTab.cpp" />
@@ -270,6 +272,7 @@
     <Image Include="res\ToolDoc.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="ShaderFiles\Shader_Cube.hlsl" />
     <FxCompile Include="ShaderFiles\Shader_NonTex.hlsl" />
     <FxCompile Include="ShaderFiles\Shader_Texture.hlsl" />
   </ItemGroup>

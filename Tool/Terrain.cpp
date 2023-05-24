@@ -58,27 +58,8 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
 {
-    CGameInstance* pGameInstance = CGameInstance::GetInstance();
-    Safe_AddRef(pGameInstance);
-
-    // Delete Terrain Component
-    if (FAILED(pGameInstance->Delete_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"))))
+    if (FAILED(m_pTerrainCom->RemakeTerrain(iSizeX, iSizeY)))
         return E_FAIL;
-    __super::Delete_Component(TEXT("Com_Terrain"));
-    Safe_Release(m_pTerrainCom);
-
-    // Remake terrain Component
-    /* Prototype_Component_VIBuffer_Terrain */
-    if (FAILED(pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"),
-        CVIBuffer_Terrain::Create(m_pDevice, m_pContext, iSizeX, iSizeY))))
-        return E_FAIL;
-
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-        TEXT("Prototype_Component_VIBuffer_Terrain"),
-        TEXT("Com_Terrain"), reinterpret_cast<CComponent**>(&m_pTerrainCom))))
-        return E_FAIL;
-
-    Safe_Release(pGameInstance);
 
     return S_OK;
 }

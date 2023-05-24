@@ -30,6 +30,9 @@ private:
 	void		Mouse_Move(void);
 	void		Fix_Mouse(void);
 
+public:
+	_vector		Picking();
+
 private:
 	_vector		m_vEye = { 0 };
 	_vector		m_vAt = { 0 };

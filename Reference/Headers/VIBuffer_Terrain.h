@@ -15,6 +15,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
+	HRESULT RemakeTerrain(_uint iTerrainSizeX, _uint iTerrainSizeY);
+
+public:
 	static CVIBuffer_Terrain* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, _uint iTerrainSizeX, _uint iTerrainSizeY);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;

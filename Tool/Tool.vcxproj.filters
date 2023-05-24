@@ -64,6 +64,9 @@
     <Filter Include="01. Main\01. Objects\Axis">
       <UniqueIdentifier>{dd33aa4b-5d5d-452c-9ab2-d0b093fb1bc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Main\01. Objects\Dummy">
+      <UniqueIdentifier>{4070c659-9119-4bab-ad1b-cb466a3d3ed0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -126,6 +129,9 @@
     <ClInclude Include="Axis.h">
       <Filter>01. Main\01. Objects\Axis</Filter>
     </ClInclude>
+    <ClInclude Include="DummyObject.h">
+      <Filter>01. Main\01. Objects\Dummy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -173,6 +179,9 @@
     <ClCompile Include="Axis.cpp">
       <Filter>01. Main\01. Objects\Axis</Filter>
     </ClCompile>
+    <ClCompile Include="DummyObject.cpp">
+      <Filter>01. Main\01. Objects\Dummy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Tool.ico">
@@ -200,6 +209,9 @@
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="ShaderFiles\Shader_NonTex.hlsl">
+      <Filter>98. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="ShaderFiles\Shader_Cube.hlsl">
       <Filter>98. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

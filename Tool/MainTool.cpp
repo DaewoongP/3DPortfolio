@@ -83,6 +83,11 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_NonTex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
+	/* Prototype_Component_Shader_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Cube"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Cube.hlsl"), VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
+		return E_FAIL;
+
 	/* Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
@@ -101,6 +106,11 @@ HRESULT CMainTool::Ready_Prototype_Component()
 	/* Prototype_Component_VIBuffer_Line */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Line"),
 		CVIBuffer_Line::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Prototype_Component_VIBuffer_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Cube"),
+		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -147,7 +157,19 @@ HRESULT CMainTool::Ready_Prototype_Object()
 		AfxMessageBox(TEXT("Failed Add GameObject CAxis"));
 		return E_FAIL;
 	}
-
+	/* For.Prototype_GameObject_DummyObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DummyObject"),
+		m_pToolInstance->m_pDummyObject = CDummyObject::Create(m_pDevice, m_pContext))))
+	{
+		AfxMessageBox(TEXT("Failed Add Prototype CDummyObject"));
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+		TEXT("Prototype_GameObject_DummyObject"), TEXT("GameObject_DummyObject"), nullptr, false)))
+	{
+		AfxMessageBox(TEXT("Failed Add GameObject CDummyObject"));
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

@@ -185,6 +185,40 @@ void CDynamicCamera::Fix_Mouse(void)
 	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 
+_vector CDynamicCamera::Picking()
+{
+	POINT	pt{};
+	GetCursorPos(&pt);
+	ScreenToClient(g_hViewWnd, &pt);
+
+	_vector		vMouse;
+	vMouse.m128_f32[0] = pt.x / (g_iWinSizeX * 0.5f) - 1.f;
+	vMouse.m128_f32[1] = pt.y / -(g_iWinSizeY * 0.5f) + 1.f;
+	vMouse.m128_f32[2] = 0.f;
+	vMouse.m128_f32[3] = 1.f;
+
+	_matrix		matProj;
+	matProj = XMMatrixInverse(nullptr, m_matProj);
+	vMouse = XMVector3TransformCoord(vMouse, matProj);
+
+	_matrix matView;
+	matView = XMMatrixInverse(nullptr, m_matView);
+	
+	_vector vRayPos, vRayDir;
+	vRayPos = { 0.f,0.f,0.f, 0.f};
+	vRayDir = vMouse - vRayPos;
+	vRayPos = XMVector3TransformCoord(vRayPos, matView);
+	vRayDir = XMVector3TransformNormal(vRayDir, matView);
+	
+	vRayDir.m128_f32[0] /= vRayDir.m128_f32[1];
+	vRayDir.m128_f32[1] /= vRayDir.m128_f32[1];	vRayDir.m128_f32[2] /= vRayDir.m128_f32[1];
+	vRayDir.m128_f32[3] = 0.f;
+
+	_vector vPos = vRayPos + vRayDir * (-vRayPos.m128_f32[1]);
+
+	return vPos;
+}
+
 CDynamicCamera* CDynamicCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CDynamicCamera* pInstance = new CDynamicCamera(pDevice, pContext);

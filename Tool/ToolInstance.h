@@ -3,6 +3,7 @@
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "Axis.h"
+#include "DummyObject.h"
 
 class CToolView;
 class CMainFrame;
@@ -24,6 +25,7 @@ public:
 	CTerrain*			m_pTerrain = { nullptr };
 	CDynamicCamera*		m_pDynamicCamera = { nullptr };
 	CAxis*				m_pAxis = { nullptr };
+	CDummyObject*		m_pDummyObject = { nullptr };
 
 public:
 	CMainFrame*			m_pMainFrm = { nullptr };

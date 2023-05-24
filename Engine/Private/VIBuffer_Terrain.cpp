@@ -96,6 +96,15 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CVIBuffer_Terrain::RemakeTerrain(_uint iTerrainSizeX, _uint iTerrainSizeY)
+{
+	Safe_Release(m_pVB);
+	Safe_Release(m_pIB);
+	if (FAILED(Initialize_Prototype(iTerrainSizeX, iTerrainSizeY)))
+		return E_FAIL;
+	return S_OK;
+}
+
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iTerrainSizeX, _uint iTerrainSizeY)
 {
 	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext);

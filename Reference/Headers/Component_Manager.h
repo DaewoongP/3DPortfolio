@@ -5,6 +5,7 @@
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Line.h"
+#include "VIBuffer_Cube.h"
 
 BEGIN(Engine)
 
