@@ -15,7 +15,7 @@ public:
 	_ulong Release();
 
 protected:
-	_ulong			m_dwRefCnt = { 0 };
+	_ulong			m_dwRefCnt = { 1 };
 
 public:
 	virtual void Free() PURE;
