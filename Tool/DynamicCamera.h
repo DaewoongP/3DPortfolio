@@ -1,10 +1,6 @@
 #pragma once
 #include "GameObject.h"
 
-BEGIN(Engine)
-class CGameInstance;
-END
-
 BEGIN(Tool)
 
 class CDynamicCamera final : public CGameObject
@@ -50,8 +46,6 @@ private:
 public:
 	_matrix		m_matCam;
 
-private:
-	CGameInstance*		m_pGameInstance = { nullptr };
 
 public:
 	static CDynamicCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -29,6 +29,7 @@ HRESULT CTerrain::Initialize(void* pArg)
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
     FAILED_CHECK_RETURN(Add_Components(), E_FAIL);
 
+    m_pToolInstance->m_pTerrain = this;
     return S_OK;
 }
 
@@ -66,22 +67,22 @@ HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
 
 HRESULT CTerrain::Add_Components()
 {
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_Shader_Vtxtex"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_VIBuffer_Terrain"),
         TEXT("Com_Terrain"), reinterpret_cast<CComponent**>(&m_pTerrainCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_Texture_Terrain"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;

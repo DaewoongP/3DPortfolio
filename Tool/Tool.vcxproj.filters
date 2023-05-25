@@ -67,6 +67,9 @@
     <Filter Include="01. Main\01. Objects\Dummy">
       <UniqueIdentifier>{4070c659-9119-4bab-ad1b-cb466a3d3ed0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Main\00. MainTool\Level">
+      <UniqueIdentifier>{08628d87-580d-4ff6-90fc-9cea170450f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -132,6 +135,9 @@
     <ClInclude Include="DummyObject.h">
       <Filter>01. Main\01. Objects\Dummy</Filter>
     </ClInclude>
+    <ClInclude Include="Level_Tool.h">
+      <Filter>01. Main\00. MainTool\Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -181,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="DummyObject.cpp">
       <Filter>01. Main\01. Objects\Dummy</Filter>
+    </ClCompile>
+    <ClCompile Include="Level_Tool.cpp">
+      <Filter>01. Main\00. MainTool\Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -132,7 +132,7 @@ BOOL CToolApp::InitInstance()
 	NULL_CHECK_RETURN_MSG(m_pMainTool, FALSE, L"Failed Create MainApp");
 
 	m_pGameInstance = CGameInstance::GetInstance();
-
+	Safe_AddRef(m_pGameInstance);
 	if (FAILED(m_pGameInstance->Add_Timer(TEXT("Timer_Default"))))
 		return FALSE;
 	if (FAILED(m_pGameInstance->Add_Timer(TEXT("Timer_60"))))
@@ -219,6 +219,6 @@ int CToolApp::ExitInstance()
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pMainTool);
-
+	CGameInstance::Release_Engine();
 	return CWinApp::ExitInstance();
 }

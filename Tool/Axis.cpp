@@ -59,12 +59,12 @@ HRESULT CAxis::Render()
 
 HRESULT CAxis::Add_Components()
 {
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_Shader_Nontex"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
@@ -78,7 +78,7 @@ HRESULT CAxis::Add_Components()
         _float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 1.f)
     };
 
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_VIBuffer_Line"),
         TEXT("Com_Line"), reinterpret_cast<CComponent**>(&m_pLineCom), &Engine::CVIBuffer_Line::Line_Desc(6, LinePoints))))
         return E_FAIL;

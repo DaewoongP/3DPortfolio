@@ -4,6 +4,7 @@
 #include "ToolView.h"
 #include "GameInstance.h"
 #include "ToolInstance.h"
+#include "Level_Tool.h"
 
 CMainTool::CMainTool()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -34,6 +35,9 @@ HRESULT CMainTool::Initialize()
 	
 	FAILED_CHECK_RETURN(Ready_Prototype_Component(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Prototype_Object(), E_FAIL);
+
+	FAILED_CHECK_RETURN(Open_Level_Tool(), E_FAIL);
+
 	FAILED_CHECK_RETURN(m_pGameInstance->Ready_DInput(AfxGetInstanceHandle(), g_hViewWnd), E_FAIL);
 	return S_OK;
 }
@@ -53,8 +57,6 @@ void CMainTool::Render(void)
 	if (nullptr == m_pGameInstance)
 		return;
 
-	m_pView->Invalidate(false);
-
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.5f, 0.5f, 0.5f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 	m_pRenderer->Draw_RenderGroup();
@@ -67,49 +69,54 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_Renderer */
 	if (FAILED(m_pGameInstance->Add_Prototype(
-		static_cast<_uint>(LEVELID::LEVEL_STATIC),
+		static_cast<_uint>(LEVELID::LEVEL_TOOL),
 		TEXT("Prototype_Component_Renderer"),
 		m_pRenderer = CRenderer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	Safe_AddRef(m_pRenderer);
 
+	/* Prototype_Component_Transform */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Transform"),
+		CTransform::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* Prototype_Component_Shader_Vtxtex */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Vtxtex"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Shader_Vtxtex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Texture.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_Nontex */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Nontex"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Shader_Nontex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_NonTex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_Cube */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Cube"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Shader_Cube"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Cube.hlsl"), VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Rect */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 5, 5))))
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Texture_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("Resources/ANA.png")))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Line */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Line"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_VIBuffer_Line"),
 		CVIBuffer_Line::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Cube */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Cube"),
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -119,58 +126,43 @@ HRESULT CMainTool::Ready_Prototype_Component()
 HRESULT CMainTool::Ready_Prototype_Object()
 {
 	/* For.Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), 
-		m_pToolInstance->m_pTerrain = CTerrain::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
+		CTerrain::Create(m_pDevice, m_pContext))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CTerrain"));
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-		TEXT("Prototype_GameObject_Terrain"), TEXT("GameObject_Terrain"), nullptr, false)))
-	{
-		AfxMessageBox(TEXT("Failed Add GameObject CTerrain"));
-		return E_FAIL;
-	}
+
 	/* For.Prototype_GameObject_Camera */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"), 
-		m_pToolInstance->m_pDynamicCamera = CDynamicCamera::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"),
+		CDynamicCamera::Create(m_pDevice, m_pContext))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CCamera"));
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-		TEXT("Prototype_GameObject_Camera"), TEXT("GameObject_Camera"), nullptr, false)))
-	{
-		AfxMessageBox(TEXT("Failed Add GameObject CCamera"));
-		return E_FAIL;
-	}
+
 	/* For.Prototype_GameObject_Axis */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Axis"),
-		m_pToolInstance->m_pAxis = CAxis::Create(m_pDevice, m_pContext))))
+		CAxis::Create(m_pDevice, m_pContext))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CAxis"));
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-		TEXT("Prototype_GameObject_Axis"), TEXT("GameObject_Axis"), nullptr, false)))
-	{
-		AfxMessageBox(TEXT("Failed Add GameObject CAxis"));
-		return E_FAIL;
-	}
 	/* For.Prototype_GameObject_DummyObject */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DummyObject"),
-		m_pToolInstance->m_pDummyObject = CDummyObject::Create(m_pDevice, m_pContext))))
+		CDummyObject::Create(m_pDevice, m_pContext))))
 	{
 		AfxMessageBox(TEXT("Failed Add Prototype CDummyObject"));
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_STATIC),
-		TEXT("Prototype_GameObject_DummyObject"), TEXT("GameObject_DummyObject"), nullptr, false)))
-	{
-		AfxMessageBox(TEXT("Failed Add GameObject CDummyObject"));
-		return E_FAIL;
-	}
 	return S_OK;
+}
+
+HRESULT CMainTool::Open_Level_Tool()
+{
+	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+
+	return m_pGameInstance->Open_Level(static_cast<_uint>(LEVELID::LEVEL_TOOL), CLevel_Tool::Create(m_pDevice, m_pContext));
 }
 
 void CMainTool::Render_FPS(_double dTimeDelta)
@@ -206,5 +198,5 @@ void CMainTool::Free()
 	CToolInstance::DestroyInstance();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
-	CGameInstance::Release_Engine();
+	
 }

@@ -4,6 +4,7 @@
 BEGIN(Engine)
 class CShader;
 class CRenderer;
+class CTransform;
 class CVIBuffer_Cube;
 END
 
@@ -31,6 +32,7 @@ private:
 private:
 	CShader*		m_pShaderCom = { nullptr };
 	CRenderer*		m_pRendererCom = { nullptr };
+	CTransform*		m_pTransformCom = { nullptr };
 	CVIBuffer_Cube* m_pCubeCom = { nullptr };
 
 private:

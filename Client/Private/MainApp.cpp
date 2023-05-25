@@ -77,6 +77,11 @@ HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 		return E_FAIL;
 	Safe_AddRef(m_pRenderer);
 
+	/* Prototype_Component_Transform */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Transform"),
+		CTransform::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* Prototype_Component_Shader_Vtxtex */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_Vtxtex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Vtxtex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))

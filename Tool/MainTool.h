@@ -30,6 +30,7 @@ public:
 private:
 	HRESULT Ready_Prototype_Component();
 	HRESULT	Ready_Prototype_Object();
+	HRESULT Open_Level_Tool();
 
 	void Render_FPS(_double dTimeDelta);
 

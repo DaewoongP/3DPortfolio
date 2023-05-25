@@ -7,10 +7,8 @@ CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 	, m_pToolInstance{ CToolInstance::GetInstance() }
 {
-	Safe_AddRef(m_pToolInstance);
-
-
 	m_matWorld = XMMatrixIdentity();
+	Safe_AddRef(m_pToolInstance);
 }
 
 CDummyObject::CDummyObject(const CDummyObject& rhs)
@@ -61,17 +59,22 @@ HRESULT CDummyObject::Render()
 
 HRESULT CDummyObject::Add_Components()
 {
-	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
 		TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
+		TEXT("Prototype_Component_Transform"),
+		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
 		TEXT("Prototype_Component_Shader_Cube"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC),
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
 		TEXT("Prototype_Component_VIBuffer_Cube"),
 		TEXT("Com_Cube"), reinterpret_cast<CComponent**>(&m_pCubeCom))))
 		return E_FAIL;
@@ -115,6 +118,7 @@ CGameObject* CDummyObject::Clone(void* pArg)
 void CDummyObject::Free()
 {
 	__super::Free();
+	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pCubeCom);

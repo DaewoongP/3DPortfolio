@@ -26,14 +26,14 @@ HRESULT CBackGround::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBackGround::Tick(_double TimeDelta)
+void CBackGround::Tick(_double dTimeDelta)
 {
-	__super::Tick(TimeDelta);
+	__super::Tick(dTimeDelta);
 }
 
-void CBackGround::Late_Tick(_double TimeDelta)
+void CBackGround::Late_Tick(_double dTimeDelta)
 {
-	__super::Late_Tick(TimeDelta);
+	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_PRIORITY, this);
@@ -55,6 +55,12 @@ HRESULT CBackGround::Add_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+		return E_FAIL;
+
+	/* For.Com_Transform */
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(7.0, XMConvertToRadians(90.0f));
+	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Transform"),
+		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
 		return E_FAIL;
 
 	/* For.Com_Shader */
@@ -109,6 +115,7 @@ CGameObject* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
 	__super::Free();
+	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pVIBufferCom);

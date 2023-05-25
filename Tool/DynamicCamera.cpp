@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "DynamicCamera.h"
 #include "GameInstance.h"
+#include "ToolInstance.h"
 
 CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CGameObject(pDevice, pContext)
+	: CGameObject(pDevice, pContext)
 	, m_bFix(true)
 	, m_bClick(false)
-	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
 	m_matView = XMMatrixIdentity();
 	m_matProj = XMMatrixIdentity();
@@ -14,7 +14,7 @@ CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 }
 
 CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
-	:CGameObject(rhs)
+	: CGameObject(rhs)
 	, m_vEye(rhs.m_vEye)
 	, m_vAt(rhs.m_vAt)
 	, m_vUp(rhs.m_vUp)
@@ -28,9 +28,7 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 	, m_bFix(rhs.m_bFix)
 	, m_bClick(rhs.m_bClick)
 	, m_matCam(rhs.m_matCam)
-	, m_pGameInstance(rhs.m_pGameInstance)
 {
-	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CDynamicCamera::Initialize_Prototype()
@@ -44,11 +42,15 @@ HRESULT CDynamicCamera::Initialize_Prototype()
 	m_fNear = 0.1f;
 	m_fFar = 1000.f;
 	m_fSpeed = 5.f;
+
+	
 	return S_OK;
 }
 
 HRESULT CDynamicCamera::Initialize(void* pArg)
 {
+	CToolInstance* pToolInstance = CToolInstance::GetInstance();
+	pToolInstance->m_pDynamicCamera = this;
 	return S_OK;
 }
 
@@ -78,7 +80,9 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 	_matrix		matCamWorld;
 	matCamWorld = XMMatrixInverse(nullptr, m_matView);
 
-	if (GetAsyncKeyState('W') & 0x8000)
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
 		_vector		vLook;
 		memcpy(&vLook, &matCamWorld.r[2], sizeof(_vector));
@@ -89,7 +93,7 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 		m_vAt += vLength;
 	}
 
-	if (GetAsyncKeyState('S') & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_S))
 	{
 		_vector		vLook;
 		memcpy(&vLook, &matCamWorld.r[2], sizeof(_vector));
@@ -100,7 +104,7 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 		m_vAt -= vLength;
 	}
 
-	if (GetAsyncKeyState('A') & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_A))
 	{
 		_vector		vRight;
 		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
@@ -111,7 +115,7 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 		m_vAt -= vLength;
 	}
 
-	if (GetAsyncKeyState('D') & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_D))
 	{
 		_vector		vRight;
 		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
@@ -122,7 +126,7 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 		m_vAt += vLength;
 	}
 
-	if (GetAsyncKeyState('Q') & 0x8000)
+	if (pGameInstance->Get_DIKeyState(DIK_Q))
 	{
 		if (m_bClick)
 			return;
@@ -139,6 +143,7 @@ void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 
 	if (false == m_bFix)
 		return;
+
 }
 
 void CDynamicCamera::Mouse_Move(void)
@@ -147,8 +152,10 @@ void CDynamicCamera::Mouse_Move(void)
 
 	_matrix		matCamWorld;
 	matCamWorld = XMMatrixInverse(nullptr, m_matView);
-	
-	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Y))
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_Y))
 	{
 		_vector	vRight;
 		memcpy(&vRight, &matCamWorld.r[0], sizeof(_vector));
@@ -162,7 +169,7 @@ void CDynamicCamera::Mouse_Move(void)
 		m_vAt = m_vEye + vLook;
 	}
 
-	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))
 	{
 		_vector	vUp;
 		memcpy(&vUp, &matCamWorld.r[1], sizeof(_vector));
@@ -210,11 +217,12 @@ _vector CDynamicCamera::Picking()
 	vRayPos = XMVector3TransformCoord(vRayPos, matView);
 	vRayDir = XMVector3TransformNormal(vRayDir, matView);
 	
-	vRayDir.m128_f32[0] /= vRayDir.m128_f32[1];
-	vRayDir.m128_f32[1] /= vRayDir.m128_f32[1];	vRayDir.m128_f32[2] /= vRayDir.m128_f32[1];
-	vRayDir.m128_f32[3] = 0.f;
-
-	_vector vPos = vRayPos + vRayDir * (-vRayPos.m128_f32[1]);
+	/*vRayDir.m128_f32[0] /= vRayDir.m128_f32[2];
+	vRayDir.m128_f32[1] /= vRayDir.m128_f32[2];	
+	vRayDir.m128_f32[2] /= vRayDir.m128_f32[2];
+	vRayDir.m128_f32[3] = 0.f;*/
+	_float fCamPosToPickingPosDistance = { 30.f };
+	_vector vPos = vRayPos + vRayDir * fCamPosToPickingPosDistance;
 
 	return vPos;
 }
@@ -246,5 +254,4 @@ CGameObject* CDynamicCamera::Clone(void* pArg)
 void CDynamicCamera::Free()
 {
 	__super::Free();
-	Safe_Release(m_pGameInstance);
 }

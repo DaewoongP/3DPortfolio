@@ -1,7 +1,9 @@
 #pragma once
 #include "Shader.h"
 #include "Renderer.h"
+#include "Transform.h"
 #include "Texture.h"
+#include "Camera.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Line.h"

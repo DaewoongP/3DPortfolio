@@ -79,6 +79,9 @@
     <Filter Include="01. Utility\03. Components\Transform">
       <UniqueIdentifier>{e43b9cb6-2b1b-4e78-bbf2-183b64d7a3af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\Camera">
+      <UniqueIdentifier>{a6cc86fd-9723-4b26-94db-31df9f608b0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -165,6 +168,9 @@
     <ClInclude Include="..\public\Transform.h">
       <Filter>01. Utility\03. Components\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera.h">
+      <Filter>01. Utility\03. Components\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Transform.cpp">
       <Filter>01. Utility\03. Components\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera.cpp">
+      <Filter>01. Utility\03. Components\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

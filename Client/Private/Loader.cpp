@@ -68,7 +68,7 @@ HRESULT CLoader::Loading_For_Logo()
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
-	/* For.Prototype_GameObject_BackGround */
+	/* For.Prototype_Component_Texture_Logo */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_LOGO), TEXT("Prototype_Component_Texture_Logo"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2)), E_FAIL);
 

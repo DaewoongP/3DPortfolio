@@ -4,11 +4,13 @@ CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 	, m_TransformDesc(0.0, 0.0)
 {
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 }
 
 CTransform::CTransform(const CTransform& rhs)
 	: CComponent(rhs)
 	, m_TransformDesc(rhs.m_TransformDesc)
+	, m_WorldMatrix(rhs.m_WorldMatrix)
 {
 }
 

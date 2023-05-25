@@ -220,6 +220,7 @@
     <ClInclude Include="DummyObject.h" />
     <ClInclude Include="DynamicCamera.h" />
     <ClInclude Include="FileInfo.h" />
+    <ClInclude Include="Level_Tool.h" />
     <ClInclude Include="MeshTab.h" />
     <ClInclude Include="ToolInstance.h" />
     <ClInclude Include="framework.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="DummyObject.cpp" />
     <ClCompile Include="DynamicCamera.cpp" />
     <ClCompile Include="FileInfo.cpp" />
+    <ClCompile Include="Level_Tool.cpp" />
     <ClCompile Include="MeshTab.cpp" />
     <ClCompile Include="ToolInstance.cpp" />
     <ClCompile Include="MainFrm.cpp" />
