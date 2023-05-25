@@ -76,6 +76,9 @@
     <Filter Include="01. Utility\03. Components\Texture">
       <UniqueIdentifier>{d15e9f88-a737-41f1-b81e-f791f7004158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\Transform">
+      <UniqueIdentifier>{e43b9cb6-2b1b-4e78-bbf2-183b64d7a3af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\public\VIBuffer_Cube.h">
       <Filter>01. Utility\03. Components\VIBuffer\Cube</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Transform.h">
+      <Filter>01. Utility\03. Components\Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -226,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Cube.cpp">
       <Filter>01. Utility\03. Components\VIBuffer\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Transform.cpp">
+      <Filter>01. Utility\03. Components\Transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
