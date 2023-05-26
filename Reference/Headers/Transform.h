@@ -28,7 +28,7 @@ public:
 		return XMLoadFloat4x4(&m_WorldMatrix).r[static_cast<_uint>(_eState)];
 	}
 	_float3 Get_Scale();
-	_float4x4 Get_WorldFloat4x4() const { return m_WorldMatrix;  }
+	const _float4x4* Get_WorldFloat4x4() const { return &m_WorldMatrix;  }
 	void Set_State(STATE _eState, _fvector _vState);
 	void Set_Scale(const _float3& vScale);
 

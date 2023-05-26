@@ -44,7 +44,7 @@ private:
 	_float		m_fSpeed = { 0 };
 
 public:
-	_matrix		m_matCam;
+	_float4x4	m_matCam;
 
 
 public:

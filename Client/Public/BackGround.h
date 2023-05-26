@@ -33,6 +33,13 @@ private:
 	CTransform*		m_pTransformCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+private:
+	_float			m_fX = { 0.f };
+	_float			m_fY = { 0.f };
+	_float			m_fSizeX = { 0.f };
+	_float			m_fSizeY = { 0.f };
+	_float4x4		m_ViewMatrix;
+	_float4x4		m_ProjMatrix;
 
 private:
 	HRESULT Add_Components();

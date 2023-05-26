@@ -10,7 +10,7 @@ CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 {
 	m_matView = XMMatrixIdentity();
 	m_matProj = XMMatrixIdentity();
-	m_matCam = XMMatrixIdentity();
+	XMStoreFloat4x4(&m_matCam, XMMatrixIdentity());
 }
 
 CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
@@ -67,7 +67,7 @@ void CDynamicCamera::Tick(_double dTimeDelta)
 	m_matView = XMMatrixLookAtLH(m_vEye, m_vAt, m_vUp);
 	m_matProj = XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar);
 
-	m_matCam = m_matView * m_matProj;
+	XMStoreFloat4x4(&m_matCam, m_matView * m_matProj);
 }
 
 HRESULT CDynamicCamera::Add_Components()

@@ -1,4 +1,5 @@
 Texture2D g_Texture;
+float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 sampler LinearSampler = sampler_state
 {
@@ -20,8 +21,11 @@ struct VS_OUT
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT Out = (VS_OUT) 0;
+	
+    float4x4 WVMatrix = mul(g_WorldMatrix, g_ViewMatrix);
+    float4x4 WVPMatrix = mul(WVMatrix, g_ProjMatrix);
 
-	Out.vPosition = vector(In.vPosition, 1.f);
+    Out.vPosition = mul(vector(In.vPosition, 1.f), WVPMatrix);
     Out.vTexUV = In.vTexUV;
 	
 	return Out;

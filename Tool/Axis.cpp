@@ -88,7 +88,7 @@ HRESULT CAxis::Add_Components()
 
 HRESULT CAxis::SetUp_ShaderResources()
 {
-    if (FAILED(m_pShaderCom->Bind_WVPMatrix(m_pToolInstance->m_pDynamicCamera->m_matCam)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WVPMatrix", &m_pToolInstance->m_pDynamicCamera->m_matCam)))
         return E_FAIL;
 
     return S_OK;

@@ -7,14 +7,12 @@ CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 	, m_pToolInstance{ CToolInstance::GetInstance() }
 {
-	m_matWorld = XMMatrixIdentity();
 	Safe_AddRef(m_pToolInstance);
 }
 
 CDummyObject::CDummyObject(const CDummyObject& rhs)
 	: CGameObject(rhs)
 	, m_pToolInstance(rhs.m_pToolInstance)
-	, m_matWorld(rhs.m_matWorld)
 {
 	Safe_AddRef(m_pToolInstance);
 }
@@ -85,9 +83,7 @@ HRESULT CDummyObject::Add_Components()
 HRESULT CDummyObject::SetUp_ShaderResources()
 {
 	_vector vPick = m_pToolInstance->m_pDynamicCamera->Picking();
-	memcpy(&m_matWorld.r[3], &vPick, sizeof _vector);
-	if (FAILED(m_pShaderCom->Bind_WVPMatrix(m_matWorld * m_pToolInstance->m_pDynamicCamera->m_matCam)))
-		return E_FAIL;
+
 	return S_OK;
 }
 

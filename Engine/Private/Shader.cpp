@@ -116,13 +116,20 @@ HRESULT CShader::Bind_ShaderResources(const _char* pConstantName, ID3D11ShaderRe
 	return pVariableShaderResource->SetResourceArray(ppSRVArray, 0, iNumTexture);
 }
 
-HRESULT CShader::Bind_WVPMatrix(_matrix mat)
+HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix)
 {
-	m_pWVP = m_pEffect->GetVariableByName("g_WVPMatrix")->AsMatrix();
-	if (FAILED(m_pWVP->SetMatrix(reinterpret_cast<_float*>(&mat))))
+	if (nullptr == m_pEffect)
 		return E_FAIL;
 
-	return S_OK;
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectMatrixVariable* pVariableMatrix = pVariable->AsMatrix();
+	if (nullptr == pVariableMatrix)
+		return E_FAIL;
+
+	return pVariableMatrix->SetMatrix((_float*)pMatrix);
 }
 
 HRESULT CShader::Bind_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)

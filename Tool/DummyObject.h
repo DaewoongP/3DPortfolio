@@ -38,9 +38,6 @@ private:
 private:
 	CToolInstance*	m_pToolInstance = { nullptr };
 
-private:
-	_matrix m_matWorld;
-
 public:
 	static CDummyObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
