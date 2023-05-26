@@ -8,6 +8,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Rect;
+class CComposite;
 END
 
 BEGIN(Client)

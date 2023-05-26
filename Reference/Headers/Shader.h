@@ -20,8 +20,8 @@ public:
 public:
 	HRESULT Bind_ShaderResource(const _char * pConstantName, ID3D11ShaderResourceView * pSRV);
 	HRESULT Bind_ShaderResources(const _char * pConstantName, ID3D11ShaderResourceView * *ppSRVArray, _uint iNumTexture);
-public:
 	HRESULT Bind_Matrix(const _char * pConstantName, const _float4x4 * pMatrix);
+
 	HRESULT	Bind_Rasterizer(const D3D11_RASTERIZER_DESC * pRasterizer);
 
 private:

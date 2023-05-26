@@ -8,7 +8,10 @@ CComposite::CComposite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CComposite::CComposite(const CComposite& rhs)
 	: CComponent(rhs)
+	, m_Components(rhs.m_Components)
 {
+	for (auto& Pair : m_Components)
+		Safe_AddRef(Pair.second);
 }
 
 void CComposite::Tick(_double dTimeDelta)
@@ -26,7 +29,7 @@ void CComposite::Late_Tick(_double dTimeDelta)
 HRESULT CComposite::Render()
 {
 	for (auto& Pair : m_Components)
-		FAILED_CHECK_RETURN(Pair.second->Render(), E_FAIL);
+		Pair.second->Render();
 	return S_OK;
 }
 

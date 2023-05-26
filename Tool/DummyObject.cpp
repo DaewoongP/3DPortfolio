@@ -46,11 +46,10 @@ void CDummyObject::Late_Tick(_double dTimeDelta)
 
 HRESULT CDummyObject::Render()
 {
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
 	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
 
 	m_pShaderCom->Begin(0);
-	m_pCubeCom->Render();
+	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
 
 	return S_OK;
 }
@@ -83,7 +82,14 @@ HRESULT CDummyObject::Add_Components()
 HRESULT CDummyObject::SetUp_ShaderResources()
 {
 	_vector vPick = m_pToolInstance->m_pDynamicCamera->Picking();
-
+	_float4x4 WorldMatrix;
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pToolInstance->m_pDynamicCamera->m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pToolInstance->m_pDynamicCamera->m_ProjMatrix)))
+		return E_FAIL;
 	return S_OK;
 }
 
