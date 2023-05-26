@@ -41,7 +41,7 @@ CComponent* CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar*
 
 	if (nullptr == pPrototype)
 	{
-		MSG_BOX("Failed Find Protorype");
+		MSG_BOX("Failed Find Prototype");
 		return nullptr;
 	}
 		
@@ -49,7 +49,7 @@ CComponent* CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar*
 	CComponent* pComponent = pPrototype->Clone(pArg);
 	if (nullptr == pComponent)
 	{
-		MSG_BOX("Failed Clone Protorype");
+		MSG_BOX("Failed Clone Prototype");
 		return nullptr;
 	}
 
@@ -63,7 +63,7 @@ void CComponent_Manager::Clear_LevelResources(_uint iLevelIndex)
 		MSG_BOX("Out of LevelIndex");
 		return;
 	}
-
+	
 	for (auto& Pair : m_pPrototypes[iLevelIndex])
 		Safe_Release(Pair.second);
 

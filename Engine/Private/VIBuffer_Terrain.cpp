@@ -31,7 +31,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 
 	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
-
+	
 	for (_uint iVertexY = 0; iVertexY < iTerrainSizeY + 1; ++iVertexY)
 	{
 		for (_uint iVertexX = 0; iVertexX < iTerrainSizeX + 1; ++iVertexX)

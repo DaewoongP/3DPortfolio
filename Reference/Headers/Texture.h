@@ -20,8 +20,8 @@ public:
 	HRESULT Bind_ShaderResources(class CShader* pShader, const _char * pContantName);
 
 private:
-	_uint							m_iNumTextures = { 0 };
-	ID3D11ShaderResourceView**		m_ppTextures = { nullptr };
+	_uint								m_iNumTextures = { 0 };
+	vector<ID3D11ShaderResourceView*>	m_Textures;
 
 public:
 	static CTexture* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pTextureFilePath, _uint iNumTextures = 1);

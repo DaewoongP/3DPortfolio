@@ -9,12 +9,12 @@ CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CTexture::CTexture(const CTexture& rhs)
 	: CComponent(rhs)
-	, m_ppTextures(rhs.m_ppTextures)
+	, m_Textures(rhs.m_Textures)
 	, m_iNumTextures(rhs.m_iNumTextures)
 {
-	for (_uint i = 0; i < m_iNumTextures; ++i)
+	for (auto& pTexture : m_Textures)
 	{
-		Safe_AddRef(m_ppTextures[i]);
+		Safe_AddRef(pTexture);
 	}
 }
 
@@ -24,7 +24,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 	m_iNumTextures = iNumTextures;
 
-	m_ppTextures = new ID3D11ShaderResourceView* [m_iNumTextures];
+	m_Textures.reserve(m_iNumTextures);
 
 	for (_uint i = 0; i < iNumTextures; ++i)
 	{
@@ -57,7 +57,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 			return E_FAIL;
 		}
 
-		m_ppTextures[i] = pSRV;
+		m_Textures.emplace_back(pSRV);
 	}
 	return S_OK;
 }
@@ -72,12 +72,12 @@ HRESULT CTexture::Bind_ShaderResource(CShader* pShader, const _char* pContantNam
 	if (iTextureIndex >= m_iNumTextures)
 		return E_FAIL;
 
-	return pShader->Bind_ShaderResource(pContantName, m_ppTextures[iTextureIndex]);
+	return pShader->Bind_ShaderResource(pContantName, m_Textures[iTextureIndex]);
 }
 
 HRESULT CTexture::Bind_ShaderResources(CShader* pShader, const _char* pContantName)
 {
-	return pShader->Bind_ShaderResources(pContantName, m_ppTextures, m_iNumTextures);
+	return pShader->Bind_ShaderResources(pContantName, m_Textures.data(), m_iNumTextures);
 }
 
 CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTextureFilePath, _uint iNumTextures)
@@ -109,8 +109,7 @@ void CTexture::Free()
 {
 	__super::Free();
 
-	for (_uint i = 0; i < m_iNumTextures; ++i)
-		Safe_Release(m_ppTextures[i]);
-	if (!m_bIsClone)
-		Safe_Delete_Array(m_ppTextures);
+	for (auto& pTexture : m_Textures)
+		Safe_Release(pTexture);
+	m_Textures.clear();
 }

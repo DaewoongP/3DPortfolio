@@ -47,6 +47,7 @@ void CMainApp::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
+
 	m_pGameInstance->Update_DInput();
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
