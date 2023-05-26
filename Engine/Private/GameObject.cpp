@@ -2,7 +2,8 @@
 #include "GameInstance.h"
 
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: m_pDevice(pDevice)
+	: CComposite(pDevice, pContext)
+	, m_pDevice(pDevice)
 	, m_pContext(pContext)
 {
 	Safe_AddRef(m_pDevice);
@@ -10,7 +11,8 @@ CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-	: m_pDevice(rhs.m_pDevice)
+	: CComposite(rhs)
+	, m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
 {
 	Safe_AddRef(m_pDevice);
@@ -27,63 +29,25 @@ HRESULT CGameObject::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CGameObject::Tick(_double TimeDelta)
+void CGameObject::Tick(_double dTimeDelta)
 {
+	__super::Tick(dTimeDelta);
 }
 
-void CGameObject::Late_Tick(_double TimeDelta)
+void CGameObject::Late_Tick(_double dTimeDelta)
 {
+	__super::Late_Tick(dTimeDelta);
 }
 
 HRESULT CGameObject::Render()
 {
+	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
 	return S_OK;
-}
-
-
-HRESULT CGameObject::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg)
-{
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	m_Components.emplace(pComponentTag, pComponent);
-
-	*ppOut = pComponent;
-
-	Safe_AddRef(pComponent);
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CGameObject::Delete_Component(const _tchar* pComponentTag)
-{
-	for (auto Pair = m_Components.begin(); Pair != m_Components.end();)
-	{
-		if (!lstrcmp(pComponentTag, Pair->first))
-		{
-			Safe_Release(Pair->second);
-			Pair = m_Components.erase(Pair);
-
-			return S_OK;
-		}
-		else
-			++Pair;
-	}
-
-	return E_FAIL;
 }
 
 void CGameObject::Free()
 {
-	for (auto& Pair : m_Components)
-		Safe_Release(Pair.second);
-	m_Components.clear();
+	__super::Free();
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
