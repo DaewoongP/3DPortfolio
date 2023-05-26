@@ -14,6 +14,9 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
+	virtual void Tick(_double dTimeDelta);
+	virtual void Late_Tick(_double dTimeDelta);
+	virtual HRESULT Render();
 
 protected:
 	ID3D11Device* m_pDevice = { nullptr };

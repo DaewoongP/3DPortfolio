@@ -1,7 +1,9 @@
 #pragma once
-#include "Component.h"
+#include "Composite.h"
 
-class ENGINE_DLL CCamera final : public CComponent
+BEGIN(Engine)
+
+class ENGINE_DLL CCamera final : public CComposite
 {
 public:
 	enum class PROJECTION { PROJ_FOV, PROJ_ASPECT, PROJ_NEAR, PROJ_FAR, PROJ_END };
@@ -32,9 +34,13 @@ private:
 
 	CAMERADESC			m_CameraDesc;
 
+private:
+	CComposite*			m_pComposite = { nullptr };
+
 public:
 	static CCamera* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 
+END

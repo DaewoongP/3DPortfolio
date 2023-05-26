@@ -37,14 +37,13 @@ private:
 	_float		m_fAspect = { 0 };
 	_float		m_fNear = { 0 };
 	_float		m_fFar = { 0 };
-	_matrix		m_matView;
-	_matrix		m_matProj;
 	_bool		m_bFix = { 0 };
 	_bool		m_bClick = { 0 };
 	_float		m_fSpeed = { 0 };
 
 public:
-	_float4x4	m_matCam;
+	_float4x4	m_ViewMatrix;
+	_float4x4	m_ProjMatrix;
 
 
 public:

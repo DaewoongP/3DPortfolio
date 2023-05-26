@@ -1,7 +1,7 @@
 #include "..\Public\Camera.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CComponent(pDevice, pContext)
+	: CComposite(pDevice, pContext)
 {
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjectionMatrix, XMMatrixIdentity());
@@ -9,11 +9,16 @@ CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCamera::CCamera(const CCamera& rhs)
-	: CComponent(rhs)
+	: CComposite(rhs)
 	, m_ViewMatrix(rhs.m_ViewMatrix)
 	, m_ProjectionMatrix(rhs.m_ProjectionMatrix)
 	, m_CameraDesc(rhs.m_CameraDesc)
 {
+}
+
+_vector CCamera::Get_ViewState()
+{
+	return _vector();
 }
 
 HRESULT CCamera::Initialize_Prototype()
@@ -26,6 +31,8 @@ HRESULT CCamera::Initialize(void* pArg)
 	if (nullptr != pArg)
 		memmove(&m_CameraDesc, pArg, sizeof m_CameraDesc);
 
+
+	
 	return S_OK;
 }
 

@@ -48,12 +48,11 @@ void CAxis::Late_Tick(_double TimeDelta)
 
 HRESULT CAxis::Render()
 {
-    FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
     FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
 
     m_pShaderCom->Begin(0);
-    m_pLineCom->Render();
 
+    FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
     return S_OK;
 }
 
@@ -88,7 +87,13 @@ HRESULT CAxis::Add_Components()
 
 HRESULT CAxis::SetUp_ShaderResources()
 {
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WVPMatrix", &m_pToolInstance->m_pDynamicCamera->m_matCam)))
+    _float4x4 WorldMatrix;
+    XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pToolInstance->m_pDynamicCamera->m_ViewMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pToolInstance->m_pDynamicCamera->m_ProjMatrix)))
         return E_FAIL;
 
     return S_OK;

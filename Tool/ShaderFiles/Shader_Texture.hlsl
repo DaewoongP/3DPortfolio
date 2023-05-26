@@ -1,5 +1,4 @@
-// matrix
-float4x4		g_WVPMatrix;
+float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 RasterizerState g_Rasterizer;
 texture2D g_Texture;
 
@@ -23,8 +22,10 @@ struct VS_OUT
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT Out = (VS_OUT) 0;
-    
-    Out.vPosition = mul(vector(In.vPosition, 1.f), g_WVPMatrix);
+	
+    float4x4 WVMatrix = mul(g_WorldMatrix, g_ViewMatrix);
+    float4x4 WVPMatrix = mul(WVMatrix, g_ProjMatrix);
+    Out.vPosition = mul(vector(In.vPosition, 1.f), WVPMatrix);
     Out.vTexUV = In.vTexUV;
 	
 	return Out;

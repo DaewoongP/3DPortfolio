@@ -60,13 +60,12 @@ void CBackGround::Late_Tick(_double dTimeDelta)
 }
 
 HRESULT CBackGround::Render()
-{
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+{	
 	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
 
 	m_pShaderCom->Begin(0);
-	m_pVIBufferCom->Render();
-
+	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+	
 	return S_OK;
 }
 

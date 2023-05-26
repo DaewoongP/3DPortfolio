@@ -27,6 +27,19 @@ HRESULT CComponent::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CComponent::Tick(_double dTimeDelta)
+{
+}
+
+void CComponent::Late_Tick(_double dTimeDelta)
+{
+}
+
+HRESULT CComponent::Render()
+{
+	return S_OK;
+}
+
 void CComponent::Free()
 {
 	Safe_Release(m_pDevice);

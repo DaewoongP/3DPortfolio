@@ -124,11 +124,11 @@ HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatri
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
 	if (nullptr == pVariable)
 		return E_FAIL;
-
+	
 	ID3DX11EffectMatrixVariable* pVariableMatrix = pVariable->AsMatrix();
 	if (nullptr == pVariableMatrix)
 		return E_FAIL;
-
+	
 	return pVariableMatrix->SetMatrix((_float*)pMatrix);
 }
 
@@ -150,7 +150,6 @@ HRESULT CShader::Bind_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 
 	return S_OK;
 }
-
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {

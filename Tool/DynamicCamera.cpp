@@ -8,9 +8,8 @@ CDynamicCamera::CDynamicCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	, m_bFix(true)
 	, m_bClick(false)
 {
-	m_matView = XMMatrixIdentity();
-	m_matProj = XMMatrixIdentity();
-	XMStoreFloat4x4(&m_matCam, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixIdentity());
 }
 
 CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
@@ -22,12 +21,11 @@ CDynamicCamera::CDynamicCamera(const CDynamicCamera& rhs)
 	, m_fAspect(rhs.m_fAspect)
 	, m_fNear(rhs.m_fNear)
 	, m_fFar(rhs.m_fFar)
-	, m_matView(rhs.m_matView)
-	, m_matProj(rhs.m_matProj)
 	, m_fSpeed(rhs.m_fSpeed)
 	, m_bFix(rhs.m_bFix)
 	, m_bClick(rhs.m_bClick)
-	, m_matCam(rhs.m_matCam)
+	, m_ViewMatrix(rhs.m_ViewMatrix)
+	, m_ProjMatrix(rhs.m_ProjMatrix)
 {
 }
 
@@ -63,11 +61,8 @@ void CDynamicCamera::Tick(_double dTimeDelta)
 		Fix_Mouse();
 		Mouse_Move();
 	}
-
-	m_matView = XMMatrixLookAtLH(m_vEye, m_vAt, m_vUp);
-	m_matProj = XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar);
-
-	XMStoreFloat4x4(&m_matCam, m_matView * m_matProj);
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtLH(m_vEye, m_vAt, m_vUp));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNear, m_fFar));
 }
 
 HRESULT CDynamicCamera::Add_Components()
@@ -78,7 +73,8 @@ HRESULT CDynamicCamera::Add_Components()
 void CDynamicCamera::Key_Input(const _double& dTimeDelta)
 {
 	_matrix		matCamWorld;
-	matCamWorld = XMMatrixInverse(nullptr, m_matView);
+	
+	matCamWorld = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix));
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -151,7 +147,7 @@ void CDynamicCamera::Mouse_Move(void)
 	_long		dwMouseMove = 0;
 
 	_matrix		matCamWorld;
-	matCamWorld = XMMatrixInverse(nullptr, m_matView);
+	matCamWorld = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix));
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -205,11 +201,11 @@ _vector CDynamicCamera::Picking()
 	vMouse.m128_f32[3] = 1.f;
 
 	_matrix		matProj;
-	matProj = XMMatrixInverse(nullptr, m_matProj);
+	matProj = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ProjMatrix));
 	vMouse = XMVector3TransformCoord(vMouse, matProj);
 
 	_matrix matView;
-	matView = XMMatrixInverse(nullptr, m_matView);
+	matView = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix));
 	
 	_vector vRayPos, vRayDir;
 	vRayPos = { 0.f,0.f,0.f, 0.f};
