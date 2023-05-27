@@ -1,20 +1,17 @@
 #pragma once
 #include "Composite.h"
-
+#include "Transform.h"
 BEGIN(Engine)
+class CPipeLine;
 
 class ENGINE_DLL CCamera final : public CComposite
 {
 public:
-	enum class PROJECTION { PROJ_FOV, PROJ_ASPECT, PROJ_NEAR, PROJ_FAR, PROJ_END };
-public:
 	typedef struct tagCameraDesc
 	{
-		_float4		vEye;
-		_float4		vFocus;
-		_float4		vUp;
-		_float4		vProjection;
-
+		_float4			vEye, vAt, vUp;
+		_float			fFovy, fAspect, fNear, fFar;
+		CTransform::TRANSFORMDESC		TransformDesc;
 	}CAMERADESC;
 private:
 	explicit CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -22,20 +19,21 @@ private:
 	virtual ~CCamera() = default;
 
 public:
-	_vector Get_ViewState();
-
-public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-private:
-	_float4x4			m_ViewMatrix;
-	_float4x4			m_ProjectionMatrix;
+public:
+	virtual void Tick(_double dTimeDelta) override;
 
-	CAMERADESC			m_CameraDesc;
+protected:
+	CTransform* m_pTransform = { nullptr };
 
-private:
-	CComposite*			m_pComposite = { nullptr };
+	CPipeLine* m_pPipeLine = { nullptr };
+	_float4						m_vEye, m_vAt, m_vUp;
+	_float						m_fFovy = { 0 };
+	_float						m_fAspect = { 0 };
+	_float						m_fNear = { 0 };
+	_float						m_fFar = { 0 };
 
 public:
 	static CCamera* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
