@@ -24,6 +24,8 @@ public:
 	// SwapChain's Present Function
 	HRESULT Present();
 
+	HRESULT Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight);
+
 private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pDeviceContext = { nullptr };

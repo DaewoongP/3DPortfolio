@@ -90,6 +90,13 @@ HRESULT CGameInstance::Present()
 	return m_pGraphic_Device->Present();
 }
 
+HRESULT CGameInstance::Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight)
+{
+	NULL_CHECK_RETURN(m_pGraphic_Device, E_FAIL);
+
+	return m_pGraphic_Device->Resize_Buffer(ResizeWidth, ResizeHeight);
+}
+
 HRESULT CGameInstance::Add_Timer(const _tchar* pTimerTag)
 {
 	NULL_CHECK_RETURN(m_pTimer_Manager, E_FAIL);

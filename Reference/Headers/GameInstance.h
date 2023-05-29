@@ -24,6 +24,8 @@ public:
 	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();
 
+	HRESULT Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight);
+
 public: /* For.Timer_Manager */
 	HRESULT		Add_Timer(const _tchar * pTimerTag);
 	void		Tick_Timer(const _tchar * pTimerTag);

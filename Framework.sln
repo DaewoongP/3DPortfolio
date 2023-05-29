@@ -10,9 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Default\Cl
 		{65540D77-83D0-40E7-940D-9DD18CC13F77} = {65540D77-83D0-40E7-940D-9DD18CC13F77}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tool", "Tool\Tool.vcxproj", "{2C30C542-E752-4678-9AFF-E12C1D107AF4}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example_win32_directx11", "Imgui\examples\example_win32_directx11\example_win32_directx11.vcxproj", "{9F316E83-5AE5-4939-A723-305A94F48005}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Imgui", "Imgui\Default\Imgui.vcxproj", "{9F316E83-5AE5-4939-A723-305A94F48005}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,14 +36,6 @@ Global
 		{3EDD0C68-ED0A-48BC-95AD-9C426AB91B31}.Release|x64.Build.0 = Release|x64
 		{3EDD0C68-ED0A-48BC-95AD-9C426AB91B31}.Release|x86.ActiveCfg = Release|Win32
 		{3EDD0C68-ED0A-48BC-95AD-9C426AB91B31}.Release|x86.Build.0 = Release|Win32
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Debug|x64.ActiveCfg = Debug|x64
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Debug|x64.Build.0 = Debug|x64
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Debug|x86.ActiveCfg = Debug|Win32
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Debug|x86.Build.0 = Debug|Win32
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Release|x64.ActiveCfg = Release|x64
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Release|x64.Build.0 = Release|x64
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Release|x86.ActiveCfg = Release|Win32
-		{2C30C542-E752-4678-9AFF-E12C1D107AF4}.Release|x86.Build.0 = Release|Win32
 		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x64.ActiveCfg = Debug|x64
 		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x64.Build.0 = Debug|x64
 		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x86.ActiveCfg = Debug|Win32

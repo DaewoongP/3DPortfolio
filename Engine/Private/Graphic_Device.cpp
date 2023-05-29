@@ -72,6 +72,21 @@ HRESULT CGraphic_Device::Present()
 	return m_pSwapChain->Present(0, 0);
 }
 
+HRESULT CGraphic_Device::Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight)
+{
+	Safe_Release(m_pBackBufferRTV);
+	Safe_Release(m_pDepthStencilView);
+
+	m_pSwapChain->ResizeBuffers(0, ResizeWidth, ResizeHeight, DXGI_FORMAT_UNKNOWN, 0);
+
+	Ready_BackBufferRenderTargetView();
+	Ready_DepthStencilRenderTargetView(ResizeWidth, ResizeHeight);
+	ResizeWidth = ResizeHeight = 0;
+
+	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+	return S_OK;
+}
+
 
 HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHICDESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY)
 {
