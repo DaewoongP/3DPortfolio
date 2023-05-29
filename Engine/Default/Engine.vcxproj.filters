@@ -85,9 +85,6 @@
     <Filter Include="01. Utility\03. Components\Composite">
       <UniqueIdentifier>{53c2db70-b423-4c28-b85b-6fb6e33bc6d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\04. PipeLine">
-      <UniqueIdentifier>{254f3c95-b436-4476-aa4c-4dc125fbff44}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -180,9 +177,6 @@
     <ClInclude Include="..\public\Composite.h">
       <Filter>01. Utility\03. Components\Composite</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\PipeLine.h">
-      <Filter>01. Utility\04. PipeLine</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -259,9 +253,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Composite.cpp">
       <Filter>01. Utility\03. Components\Composite</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\PipeLine.cpp">
-      <Filter>01. Utility\04. PipeLine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
