@@ -93,6 +93,25 @@ HRESULT CLoader::Loading_For_Logo()
 
 HRESULT CLoader::Loading_For_GamePlay()
 {
+	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+
+	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
+
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 100, 100))))
+		return E_FAIL;
+
+	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
+
+
+	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
+
+
+	lstrcpy(m_szLoading, TEXT("로딩 완료."));
+
+	m_isFinished = true;
 
 	return S_OK;
 }

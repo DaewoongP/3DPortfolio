@@ -17,7 +17,7 @@ CMainTool::CMainTool()
 }
 
 HRESULT CMainTool::Initialize()
-{	
+{
 	GRAPHICDESC		GraphicDesc;
 	ZeroMemory(&GraphicDesc, sizeof GraphicDesc);
 
@@ -131,10 +131,10 @@ HRESULT CMainTool::Ready_Prototype_Component()
 HRESULT CMainTool::Ready_Prototype_Object()
 {
 	/* For.Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
-		CTerrain::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DummyTerrain"),
+		CDummyTerrain::Create(m_pDevice, m_pContext))))
 	{
-		AfxMessageBox(TEXT("Failed Add Prototype CTerrain"));
+		AfxMessageBox(TEXT("Failed Add Prototype CDummyTerrain"));
 		return E_FAIL;
 	}
 

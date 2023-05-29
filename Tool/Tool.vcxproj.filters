@@ -43,9 +43,6 @@
     <Filter Include="01. Main\01. Objects\Terrain">
       <UniqueIdentifier>{170637d3-e50d-49ca-9819-7ca36fdb0ab5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Main\01. Objects\DynamicCamera">
-      <UniqueIdentifier>{9629db39-e6ba-4652-b87c-33a344486cdb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98. ShaderFiles">
       <UniqueIdentifier>{55d85534-a0ec-4b34-b90f-450225e0277a}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,9 @@
     </Filter>
     <Filter Include="01. Main\00. MainTool\Level">
       <UniqueIdentifier>{08628d87-580d-4ff6-90fc-9cea170450f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Main\01. Objects\FreeCam">
+      <UniqueIdentifier>{9629db39-e6ba-4652-b87c-33a344486cdb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,13 +103,10 @@
       <Filter>01. Main\02. ToolManager</Filter>
     </ClInclude>
     <ClInclude Include="Camera_Free.h">
-      <Filter>01. Main\01. Objects\DynamicCamera</Filter>
+      <Filter>01. Main\01. Objects\FreeCam</Filter>
     </ClInclude>
     <ClInclude Include="MainFrm.h">
       <Filter>00. Tools\01. MainFrm</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>01. Main\01. Objects\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Tool_Macro.h">
       <Filter>99. Headers</Filter>
@@ -138,6 +135,9 @@
     <ClInclude Include="Level_Tool.h">
       <Filter>01. Main\00. MainTool\Level</Filter>
     </ClInclude>
+    <ClInclude Include="DummyTerrain.h">
+      <Filter>01. Main\01. Objects\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -162,10 +162,7 @@
       <Filter>01. Main\02. ToolManager</Filter>
     </ClCompile>
     <ClCompile Include="Camera_Free.cpp">
-      <Filter>01. Main\01. Objects\DynamicCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>01. Main\01. Objects\Terrain</Filter>
+      <Filter>01. Main\01. Objects\FreeCam</Filter>
     </ClCompile>
     <ClCompile Include="MainFrm.cpp">
       <Filter>00. Tools\01. MainFrm</Filter>
@@ -190,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="Level_Tool.cpp">
       <Filter>01. Main\00. MainTool\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyTerrain.cpp">
+      <Filter>01. Main\01. Objects\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

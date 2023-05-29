@@ -1,6 +1,7 @@
 #include "..\Public\Level_Loading.h"
 #include "Loader.h"
 #include "Level_Logo.h"
+#include "Level_GamePlay.h"
 #include "GameInstance.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -37,7 +38,7 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 			pLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 			break;
 		case LEVELID::LEVEL_GAMEPLAY:
-			
+			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
 			break;
 		}
 		NULL_CHECK_MSG(pLevel, L"NULL Level");

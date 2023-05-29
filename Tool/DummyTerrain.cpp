@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "Terrain.h"
+#include "DummyTerrain.h"
 #include "GameInstance.h"
 #include "ToolInstance.h"
 
-CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummyTerrain::CDummyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
     , m_pToolInstance{ CToolInstance::GetInstance() }
 {
     Safe_AddRef(m_pToolInstance);
 }
 
-CTerrain::CTerrain(const CTerrain& rhs)
+CDummyTerrain::CDummyTerrain(const CDummyTerrain& rhs)
     : CGameObject(rhs)
     , m_pToolInstance(rhs.m_pToolInstance)
 {
     Safe_AddRef(m_pToolInstance);
 }
 
-HRESULT CTerrain::Initialize_Prototype()
+HRESULT CDummyTerrain::Initialize_Prototype()
 {
     FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
 
     return S_OK;
 }
 
-HRESULT CTerrain::Initialize(void* pArg)
+HRESULT CDummyTerrain::Initialize(void* pArg)
 {
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
     FAILED_CHECK_RETURN(Add_Components(), E_FAIL);
@@ -33,12 +33,12 @@ HRESULT CTerrain::Initialize(void* pArg)
     return S_OK;
 }
 
-void CTerrain::Tick(_double TimeDelta)
+void CDummyTerrain::Tick(_double TimeDelta)
 {
     __super::Tick(TimeDelta);
 }
 
-void CTerrain::Late_Tick(_double TimeDelta)
+void CDummyTerrain::Late_Tick(_double TimeDelta)
 {
     __super::Late_Tick(TimeDelta);
 
@@ -46,7 +46,7 @@ void CTerrain::Late_Tick(_double TimeDelta)
         m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_NONLIGHT, this);
 }
 
-HRESULT CTerrain::Render()
+HRESULT CDummyTerrain::Render()
 {
     FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
     
@@ -56,7 +56,7 @@ HRESULT CTerrain::Render()
     return S_OK;
 }
 
-HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
+HRESULT CDummyTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
 {
     if (FAILED(m_pTerrainCom->RemakeTerrain(iSizeX, iSizeY)))
         return E_FAIL;
@@ -64,7 +64,7 @@ HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
     return S_OK;
 }
 
-HRESULT CTerrain::Add_Components()
+HRESULT CDummyTerrain::Add_Components()
 {
     if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
         TEXT("Prototype_Component_Renderer"),
@@ -89,7 +89,7 @@ HRESULT CTerrain::Add_Components()
     return S_OK;
 }
 
-HRESULT CTerrain::SetUp_ShaderResources()
+HRESULT CDummyTerrain::SetUp_ShaderResources()
 {
     _float4x4 WorldMatrix;
     XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
@@ -119,9 +119,9 @@ HRESULT CTerrain::SetUp_ShaderResources()
     return S_OK;
 }
 
-CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummyTerrain* CDummyTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-    CTerrain* pInstance = new CTerrain(pDevice, pContext);
+    CDummyTerrain* pInstance = new CDummyTerrain(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
     {
@@ -131,9 +131,9 @@ CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     return pInstance;
 }
 
-CGameObject* CTerrain::Clone(void* pArg)
+CGameObject* CDummyTerrain::Clone(void* pArg)
 {
-    CTerrain* pInstance = new CTerrain(*this);
+    CDummyTerrain* pInstance = new CDummyTerrain(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
@@ -143,7 +143,7 @@ CGameObject* CTerrain::Clone(void* pArg)
     return pInstance;
 }
 
-void CTerrain::Free()
+void CDummyTerrain::Free()
 {
     __super::Free();
     Safe_Release(m_pToolInstance);

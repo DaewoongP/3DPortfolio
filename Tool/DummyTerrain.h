@@ -12,12 +12,12 @@ END
 BEGIN(Tool)
 class CToolInstance;
 
-class CTerrain final : public CGameObject
+class CDummyTerrain final : public CGameObject
 {
 private:
-	explicit CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CTerrain(const CTerrain& rhs);
-	virtual ~CTerrain() = default;
+	explicit CDummyTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CDummyTerrain(const CDummyTerrain& rhs);
+	virtual ~CDummyTerrain() = default;
 
 public:
 	void Set_WireFrame(_bool isWireFrame) { m_bIsWireFrame = isWireFrame; }
@@ -48,7 +48,7 @@ private:
 	HRESULT		SetUp_ShaderResources();
 
 public:
-	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDummyTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
