@@ -80,9 +80,9 @@ int main(int, char**)
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello, world!");
 
-            ImGui::Text("This is some useful text.");
+            ImGui::ShowDemoWindow();
             ImGui::End();
             pMainTool->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
             pMainTool->Render();

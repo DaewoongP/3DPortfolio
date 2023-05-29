@@ -156,6 +156,8 @@
     <ClCompile Include="..\private\ImWindow_Manager.cpp" />
     <ClCompile Include="..\private\Level_Tool.cpp" />
     <ClCompile Include="..\private\MainTool.cpp" />
+    <ClCompile Include="..\private\ToolInstance.cpp" />
+    <ClCompile Include="..\private\Window_Terrain.cpp" />
     <ClCompile Include="backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="backends\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui.cpp" />
@@ -170,7 +172,9 @@
     <ClInclude Include="..\public\ImWindow_Manager.h" />
     <ClInclude Include="..\public\Level_Tool.h" />
     <ClInclude Include="..\public\MainTool.h" />
+    <ClInclude Include="..\public\ToolInstance.h" />
     <ClInclude Include="..\Public\Tool_Defines.h" />
+    <ClInclude Include="..\public\Window_Terrain.h" />
     <ClInclude Include="backends\imgui_impl_dx11.h" />
     <ClInclude Include="backends\imgui_impl_win32.h" />
     <ClInclude Include="imconfig.h" />

@@ -28,14 +28,20 @@
     <ClCompile Include="..\private\MainTool.cpp">
       <Filter>00. MainTool</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\ImWindow_Manager.cpp">
-      <Filter>96. ImMgr</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\ImWindow.cpp">
       <Filter>01. ImWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Tool.cpp">
       <Filter>00. MainTool\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ImWindow_Manager.cpp">
+      <Filter>96. Managers\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Window_Terrain.cpp">
+      <Filter>01. ImWindow\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ToolInstance.cpp">
+      <Filter>96. Managers\Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,14 +75,20 @@
     <ClInclude Include="..\Public\Tool_Defines.h">
       <Filter>99. Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\ImWindow_Manager.h">
-      <Filter>96. ImMgr</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ImWindow.h">
       <Filter>01. ImWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Tool.h">
       <Filter>00. MainTool\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImWindow_Manager.h">
+      <Filter>96. Managers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Window_Terrain.h">
+      <Filter>01. ImWindow\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ToolInstance.h">
+      <Filter>96. Managers\Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,14 +104,23 @@
     <Filter Include="00. MainTool">
       <UniqueIdentifier>{42ad99fd-8c4b-4b28-a79e-31c2e28569b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. ImMgr">
-      <UniqueIdentifier>{98c9ec1a-b769-48fd-a5bd-f9f2c3e0c928}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. ImWindow">
       <UniqueIdentifier>{72201d44-662a-4e1f-ab38-1d603d822335}</UniqueIdentifier>
     </Filter>
     <Filter Include="00. MainTool\Level">
       <UniqueIdentifier>{ec25a9eb-dbfc-46ca-9b39-9b4c81b97b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Managers">
+      <UniqueIdentifier>{98c9ec1a-b769-48fd-a5bd-f9f2c3e0c928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Managers\Window">
+      <UniqueIdentifier>{2dc4ee36-4ef7-4b42-82b1-c91827dd8617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. Managers\Instance">
+      <UniqueIdentifier>{944fc16a-9e39-4c49-b59a-35d109be6631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Terrain">
+      <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -13,18 +13,17 @@ class CImWindow_Manager;
 class CImWindow abstract : public CBase
 {
 protected:
-    explicit CImWindow(ImGuiIO* pIO);
+    explicit CImWindow();
     virtual ~CImWindow() = default;
 
 public:
     _bool   m_IsShow;
 
 public:
-    virtual void Initialize(void* pArg);
+    virtual HRESULT Initialize(void* pArg) { return S_OK; };
     virtual void Tick(_double dTimeDelta) PURE;
 
 protected:
-    ImGuiIO*                m_pIO = { nullptr };
     CGameInstance*          m_pGameInstance = { nullptr };
     CImWindow_Manager*      m_pImWindow_Manager = { nullptr };
 

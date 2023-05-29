@@ -23,13 +23,12 @@ public:
     void Tick(_double dTimeDelta);
     void Render();
     HRESULT Add_Window(wstring tag, CImWindow* pWindow);
-
-private:
     CImWindow* Find_Window(wstring tag);
 
 private:
     ImGuiIO* m_pIO = { nullptr };
     unordered_map<const _tchar*, CImWindow*>    m_ImWindows;
+
 public:
     virtual void Free(void) override;
 };
