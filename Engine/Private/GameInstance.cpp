@@ -213,10 +213,10 @@ _matrix CGameInstance::Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eTransfo
 	return m_pPipeLine->Get_TransformMatrix(eTransformState);
 }
 
-_float4x4 CGameInstance::Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+_float4x4* CGameInstance::Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState)
 {
 	if (nullptr == m_pPipeLine)
-		return _float4x4();
+		return nullptr;
 
 	return m_pPipeLine->Get_TransformFloat4x4(eTransformState);
 }
@@ -229,10 +229,10 @@ _matrix CGameInstance::Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE 
 	return m_pPipeLine->Get_TransformMatrix_Inverse(eTransformState);
 }
 
-_float4x4 CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+_float4x4* CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState)
 {
 	if (nullptr == m_pPipeLine)
-		return _float4x4();
+		return nullptr;
 
 	return m_pPipeLine->Get_TransformFloat4x4_Inverse(eTransformState);
 }

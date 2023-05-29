@@ -1,9 +1,11 @@
 #pragma once
 #include "GameObject.h"
+#include "Client_Defines.h"
 
 BEGIN(Engine)
 class CRenderer;
 class CShader;
+class CTexture;
 class CVIBuffer_Terrain;
 class CTransform;
 END
@@ -26,12 +28,14 @@ public:
 
 private:
 	HRESULT Add_Component();
+	HRESULT SetUp_ShaderResources();
 
 private:
-	CRenderer* m_pRendererCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Terrain* m_pBufferCom = { nullptr };
-	CTransform* m_pTransformCOm = { nullptr };
+	CRenderer*			m_pRendererCom = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
+	CTexture*			m_pTextureCom = { nullptr };
+	CVIBuffer_Terrain*	m_pBufferCom = { nullptr };
+	CTransform*			m_pTransformCom = { nullptr };
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

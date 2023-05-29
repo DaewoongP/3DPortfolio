@@ -222,7 +222,7 @@
     <ClInclude Include="FileInfo.h" />
     <ClInclude Include="Level_Tool.h" />
     <ClInclude Include="MeshTab.h" />
-    <ClInclude Include="DummyTerrain.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="ToolInstance.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -246,7 +246,7 @@
     <ClCompile Include="FileInfo.cpp" />
     <ClCompile Include="Level_Tool.cpp" />
     <ClCompile Include="MeshTab.cpp" />
-    <ClCompile Include="DummyTerrain.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="ToolInstance.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MainTool.cpp" />

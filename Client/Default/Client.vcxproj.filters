@@ -37,6 +37,9 @@
     <Filter Include="02. GameObjects\Terrain">
       <UniqueIdentifier>{e1dfe010-7cfe-4b63-98ae-d83f3b4393db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\FreeCam">
+      <UniqueIdentifier>{8008fbe6-02b5-4a71-8dfb-57073fc91837}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -74,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02. GameObjects\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Free.h">
+      <Filter>02. GameObjects\FreeCam</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,10 +120,16 @@
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02. GameObjects\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Camera_Free.cpp">
+      <Filter>02. GameObjects\FreeCam</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Bin\ShaderFiles\Shader_Vtxtex.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
       <Filter>97. ShaderFiles</Filter>
-    </Text>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

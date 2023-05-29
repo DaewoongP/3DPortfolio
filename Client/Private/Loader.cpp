@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "BackGround.h"
 #include "Texture.h"
+#include "Terrain.h"
+#include "Camera_Free.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -79,7 +81,6 @@ HRESULT CLoader::Loading_For_Logo()
 
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
-
 	/* For.Prototype_GameObject_BackGround */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
 		CBackGround::Create(m_pDevice, m_pContext)), E_FAIL);
@@ -96,18 +97,26 @@ HRESULT CLoader::Loading_For_GamePlay()
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
-
+	/* For.Prototype_Component_Texture_Terrain */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 100, 100))))
-		return E_FAIL;
+	/*For.Prototype_Component_VIBuffer_Terrain*/
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 10, 10)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
+	/* For.Prototype_GameObject_Camera_Free */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
+		CCamera_Free::Create(m_pDevice, m_pContext)), E_FAIL);
 
+	/* For.Prototype_GameObject_Terrain */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
+		CTerrain::Create(m_pDevice, m_pContext)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 

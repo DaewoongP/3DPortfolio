@@ -1,6 +1,6 @@
 #pragma once
 #include "Base.h"
-#include "DummyTerrain.h"
+#include "Terrain.h"
 #include "Camera_Free.h"
 #include "Axis.h"
 #include "DummyObject.h"
@@ -22,7 +22,7 @@ private:
 	virtual ~CToolInstance() = default;
 
 public:
-	CDummyTerrain*			m_pTerrain = { nullptr };
+	CTerrain*			m_pTerrain = { nullptr };
 	CCamera_Free*		m_pFreeCam = { nullptr };
 	CAxis*				m_pAxis = { nullptr };
 	CDummyObject*		m_pDummyObject = { nullptr };

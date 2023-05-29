@@ -135,7 +135,7 @@
     <ClInclude Include="Level_Tool.h">
       <Filter>01. Main\00. MainTool\Level</Filter>
     </ClInclude>
-    <ClInclude Include="DummyTerrain.h">
+    <ClInclude Include="Terrain.h">
       <Filter>01. Main\01. Objects\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
@@ -188,7 +188,7 @@
     <ClCompile Include="Level_Tool.cpp">
       <Filter>01. Main\00. MainTool\Level</Filter>
     </ClCompile>
-    <ClCompile Include="DummyTerrain.cpp">
+    <ClCompile Include="Terrain.cpp">
       <Filter>01. Main\01. Objects\Terrain</Filter>
     </ClCompile>
   </ItemGroup>

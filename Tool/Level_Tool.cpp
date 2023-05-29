@@ -40,7 +40,7 @@ HRESULT CLevel_Tool::Ready_For_Layer_Terrain(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_TOOL),
 		TEXT("Prototype_GameObject_DummyTerrain"), TEXT("GameObject_DummyTerrain"))))
 	{
-		AfxMessageBox(TEXT("Failed Add GameObject CDummyTerrain"));
+		AfxMessageBox(TEXT("Failed Add GameObject CTerrain"));
 		return E_FAIL;
 	}
 	/* For.GameObject_Camera_Free */

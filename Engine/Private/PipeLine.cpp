@@ -12,9 +12,9 @@ _matrix CPipeLine::Get_TransformMatrix(D3DTRANSFORMSTATE eTransformState)
 	return XMLoadFloat4x4(&m_TransformMatrix[static_cast<_uint>(eTransformState)]);
 }
 
-_float4x4 CPipeLine::Get_TransformFloat4x4(D3DTRANSFORMSTATE eTransformState)
+_float4x4* CPipeLine::Get_TransformFloat4x4(D3DTRANSFORMSTATE eTransformState)
 {
-	return m_TransformMatrix[static_cast<_uint>(eTransformState)];
+	return &m_TransformMatrix[static_cast<_uint>(eTransformState)];
 }
 
 _matrix CPipeLine::Get_TransformMatrix_Inverse(D3DTRANSFORMSTATE eTransformState)
@@ -22,9 +22,9 @@ _matrix CPipeLine::Get_TransformMatrix_Inverse(D3DTRANSFORMSTATE eTransformState
 	return XMLoadFloat4x4(&m_TransformMatrix_Inverse[static_cast<_uint>(eTransformState)]);
 }
 
-_float4x4 CPipeLine::Get_TransformFloat4x4_Inverse(D3DTRANSFORMSTATE eTransformState)
+_float4x4* CPipeLine::Get_TransformFloat4x4_Inverse(D3DTRANSFORMSTATE eTransformState)
 {
-	return m_TransformMatrix_Inverse[static_cast<_uint>(eTransformState)];
+	return &m_TransformMatrix_Inverse[static_cast<_uint>(eTransformState)];
 }
 
 void CPipeLine::Tick()

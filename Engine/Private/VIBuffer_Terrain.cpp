@@ -13,7 +13,7 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs)
 HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerrainSizeY)
 {
 	m_iNumVertexBuffers = { 1 };
-	m_iStride = { sizeof(VTXPOSTEX) };
+	m_iStride = { sizeof(VTXPOSNORTEX) };
 	m_iNumVertices = { (iTerrainSizeX + 1) * (iTerrainSizeY + 1)};
 	m_iIndexStride = { sizeof(_uint) };
 	m_iNumIndices = { iTerrainSizeX * iTerrainSizeY * 6 };
@@ -29,8 +29,8 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 	m_BufferDesc.CPUAccessFlags = { 0 };
 	m_BufferDesc.MiscFlags = { 0 };
 
-	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices];
-	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+	VTXPOSNORTEX* pVertices = new VTXPOSNORTEX[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXPOSNORTEX) * m_iNumVertices);
 	
 	for (_uint iVertexY = 0; iVertexY < iTerrainSizeY + 1; ++iVertexY)
 	{
@@ -42,7 +42,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 			pVertices[iVertexX + ((iTerrainSizeX + 1) * iVertexY)].vTexCoord =
 				_float2(
 					(_float)iVertexX / iTerrainSizeX,
-					(_float)(iTerrainSizeY - iVertexY) / iTerrainSizeY);
+					(_float)iVertexY / iTerrainSizeY);
 		}
 	}
 
@@ -66,18 +66,28 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(_uint iTerrainSizeX, _uint iTerr
 	_uint* pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
-	_uint iCurVertex = { 0 };
-	for (_uint iIndexY = 0; iIndexY < iTerrainSizeY; ++iIndexY)
-	{
-		for (_uint iIndexX = 0; iIndexX < iTerrainSizeX; ++iIndexX)
-		{
-			pIndices[iCurVertex++] = ((iTerrainSizeX + 1) * iIndexY) + iIndexX;
-			pIndices[iCurVertex++] = ((iTerrainSizeX + 1) * (iIndexY + 1)) + iIndexX;
-			pIndices[iCurVertex++] = ((iTerrainSizeX + 1) * (iIndexY + 1)) + iIndexX + 1;
+	_uint		iNumIndices = { 0 };
 
-			pIndices[iCurVertex++] = ((iTerrainSizeX + 1) * iIndexY) + iIndexX;
-			pIndices[iCurVertex++] = ((iTerrainSizeX + 1) * (iIndexY + 1)) + iIndexX + 1;
-			pIndices[iCurVertex++] = ((iTerrainSizeX + 1) * iIndexY) + iIndexX + 1;
+	for (_uint i = 0; i < iTerrainSizeY; ++i)
+	{
+		for (_uint j = 0; j < iTerrainSizeX; j++)
+		{
+			_uint		iIndex = i * (iTerrainSizeX + 1) + j;
+
+			_uint		iIndices[4] = {
+				iIndex + iTerrainSizeX + 1,
+				iIndex + iTerrainSizeX + 2,
+				iIndex + 1,
+				iIndex
+			};
+
+			pIndices[iNumIndices++] = iIndices[0];
+			pIndices[iNumIndices++] = iIndices[1];
+			pIndices[iNumIndices++] = iIndices[2];
+
+			pIndices[iNumIndices++] = iIndices[0];
+			pIndices[iNumIndices++] = iIndices[2];
+			pIndices[iNumIndices++] = iIndices[3];
 		}
 	}
 

@@ -28,7 +28,7 @@ HRESULT CObject_Manager::Add_Prototype(const _tchar* pPrototypeTag, CGameObject*
 {
 	if (nullptr != Find_Prototype(pPrototypeTag))
 	{
-		MSG_BOX("Already have Protorype In CObject_Manager");
+		MSG_BOX("Already have Prototype In CObject_Manager");
 		return E_FAIL;
 	}
 

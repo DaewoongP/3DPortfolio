@@ -46,22 +46,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	/*CCamera_Free::CAMERAFREEDESC		CameraFreeDesc;
-
-	CameraFreeDesc.iData = { 0 };
-	CameraFreeDesc.CameraDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
-	CameraFreeDesc.CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	CameraFreeDesc.CameraDesc.vUp = _float4(0.f, 1.f, 0.f, 0.f);
-	CameraFreeDesc.CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	CameraFreeDesc.CameraDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	CameraFreeDesc.CameraDesc.fNear = 0.2f;
-	CameraFreeDesc.CameraDesc.fFar = 300.f;
-	CameraFreeDesc.CameraDesc.TransformDesc.SpeedPerSec = 10.f;
-	CameraFreeDesc.CameraDesc.TransformDesc.RotationPerSec = XMConvertToRadians(90.0f);
-
-
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Camera_Free"), pLayerTag, &CameraFreeDesc)))
-		return E_FAIL;*/
+	if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"), pLayerTag)))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 

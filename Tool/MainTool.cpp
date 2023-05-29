@@ -85,9 +85,9 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* Prototype_Component_Shader_Vtxtex */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Shader_Vtxtex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Texture.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+	/* Prototype_Component_Shader_VtxNorTex */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Shader_VtxNorTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Texture.hlsl"), VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_Nontex */
@@ -132,9 +132,9 @@ HRESULT CMainTool::Ready_Prototype_Object()
 {
 	/* For.Prototype_GameObject_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DummyTerrain"),
-		CDummyTerrain::Create(m_pDevice, m_pContext))))
+		CTerrain::Create(m_pDevice, m_pContext))))
 	{
-		AfxMessageBox(TEXT("Failed Add Prototype CDummyTerrain"));
+		AfxMessageBox(TEXT("Failed Add Prototype CTerrain"));
 		return E_FAIL;
 	}
 
