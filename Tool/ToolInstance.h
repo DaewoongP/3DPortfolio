@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Terrain.h"
-#include "DynamicCamera.h"
+#include "Camera_Free.h"
 #include "Axis.h"
 #include "DummyObject.h"
 
@@ -23,7 +23,7 @@ private:
 
 public:
 	CTerrain*			m_pTerrain = { nullptr };
-	CDynamicCamera*		m_pDynamicCamera = { nullptr };
+	CCamera_Free*		m_pFreeCam = { nullptr };
 	CAxis*				m_pAxis = { nullptr };
 	CDummyObject*		m_pDummyObject = { nullptr };
 

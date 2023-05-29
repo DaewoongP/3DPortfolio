@@ -6,6 +6,7 @@
 #include "TerrainTab.h"
 #include "afxdialogex.h"
 #include "ToolInstance.h"
+#include "Transform.h"
 
 // CTerrainTab 대화 상자
 
@@ -82,10 +83,10 @@ void CTerrainTab::OnBnClickedButtonCameraSpeed()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (nullptr == m_pToolInstance ||
-		nullptr == m_pToolInstance->m_pDynamicCamera)
+		nullptr == m_pToolInstance->m_pFreeCam)
 		return;
 	CString strCamSpeed;
 	m_CameraMoveSpeed.GetWindowTextW(strCamSpeed);
 	_float fSpeed = (_float)_ttof(strCamSpeed);
-	m_pToolInstance->m_pDynamicCamera->Set_CamSpeed(fSpeed);
+	m_pToolInstance->m_pFreeCam->Set_Speed(fSpeed);
 }

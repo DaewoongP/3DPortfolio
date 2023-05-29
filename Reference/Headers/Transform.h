@@ -10,6 +10,7 @@ public:
 public:
 	typedef struct tagTransformDesc
 	{
+		tagTransformDesc() = default;
 		tagTransformDesc(_double _SpeedPerSec, _double _RoationPerSec)
 			: dSpeedPerSec{ _SpeedPerSec }
 			, dRotationPerSec{ _RoationPerSec }
@@ -24,13 +25,19 @@ private:
 	virtual ~CTransform() = default;
 
 public:
-	_vector Get_State(STATE _eState) {
+	_vector Get_State(STATE _eState) 
+	{
 		return XMLoadFloat4x4(&m_WorldMatrix).r[static_cast<_uint>(_eState)];
 	}
 	_float3 Get_Scale();
 	const _float4x4* Get_WorldFloat4x4() const { return &m_WorldMatrix;  }
+	const _matrix Get_WorldMatrix_Inverse() const
+	{
+		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
+	}
 	void Set_State(STATE _eState, _fvector _vState);
 	void Set_Scale(const _float3& vScale);
+	void Set_Desc(TRANSFORMDESC TransformDesc) { m_TransformDesc = TransformDesc; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

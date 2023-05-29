@@ -34,12 +34,14 @@ HRESULT CDummyObject::Initialize(void* pArg)
 void CDummyObject::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+	
 }
 
 void CDummyObject::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
-
+	_vector vPick = m_pToolInstance->m_pFreeCam->Picking();
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vPick);
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_BLEND, this);
 }
@@ -60,10 +62,12 @@ HRESULT CDummyObject::Add_Components()
 		TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 		return E_FAIL;
-
+	CTransform::TRANSFORMDESC TransformDesc;
+	TransformDesc.dRotationPerSec = 3.f;
+	TransformDesc.dSpeedPerSec = 10.f;
 	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
 		TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
+		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_TOOL),
@@ -81,15 +85,15 @@ HRESULT CDummyObject::Add_Components()
 
 HRESULT CDummyObject::SetUp_ShaderResources()
 {
-	_vector vPick = m_pToolInstance->m_pDynamicCamera->Picking();
-	_float4x4 WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pToolInstance->m_pDynamicCamera->m_ViewMatrix)))
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pToolInstance->m_pDynamicCamera->m_ProjMatrix)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ))))
 		return E_FAIL;
+
 	return S_OK;
 }
 

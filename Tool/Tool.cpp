@@ -219,6 +219,6 @@ int CToolApp::ExitInstance()
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pMainTool);
-	CGameInstance::Release_Engine();
+	
 	return CWinApp::ExitInstance();
 }

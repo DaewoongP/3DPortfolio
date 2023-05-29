@@ -218,7 +218,7 @@
     <ClInclude Include="Axis.h" />
     <ClInclude Include="CameraTab.h" />
     <ClInclude Include="DummyObject.h" />
-    <ClInclude Include="DynamicCamera.h" />
+    <ClInclude Include="Camera_Free.h" />
     <ClInclude Include="FileInfo.h" />
     <ClInclude Include="Level_Tool.h" />
     <ClInclude Include="MeshTab.h" />
@@ -242,7 +242,7 @@
     <ClCompile Include="Axis.cpp" />
     <ClCompile Include="CameraTab.cpp" />
     <ClCompile Include="DummyObject.cpp" />
-    <ClCompile Include="DynamicCamera.cpp" />
+    <ClCompile Include="Camera_Free.cpp" />
     <ClCompile Include="FileInfo.cpp" />
     <ClCompile Include="Level_Tool.cpp" />
     <ClCompile Include="MeshTab.cpp" />

@@ -43,11 +43,11 @@ HRESULT CLevel_Tool::Ready_For_Layer_Terrain(const _tchar* pLayerTag)
 		AfxMessageBox(TEXT("Failed Add GameObject CTerrain"));
 		return E_FAIL;
 	}
-	/* For.GameObject_Camera */
+	/* For.GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_TOOL),
-		TEXT("Prototype_GameObject_Camera"), TEXT("GameObject_Camera"))))
+		TEXT("Prototype_GameObject_Camera_Free"), TEXT("GameObject_Camera_Free"))))
 	{
-		AfxMessageBox(TEXT("Failed Add GameObject CCamera"));
+		AfxMessageBox(TEXT("Failed Add GameObject CCamera_Free"));
 		return E_FAIL;
 	}
 	/* For.GameObject_Axis */

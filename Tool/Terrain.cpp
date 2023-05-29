@@ -95,9 +95,11 @@ HRESULT CTerrain::SetUp_ShaderResources()
     XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pToolInstance->m_pDynamicCamera->m_ViewMatrix)))
+    CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW))))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pToolInstance->m_pDynamicCamera->m_ProjMatrix)))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ))))
         return E_FAIL;
 
     D3D11_RASTERIZER_DESC rasterizer;

@@ -14,7 +14,9 @@ CGameInstance::CGameInstance()
 	, m_pTimer_Manager{ CTimer_Manager::GetInstance() }
 	, m_pComponent_Manager{ CComponent_Manager::GetInstance() }
 	, m_pDInput_Manager{ CDInput_Manager::GetInstance() }
+	, m_pPipeLine{ CPipeLine::GetInstance() }
 {
+	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pLevel_Manager);
 	Safe_AddRef(m_pObject_Manager);
@@ -47,13 +49,14 @@ HRESULT CGameInstance::Reserve_Engine(_uint iNumLevels)
 void CGameInstance::Tick_Engine(_double dTimeDelta)
 {
 	if (nullptr == m_pLevel_Manager ||
-		nullptr == m_pObject_Manager)
+		nullptr == m_pObject_Manager ||
+		nullptr == m_pPipeLine)
 		return;
 
-	m_pLevel_Manager->Tick(dTimeDelta);
-
 	m_pObject_Manager->Tick(dTimeDelta);
+	m_pPipeLine->Tick();
 	m_pObject_Manager->Late_Tick(dTimeDelta);
+	m_pLevel_Manager->Tick(dTimeDelta);
 }
 
 void CGameInstance::Clear_LevelResources(_uint iLevelIndex)
@@ -194,9 +197,50 @@ void	CGameInstance::Update_DInput(void)
 	return m_pDInput_Manager->Update_DInput();
 }
 
+void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix TransformStateMatrix)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	m_pPipeLine->Set_Transform(eTransformState, TransformStateMatrix);
+}
+
+_matrix CGameInstance::Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+{
+	if (nullptr == m_pPipeLine)
+		return _matrix();
+
+	return m_pPipeLine->Get_TransformMatrix(eTransformState);
+}
+
+_float4x4 CGameInstance::Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_TransformFloat4x4(eTransformState);
+}
+
+_matrix CGameInstance::Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+{
+	if (nullptr == m_pPipeLine)
+		return _matrix();
+
+	return m_pPipeLine->Get_TransformMatrix_Inverse(eTransformState);
+}
+
+_float4x4 CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_TransformFloat4x4_Inverse(eTransformState);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
+	CPipeLine::GetInstance()->DestroyInstance();
 	CObject_Manager::GetInstance()->DestroyInstance();
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CLevel_Manager::GetInstance()->DestroyInstance();
@@ -207,6 +251,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pDInput_Manager);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pTimer_Manager);

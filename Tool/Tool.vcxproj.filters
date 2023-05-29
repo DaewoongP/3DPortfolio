@@ -102,7 +102,7 @@
     <ClInclude Include="ToolInstance.h">
       <Filter>01. Main\02. ToolManager</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicCamera.h">
+    <ClInclude Include="Camera_Free.h">
       <Filter>01. Main\01. Objects\DynamicCamera</Filter>
     </ClInclude>
     <ClInclude Include="MainFrm.h">
@@ -161,7 +161,7 @@
     <ClCompile Include="ToolInstance.cpp">
       <Filter>01. Main\02. ToolManager</Filter>
     </ClCompile>
-    <ClCompile Include="DynamicCamera.cpp">
+    <ClCompile Include="Camera_Free.cpp">
       <Filter>01. Main\01. Objects\DynamicCamera</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp">

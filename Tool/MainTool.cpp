@@ -80,6 +80,11 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CTransform::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* Prototype_Component_Camera */
+	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Camera"),
+		CCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* Prototype_Component_Shader_Vtxtex */
 	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_TOOL), TEXT("Prototype_Component_Shader_Vtxtex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("ShaderFiles/Shader_Texture.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
@@ -133,11 +138,11 @@ HRESULT CMainTool::Ready_Prototype_Object()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_Camera */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera"),
-		CDynamicCamera::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_Camera_Free */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
+		CCamera_Free::Create(m_pDevice, m_pContext))))
 	{
-		AfxMessageBox(TEXT("Failed Add Prototype CCamera"));
+		AfxMessageBox(TEXT("Failed Add Prototype CCamera_Free"));
 		return E_FAIL;
 	}
 
@@ -198,5 +203,5 @@ void CMainTool::Free()
 	CToolInstance::DestroyInstance();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
-	
+	CGameInstance::Release_Engine();
 }

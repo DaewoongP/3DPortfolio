@@ -1,5 +1,6 @@
 #pragma once
 #include "Component_Manager.h"
+#include "PipeLine.h"
 
 BEGIN(Engine)
 
@@ -47,6 +48,13 @@ public: /* For.DInput_Manager*/
 	HRESULT		Ready_DInput(HINSTANCE hInst, HWND hWnd);
 	void		Update_DInput(void);
 
+public: /* For.PipeLine*/
+	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix TransformStateMatrix);
+	_matrix Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState);
+	_float4x4 Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState);
+	_matrix Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);
+	_float4x4 Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -55,6 +63,8 @@ private:
 	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
 	class CDInput_Manager*			m_pDInput_Manager = { nullptr };
+	class CPipeLine*				m_pPipeLine = { nullptr };
+
 public:
 	static void Release_Engine();
 	virtual void Free() override;

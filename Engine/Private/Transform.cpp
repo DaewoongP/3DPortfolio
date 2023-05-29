@@ -132,6 +132,8 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)
 	_vector vPosition = Get_State(STATE::STATE_POSITION);
 
 	vPosition += vDir * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
+
+	Set_State(STATE::STATE_POSITION, vPosition);
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

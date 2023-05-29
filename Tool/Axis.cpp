@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "VIBuffer_Line.h"
 #include "ToolInstance.h"
+#include "GameInstance.h"
 
 CAxis::CAxis(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CGameObject(pDevice, pContext)
@@ -91,11 +92,13 @@ HRESULT CAxis::SetUp_ShaderResources()
     XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pToolInstance->m_pDynamicCamera->m_ViewMatrix)))
-        return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pToolInstance->m_pDynamicCamera->m_ProjMatrix)))
-        return E_FAIL;
 
+    CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW))))
+        return E_FAIL;
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ))))
+        return E_FAIL;
     return S_OK;
 }
 
