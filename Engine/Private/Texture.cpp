@@ -20,10 +20,12 @@ CTexture::CTexture(const CTexture& rhs)
 
 HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNumTextures)
 {
+	FAILED_CHECK_RETURN(CoInitializeEx(nullptr, 0), E_FAIL);
+
 	_tchar			szTextureFilePath[MAX_PATH] = TEXT("");
-
+	
 	m_iNumTextures = iNumTextures;
-
+	
 	m_Textures.reserve(m_iNumTextures);
 
 	for (_uint i = 0; i < iNumTextures; ++i)

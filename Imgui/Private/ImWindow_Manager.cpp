@@ -13,7 +13,6 @@ CImWindow* CImWindow_Manager::Get_ImWindow(const _tchar* pWindowTag)
 
 HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ImGuiIO** pIO)
 {
-    
     // Show the window
     ::ShowWindow(g_hWnd, SW_SHOWDEFAULT);
     ::UpdateWindow(g_hWnd);
@@ -28,13 +27,6 @@ HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
-    //g_io.ConfigViewportsNoAutoMerge = true;
-    //g_io.ConfigViewportsNoTaskBarIcon = true;
-    //g_io.ConfigViewportsNoDefaultParent = true;
-    //g_io.ConfigDockingAlwaysTabBar = true;
-    //g_io.ConfigDockingTransparentPayload = true;
-    //g_io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;     // FIXME-DPI: Experimental. THIS CURRENTLY DOESN'T WORK AS EXPECTED. DON'T USE IN USER APP!
-    //g_io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports; // FIXME-DPI: Experimental.
 
     ImGui::StyleColorsDark();
     ImGuiStyle& style = ImGui::GetStyle();
@@ -54,15 +46,18 @@ HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext
 void CImWindow_Manager::Tick(_double dTimeDelta)
 {
     for (auto& ImWindow : m_ImWindows)
+    {
         ImWindow.second->Tick(dTimeDelta);
+    }
 }
 
 void CImWindow_Manager::Render()
 {
     // Rendering
-    ImGui::Render();
+    m_pIO->ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    m_pIO->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    ImGui::Render();
 
     // Update and Render additional Platform Windows
     if (m_pIO->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

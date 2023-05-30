@@ -1,4 +1,4 @@
-#include "..\Public\Terrain.h"
+#include "Terrain.h"
 #include "GameInstance.h"
 
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -35,7 +35,7 @@ void CTerrain::Late_Tick(_double dTimeDelta)
     __super::Late_Tick(dTimeDelta);
 
     if (nullptr != m_pRendererCom)
-        m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+        m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CTerrain::Render()
@@ -48,57 +48,66 @@ HRESULT CTerrain::Render()
     return S_OK;
 }
 
-HRESULT CTerrain::Add_Component()
-{
-    CGameInstance* pGameInstance = CGameInstance::GetInstance();
-    Safe_AddRef(pGameInstance);
 
-    /* For.Com_VIBuffer */
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
+HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
+{
+    if (FAILED(m_pTerrainCom->RemakeTerrain(iSizeX, iSizeY)))
         return E_FAIL;
 
-    /* For.Com_Renderer */
-    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
+    return S_OK;
+}
+
+HRESULT CTerrain::Add_Component()
+{
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
         return E_FAIL;
 
-    /* For.Com_Transform */
-    CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
-        return E_FAIL;
-
-    /* For.Com_Shader */
-    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_Shader_VtxNorTex"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
-    /* For.Com_Texture */
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_VIBuffer_Terrain"),
+        TEXT("Com_Terrain"), reinterpret_cast<CComponent**>(&m_pTerrainCom))))
+        return E_FAIL;
+
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_Texture_Terrain"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
-
-    Safe_Release(pGameInstance);
     return S_OK;
 }
 
 HRESULT CTerrain::SetUp_ShaderResources()
 {
+    _float4x4 WorldMatrix;
+    XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+        return E_FAIL;
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     Safe_AddRef(pGameInstance);
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW))))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-        return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ))))
         return E_FAIL;
 
-    if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_Texture")))
+    D3D11_RASTERIZER_DESC rasterizer;
+    ZeroMemory(&rasterizer, sizeof rasterizer);
+    rasterizer.CullMode = D3D11_CULL_NONE;
+    if (m_bIsWireFrame)
+        rasterizer.FillMode = D3D11_FILL_WIREFRAME;
+    else
+        rasterizer.FillMode = D3D11_FILL_SOLID;
+
+    if (FAILED(m_pShaderCom->Bind_Rasterizer(&rasterizer)))
         return E_FAIL;
 
+    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
+        return E_FAIL;
     Safe_Release(pGameInstance);
     return S_OK;
 }
@@ -130,9 +139,8 @@ CGameObject* CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
     __super::Free();
-    Safe_Release(m_pRendererCom);
-    Safe_Release(m_pShaderCom);
     Safe_Release(m_pTextureCom);
-    Safe_Release(m_pBufferCom);
-    Safe_Release(m_pTransformCom);
+    Safe_Release(m_pShaderCom);
+    Safe_Release(m_pTerrainCom);
+    Safe_Release(m_pRendererCom);
 }

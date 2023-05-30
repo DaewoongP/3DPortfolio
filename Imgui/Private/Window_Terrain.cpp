@@ -6,16 +6,20 @@ CWindow_Terrain::CWindow_Terrain()
 
 HRESULT CWindow_Terrain::Initialize(void* pArg)
 {
+	m_vWindowSize = ImVec2(100, 100);
+	
+
 	return S_OK;
 }
 
 void CWindow_Terrain::Tick(_double dTimeDelta)
 {
-	ImGui::Begin("Terrain");
+	__super::Tick(dTimeDelta);
+	ImGui::Begin("Terrain", nullptr, m_WindowFlag);
+	
 
-	//ImGui::ShowDemoWindow();
-
-	ImGui::End();
+    
+    ImGui::End();
 }
 
 CWindow_Terrain* CWindow_Terrain::Create(void* pArg)

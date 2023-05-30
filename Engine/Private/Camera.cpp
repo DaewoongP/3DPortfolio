@@ -65,8 +65,8 @@ HRESULT CCamera::Initialize(void* pArg)
 
 void CCamera::Tick(_double dTimeDelta)
 {
-	m_pPipeLine->Set_Transform(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW, m_pTransform->Get_WorldMatrix_Inverse());
-	m_pPipeLine->Set_Transform(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->Get_WorldMatrix_Inverse());
+	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 }
 
 CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

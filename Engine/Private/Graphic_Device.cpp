@@ -72,7 +72,7 @@ HRESULT CGraphic_Device::Present()
 	return m_pSwapChain->Present(0, 0);
 }
 
-HRESULT CGraphic_Device::Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight)
+HRESULT CGraphic_Device::Resize_Buffer(_uint ResizeWidth, _uint ResizeHeight)
 {
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pDepthStencilView);

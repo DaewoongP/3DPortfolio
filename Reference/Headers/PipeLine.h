@@ -11,7 +11,7 @@ public:
 	enum D3DTRANSFORMSTATE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
 
 public:
-	explicit CPipeLine() = default;
+	explicit CPipeLine();
 	virtual ~CPipeLine() = default;
 
 public:

@@ -91,7 +91,7 @@ HRESULT CGameInstance::Present()
 	return m_pGraphic_Device->Present();
 }
 
-HRESULT CGameInstance::Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight)
+HRESULT CGameInstance::Resize_Buffer(_uint ResizeWidth, _uint ResizeHeight)
 {
 	NULL_CHECK_RETURN(m_pGraphic_Device, E_FAIL);
 

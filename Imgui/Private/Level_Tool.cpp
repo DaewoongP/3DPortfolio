@@ -34,29 +34,29 @@ HRESULT CLevel_Tool::Ready_For_Layer_Terrain(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	///* For.GameObject_Terrain */
-	//if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_TOOL),
-	//	TEXT("Prototype_GameObject_DummyTerrain"), TEXT("GameObject_DummyTerrain"))))
-	//{
-	//	MSG_BOX("Failed Add GameObject CTerrain");
-	//	return E_FAIL;
-	//}
-	///* For.GameObject_Camera_Free */
-	//if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_TOOL),
-	//	TEXT("Prototype_GameObject_Camera_Free"), TEXT("GameObject_Camera_Free"))))
-	//{
-	//	MSG_BOX("Failed Add GameObject CCamera_Free");
-	//	return E_FAIL;
-	//}
+	/* For.GameObject_Terrain */
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_Terrain"), TEXT("GameObject_Terrain"))))
+	{
+		MSG_BOX("Failed Add GameObject CTerrain");
+		return E_FAIL;
+	}
+	/* For.GameObject_Camera_Free */
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_Camera_Free"), TEXT("GameObject_Camera_Free"))))
+	{
+		MSG_BOX("Failed Add GameObject CCamera_Free");
+		return E_FAIL;
+	}
 	///* For.GameObject_Axis */
-	//if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_TOOL),
+	//if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
 	//	TEXT("Prototype_GameObject_Axis"), TEXT("GameObject_Axis"))))
 	//{
 	//	MSG_BOX("Failed Add GameObject CAxis");
 	//	return E_FAIL;
 	//}
 	///* For.GameObject_DummyObject */
-	//if (FAILED(pGameInstance->Add_GameObject(static_cast<_uint>(LEVELID::LEVEL_TOOL),
+	//if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
 	//	TEXT("Prototype_GameObject_DummyObject"), TEXT("GameObject_DummyObject"))))
 	//{
 	//	MSG_BOX("Failed Add GameObject CDummyObject");

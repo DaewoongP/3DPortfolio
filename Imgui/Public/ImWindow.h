@@ -16,14 +16,14 @@ protected:
     virtual ~CImWindow() = default;
 
 public:
-    _bool   m_IsShow;
-
-public:
     virtual HRESULT Initialize(void* pArg) { return S_OK; };
-    virtual void Tick(_double dTimeDelta) PURE;
+    virtual void Tick(_double dTimeDelta);
 
 protected:
     CGameInstance*          m_pGameInstance = { nullptr };
+	ImGuiWindowFlags		m_WindowFlag;
+    ImVec2                  m_vWindowPos;
+    ImVec2                  m_vWindowSize;
 
 public:
     virtual void Free(void) override;

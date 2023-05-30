@@ -16,12 +16,6 @@
     <Filter Include="01. Utility\00. GameInstance">
       <UniqueIdentifier>{8d9af0e6-13b6-4a21-8a73-4bd490b369a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. System\00. Device">
-      <UniqueIdentifier>{7d2bca39-5d79-44bb-9d51-8a5dd0fd01c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. System\00. Device\Graphic">
-      <UniqueIdentifier>{5f2f3809-5a27-4c1f-bc48-a6411c8d57c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\01. Levels">
       <UniqueIdentifier>{2c2cbf1d-cdd5-4810-b3dd-cc3ffc5bd683}</UniqueIdentifier>
     </Filter>
@@ -46,12 +40,6 @@
     <Filter Include="01. Utility\03. Components\Renderer">
       <UniqueIdentifier>{2c3d4843-19bd-4792-8054-90f92f5a5fb7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00. System\01. Timer">
-      <UniqueIdentifier>{df2b7430-a684-44b8-a300-f802a45a12c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. System\01. Timer\Manager">
-      <UniqueIdentifier>{3865fd73-fc4b-4182-bec8-21cdb1ae8407}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\03. Components\VIBuffer">
       <UniqueIdentifier>{be1b118c-8036-4d63-a359-1e047962a299}</UniqueIdentifier>
     </Filter>
@@ -66,9 +54,6 @@
     </Filter>
     <Filter Include="01. Utility\03. Components\Shader">
       <UniqueIdentifier>{a41f9bc8-bbfd-4a9b-ad1c-ebbc463e5ade}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. System\02. DInput">
-      <UniqueIdentifier>{ac94b3ec-0079-46da-bdb9-95c2983571b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Utility\03. Components\VIBuffer\Line">
       <UniqueIdentifier>{2e545b8c-0265-4238-8b60-bf0157395166}</UniqueIdentifier>
@@ -87,6 +72,21 @@
     </Filter>
     <Filter Include="04. PipeLine">
       <UniqueIdentifier>{f804068e-04a5-42f8-b312-072c687c9442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\02. Timer">
+      <UniqueIdentifier>{df2b7430-a684-44b8-a300-f802a45a12c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\02. Timer\Manager">
+      <UniqueIdentifier>{3865fd73-fc4b-4182-bec8-21cdb1ae8407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\00. Device">
+      <UniqueIdentifier>{7d2bca39-5d79-44bb-9d51-8a5dd0fd01c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\00. Device\Input">
+      <UniqueIdentifier>{ac94b3ec-0079-46da-bdb9-95c2983571b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\00. Device\Graphic">
+      <UniqueIdentifier>{5f2f3809-5a27-4c1f-bc48-a6411c8d57c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -130,10 +130,10 @@
       <Filter>01. Utility\02. GameObjects\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Timer.h">
-      <Filter>00. System\01. Timer</Filter>
+      <Filter>00. System\02. Timer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Timer_Manager.h">
-      <Filter>00. System\01. Timer\Manager</Filter>
+      <Filter>00. System\02. Timer\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Component.h">
       <Filter>01. Utility\03. Components</Filter>
@@ -154,7 +154,7 @@
       <Filter>01. Utility\03. Components\Shader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Input_Device.h">
-      <Filter>00. System\02. DInput</Filter>
+      <Filter>00. System\00. Device\Input</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Enums.h">
       <Filter>99. Headers</Filter>
@@ -207,10 +207,10 @@
       <Filter>01. Utility\02. GameObjects\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Timer.cpp">
-      <Filter>00. System\01. Timer</Filter>
+      <Filter>00. System\02. Timer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Timer_Manager.cpp">
-      <Filter>00. System\01. Timer\Manager</Filter>
+      <Filter>00. System\02. Timer\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Component.cpp">
       <Filter>01. Utility\03. Components</Filter>
@@ -237,7 +237,7 @@
       <Filter>99. Headers</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Input_Device.cpp">
-      <Filter>00. System\02. DInput</Filter>
+      <Filter>00. System\00. Device\Input</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
       <Filter>01. Utility\03. Components\VIBuffer\Terrain</Filter>

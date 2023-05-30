@@ -4,8 +4,6 @@
 #include "imgui_impl_dx11.h"
 #include <windows.h>
 
-
-
 namespace Tool
 {
     const unsigned int g_iWinSizeX = 1280;
@@ -18,4 +16,6 @@ extern HINSTANCE    g_hInst;
 extern HWND         g_hWnd;
 extern UINT         g_ResizeWidth;
 extern UINT         g_ResizeHeight;
+
 using namespace Tool;
+using namespace ImGui;

@@ -43,6 +43,12 @@
     <ClCompile Include="..\private\ToolInstance.cpp">
       <Filter>96. Managers\Instance</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02. ToolObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Free.cpp">
+      <Filter>02. ToolObject\Camera_Free</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -90,6 +96,15 @@
     <ClInclude Include="..\public\ToolInstance.h">
       <Filter>96. Managers\Instance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Tool_Struct.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02. ToolObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Free.h">
+      <Filter>02. ToolObject\Camera_Free</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Headers">
@@ -122,6 +137,18 @@
     <Filter Include="01. ImWindow\Terrain">
       <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. ToolObject">
+      <UniqueIdentifier>{414f2479-5282-4c23-954a-6e4f4668db7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ToolObject\Terrain">
+      <UniqueIdentifier>{338d7f44-6e6b-44b5-a14c-a394e65251ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles">
+      <UniqueIdentifier>{a9f8ace1-6aa8-4dff-a346-ddfc6cd6ef47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ToolObject\Camera_Free">
+      <UniqueIdentifier>{c523fe43-2f3e-414a-a531-9c466dca5235}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="misc\debuggers\imgui.natstepfilter">
@@ -132,5 +159,16 @@
     <Natvis Include="misc\debuggers\imgui.natvis">
       <Filter>98. Imgui</Filter>
     </Natvis>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_NonTex.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Texture.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
