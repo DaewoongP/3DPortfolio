@@ -1,8 +1,8 @@
-#include "DInput_Manager.h"
+#include "Input_Device.h"
 
-IMPLEMENT_SINGLETON(CDInput_Manager)
+IMPLEMENT_SINGLETON(CInput_Device)
 
-CDInput_Manager::CDInput_Manager()
+CInput_Device::CInput_Device()
 	: m_pInputSDK(nullptr)
 	, m_pKeyBoard(nullptr)
 	, m_pMouse(nullptr)
@@ -12,12 +12,7 @@ CDInput_Manager::CDInput_Manager()
 }
 
 
-CDInput_Manager::~CDInput_Manager()
-{
-	Free();
-}
-
-HRESULT CDInput_Manager::Ready_DInput(HINSTANCE hInst, HWND hWnd)
+HRESULT CInput_Device::Ready_Input_Device(HINSTANCE hInst, HWND hWnd)
 {
 	// 何葛 哪按眉 积己
 	FAILED_CHECK_RETURN(DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_pInputSDK, nullptr), E_FAIL);
@@ -49,13 +44,13 @@ HRESULT CDInput_Manager::Ready_DInput(HINSTANCE hInst, HWND hWnd)
 	return S_OK;
 }
 
-void CDInput_Manager::Update_DInput(void)
+void CInput_Device::Tick(void)
 {
 	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_MouseState), &m_MouseState);
 }
 
-void CDInput_Manager::Free(void)
+void CInput_Device::Free(void)
 {
 	Safe_Release(m_pKeyBoard);
 	Safe_Release(m_pMouse);

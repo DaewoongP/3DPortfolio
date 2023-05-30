@@ -17,7 +17,7 @@ public:
 
 private:
 	class CLoader*			m_pLoader = { nullptr };
-	LEVELID					m_eNextLevelID = { LEVELID::LEVEL_END };
+	LEVELID					m_eNextLevelID = { LEVEL_END };
 
 public:
 	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVELID eNextLevelID);

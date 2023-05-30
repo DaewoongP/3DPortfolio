@@ -20,14 +20,12 @@ HRESULT CMainTool::Initialize()
 	GraphicDesc.iViewportSizeY = g_iWinSizeY;
 	GraphicDesc.eWinMode = GRAPHICDESC::WINMODE::WM_WIN;
 
-	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(static_cast<_uint>(LEVELID::LEVEL_END), GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
+	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(g_hInst, static_cast<_uint>(LEVELID::LEVEL_END), GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
 		L"Failed Initialize_Engine");
 
 	FAILED_CHECK_RETURN(Ready_Prototype_Component(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Open_Level(), E_FAIL);
-
-	FAILED_CHECK_RETURN(m_pGameInstance->Ready_DInput(g_hInst, g_hWnd), E_FAIL);
 
 	m_pImWindow_Manager->Initialize(m_pDevice, m_pContext, &m_pIO);
 
@@ -39,7 +37,7 @@ void CMainTool::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
-	m_pGameInstance->Update_DInput();
+
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
 	m_pImWindow_Manager->Tick(dTimeDelta);

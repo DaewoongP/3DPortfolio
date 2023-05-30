@@ -153,7 +153,7 @@
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01. Utility\03. Components\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\DInput_Manager.h">
+    <ClInclude Include="..\Public\Input_Device.h">
       <Filter>00. System\02. DInput</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Enums.h">
@@ -236,7 +236,7 @@
     <ClCompile Include="..\Private\Engine_Struct.cpp">
       <Filter>99. Headers</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\DInput_Manager.cpp">
+    <ClCompile Include="..\Private\Input_Device.cpp">
       <Filter>00. System\02. DInput</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">

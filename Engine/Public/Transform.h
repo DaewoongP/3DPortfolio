@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CTransform final : public CComponent
 {
 public:
-	enum class STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
+	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
 public:
 	typedef struct tagTransformDesc
 	{

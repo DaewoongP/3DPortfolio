@@ -1,6 +1,7 @@
 #pragma once
 #include "Component_Manager.h"
 #include "PipeLine.h"
+#include "Input_Device.h"
 
 BEGIN(Engine)
 
@@ -13,7 +14,7 @@ private:
 	virtual ~CGameInstance() = default;
 
 public:
-	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
 	HRESULT	Reserve_Engine(_uint iNumLevels);
 	void Tick_Engine(_double dTimeDelta);
 	void Clear_LevelResources(_uint iLevelIndex);
@@ -43,12 +44,10 @@ public: /* For.Component_Manager*/
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void* pArg = nullptr);
 	HRESULT	Delete_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag);
 
-public: /* For.DInput_Manager*/
+public: /* For.Input_Device*/
 	_byte		Get_DIKeyState(_ubyte ubyKeyID);
-	_byte		Get_DIMouseState(MOUSEKEYSTATE eMouseID);
-	_long		Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
-	HRESULT		Ready_DInput(HINSTANCE hInst, HWND hWnd);
-	void		Update_DInput(void);
+	_byte		Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID);
+	_long		Get_DIMouseMove(CInput_Device::MOUSEMOVESTATE eMouseMoveID);
 
 public: /* For.PipeLine*/
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix TransformStateMatrix);
@@ -64,7 +63,6 @@ private:
 	class CObject_Manager*			m_pObject_Manager = { nullptr };
 	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
-	class CDInput_Manager*			m_pDInput_Manager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
 
 public:

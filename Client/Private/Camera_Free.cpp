@@ -60,7 +60,7 @@ HRESULT CCamera_Free::Add_Component()
 	CameraDesc.TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Camera */
-	if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Camera"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
 		TEXT("Com_Camera"), reinterpret_cast<CComponent**>(&m_pCameraCom), &CameraDesc)))
 		return E_FAIL;
 
@@ -116,20 +116,23 @@ void CCamera_Free::Mouse_Move(_double dTimeDelta)
 	_long		dwMouseMove = 0;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_Y))
-	{
-		_vector	vRight = m_pCameraCom->Get_TransformState(CTransform::STATE::STATE_RIGHT);
-
-		m_pCameraCom->Turn(vRight, (dwMouseMove / 10.f) * dTimeDelta);
-	}
-
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
-		m_pCameraCom->Turn(vUp, (dwMouseMove / 10.f) * dTimeDelta);
+		m_pCameraCom->Turn(vUp, dwMouseMove * dTimeDelta * 0.1f);
 	}
+
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
+	{
+		_vector	vRight = m_pCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
+
+		m_pCameraCom->Turn(vRight, dwMouseMove * dTimeDelta * 0.1f);
+	}
+
+	Safe_Release(pGameInstance);
 }
 
 void CCamera_Free::Fix_Mouse(void)

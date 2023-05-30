@@ -4,8 +4,7 @@
 #include "imgui_impl_dx11.h"
 #include <windows.h>
 
-#pragma warning (disable : 4828)
-#pragma warning (disable : 4702)
+
 
 namespace Tool
 {

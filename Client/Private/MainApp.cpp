@@ -32,14 +32,12 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iViewportSizeY = g_iWinSizeY;
 	GraphicDesc.eWinMode = GRAPHICDESC::WINMODE::WM_WIN;
 
-	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(static_cast<_uint>(LEVELID::LEVEL_END), GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
+	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
 		L"Failed Initialize_Engine");
 
 	FAILED_CHECK_RETURN(Ready_Prototype_Component_For_Static(), E_FAIL);
 	
-	FAILED_CHECK_RETURN(Open_Level(LEVELID::LEVEL_LOGO), E_FAIL);
-	
-	FAILED_CHECK_RETURN(m_pGameInstance->Ready_DInput(g_hInst, g_hWnd), E_FAIL);
+	FAILED_CHECK_RETURN(Open_Level(LEVEL_LOGO), E_FAIL);
 	return S_OK;
 }
 
@@ -48,7 +46,6 @@ void CMainApp::Tick(_double dTimeDelta)
 	if (nullptr == m_pGameInstance)
 		return;
 
-	m_pGameInstance->Update_DInput();
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
 #ifdef _DEBUG
@@ -73,33 +70,35 @@ HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 	
 	/* Prototype_Component_Renderer */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Renderer"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		m_pRenderer = CRenderer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	Safe_AddRef(m_pRenderer);
 
 	/* Prototype_Component_Transform */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Transform"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		CTransform::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_Component_Camera */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Camera"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_VtxTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_VtxTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"),
+			VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_VtxTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_VtxNorTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), 
+			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Rect */
-	if (FAILED(m_pGameInstance->Add_Prototype(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -110,7 +109,7 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelIndex)
 {
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
-	return m_pGameInstance->Open_Level(static_cast<_uint>(LEVELID::LEVEL_LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
+	return m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
 }
 
 void CMainApp::Render_FPS(_double dTimeDelta)

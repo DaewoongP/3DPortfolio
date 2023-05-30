@@ -3,7 +3,6 @@
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "Timer_Manager.h"
-#include "DInput_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -13,7 +12,7 @@ CGameInstance::CGameInstance()
 	, m_pObject_Manager{ CObject_Manager::GetInstance() }
 	, m_pTimer_Manager{ CTimer_Manager::GetInstance() }
 	, m_pComponent_Manager{ CComponent_Manager::GetInstance() }
-	, m_pDInput_Manager{ CDInput_Manager::GetInstance() }
+	, m_pInput_Device{ CInput_Device::GetInstance() }
 	, m_pPipeLine{ CPipeLine::GetInstance() }
 {
 	Safe_AddRef(m_pPipeLine);
@@ -22,17 +21,17 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pObject_Manager);
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pComponent_Manager);
-	Safe_AddRef(m_pDInput_Manager);
+	Safe_AddRef(m_pInput_Device);
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
 {
 	NULL_CHECK_RETURN(m_pGraphic_Device, E_FAIL);
 	FAILED_CHECK_RETURN_MSG(m_pGraphic_Device->Ready_Graphic_Device(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iViewportSizeX, GraphicDesc.iViewportSizeY, ppDevice, ppContext), E_FAIL,
 		L"Failed Ready_Graphic_Device");
 
 	FAILED_CHECK_RETURN_MSG(Reserve_Engine(iNumLevels), E_FAIL, TEXT("Failed Reserve_Engine"));
-
+	FAILED_CHECK_RETURN_MSG(m_pInput_Device->Ready_Input_Device(hInst, GraphicDesc.hWnd), E_FAIL, TEXT("Failed Ready Input device"));
 	return S_OK;
 }
 
@@ -50,9 +49,11 @@ void CGameInstance::Tick_Engine(_double dTimeDelta)
 {
 	if (nullptr == m_pLevel_Manager ||
 		nullptr == m_pObject_Manager ||
-		nullptr == m_pPipeLine)
+		nullptr == m_pPipeLine ||
+		nullptr == m_pInput_Device)
 		return;
 
+	m_pInput_Device->Tick();
 	m_pObject_Manager->Tick(dTimeDelta);
 	m_pPipeLine->Tick();
 	m_pObject_Manager->Late_Tick(dTimeDelta);
@@ -166,42 +167,26 @@ HRESULT CGameInstance::Delete_Prototype(_uint iLevelIndex, const _tchar* pProtot
 
 _byte	CGameInstance::Get_DIKeyState(_ubyte ubyKeyID)
 {
-	if (nullptr == m_pDInput_Manager)
+	if (nullptr == m_pInput_Device)
 		return 0;
 
-	return m_pDInput_Manager->Get_DIKeyState(ubyKeyID);
+	return m_pInput_Device->Get_DIKeyState(ubyKeyID);
 }
 
-_byte	CGameInstance::Get_DIMouseState(MOUSEKEYSTATE eMouseID)
+_byte	CGameInstance::Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID)
 {
-	if (nullptr == m_pDInput_Manager)
+	if (nullptr == m_pInput_Device)
 		return 0;
 
-	return m_pDInput_Manager->Get_DIMouseState(eMouseID);
+	return m_pInput_Device->Get_DIMouseState(eMouseID);
 }
 
-_long	CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID)
+_long	CGameInstance::Get_DIMouseMove(CInput_Device::MOUSEMOVESTATE eMouseMoveID)
 {
-	if (nullptr == m_pDInput_Manager)
+	if (nullptr == m_pInput_Device)
 		return 0;
 
-	return m_pDInput_Manager->Get_DIMouseMove(eMouseMoveID);
-}
-
-HRESULT	CGameInstance::Ready_DInput(HINSTANCE hInst, HWND hWnd)
-{
-	if (nullptr == m_pDInput_Manager)
-		return 0;
-
-	return m_pDInput_Manager->Ready_DInput(hInst, hWnd);
-}
-
-void	CGameInstance::Update_DInput(void)
-{
-	if (nullptr == m_pDInput_Manager)
-		return;
-
-	return m_pDInput_Manager->Update_DInput();
+	return m_pInput_Device->Get_DIMouseMove(eMouseMoveID);
 }
 
 void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix TransformStateMatrix)
@@ -252,14 +237,14 @@ void CGameInstance::Release_Engine()
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CLevel_Manager::GetInstance()->DestroyInstance();
 	CTimer_Manager::GetInstance()->DestroyInstance();
-	CDInput_Manager::GetInstance()->DestroyInstance();
+	CInput_Device::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
 }
 
 void CGameInstance::Free()
 {
 	Safe_Release(m_pPipeLine);
-	Safe_Release(m_pDInput_Manager);
+	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pObject_Manager);

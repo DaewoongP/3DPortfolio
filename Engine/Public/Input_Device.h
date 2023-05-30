@@ -3,12 +3,16 @@
 
 BEGIN(Engine)
 
-class CDInput_Manager : public CBase
+class CInput_Device : public CBase
 {
-	DECLARE_SINGLETON(CDInput_Manager)
+	DECLARE_SINGLETON(CInput_Device)
+public:
+	enum MOUSEKEYSTATE { DIMK_LBUTTON, DIMK_RBUTTON, DIMK_WHEEL, DIMK_END };
+	enum MOUSEMOVESTATE { DIMM_X, DIMM_Y, DIMM_WHEEL, DIMM_END };
+
 private:
-	explicit CDInput_Manager();
-	virtual ~CDInput_Manager();
+	explicit CInput_Device();
+	virtual ~CInput_Device() = default;
 
 public:
 	_byte		Get_DIKeyState(_ubyte ubyKeyID) 
@@ -27,8 +31,8 @@ public:
 
 
 public:
-	HRESULT			Ready_DInput(HINSTANCE hInst, HWND hWnd);
-	void			Update_DInput(void);
+	HRESULT			Ready_Input_Device(HINSTANCE hInst, HWND hWnd);
+	void			Tick(void);
 
 private:
 	LPDIRECTINPUT8				m_pInputSDK;

@@ -34,10 +34,10 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 
 		switch (m_eNextLevelID)
 		{
-		case LEVELID::LEVEL_LOGO:
+		case LEVEL_LOGO:
 			pLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 			break;
-		case LEVELID::LEVEL_GAMEPLAY:
+		case LEVEL_GAMEPLAY:
 			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
 			break;
 		}
@@ -46,7 +46,7 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
-		pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pLevel);
+		pGameInstance->Open_Level(m_eNextLevelID, pLevel);
 
 		Safe_Release(pGameInstance);
 		return;

@@ -35,7 +35,7 @@ void CTerrain::Late_Tick(_double dTimeDelta)
     __super::Late_Tick(dTimeDelta);
 
     if (nullptr != m_pRendererCom)
-        m_pRendererCom->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_NONBLEND, this);
+        m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CTerrain::Render()
@@ -54,28 +54,28 @@ HRESULT CTerrain::Add_Component()
     Safe_AddRef(pGameInstance);
 
     /* For.Com_VIBuffer */
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
+    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
         return E_FAIL;
 
     /* For.Com_Renderer */
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Renderer"),
+    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
         return E_FAIL;
 
     /* For.Com_Transform */
     CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Transform"),
+    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
         TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
         return E_FAIL;
 
     /* For.Com_Shader */
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_STATIC), TEXT("Prototype_Component_Shader_VtxNorTex"),
+    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
     /* For.Com_Texture */
-    if (FAILED(__super::Add_Component(static_cast<_uint>(LEVELID::LEVEL_GAMEPLAY), TEXT("Prototype_Component_Texture_Terrain"),
+    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 

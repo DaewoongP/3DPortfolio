@@ -8,7 +8,7 @@ class CPipeLine final : public CBase
 	DECLARE_SINGLETON(CPipeLine)
 
 public:
-	enum class D3DTRANSFORMSTATE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
+	enum D3DTRANSFORMSTATE { D3DTS_VIEW, D3DTS_PROJ, D3DTS_END };
 
 public:
 	explicit CPipeLine() = default;
@@ -26,8 +26,8 @@ public:
 	void Tick();
 
 private:
-	_float4x4				m_TransformMatrix[static_cast<_uint>(D3DTRANSFORMSTATE::D3DTS_END)];
-	_float4x4				m_TransformMatrix_Inverse[static_cast<_uint>(D3DTRANSFORMSTATE::D3DTS_END)];
+	_float4x4				m_TransformMatrix[D3DTS_END];
+	_float4x4				m_TransformMatrix_Inverse[D3DTS_END];
 	_float4					m_vCameraPos;
 
 public:
