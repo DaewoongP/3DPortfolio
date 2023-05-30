@@ -63,6 +63,16 @@ void CMainTool::Render(void)
 	m_pGameInstance->Present();
 }
 
+HRESULT CMainTool::Ready_Prototype_Component_For_Static()
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CMainTool::Open_Level(LEVELID eLevelIndex)
+{
+	return E_NOTIMPL;
+}
+
 HRESULT CMainTool::Ready_Prototype_Component()
 {
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);

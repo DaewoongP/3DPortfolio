@@ -13,6 +13,7 @@ public:
 		_float			fFovy, fAspect, fNear, fFar;
 		CTransform::TRANSFORMDESC		TransformDesc;
 	}CAMERADESC;
+
 private:
 	explicit CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CCamera(const CCamera& rhs);
