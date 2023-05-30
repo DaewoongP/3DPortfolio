@@ -58,7 +58,7 @@ void CImWindow_Manager::Render()
     m_pIO->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
     ImGui::Render();
-
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     // Update and Render additional Platform Windows
     if (m_pIO->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {

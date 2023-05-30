@@ -68,6 +68,9 @@ HRESULT CGraphic_Device::Clear_DepthStencil_View()
 HRESULT CGraphic_Device::Present()
 {
 	NULL_CHECK_RETURN_MSG(m_pSwapChain, E_FAIL, L"Failed Load SwapChain");
+#ifdef _USE_IMGUI
+	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+#endif // _USE_IMGUI
 
 	return m_pSwapChain->Present(0, 0);
 }
