@@ -11,6 +11,11 @@ HRESULT CWindow_Terrain::Initialize(void* pArg)
 
 void CWindow_Terrain::Tick(_double dTimeDelta)
 {
+	ImGui::Begin("Terrain");
+
+	//ImGui::ShowDemoWindow();
+
+	ImGui::End();
 }
 
 CWindow_Terrain* CWindow_Terrain::Create(void* pArg)
@@ -23,4 +28,9 @@ CWindow_Terrain* CWindow_Terrain::Create(void* pArg)
 		Safe_Release(pInstance);
 	}
 	return pInstance;
+}
+
+void CWindow_Terrain::Free()
+{
+	__super::Free();
 }

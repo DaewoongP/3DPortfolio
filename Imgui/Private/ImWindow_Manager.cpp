@@ -6,13 +6,14 @@ CImWindow_Manager::CImWindow_Manager()
 {
 }
 
-CImWindow* CImWindow_Manager::Get_ImWindow(wstring tag)
+CImWindow* CImWindow_Manager::Get_ImWindow(const _tchar* pWindowTag)
 {
-    return Find_Window(tag);
+    return Find_Window(pWindowTag);
 }
 
 HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ImGuiIO** pIO)
 {
+    
     // Show the window
     ::ShowWindow(g_hWnd, SW_SHOWDEFAULT);
     ::UpdateWindow(g_hWnd);
@@ -20,7 +21,7 @@ HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO(); 
     *pIO = &io;
     m_pIO = *pIO;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -52,7 +53,7 @@ HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext
 
 void CImWindow_Manager::Tick(_double dTimeDelta)
 {
-    for (auto ImWindow : m_ImWindows)
+    for (auto& ImWindow : m_ImWindows)
         ImWindow.second->Tick(dTimeDelta);
 }
 
@@ -71,24 +72,24 @@ void CImWindow_Manager::Render()
     }
 }
 
-HRESULT CImWindow_Manager::Add_Window(wstring tag, CImWindow* pWindow)
+HRESULT CImWindow_Manager::Add_Window(const _tchar* pWindowTag, CImWindow* pWindow)
 {
     if (nullptr == pWindow)
         return E_FAIL;
 
-    CImWindow* pImWindow = Find_Window(tag);
+    CImWindow* pImWindow = Find_Window(pWindowTag);
 
     if (nullptr != pImWindow)
         return E_FAIL;
 
-    m_ImWindows.emplace(tag.c_str(), pWindow);
+    m_ImWindows.emplace(pWindowTag, pWindow);
 
     return S_OK;
 }
 
-CImWindow* CImWindow_Manager::Find_Window(wstring tag)
+CImWindow* CImWindow_Manager::Find_Window(const _tchar* pWindowTag)
 {
-    auto iter = find_if(m_ImWindows.begin(), m_ImWindows.end(), CTag_Finder(tag.c_str()));
+    auto iter = find_if(m_ImWindows.begin(), m_ImWindows.end(), CTag_Finder(pWindowTag));
 
     if (iter == m_ImWindows.end())
         return nullptr;
@@ -100,4 +101,5 @@ void CImWindow_Manager::Free(void)
 {
     for (auto& ImWindow : m_ImWindows)
         Safe_Release(ImWindow.second);
+    m_ImWindows.clear();
 }

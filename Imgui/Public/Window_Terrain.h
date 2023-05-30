@@ -15,7 +15,7 @@ public:
 
 public:
 	static CWindow_Terrain* Create(void* pArg = nullptr);
-
+	virtual void Free() override;
 };
 
 END

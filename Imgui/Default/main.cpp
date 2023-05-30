@@ -80,10 +80,6 @@ int main(int, char**)
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
 
-            ImGui::Begin("Hello, world!");
-
-            ImGui::ShowDemoWindow();
-            ImGui::End();
             pMainTool->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
             pMainTool->Render();
 

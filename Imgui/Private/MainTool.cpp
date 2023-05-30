@@ -31,6 +31,7 @@ HRESULT CMainTool::Initialize()
 
 	m_pImWindow_Manager->Initialize(m_pDevice, m_pContext, &m_pIO);
 
+	FAILED_CHECK_RETURN(Add_Windows(), E_FAIL);
 	return S_OK;
 }
 
@@ -82,6 +83,14 @@ HRESULT CMainTool::Open_Level()
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
 	return m_pGameInstance->Open_Level(static_cast<_uint>(LEVELID::LEVEL_TOOL), CLevel_Tool::Create(m_pDevice, m_pContext));
+}
+
+HRESULT CMainTool::Add_Windows()
+{
+	FAILED_CHECK_RETURN_MSG(m_pImWindow_Manager->Add_Window(TEXT("Window_Terrain"),
+		CWindow_Terrain::Create()), E_FAIL, TEXT("Failed Create CWindow_Terrain"));
+
+	return S_OK;
 }
 
 void CMainTool::Render_FPS(_double dTimeDelta)

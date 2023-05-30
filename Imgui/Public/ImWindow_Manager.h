@@ -3,7 +3,7 @@
 #include "Tool_Defines.h"
 #include "Engine_Defines.h"
 #include "Base.h"
-#include "ImWindow.h"
+#include "Window_Terrain.h"
 
 BEGIN(Tool)
 
@@ -16,14 +16,14 @@ private:
     ~CImWindow_Manager() = default;
 
 public:
-    CImWindow* Get_ImWindow(wstring tag);
+    CImWindow* Get_ImWindow(const _tchar* pWindowTag);
 
 public:
-    HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, __inout ImGuiIO** pIO);
+    HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ImGuiIO** pIO);
     void Tick(_double dTimeDelta);
     void Render();
-    HRESULT Add_Window(wstring tag, CImWindow* pWindow);
-    CImWindow* Find_Window(wstring tag);
+    HRESULT Add_Window(const _tchar* pWindowTag, CImWindow* pWindow);
+    CImWindow* Find_Window(const _tchar* pWindowTag);
 
 private:
     ImGuiIO* m_pIO = { nullptr };

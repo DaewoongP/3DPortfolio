@@ -8,7 +8,6 @@ class CGameInstance;
 END
 
 BEGIN(Tool)
-class CImWindow_Manager;
 
 class CImWindow abstract : public CBase
 {
@@ -25,7 +24,6 @@ public:
 
 protected:
     CGameInstance*          m_pGameInstance = { nullptr };
-    CImWindow_Manager*      m_pImWindow_Manager = { nullptr };
 
 public:
     virtual void Free(void) override;
