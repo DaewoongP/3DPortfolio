@@ -150,8 +150,10 @@ HRESULT CMainTool::Open_Level()
 
 HRESULT CMainTool::Add_Windows()
 {
+	// enum == pushback
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Tool::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Camera::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
 
 	return S_OK;
 }

@@ -8,7 +8,7 @@ CWindow_Tool::CWindow_Tool()
 
 HRESULT CWindow_Tool::Initialize(void* pArg)
 {
-	m_vWindowSize = ImVec2(300, 300);
+	m_vWindowSize = ImVec2(500, 100);
 	
 	m_TerrainSize[0] = 5;
 	m_TerrainSize[1] = 5;
