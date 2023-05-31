@@ -19,6 +19,9 @@ private:
 	virtual ~CTerrain() = default;
 
 public:
+	void Set_WireFrame(_bool isWireFrame) { m_bIsWireFrame = isWireFrame; }
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;

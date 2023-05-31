@@ -10,14 +10,15 @@ private:
 	virtual ~CLayer() = default;
 
 public:
-	HRESULT Add_GameObjects(class CGameObject* pGameObject);
-
+	HRESULT Add_GameObjects(const _tchar* pGameObjectTag, class CGameObject* pGameObject);
+	CGameObject* Find_GameObject(const _tchar* pGameObjectTag);
 public:
-	void Tick(_double TimeDelta);
-	void Late_Tick(_double TimeDelta);
+	void Tick(_double dTimeDelta);
+	void Late_Tick(_double dTimeDelta);
 
 private:
-	list<class CGameObject*>				m_GameObjects;
+	unordered_map<const _tchar*, class CGameObject*>	m_GameObjects;
+
 
 public:
 	static CLayer* Create();

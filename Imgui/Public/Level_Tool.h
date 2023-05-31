@@ -17,7 +17,7 @@ public:
 	virtual HRESULT Render();
 
 private:
-	HRESULT Ready_For_Layer_Tool();
+	HRESULT Ready_For_Layer_Tool(const _tchar* pLayerTag);
 
 private:
 	CToolInstance*			m_pToolInstance = { nullptr };

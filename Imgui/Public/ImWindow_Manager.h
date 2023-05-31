@@ -3,7 +3,7 @@
 #include "Tool_Defines.h"
 #include "Engine_Defines.h"
 #include "Base.h"
-#include "Window_Terrain.h"
+#include "Window_Tool.h"
 #include "Window_Camera.h"
 
 BEGIN(Tool)
@@ -14,8 +14,8 @@ class CImWindow_Manager final : public CBase
 public:
     enum TOOLWINDOW 
     {
-        TERRAIN,
-
+        TOOL,
+        CAMERA,
         WINDOW_END
     };
 

@@ -10,7 +10,7 @@ CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 HRESULT CLevel_Tool::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_For_Layer_Tool(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_For_Layer_Tool(TEXT("Layer_Tool")), E_FAIL);
 	return S_OK;
 }
 
@@ -30,21 +30,21 @@ HRESULT CLevel_Tool::Render()
 	return S_OK;
 }
 
-HRESULT CLevel_Tool::Ready_For_Layer_Tool()
+HRESULT CLevel_Tool::Ready_For_Layer_Tool(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
 	/* For.GameObject_Terrain */
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
-		TEXT("Prototype_GameObject_Terrain"), TEXT("GameObject_Terrain"))))
+		TEXT("Prototype_GameObject_Terrain"), pLayerTag, TEXT("GameObject_Terrain"))))
 	{
 		MSG_BOX("Failed Add GameObject CTerrain");
 		return E_FAIL;
 	}
 	/* For.GameObject_Camera_Free */
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
-		TEXT("Prototype_GameObject_Camera_Free"), TEXT("GameObject_Camera_Free"))))
+		TEXT("Prototype_GameObject_Camera_Free"), pLayerTag, TEXT("GameObject_Camera_Free"))))
 	{
 		MSG_BOX("Failed Add GameObject CCamera_Free");
 		return E_FAIL;
