@@ -4,11 +4,7 @@ IMPLEMENT_SINGLETON(CImWindow_Manager)
 
 CImWindow_Manager::CImWindow_Manager()
 {
-}
-
-CImWindow* CImWindow_Manager::Get_ImWindow(const _tchar* pWindowTag)
-{
-    return Find_Window(pWindowTag);
+    m_ImWindows.reserve(WINDOW_END);
 }
 
 HRESULT CImWindow_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ImGuiIO** pIO)
@@ -47,7 +43,7 @@ void CImWindow_Manager::Tick(_double dTimeDelta)
 {
     for (auto& ImWindow : m_ImWindows)
     {
-        ImWindow.second->Tick(dTimeDelta);
+        ImWindow->Tick(dTimeDelta);
     }
 }
 
@@ -67,34 +63,9 @@ void CImWindow_Manager::Render()
     }
 }
 
-HRESULT CImWindow_Manager::Add_Window(const _tchar* pWindowTag, CImWindow* pWindow)
-{
-    if (nullptr == pWindow)
-        return E_FAIL;
-
-    CImWindow* pImWindow = Find_Window(pWindowTag);
-
-    if (nullptr != pImWindow)
-        return E_FAIL;
-
-    m_ImWindows.emplace(pWindowTag, pWindow);
-
-    return S_OK;
-}
-
-CImWindow* CImWindow_Manager::Find_Window(const _tchar* pWindowTag)
-{
-    auto iter = find_if(m_ImWindows.begin(), m_ImWindows.end(), CTag_Finder(pWindowTag));
-
-    if (iter == m_ImWindows.end())
-        return nullptr;
-
-    return iter->second;
-}
-
 void CImWindow_Manager::Free(void)
 {
     for (auto& ImWindow : m_ImWindows)
-        Safe_Release(ImWindow.second);
+        Safe_Release(ImWindow);
     m_ImWindows.clear();
 }

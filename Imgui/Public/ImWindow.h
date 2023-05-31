@@ -1,11 +1,7 @@
 #pragma once
-
 #include "Tool_Defines.h"
+#include "GameInstance.h"
 #include "Base.h"
-
-BEGIN(Engine)
-class CGameInstance;
-END
 
 BEGIN(Tool)
 
@@ -16,7 +12,7 @@ protected:
     virtual ~CImWindow() = default;
 
 public:
-    virtual HRESULT Initialize(void* pArg) { return S_OK; };
+    virtual HRESULT Initialize(void* pArg = nullptr) { return S_OK; };
     virtual void Tick(_double dTimeDelta);
 
 protected:

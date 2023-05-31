@@ -40,7 +40,8 @@ void CMainTool::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
-	m_pImWindow_Manager->Tick(0.0);
+	ShowDemoWindow();
+	m_pImWindow_Manager->Tick(dTimeDelta);
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 	
 	Render_FPS(dTimeDelta);
@@ -54,6 +55,7 @@ HRESULT CMainTool::Render(void)
 	FAILED_CHECK_RETURN(m_pGameInstance->Clear_DepthStencil_View(), E_FAIL);
 	FAILED_CHECK_RETURN(m_pRenderer->Draw_RenderGroup(), E_FAIL);
 	m_pImWindow_Manager->Render();
+	m_pGameInstance->ResetRenderTargets();
 	FAILED_CHECK_RETURN(m_pGameInstance->Present(), E_FAIL);
 
 	return S_OK;
@@ -82,17 +84,20 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_VtxNorTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Texture.hlsl"), VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Texture.hlsl"),
+			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_Nontex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Nontex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_NonTex.hlsl"), VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_NonTex.hlsl"),
+			VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_Shader_Cube */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Cube"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cube.hlsl"), VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cube.hlsl"), 
+			VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Rect */
@@ -107,7 +112,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_Texture_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Default%d.jpg"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ANA.png")))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Line */
@@ -127,7 +132,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 HRESULT CMainTool::Ready_Prototype_Object()
 {
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
-		 CTerrain::Create(m_pDevice, m_pContext))))
+		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
@@ -145,8 +150,8 @@ HRESULT CMainTool::Open_Level()
 
 HRESULT CMainTool::Add_Windows()
 {
-	FAILED_CHECK_RETURN_MSG(m_pImWindow_Manager->Add_Window(TEXT("Window_Terrain"),
-		CWindow_Terrain::Create()), E_FAIL, TEXT("Failed Create CWindow_Terrain"));
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Terrain::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Camera::Create());
 
 	return S_OK;
 }

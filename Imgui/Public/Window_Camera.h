@@ -3,21 +3,18 @@
 
 BEGIN(Tool)
 
-class CWindow_Terrain : public CImWindow
+class CWindow_Camera : public CImWindow
 {
 private:
-	explicit CWindow_Terrain();
-	virtual ~CWindow_Terrain() = default;
+	explicit CWindow_Camera();
+	virtual ~CWindow_Camera() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 
-private:
-	array<_int, 2>				m_TerrainSize;
-
 public:
-	static CWindow_Terrain* Create(void* pArg = nullptr);
+	static CWindow_Camera* Create(void* pArg = nullptr);
 	virtual void Free() override;
 };
 

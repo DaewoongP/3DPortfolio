@@ -24,6 +24,8 @@ public:
 	// SwapChain's Present Function
 	HRESULT Present();
 
+	HRESULT ResetRenderTargets();
+	
 	HRESULT Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight);
 
 private:

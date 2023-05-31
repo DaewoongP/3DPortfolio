@@ -49,6 +49,9 @@
     <ClCompile Include="..\private\Camera_Free.cpp">
       <Filter>02. ToolObject\Camera_Free</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Window_Camera.cpp">
+      <Filter>01. ImWindow\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -105,6 +108,9 @@
     <ClInclude Include="..\public\Camera_Free.h">
       <Filter>02. ToolObject\Camera_Free</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Window_Camera.h">
+      <Filter>01. ImWindow\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Headers">
@@ -148,6 +154,15 @@
     </Filter>
     <Filter Include="02. ToolObject\Camera_Free">
       <UniqueIdentifier>{c523fe43-2f3e-414a-a531-9c466dca5235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Camera">
+      <UniqueIdentifier>{860ed18a-9be6-4a39-89da-c43ce5733179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Light">
+      <UniqueIdentifier>{08763a61-47f1-4480-a559-c5cafbb514a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Mesh">
+      <UniqueIdentifier>{22ee1db2-a7d9-4979-801f-4e3c7e455b82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

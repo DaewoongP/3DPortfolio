@@ -51,6 +51,9 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
 {
+    if (0 == iSizeX ||
+        0 == iSizeY)
+        return S_OK;
     if (FAILED(m_pTerrainCom->RemakeTerrain(iSizeX, iSizeY)))
         return E_FAIL;
 

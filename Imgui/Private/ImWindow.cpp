@@ -1,5 +1,4 @@
 #include "..\Public\ImWindow.h"
-#include "GameInstance.h"
 
 CImWindow::CImWindow()
     : m_pGameInstance(CGameInstance::GetInstance())

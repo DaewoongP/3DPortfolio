@@ -156,6 +156,12 @@
       <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x64;../../Reference/Librarys/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Camera_Free.cpp" />
@@ -165,6 +171,7 @@
     <ClCompile Include="..\private\MainTool.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\ToolInstance.cpp" />
+    <ClCompile Include="..\private\Window_Camera.cpp" />
     <ClCompile Include="..\private\Window_Terrain.cpp" />
     <ClCompile Include="backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="backends\imgui_impl_win32.cpp" />
@@ -185,6 +192,7 @@
     <ClInclude Include="..\public\ToolInstance.h" />
     <ClInclude Include="..\Public\Tool_Defines.h" />
     <ClInclude Include="..\Public\Tool_Struct.h" />
+    <ClInclude Include="..\public\Window_Camera.h" />
     <ClInclude Include="..\public\Window_Terrain.h" />
     <ClInclude Include="backends\imgui_impl_dx11.h" />
     <ClInclude Include="backends\imgui_impl_win32.h" />

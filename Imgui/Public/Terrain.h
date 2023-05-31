@@ -34,7 +34,7 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 
-	_bool					m_bIsWireFrame = { true };
+	_bool					m_bIsWireFrame = { false };
 
 private:
 	HRESULT		Add_Component();

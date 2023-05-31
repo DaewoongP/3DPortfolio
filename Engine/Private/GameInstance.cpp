@@ -91,6 +91,14 @@ HRESULT CGameInstance::Present()
 	return m_pGraphic_Device->Present();
 }
 
+HRESULT CGameInstance::ResetRenderTargets()
+{
+	if (nullptr == m_pGraphic_Device)
+		return E_FAIL;
+
+	return m_pGraphic_Device->ResetRenderTargets();
+}
+
 HRESULT CGameInstance::Resize_Buffer(_uint& ResizeWidth, _uint&  ResizeHeight)
 {
 	NULL_CHECK_RETURN(m_pGraphic_Device, E_FAIL);

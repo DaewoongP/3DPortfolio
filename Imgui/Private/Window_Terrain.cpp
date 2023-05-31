@@ -2,24 +2,31 @@
 
 CWindow_Terrain::CWindow_Terrain()
 {
+	ZEROMEM(&m_TerrainSize);
 }
 
 HRESULT CWindow_Terrain::Initialize(void* pArg)
 {
-	m_vWindowSize = ImVec2(100, 100);
+	m_vWindowSize = ImVec2(300, 300);
 	
-
+	m_TerrainSize[0] = 5;
+	m_TerrainSize[1] = 5;
 	return S_OK;
 }
 
 void CWindow_Terrain::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-	ImGui::Begin("Terrain", nullptr, m_WindowFlag);
-	
 
-    
-    ImGui::End();
+	Begin("Terrain", nullptr, m_WindowFlag);
+
+	if (InputInt2("Terrain Size X, Z", m_TerrainSize.data(), ImGuiInputTextFlags_CharsNoBlank))
+	{
+		//m_pGameInstance->
+		//RemakeTerrain(m_TerrainSize[0], m_TerrainSize[1]);
+	}
+	
+    End();
 }
 
 CWindow_Terrain* CWindow_Terrain::Create(void* pArg)

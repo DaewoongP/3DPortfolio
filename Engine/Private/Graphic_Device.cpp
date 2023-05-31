@@ -68,11 +68,20 @@ HRESULT CGraphic_Device::Clear_DepthStencil_View()
 HRESULT CGraphic_Device::Present()
 {
 	NULL_CHECK_RETURN_MSG(m_pSwapChain, E_FAIL, L"Failed Load SwapChain");
-#ifdef _USE_IMGUI
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
-#endif // _USE_IMGUI
 
 	return m_pSwapChain->Present(0, 0);
+}
+
+HRESULT CGraphic_Device::ResetRenderTargets()
+{
+	if (nullptr == m_pDeviceContext ||
+		nullptr == m_pBackBufferRTV ||
+		nullptr == m_pDepthStencilView)
+		return E_FAIL;
+
+	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+
+	return E_NOTIMPL;
 }
 
 HRESULT CGraphic_Device::Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight)

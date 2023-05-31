@@ -11,6 +11,8 @@ private:
 
 public:
 	HRESULT Add_GameObjects(class CGameObject* pGameObject);
+
+public:
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
 

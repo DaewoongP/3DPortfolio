@@ -4,12 +4,13 @@
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
+	Safe_AddRef(m_pToolInstance);
 }
 
 HRESULT CLevel_Tool::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_For_Layer_Terrain(TEXT("Layer_Terrain")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_For_Layer_Tool(), E_FAIL);
 	return S_OK;
 }
 
@@ -29,7 +30,7 @@ HRESULT CLevel_Tool::Render()
 	return S_OK;
 }
 
-HRESULT CLevel_Tool::Ready_For_Layer_Terrain(const _tchar* pLayerTag)
+HRESULT CLevel_Tool::Ready_For_Layer_Tool()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -55,6 +56,7 @@ HRESULT CLevel_Tool::Ready_For_Layer_Terrain(const _tchar* pLayerTag)
 	//	MSG_BOX("Failed Add GameObject CAxis");
 	//	return E_FAIL;
 	//}
+	
 	///* For.GameObject_DummyObject */
 	//if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
 	//	TEXT("Prototype_GameObject_DummyObject"), TEXT("GameObject_DummyObject"))))
@@ -62,7 +64,6 @@ HRESULT CLevel_Tool::Ready_For_Layer_Terrain(const _tchar* pLayerTag)
 	//	MSG_BOX("Failed Add GameObject CDummyObject");
 	//	return E_FAIL;
 	//}
-
 	Safe_Release(pGameInstance);
 	return S_OK;
 }
@@ -82,4 +83,5 @@ CLevel_Tool* CLevel_Tool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 void CLevel_Tool::Free()
 {
 	__super::Free();
+	Safe_Release(m_pToolInstance);
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Level.h"
 #include "Tool_Defines.h"
+#include "ToolInstance.h"
 
 BEGIN(Tool)
 
@@ -16,7 +17,10 @@ public:
 	virtual HRESULT Render();
 
 private:
-	HRESULT Ready_For_Layer_Terrain(const _tchar* pLayerTag);
+	HRESULT Ready_For_Layer_Tool();
+
+private:
+	CToolInstance*			m_pToolInstance = { nullptr };
 
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
