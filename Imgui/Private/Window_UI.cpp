@@ -28,10 +28,10 @@ void CWindow_UI::Tick(_double dTimeDelta)
 		{
 			string filePathName = IMFILE->GetFilePathName();
 			string filePath = IMFILE->GetCurrentPath();
-			
-			
-			// action
-			
+
+			wstring fPath;
+			fPath.assign(filePathName.begin(), filePathName.end());
+			const _tchar* test = fPath.c_str();
 		}
 
 		// close
@@ -39,8 +39,6 @@ void CWindow_UI::Tick(_double dTimeDelta)
 	}
 
 	End();
-
-
 }
 
 CWindow_UI* CWindow_UI::Create(void* pArg)

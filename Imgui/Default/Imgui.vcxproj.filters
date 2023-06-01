@@ -64,6 +64,9 @@
     <ClCompile Include="..\private\Axis.cpp">
       <Filter>02. ToolObject\Axis</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\DummyObject.cpp">
+      <Filter>02. ToolObject\DummyObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -144,6 +147,9 @@
     <ClInclude Include="..\public\Axis.h">
       <Filter>02. ToolObject\Axis</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\DummyObject.h">
+      <Filter>02. ToolObject\DummyObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Headers">
@@ -202,6 +208,9 @@
     </Filter>
     <Filter Include="02. ToolObject\Axis">
       <UniqueIdentifier>{7d914554-17d5-42ef-a0b3-71d9479048ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ToolObject\DummyObject">
+      <UniqueIdentifier>{cd3c57c5-f724-44cb-8cd6-d08239b5078a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

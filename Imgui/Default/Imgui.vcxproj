@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="..\private\Axis.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
+    <ClCompile Include="..\private\DummyObject.cpp" />
     <ClCompile Include="..\private\ImWindow.cpp" />
     <ClCompile Include="..\private\ImWindow_Manager.cpp" />
     <ClCompile Include="..\private\Level_Tool.cpp" />
@@ -189,6 +190,7 @@
   <ItemGroup>
     <ClInclude Include="..\public\Axis.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
+    <ClInclude Include="..\public\DummyObject.h" />
     <ClInclude Include="..\public\ImWindow.h" />
     <ClInclude Include="..\public\ImWindow_Manager.h" />
     <ClInclude Include="..\public\Level_Tool.h" />
