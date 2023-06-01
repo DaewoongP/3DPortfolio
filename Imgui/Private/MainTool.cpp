@@ -2,6 +2,7 @@
 #include "Level_Tool.h"
 #include "Terrain.h"
 #include "Camera_Free.h"
+#include "Axis.h"
 
 CMainTool::CMainTool()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -51,7 +52,7 @@ HRESULT CMainTool::Render(void)
 {
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
-	FAILED_CHECK_RETURN(m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f)), E_FAIL);
+	FAILED_CHECK_RETURN(m_pGameInstance->Clear_BackBuffer_View(_float4(0.5f, 0.5f, 0.5f, 1.f)), E_FAIL);
 	FAILED_CHECK_RETURN(m_pGameInstance->Clear_DepthStencil_View(), E_FAIL);
 	FAILED_CHECK_RETURN(m_pRenderer->Draw_RenderGroup(), E_FAIL);
 	m_pImWindow_Manager->Render();
@@ -138,6 +139,10 @@ HRESULT CMainTool::Ready_Prototype_Object()
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Axis"),
+		CAxis::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -154,6 +159,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Tool::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Camera::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
 
 	return S_OK;
 }

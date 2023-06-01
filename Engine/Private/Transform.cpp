@@ -26,7 +26,7 @@ void CTransform::Set_State(STATE _eState, _fvector _vState)
 {
 	_float4		vState;
 	XMStoreFloat4(&vState, _vState);
-	memcpy(&m_WorldMatrix.m[static_cast<_uint>(_eState)][0], &vState, sizeof vState);
+	memcpy(&m_WorldMatrix.m[_eState][0], &vState, sizeof vState);
 }
 
 void CTransform::Set_Scale(const _float3& vScale)

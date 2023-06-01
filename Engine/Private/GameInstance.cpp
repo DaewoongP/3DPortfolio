@@ -245,6 +245,14 @@ _float4x4* CGameInstance::Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMS
 	return m_pPipeLine->Get_TransformFloat4x4_Inverse(eTransformState);
 }
 
+_float4 CGameInstance::Get_CamPosition() const
+{
+	if (nullptr == m_pPipeLine)
+		return _float4();
+
+	return m_pPipeLine->Get_CamPosition();
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();

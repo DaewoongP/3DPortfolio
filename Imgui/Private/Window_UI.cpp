@@ -6,8 +6,8 @@ CWindow_UI::CWindow_UI()
 
 HRESULT CWindow_UI::Initialize(void* pArg)
 {
-	m_vWindowPos = ImVec2(0, 100);
-	m_vWindowSize = ImVec2(500, 500);
+	m_vWindowPos = ImVec2(0, 200);
+	m_vWindowSize = ImVec2(500, 400);
 	return S_OK;
 }
 
@@ -28,7 +28,10 @@ void CWindow_UI::Tick(_double dTimeDelta)
 		{
 			string filePathName = IMFILE->GetFilePathName();
 			string filePath = IMFILE->GetCurrentPath();
+			
+			
 			// action
+			
 		}
 
 		// close
@@ -36,21 +39,6 @@ void CWindow_UI::Tick(_double dTimeDelta)
 	}
 
 	End();
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
-
 
 
 }
@@ -70,4 +58,5 @@ CWindow_UI* CWindow_UI::Create(void* pArg)
 void CWindow_UI::Free()
 {
 	__super::Free();
+	
 }

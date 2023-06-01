@@ -106,7 +106,7 @@ HRESULT CTerrain::SetUp_ShaderResources()
     else
         rasterizer.FillMode = D3D11_FILL_SOLID;
 
-    if (FAILED(m_pShaderCom->Bind_Rasterizer(&rasterizer)))
+    if (FAILED(m_pShaderCom->Bind_Rasterizer("g_Rasterizer", &rasterizer)))
         return E_FAIL;
 
     if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))

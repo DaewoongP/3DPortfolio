@@ -58,6 +58,12 @@
     <ClCompile Include="ImGuiFileDialog.cpp">
       <Filter>98. Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Window_Light.cpp">
+      <Filter>01. ImWindow\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Axis.cpp">
+      <Filter>02. ToolObject\Axis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -126,6 +132,18 @@
     <ClInclude Include="ImGuiFileDialogConfig.h">
       <Filter>98. Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="stb\stb_image.h">
+      <Filter>98. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="stb\stb_image_resize.h">
+      <Filter>98. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Window_Light.h">
+      <Filter>01. ImWindow\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Axis.h">
+      <Filter>02. ToolObject\Axis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Headers">
@@ -181,6 +199,9 @@
     </Filter>
     <Filter Include="01. ImWindow\UI">
       <UniqueIdentifier>{940470a4-51a9-434b-9968-118ceb59f3f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ToolObject\Axis">
+      <UniqueIdentifier>{7d914554-17d5-42ef-a0b3-71d9479048ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

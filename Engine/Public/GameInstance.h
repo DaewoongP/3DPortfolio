@@ -57,6 +57,7 @@ public: /* For.PipeLine*/
 	_float4x4* Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_matrix Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_float4x4* Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);
+	_float4	Get_CamPosition() const;
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

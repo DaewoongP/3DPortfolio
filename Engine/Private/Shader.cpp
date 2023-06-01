@@ -132,7 +132,19 @@ HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatri
 	return pVariableMatrix->SetMatrix((_float*)pMatrix);
 }
 
-HRESULT CShader::Bind_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
+HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _uint iSize)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetRawValue(pData, 0, iSize);
+}
+
+HRESULT CShader::Bind_Rasterizer(const _char* pConstantName, const D3D11_RASTERIZER_DESC* pRasterizer)
 {
 	ID3D11RasterizerState* pState = { nullptr };
 	m_pDevice->CreateRasterizerState(pRasterizer, &pState);
@@ -141,7 +153,7 @@ HRESULT CShader::Bind_Rasterizer(const D3D11_RASTERIZER_DESC* pRasterizer)
 		return E_FAIL;
 
 	m_pContext->RSSetState(pState);
-	m_pRasterizer = m_pEffect->GetVariableByName("g_Rasterizer")->AsRasterizer();
+	m_pRasterizer = m_pEffect->GetVariableByName(pConstantName)->AsRasterizer();
 
 	if (FAILED(m_pRasterizer->SetRasterizerState(0, pState)))
 		return E_FAIL;

@@ -21,6 +21,7 @@ public:
 	_float4x4* Get_TransformFloat4x4(D3DTRANSFORMSTATE eTransformState);
 	_matrix Get_TransformMatrix_Inverse(D3DTRANSFORMSTATE eTransformState);
 	_float4x4* Get_TransformFloat4x4_Inverse(D3DTRANSFORMSTATE eTransformState);
+	_float4	Get_CamPosition() const;
 
 public:
 	void Tick();

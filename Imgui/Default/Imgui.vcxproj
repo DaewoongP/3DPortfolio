@@ -164,6 +164,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Axis.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\ImWindow.cpp" />
     <ClCompile Include="..\private\ImWindow_Manager.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\ToolInstance.cpp" />
     <ClCompile Include="..\private\Window_Camera.cpp" />
+    <ClCompile Include="..\private\Window_Light.cpp" />
     <ClCompile Include="..\private\Window_Tool.cpp" />
     <ClCompile Include="..\private\Window_UI.cpp" />
     <ClCompile Include="backends\imgui_impl_dx11.cpp" />
@@ -185,6 +187,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\Axis.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\ImWindow.h" />
     <ClInclude Include="..\public\ImWindow_Manager.h" />
@@ -195,6 +198,7 @@
     <ClInclude Include="..\Public\Tool_Defines.h" />
     <ClInclude Include="..\Public\Tool_Struct.h" />
     <ClInclude Include="..\public\Window_Camera.h" />
+    <ClInclude Include="..\public\Window_Light.h" />
     <ClInclude Include="..\public\Window_Tool.h" />
     <ClInclude Include="..\public\Window_UI.h" />
     <ClInclude Include="backends\imgui_impl_dx11.h" />
@@ -207,6 +211,8 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="stb\stb_image.h" />
+    <ClInclude Include="stb\stb_image_resize.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="misc\debuggers\imgui.natstepfilter" />

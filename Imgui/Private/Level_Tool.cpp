@@ -1,5 +1,6 @@
 #include "Level_Tool.h"
 #include "GameInstance.h"
+#include "Axis.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -49,13 +50,31 @@ HRESULT CLevel_Tool::Ready_For_Layer_Tool(const _tchar* pLayerTag)
 		MSG_BOX("Failed Add GameObject CCamera_Free");
 		return E_FAIL;
 	}
-	///* For.GameObject_Axis */
-	//if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
-	//	TEXT("Prototype_GameObject_Axis"), TEXT("GameObject_Axis"))))
-	//{
-	//	MSG_BOX("Failed Add GameObject CAxis");
-	//	return E_FAIL;
-	//}
+	CAxis::AXISSTATE eState;
+	eState = CAxis::AXIS_ORIGIN;
+	/* For.GameObject_Axis_Origin */
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_Axis"), pLayerTag, TEXT("GameObject_Axis_Origin"), &eState)))
+	{
+		MSG_BOX("Failed Add GameObject CAxis");
+		return E_FAIL;
+	}
+	eState = CAxis::AXIS_UI;
+	/* For.GameObject_Axis_UI */
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_Axis"), pLayerTag, TEXT("GameObject_Axis_UI"), &eState)))
+	{
+		MSG_BOX("Failed Add GameObject CAxis");
+		return E_FAIL;
+	}
+	eState = CAxis::AXIS_CENTER;
+	/* For.GameObject_Axis_Center */
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_Axis"), pLayerTag, TEXT("GameObject_Axis_Center"), &eState)))
+	{
+		MSG_BOX("Failed Add GameObject CAxis");
+		return E_FAIL;
+	}
 	
 	///* For.GameObject_DummyObject */
 	//if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
