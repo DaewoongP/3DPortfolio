@@ -55,6 +55,9 @@
     <ClCompile Include="..\private\Window_UI.cpp">
       <Filter>01. ImWindow\UI</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiFileDialog.cpp">
+      <Filter>98. Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -116,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Window_UI.h">
       <Filter>01. ImWindow\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiFileDialog.h">
+      <Filter>98. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiFileDialogConfig.h">
+      <Filter>98. Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

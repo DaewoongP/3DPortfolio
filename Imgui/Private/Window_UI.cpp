@@ -15,35 +15,44 @@ void CWindow_UI::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 	Begin("UI", nullptr, m_WindowFlag);
-	if (BeginListBox("listbox 1"))
+
+
+	if (Button("Open File Dialog"))
+		IMFILE->OpenDialog("ChooseFileDlgKey", "Choose File", ".png, .dds", ".");
+	
+	// display
+	if (IMFILE->Display("ChooseFileDlgKey"))
 	{
-		if (TreeNode("Combo 1"))
+		// action if OK
+		if (IMFILE->IsOk())
 		{
-			if (TreeNode("Combo 2"))
-			{
-				if (TreeNode("Combo 3"))
-				{
-
-
-					TreePop();
-				}
-
-				TreePop();
-			}
-
-			if (TreeNode("Combo 4"))
-			{
-
-
-				TreePop();
-			}
-			TreePop();
+			string filePathName = IMFILE->GetFilePathName();
+			string filePath = IMFILE->GetCurrentPath();
+			// action
 		}
 
-		EndListBox();
+		// close
+		IMFILE->Close();
 	}
 
 	End();
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
 }
 
 CWindow_UI* CWindow_UI::Create(void* pArg)

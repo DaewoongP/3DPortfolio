@@ -20,7 +20,7 @@ protected:
 	ImGuiWindowFlags		m_WindowFlag;
     ImVec2                  m_vWindowPos;
     ImVec2                  m_vWindowSize;
-
+    
 public:
     virtual void Free(void) override;
 };
