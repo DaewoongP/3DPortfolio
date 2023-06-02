@@ -68,7 +68,7 @@ HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
     return S_OK;
 }
 
-HRESULT CTerrain::PickingOnTerrain(_fvector& vRayPos, _fvector& vRayDir, _Inout_ _float3* vPickPos)
+HRESULT CTerrain::PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _float3* vPickPos)
 {
     const _float3* vVertices =  m_pTerrainCom->Get_PosArray();
     const _uint* iIndex = m_pTerrainCom->Get_Index();
@@ -100,7 +100,9 @@ HRESULT CTerrain::PickingOnTerrain(_fvector& vRayPos, _fvector& vRayDir, _Inout_
         else
             return false;
     });*/
-    XMStoreFloat3(vPickPos, vRayPos + DistanceVec.back() * vRayDir);
+    _float fDistance = DistanceVec.back();
+    _vector vPos = vRayPos + (fDistance * vRayDir);
+    XMStoreFloat3(vPickPos, vPos);
 
     return S_OK;
 }

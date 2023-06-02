@@ -168,10 +168,7 @@ void CWindow_Tool::AxisRendering()
 
 HRESULT CWindow_Tool::MakeObject(_double dTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON))
+	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON))
 	{
 		POINT	pt{};
 		GetCursorPos(&pt);
@@ -181,28 +178,27 @@ HRESULT CWindow_Tool::MakeObject(_double dTimeDelta)
 		vMouse = XMVectorSet(pt.x / (g_iWinSizeX * 0.5f) - 1.f, pt.y / -(g_iWinSizeY * 0.5f) + 1.f, 0.f, 1.f);
 
 		_matrix		ProjMatrix_Inverse;
-		ProjMatrix_Inverse = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
+		ProjMatrix_Inverse = m_pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
 		vMouse = XMVector3TransformCoord(vMouse, ProjMatrix_Inverse);
 
 		_matrix		ViewMatrix_Inverse;
-		ViewMatrix_Inverse = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW);
+		ViewMatrix_Inverse = m_pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW);
 
 		_vector vRayPos, vRayDir;
 		vRayPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 		vRayDir = vMouse - vRayPos;
 		vRayDir = XMVector3Normalize(vRayDir);
-		_vector fTest1 = XMVector4Length(vRayDir);
+
 		vRayPos = XMVector3TransformCoord(vRayPos, ViewMatrix_Inverse);
 		vRayDir = XMVector3TransformNormal(vRayDir, ViewMatrix_Inverse);
 
-		
 		if (FAILED(m_pTerrain->PickingOnTerrain(vRayPos, vRayDir, &m_vPickPos)))
 			return E_FAIL;
 
 	}
-
+	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON))
+		m_vPickPos = _float3(0.f, 0.f, 0.f);
 	m_pDummy->Move_Position(XMLoadFloat3(&m_vPickPos), dTimeDelta);
-	Safe_Release(pGameInstance);
 }
 
 
