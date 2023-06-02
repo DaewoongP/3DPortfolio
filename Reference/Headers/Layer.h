@@ -17,7 +17,7 @@ public:
 	void Late_Tick(_double dTimeDelta);
 
 private:
-	unordered_map<const _tchar*, class CGameObject*>	m_GameObjects;
+	multimap<const _tchar*, class CGameObject*>	m_GameObjects;
 
 
 public:

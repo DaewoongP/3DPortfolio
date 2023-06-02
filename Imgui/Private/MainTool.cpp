@@ -3,6 +3,7 @@
 #include "Terrain.h"
 #include "Camera_Free.h"
 #include "Axis.h"
+#include "DummyObject.h"
 
 CMainTool::CMainTool()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -108,12 +109,12 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 5, 5))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500))))
 		return E_FAIL;
 
 	/* Prototype_Component_Texture_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ANA.png")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Tile%d.dds"), 2))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Line */
@@ -143,6 +144,11 @@ HRESULT CMainTool::Ready_Prototype_Object()
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Axis"),
 		CAxis::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DummyObject"),
+		CDummyObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

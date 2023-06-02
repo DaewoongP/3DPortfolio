@@ -77,4 +77,10 @@ namespace Engine
 		const wchar_t* m_pTargetTag = nullptr;
 	};
 
+	static wstring StringToWString(const string& str)
+	{
+		wstring wStr;
+		wStr.assign(str.begin(), str.end());
+		return wStr;
+	}
 }

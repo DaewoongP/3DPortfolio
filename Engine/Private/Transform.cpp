@@ -79,7 +79,7 @@ void CTransform::Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMin
 	_vector vDir = vTargetPosition - vPosition;
 
 	if (fMinDistance <= XMVectorGetX(XMVector3Length(vDir)))
-		vPosition += XMVector3Normalize(vDir) * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
+		Move_Direction(vDir, dTimeDelta);
 }
 
 void CTransform::LookAt(_fvector vTargetPosition)

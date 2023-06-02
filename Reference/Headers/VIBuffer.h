@@ -11,6 +11,10 @@ protected:
 	virtual ~CVIBuffer() = default;
 
 public:
+	_uint Get_NumVertices() const { return m_iNumVertices; }
+	_uint Get_NumIndices() const { return m_iNumIndices; }
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	

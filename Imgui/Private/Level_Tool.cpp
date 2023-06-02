@@ -75,14 +75,15 @@ HRESULT CLevel_Tool::Ready_For_Layer_Tool(const _tchar* pLayerTag)
 		MSG_BOX("Failed Add GameObject CAxis");
 		return E_FAIL;
 	}
-	
+
 	///* For.GameObject_DummyObject */
-	//if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
-	//	TEXT("Prototype_GameObject_DummyObject"), TEXT("GameObject_DummyObject"))))
-	//{
-	//	MSG_BOX("Failed Add GameObject CDummyObject");
-	//	return E_FAIL;
-	//}
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_DummyObject"), pLayerTag, TEXT("GameObject_DummyObject"))))
+	{
+		MSG_BOX("Failed Add GameObject DummyObject");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

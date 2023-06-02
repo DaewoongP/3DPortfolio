@@ -1,4 +1,5 @@
 #include "..\Public\Window_Tool.h"
+#include "DummyObject.h"
 
 CWindow_Tool::CWindow_Tool()
 {
@@ -15,6 +16,7 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 	m_TerrainSize[1] = 5;
 	m_TerrainOverflowSize[0] = 50000;
 	m_TerrainOverflowSize[1] = 50000;
+	m_vPickPos = _float3(0.f, 0.f, 0.f);
 
 	m_pTerrain = static_cast<CTerrain*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Terrain")));
 	if (nullptr == m_pTerrain)
@@ -46,6 +48,11 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 	else
 		Safe_AddRef(m_pAxisCenter);
 
+	m_pDummy = static_cast<CDummyObject*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_DummyObject")));
+	if (nullptr == m_pDummy)
+		return E_FAIL;
+	else
+		Safe_AddRef(m_pDummy);
 	return S_OK;
 }
 
@@ -57,12 +64,16 @@ void CWindow_Tool::Tick(_double dTimeDelta)
 
 	TerrainSizeXZ();
 
+	TerrainHeightMap();
+
 	WireFrame();
 	
 	CamSpeedAndAxisDist();
 	
 	AxisRendering();
 	
+	MakeObject(dTimeDelta);
+
     End();
 }
 
@@ -70,16 +81,18 @@ void CWindow_Tool::TerrainSizeXZ()
 {
 	if (InputInt2("Terrain Size X, Z", m_TerrainSize.data(), ImGuiInputTextFlags_CharsNoBlank))
 	{
-		if (m_TerrainOverflowSize[0] < m_TerrainSize[0])
+		if (m_TerrainOverflowSize[0] < m_TerrainSize[0] ||
+			0 >= m_TerrainSize[0])
 		{
-			m_TerrainSize[0] = m_TerrainOverflowSize[0];
-			MSG_BOX("Terrain Size X overflow");
+			m_TerrainSize[0] = 5;
+			MSG_BOX("Wrong Terrain Size X");
 		}
 
-		else if (m_TerrainOverflowSize[1] < m_TerrainSize[1])
+		else if (m_TerrainOverflowSize[1] < m_TerrainSize[1] ||
+			0 >= m_TerrainSize[1])
 		{
-			m_TerrainSize[1] = m_TerrainOverflowSize[1];
-			MSG_BOX("Terrain Size Z overflow");
+			m_TerrainSize[1] = 5;
+			MSG_BOX("Wrong Terrain Size Z");
 		}
 
 		else
@@ -95,10 +108,34 @@ void CWindow_Tool::WireFrame()
 	}
 }
 
+void CWindow_Tool::TerrainHeightMap()
+{
+	if (Button("Open HeightMap"))
+		IMFILE->OpenDialog("ChooseHeightMap", "Choose File", ".bmp", ".");
+
+	// display
+	if (IMFILE->Display("ChooseHeightMap"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			string str = IMFILE->GetFilePathName();
+
+			wstring wStr = StringToWString(str);
+			const _tchar* pPath = wStr.c_str();
+
+			m_pTerrain->RemakeTerrain(pPath);
+		}
+
+		// close
+		IMFILE->Close();
+	}
+}
+
 void CWindow_Tool::CamSpeedAndAxisDist()
 {
 	SetNextItemWidth(190.f);
-	if (SliderFloat("FreeCam Speed", &m_fFreeCamSpeed, 5.f, 100.f))
+	if (SliderFloat("FreeCam Speed", &m_fFreeCamSpeed, 5.f, 200.f))
 	{
 		m_pCamera_Free->Set_Speed(m_fFreeCamSpeed);
 	}
@@ -129,6 +166,45 @@ void CWindow_Tool::AxisRendering()
 	}
 }
 
+HRESULT CWindow_Tool::MakeObject(_double dTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON))
+	{
+		POINT	pt{};
+		GetCursorPos(&pt);
+		ScreenToClient(g_hWnd, &pt);
+
+		_vector		vMouse;
+		vMouse = XMVectorSet(pt.x / (g_iWinSizeX * 0.5f) - 1.f, pt.y / -(g_iWinSizeY * 0.5f) + 1.f, 0.f, 1.f);
+
+		_matrix		ProjMatrix_Inverse;
+		ProjMatrix_Inverse = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
+		vMouse = XMVector3TransformCoord(vMouse, ProjMatrix_Inverse);
+
+		_matrix		ViewMatrix_Inverse;
+		ViewMatrix_Inverse = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW);
+
+		_vector vRayPos, vRayDir;
+		vRayPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+		vRayDir = vMouse - vRayPos;
+		vRayDir = XMVector3Normalize(vRayDir);
+		_vector fTest1 = XMVector4Length(vRayDir);
+		vRayPos = XMVector3TransformCoord(vRayPos, ViewMatrix_Inverse);
+		vRayDir = XMVector3TransformNormal(vRayDir, ViewMatrix_Inverse);
+
+		
+		if (FAILED(m_pTerrain->PickingOnTerrain(vRayPos, vRayDir, &m_vPickPos)))
+			return E_FAIL;
+
+	}
+
+	m_pDummy->Move_Position(XMLoadFloat3(&m_vPickPos), dTimeDelta);
+	Safe_Release(pGameInstance);
+}
+
 
 CWindow_Tool* CWindow_Tool::Create(void* pArg)
 {
@@ -145,6 +221,7 @@ CWindow_Tool* CWindow_Tool::Create(void* pArg)
 void CWindow_Tool::Free()
 {
 	__super::Free();
+	Safe_Release(m_pDummy);
 	Safe_Release(m_pTerrain);
 	Safe_Release(m_pCamera_Free);
 	Safe_Release(m_pAxisUI);

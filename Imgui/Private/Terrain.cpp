@@ -1,5 +1,6 @@
 #include "Terrain.h"
 #include "GameInstance.h"
+#include "Engine_Defines.h"
 
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
@@ -49,6 +50,13 @@ HRESULT CTerrain::Render()
 }
 
 
+HRESULT CTerrain::RemakeTerrain(const _tchar* pHeightMap)
+{
+    if (FAILED(m_pTerrainCom->RemakeTerrain(pHeightMap)))
+        return E_FAIL;
+    return S_OK;
+}
+
 HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
 {
     if (0 == iSizeX ||
@@ -56,6 +64,43 @@ HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
         return S_OK;
     if (FAILED(m_pTerrainCom->RemakeTerrain(iSizeX, iSizeY)))
         return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CTerrain::PickingOnTerrain(_fvector& vRayPos, _fvector& vRayDir, _Inout_ _float3* vPickPos)
+{
+    const _float3* vVertices =  m_pTerrainCom->Get_PosArray();
+    const _uint* iIndex = m_pTerrainCom->Get_Index();
+    _uint iNumIndices = m_pTerrainCom->Get_NumIndices();
+
+    vector<_float>  DistanceVec;
+    DistanceVec.push_back(9999.f);
+    for (_uint i = 0; i < iNumIndices - 2; i++)
+    {
+        _float fDist;
+
+        TriangleTests::Intersects(vRayPos, XMVector3Normalize(vRayDir),
+            XMLoadFloat3(&vVertices[iIndex[i]]),
+            XMLoadFloat3(&vVertices[iIndex[i + 1]]),
+            XMLoadFloat3(&vVertices[iIndex[i + 2]]),
+            fDist);
+
+        if (0.f < fDist && DistanceVec.back() > fDist)
+        {
+            DistanceVec.pop_back();
+            DistanceVec.push_back(fDist);
+        }
+    }
+    if (DistanceVec.back() >= 9998.f)
+        return E_FAIL;
+    /*sort(DistanceVec.begin(), DistanceVec.end(), [](_float fSrc, _float fDst)->_bool {
+        if (fSrc < fDst)
+            return true;
+        else
+            return false;
+    });*/
+    XMStoreFloat3(vPickPos, vRayPos + DistanceVec.back() * vRayDir);
 
     return S_OK;
 }

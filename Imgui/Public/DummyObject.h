@@ -10,6 +10,7 @@ class CMesh;
 class CShader;
 class CCollider;
 class CTexture;
+class CVIBuffer_Cube;
 END
 
 BEGIN(Tool)
@@ -28,13 +29,19 @@ public:
 	virtual void Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Move_Position(_fvector vPos, _double dTimeDelta);
+
 private:
 	CRenderer*		m_pRendererCom = { nullptr };
-	CTransform*		m_pTransform = { nullptr };
+	CTransform*		m_pTransformCom = { nullptr };
 	CMesh*			m_pMeshCom = { nullptr };
 	CShader*		m_pShaderCom = { nullptr };
 	CCollider*		m_pColliderCom = { nullptr };
 	CTexture*		m_pTextureCom = { nullptr };
+
+private:
+	CVIBuffer_Cube* m_pBufferCom = { nullptr };
 
 private:
 	HRESULT	Add_Component();
