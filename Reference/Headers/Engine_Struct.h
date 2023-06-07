@@ -46,4 +46,18 @@ namespace Engine
 		static const unsigned int				iNumElements = { 2 };
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXPOSCUBE_DECL;
+
+	typedef struct tagVertex_Mesh
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexCoord;
+		XMFLOAT3		vTangent;
+	}VTXMESH;
+
+	typedef struct ENGINE_DLL tagVertex_Mesh_Declaration
+	{
+		static const unsigned int				iNumElements = { 4 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMESH_DECL;
 }

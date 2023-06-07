@@ -50,9 +50,6 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Add_Component()
 {
-    CGameInstance* pGameInstance = CGameInstance::GetInstance();
-    Safe_AddRef(pGameInstance);
-
     /* For.Com_VIBuffer */
     if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
@@ -79,8 +76,6 @@ HRESULT CTerrain::Add_Component()
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
-
-    Safe_Release(pGameInstance);
     return S_OK;
 }
 

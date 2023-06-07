@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class CModel : public CComponent
+class ENGINE_DLL CModel : public CComponent
 {
 private:
 	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -14,8 +14,11 @@ public:
 	virtual HRESULT Initialize_Prototype(const char* pModelFilePath);
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	virtual HRESULT Render() override;
+
 private:
-	const aiScene* m_pAIScene = { nullptr };
+	const aiScene*			m_pAIScene = { nullptr };
 	Assimp::Importer		m_Importer;
 
 private: /* For.Meshes  */

@@ -1,5 +1,6 @@
 #pragma once
 #include "Shader.h"
+#include "Model.h"
 #include "Renderer.h"
 #include "Transform.h"
 #include "Texture.h"

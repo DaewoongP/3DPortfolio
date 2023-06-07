@@ -207,6 +207,7 @@ HRESULT CWindow_Tool::MakeObject(_double dTimeDelta)
 		m_vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
 	m_pDummy->Move_Position(XMLoadFloat4(&m_vPickPos), dTimeDelta);
 	
+	return S_OK;
 }
 
 
