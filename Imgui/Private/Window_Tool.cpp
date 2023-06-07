@@ -21,38 +21,33 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 	m_pTerrain = static_cast<CTerrain*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Terrain")));
 	if (nullptr == m_pTerrain)
 		return E_FAIL;
-	else
-		Safe_AddRef(m_pTerrain);
+	Safe_AddRef(m_pTerrain);
 
 	m_pCamera_Free = static_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
 	if (nullptr == m_pCamera_Free)
 		return E_FAIL;
-	else
-		Safe_AddRef(m_pCamera_Free);
+	Safe_AddRef(m_pCamera_Free);
 
 	m_pAxisUI = static_cast<CAxis*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Axis_UI")));
 	if (nullptr == m_pAxisUI)
 		return E_FAIL;
-	else
-		Safe_AddRef(m_pAxisUI);
+	Safe_AddRef(m_pAxisUI);
 
 	m_pAxisOrigin = static_cast<CAxis*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Axis_Origin")));
 	if (nullptr == m_pAxisOrigin)
 		return E_FAIL;
-	else
-		Safe_AddRef(m_pAxisOrigin);
+	Safe_AddRef(m_pAxisOrigin);
 
 	m_pAxisCenter = static_cast<CAxis*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Axis_Center")));
 	if (nullptr == m_pAxisCenter)
 		return E_FAIL;
-	else
-		Safe_AddRef(m_pAxisCenter);
+	Safe_AddRef(m_pAxisCenter);
 
 	m_pDummy = static_cast<CDummyObject*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_DummyObject")));
 	if (nullptr == m_pDummy)
 		return E_FAIL;
-	else
-		Safe_AddRef(m_pDummy);
+	Safe_AddRef(m_pDummy);
+
 	return S_OK;
 }
 

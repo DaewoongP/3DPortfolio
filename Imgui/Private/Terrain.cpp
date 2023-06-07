@@ -74,8 +74,8 @@ HRESULT CTerrain::PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _
     const _uint* iIndex = m_pTerrainCom->Get_Index();
     _uint iNumIndices = m_pTerrainCom->Get_NumIndices();
 
-    vector<_float>  DistanceVec;
-    DistanceVec.push_back(9999.f);
+    _float fIntersectsDistance = 9999.f;
+    
     for (_uint i = 0; i < iNumIndices - 2; i++)
     {
         _float fDist;
@@ -86,22 +86,15 @@ HRESULT CTerrain::PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _
             XMLoadFloat3(&vVertices[iIndex[i + 2]]),
             fDist);
 
-        if (0.f < fDist && DistanceVec.back() > fDist)
+        if (0.f < fDist && fIntersectsDistance > fDist)
         {
-            DistanceVec.pop_back();
-            DistanceVec.push_back(fDist);
+            fIntersectsDistance = fDist;
         }
     }
-    if (DistanceVec.back() >= 9998.f)
+    if (fIntersectsDistance >= 9998.f)
         return E_FAIL;
-    /*sort(DistanceVec.begin(), DistanceVec.end(), [](_float fSrc, _float fDst)->_bool {
-        if (fSrc < fDst)
-            return true;
-        else
-            return false;
-    });*/
-    _float fDistance = DistanceVec.back();
-    _vector vPos = vRayPos + (fDistance * vRayDir);
+
+    _vector vPos = vRayPos + (fIntersectsDistance * vRayDir);
     XMStoreFloat3(vPickPos, vPos);
 
     return S_OK;
