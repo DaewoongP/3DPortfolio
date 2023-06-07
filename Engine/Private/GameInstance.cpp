@@ -183,6 +183,14 @@ HRESULT CGameInstance::Delete_Prototype(_uint iLevelIndex, const _tchar* pProtot
 	return m_pComponent_Manager->Delete_Prototype(iLevelIndex, pPrototypeTag);
 }
 
+unordered_map<const _tchar*, class CComponent*> CGameInstance::Find_PrototypesBySubTag(_uint iLevelIndex, const _tchar* pSubTag)
+{
+	if (nullptr == m_pComponent_Manager)
+		return unordered_map<const _tchar*, class CComponent*>();
+
+	return m_pComponent_Manager->Find_PrototypesBySubTag(iLevelIndex, pSubTag);
+}
+
 _byte	CGameInstance::Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState)
 {
 	if (nullptr == m_pInput_Device)

@@ -13,12 +13,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 
-
-
-
 private:
 	vector<class CGameObject*>			m_Undo;
-
+	_uint								m_iMaxSelection;
 public:
 	static CWindow_UI* Create(void* pArg = nullptr);
 	virtual void Free() override;

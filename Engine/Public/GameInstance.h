@@ -45,6 +45,7 @@ public: /* For.Component_Manager*/
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, class CComponent* pPrototype);
 	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar * pPrototypeTag, void* pArg = nullptr);
 	HRESULT	Delete_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag);
+	unordered_map<const _tchar*, class CComponent*> Find_PrototypesBySubTag(_uint iLevelIndex, const _tchar * pSubTag);
 
 public: /* For.Input_Device*/
 	_byte		Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState = CInput_Device::KEY_PRESSING);

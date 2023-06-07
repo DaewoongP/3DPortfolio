@@ -53,12 +53,12 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	{
 		pLayer = CLayer::Create();
 
-		pLayer->Add_GameObjects(pObjectTag, pGameObject);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObjects(pObjectTag, pGameObject), E_FAIL);
 
 		m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
 	}
 	else
-		pLayer->Add_GameObjects(pObjectTag, pGameObject);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObjects(pObjectTag, pGameObject),E_FAIL);
 
 	return S_OK;
 }

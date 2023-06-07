@@ -23,8 +23,6 @@ public:
 	{
 		_tchar* pModelPrototypeTag = TEXT("");
 		_float4 vPosition;
-		_float3 vScale;
-		_float3 vLook;
 	}OBJECTDESC;
 private:
 	explicit CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -12,11 +12,20 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
+	void Set_Tag(const _tchar * pTag) {
+		wcscpy_s(m_pTag, MAX_STR, pTag);
+	}
+	const _tchar* Get_Tag() const { return m_pTag; }
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_double dTimeDelta);
 	virtual void Late_Tick(_double dTimeDelta);
 	virtual HRESULT Render();
+
+private:
+	_tchar m_pTag[MAX_STR];
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

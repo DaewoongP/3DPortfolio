@@ -10,8 +10,8 @@ HRESULT CLayer::Add_GameObjects(const _tchar* pGameObjectTag, CGameObject* pGame
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (nullptr != Find_GameObject(pGameObjectTag))
 		return E_FAIL;
-
-	m_GameObjects.insert({ pGameObjectTag, pGameObject });
+	pGameObject->Set_Tag(pGameObjectTag);
+	m_GameObjects.insert({ pGameObject->Get_Tag(), pGameObject });
 
 	return S_OK;
 }

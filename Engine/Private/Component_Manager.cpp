@@ -98,6 +98,16 @@ HRESULT CComponent_Manager::Delete_Prototype(_uint iLevelIndex, const _tchar* pP
 	return E_FAIL;
 }
 
+unordered_map<const _tchar*, class CComponent*> CComponent_Manager::Find_PrototypesBySubTag(_uint iLevelIndex, const _tchar* pSubTag)
+{
+	unordered_map<const _tchar*, class CComponent*> Components;
+	for_each(m_pPrototypes[iLevelIndex].begin(), m_pPrototypes[iLevelIndex].end(), [&](auto& pair) {
+		if (nullptr != wcswcs(pair.first, pSubTag))
+			Components.insert(pair);
+		});
+	return Components;
+}
+
 void CComponent_Manager::Free()
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)

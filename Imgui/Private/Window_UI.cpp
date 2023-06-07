@@ -8,6 +8,7 @@ HRESULT CWindow_UI::Initialize(void* pArg)
 {
 	m_vWindowPos = ImVec2(0, 200);
 	m_vWindowSize = ImVec2(500, 400);
+	m_iMaxSelection = 10;
 	return S_OK;
 }
 
@@ -16,9 +17,8 @@ void CWindow_UI::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 	Begin("UI", nullptr, m_WindowFlag);
 
-
 	if (Button("Open File Dialog"))
-		IMFILE->OpenDialog("ChooseFileDlgKey", "Choose File", ".png, .dds", ".");
+		IMFILE->OpenDialog("ChooseFileDlgKey", "Choose File", ".png, .dds", ".", m_iMaxSelection);
 	
 	// display
 	if (IMFILE->Display("ChooseFileDlgKey"))
@@ -26,9 +26,10 @@ void CWindow_UI::Tick(_double dTimeDelta)
 		// action if OK
 		if (IMFILE->IsOk())
 		{
+			map<string, string> strMap = IMFILE->GetSelection();
 			string filePathName = IMFILE->GetFilePathName();
 			string filePath = IMFILE->GetCurrentPath();
-
+			
 			wstring fPath;
 			fPath.assign(filePathName.begin(), filePathName.end());
 			const _tchar* test = fPath.c_str();

@@ -83,4 +83,11 @@ namespace Engine
 		wStr.assign(str.begin(), str.end());
 		return wStr;
 	}
+
+	static string WStringToString(const wstring& wstr)
+	{
+		string Str;
+		Str.assign(wstr.begin(), wstr.end());
+		return Str;
+	}
 }
