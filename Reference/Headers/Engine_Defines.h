@@ -6,6 +6,10 @@
 #pragma warning (disable : 4828)
 #pragma warning (disable : 4702)
 
+
+#define DIRECTINPUT_VERSION		0x0800
+#include <dinput.h>
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
@@ -14,9 +18,11 @@
 #include "fx11\d3dx11effect.h"
 #include "DirectXTK\DDSTextureLoader.h"
 #include "DirectXTK\WICTextureLoader.h"
+#include "DirectXTK\ScreenGrab.h"
 
-#define DIRECTINPUT_VERSION		0x0800
-#include <dinput.h>
+#include "assimp\Importer.hpp"
+#include "assimp\scene.h"
+
 
 #include <iostream>
 #include <vector>
@@ -51,7 +57,7 @@ using namespace DirectX;
 #define New DBG_NEW
 #endif // _USE_IMGUI
 
-#endif // _DEBUG
+#endif // DBG_NEW
 #endif // _DEBUG
 
 using namespace Engine;
