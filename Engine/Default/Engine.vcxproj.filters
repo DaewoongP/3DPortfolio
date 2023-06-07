@@ -189,12 +189,6 @@
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>04. PipeLine</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Model.h">
-      <Filter>01. Utility\03. Components\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Mesh.h">
-      <Filter>01. Utility\03. Components\Model\Mesh</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -274,12 +268,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp">
       <Filter>04. PipeLine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Model.cpp">
-      <Filter>01. Utility\03. Components\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Mesh.cpp">
-      <Filter>01. Utility\03. Components\Model\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

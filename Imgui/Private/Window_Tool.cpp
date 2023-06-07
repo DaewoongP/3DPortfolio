@@ -16,7 +16,7 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 	m_TerrainSize[1] = 5;
 	m_TerrainOverflowSize[0] = 50000;
 	m_TerrainOverflowSize[1] = 50000;
-	m_vPickPos = _float3(0.f, 0.f, 0.f);
+	m_vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
 
 	m_pTerrain = static_cast<CTerrain*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Terrain")));
 	if (nullptr == m_pTerrain)
@@ -190,10 +190,23 @@ HRESULT CWindow_Tool::MakeObject(_double dTimeDelta)
 		if (FAILED(m_pTerrain->PickingOnTerrain(vRayPos, vRayDir, &m_vPickPos)))
 			return E_FAIL;
 
+		/*wstring strName = TEXT("GameObject_DummyObject");
+		static int iNum = 0;
+		wstring strNum = to_wstring(iNum);
+		
+		strName = strName + strNum;
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
+			TEXT("Prototype_GameObject_DummyObject"), TEXT("Layer_Tool"), strName.c_str(), &m_vPickPos)))
+		{
+			MSG_BOX("Failed Add GameObject DummyObject");
+			return E_FAIL;
+		}
+		++iNum;*/
 	}
 	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON))
-		m_vPickPos = _float3(0.f, 0.f, 0.f);
-	m_pDummy->Move_Position(XMLoadFloat3(&m_vPickPos), dTimeDelta);
+		m_vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
+	m_pDummy->Move_Position(XMLoadFloat4(&m_vPickPos), dTimeDelta);
+	
 }
 
 

@@ -24,7 +24,7 @@ private:
 	_float							m_fFreeCamSpeed = { 5.f };
 	_float							m_fAxisDistance = { 3.f };
 	array<_bool, CAxis::AXIS_END>	m_AxisState;
-	_float3							m_vPickPos;
+	_float4							m_vPickPos;
 
 	CCamera_Free*					m_pCamera_Free = { nullptr };
 	CTerrain*						m_pTerrain = { nullptr };

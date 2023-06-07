@@ -22,6 +22,9 @@ HRESULT CDummyObject::Initialize(void* pArg)
 	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+    if (nullptr != pArg)
+        m_pTransformCom->Set_State(CTransform::STATE_POSITION, *static_cast<_vector*>(pArg));
+
 	return S_OK;
 }
 
@@ -61,7 +64,7 @@ HRESULT CDummyObject::Add_Component()
         return E_FAIL;
 
     CTransform::TRANSFORMDESC TransformDesc;
-    TransformDesc.dSpeedPerSec = 5.f;
+    TransformDesc.dSpeedPerSec = 50.f;
     TransformDesc.dRotationPerSec = 5.f;
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Transform"),

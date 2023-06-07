@@ -32,7 +32,7 @@ public:
 	HRESULT RemakeTerrain(const _tchar* pHeightMap);
 	HRESULT RemakeTerrain(_uint iSizeX, _uint iSizeY);
 
-	HRESULT PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _float3* vPickPos);
+	HRESULT PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _float4* vPickPos);
 
 private:
 	CShader*				m_pShaderCom = { nullptr };
