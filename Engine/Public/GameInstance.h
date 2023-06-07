@@ -47,8 +47,8 @@ public: /* For.Component_Manager*/
 	HRESULT	Delete_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag);
 
 public: /* For.Input_Device*/
-	_byte		Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState);
-	_byte		Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID, CInput_Device::KEYSTATE eState);
+	_byte		Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState = CInput_Device::KEY_PRESSING);
+	_byte		Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID, CInput_Device::KEYSTATE eState = CInput_Device::KEY_PRESSING);
 	_long		Get_DIMouseMove(CInput_Device::MOUSEMOVESTATE eMouseMoveID);
 
 public: /* For.PipeLine*/
