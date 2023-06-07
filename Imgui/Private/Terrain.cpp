@@ -68,8 +68,19 @@ HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
     return S_OK;
 }
 
-HRESULT CTerrain::PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _float4* vPickPos)
+HRESULT CTerrain::PickingOnTerrain(_Inout_ _float4* vPickPos)
 {
+    CGameInstance* pGameInstance = CGameInstance::GetInstance();
+    Safe_AddRef(pGameInstance);
+
+    _float4 vRayPos, vRayDir;
+    if (FAILED(pGameInstance->Get_MouseRay(m_pContext, g_hWnd, &vRayPos, &vRayDir)))
+    {
+        Safe_Release(pGameInstance);
+        return E_FAIL;
+    }
+    Safe_Release(pGameInstance);
+
     const _float3* vVertices =  m_pTerrainCom->Get_PosArray();
     const _uint* iIndex = m_pTerrainCom->Get_Index();
     _uint iNumIndices = m_pTerrainCom->Get_NumIndices();
@@ -80,7 +91,7 @@ HRESULT CTerrain::PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _
     {
         _float fDist;
 
-        TriangleTests::Intersects(vRayPos, XMVector3Normalize(vRayDir),
+        TriangleTests::Intersects(XMLoadFloat4(&vRayPos), XMVector3Normalize(XMLoadFloat4(&vRayDir)),
             XMLoadFloat3(&vVertices[iIndex[i]]),
             XMLoadFloat3(&vVertices[iIndex[i + 1]]),
             XMLoadFloat3(&vVertices[iIndex[i + 2]]),
@@ -94,7 +105,7 @@ HRESULT CTerrain::PickingOnTerrain(_fvector vRayPos, _fvector vRayDir, _Inout_ _
     if (fIntersectsDistance >= 9998.f)
         return E_FAIL;
 
-    _vector vPos = vRayPos + (fIntersectsDistance * vRayDir);
+    _vector vPos = XMLoadFloat4(&vRayPos) + (fIntersectsDistance * XMLoadFloat4(&vRayDir));
     XMStoreFloat4(vPickPos, vPos);
 
     return S_OK;

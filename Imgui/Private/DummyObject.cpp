@@ -77,11 +77,6 @@ HRESULT CDummyObject::Add_Component()
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
-    /*if (FAILED(__super::Add_Component(LEVEL_TOOL, 
-        TEXT("Prototype_Component_VIBuffer_Cube"),
-        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
-        return E_FAIL;*/
-
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Model_TestWall"),
         TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))

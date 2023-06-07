@@ -38,7 +38,7 @@
       <Filter>96. Managers\Window</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Tool.cpp">
-      <Filter>01. ImWindow\Terrain</Filter>
+      <Filter>01. ImWindow\Tool &amp; Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ToolInstance.cpp">
       <Filter>96. Managers\Instance</Filter>
@@ -112,7 +112,7 @@
       <Filter>96. Managers\Window</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Tool.h">
-      <Filter>01. ImWindow\Terrain</Filter>
+      <Filter>01. ImWindow\Tool &amp; Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ToolInstance.h">
       <Filter>96. Managers\Instance</Filter>
@@ -185,9 +185,6 @@
     <Filter Include="96. Managers\Instance">
       <UniqueIdentifier>{944fc16a-9e39-4c49-b59a-35d109be6631}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Terrain">
-      <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. ToolObject">
       <UniqueIdentifier>{414f2479-5282-4c23-954a-6e4f4668db7e}</UniqueIdentifier>
     </Filter>
@@ -217,6 +214,9 @@
     </Filter>
     <Filter Include="01. ImWindow\Model">
       <UniqueIdentifier>{22ee1db2-a7d9-4979-801f-4e3c7e455b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Tool &amp; Terrain">
+      <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

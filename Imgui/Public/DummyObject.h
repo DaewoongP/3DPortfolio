@@ -18,6 +18,14 @@ BEGIN(Tool)
 
 class CDummyObject : public CGameObject
 {
+public:
+	typedef struct tagDummyObjectDesc
+	{
+		_tchar* pModelPrototypeTag = TEXT("");
+		_float4 vPosition;
+		_float3 vScale;
+		_float3 vLook;
+	}OBJECTDESC;
 private:
 	explicit CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CDummyObject(const CDummyObject& rhs);

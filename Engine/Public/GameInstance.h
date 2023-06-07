@@ -47,8 +47,8 @@ public: /* For.Component_Manager*/
 	HRESULT	Delete_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag);
 
 public: /* For.Input_Device*/
-	_byte		Get_DIKeyState(_ubyte ubyKeyID);
-	_byte		Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID);
+	_byte		Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState);
+	_byte		Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID, CInput_Device::KEYSTATE eState);
 	_long		Get_DIMouseMove(CInput_Device::MOUSEMOVESTATE eMouseMoveID);
 
 public: /* For.PipeLine*/
@@ -59,6 +59,9 @@ public: /* For.PipeLine*/
 	_float4x4* Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_float4	Get_CamPosition() const;
 
+public: /* For. Calculator */
+	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -67,6 +70,7 @@ private:
 	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
+	class CCalculator*				m_pCalculator = { nullptr };
 
 public:
 	static void Release_Engine();

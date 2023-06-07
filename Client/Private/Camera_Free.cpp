@@ -71,27 +71,27 @@ void CCamera_Free::Key_Input(const _double& dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	if (pGameInstance->Get_DIKeyState(DIK_W))
+	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_PRESSING))
 	{
 		m_pCameraCom->Go_Straight(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_S))
+	if (pGameInstance->Get_DIKeyState(DIK_S, CInput_Device::KEY_PRESSING))
 	{
 		m_pCameraCom->Go_Backward(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_A))
+	if (pGameInstance->Get_DIKeyState(DIK_A, CInput_Device::KEY_PRESSING))
 	{
 		m_pCameraCom->Go_Left(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_D))
+	if (pGameInstance->Get_DIKeyState(DIK_D, CInput_Device::KEY_PRESSING))
 	{
 		m_pCameraCom->Go_Right(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_Q))
+	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
 	{
 		if (m_bClick)
 			return;

@@ -154,6 +154,11 @@ HRESULT CMainTool::Ready_Prototype_Component_Model()
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/TestWall.fbx"))))
 		return E_FAIL;
 
+	/* Prototype_Component_Model_Fiona */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Fiona.fbx"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

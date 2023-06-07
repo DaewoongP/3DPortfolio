@@ -9,8 +9,58 @@ CInput_Device::CInput_Device()
 {
 	ZeroMemory(m_byKeyState, sizeof(m_byKeyState));
 	ZeroMemory(&m_MouseState, sizeof(DIMOUSESTATE));
+	ZeroMemory(&m_MouseState, sizeof(DIMOUSESTATE));
+	ZeroMemory(&m_PreMouseState, sizeof(DIMOUSESTATE));
+}
+_byte CInput_Device::Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState)
+{
+	switch (eState)
+	{
+	case KEY_DOWN:
+		if (Key_Down(ubyKeyID))
+			return m_byKeyState[ubyKeyID];
+		break;
+	case KEY_PRESSING:
+		if (Key_Pressing(ubyKeyID))
+			return m_byKeyState[ubyKeyID];
+		break;
+	case KEY_UP:
+		if (Key_Up(ubyKeyID))
+			return m_byKeyState[ubyKeyID];
+		break;
+	default:
+		return 0;
+	}
+
+	return 0;
+}
+_byte CInput_Device::Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState)
+{
+	switch (eState)
+	{
+	case KEY_DOWN:
+		if (Mouse_Down(eMouseID))
+			return m_MouseState.rgbButtons[eMouseID];
+		break;
+	case KEY_PRESSING:
+		if (Mouse_Pressing(eMouseID))
+			return m_MouseState.rgbButtons[eMouseID];
+		break;
+	case KEY_UP:
+		if (Mouse_Up(eMouseID))
+			return m_MouseState.rgbButtons[eMouseID];
+		break;
+	default:
+		return 0;
+	}
+
+	return 0;
 }
 
+_long CInput_Device::Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID)
+{
+	return *(((_long*)&m_MouseState) + eMouseMoveID);
+}
 
 HRESULT CInput_Device::Ready_Input_Device(HINSTANCE hInst, HWND hWnd)
 {
@@ -46,8 +96,59 @@ HRESULT CInput_Device::Ready_Input_Device(HINSTANCE hInst, HWND hWnd)
 
 void CInput_Device::Tick(void)
 {
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	memcpy(m_byPreKeyState, m_byKeyState, sizeof(_byte) * MAX_DIK);
+	memcpy(&m_PreMouseState, &m_MouseState, sizeof(DIMOUSESTATE));
+
+	m_pKeyBoard->GetDeviceState(MAX_DIK, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_MouseState), &m_MouseState);
+}
+
+_bool CInput_Device::Key_Down(const _ubyte& ubyKey)
+{
+	if (!(m_byPreKeyState[ubyKey] & 0x80) && (m_byKeyState[ubyKey] & 0x80))
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::Key_Pressing(const _ubyte& ubyKey)
+{
+	if ((m_byPreKeyState[ubyKey] & 0x80) && (m_byKeyState[ubyKey] & 0x80))
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::Key_Up(const _ubyte& ubyKey)
+{
+	if ((m_byPreKeyState[ubyKey] & 0x80) && !(m_byKeyState[ubyKey] & 0x80))
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::Mouse_Down(MOUSEKEYSTATE eMouseID)
+{
+	if (!m_PreMouseState.rgbButtons[eMouseID] && m_MouseState.rgbButtons[eMouseID])
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::Mouse_Pressing(MOUSEKEYSTATE eMouseID)
+{
+	if (m_PreMouseState.rgbButtons[eMouseID] && m_MouseState.rgbButtons[eMouseID])
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::Mouse_Up(MOUSEKEYSTATE eMouseID)
+{
+	if (m_PreMouseState.rgbButtons[eMouseID] && !m_MouseState.rgbButtons[eMouseID])
+		return true;
+
+	return false;
 }
 
 void CInput_Device::Free(void)

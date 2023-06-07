@@ -3,7 +3,7 @@
 #include "Level_Manager.h"
 #include "Object_Manager.h"
 #include "Timer_Manager.h"
-
+#include "Calculator.h"
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -14,7 +14,9 @@ CGameInstance::CGameInstance()
 	, m_pComponent_Manager{ CComponent_Manager::GetInstance() }
 	, m_pInput_Device{ CInput_Device::GetInstance() }
 	, m_pPipeLine{ CPipeLine::GetInstance() }
+	, m_pCalculator{ CCalculator::GetInstance() }
 {
+	Safe_AddRef(m_pCalculator);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pGraphic_Device);
 	Safe_AddRef(m_pLevel_Manager);
@@ -181,20 +183,20 @@ HRESULT CGameInstance::Delete_Prototype(_uint iLevelIndex, const _tchar* pProtot
 	return m_pComponent_Manager->Delete_Prototype(iLevelIndex, pPrototypeTag);
 }
 
-_byte	CGameInstance::Get_DIKeyState(_ubyte ubyKeyID)
+_byte	CGameInstance::Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState)
 {
 	if (nullptr == m_pInput_Device)
 		return 0;
 
-	return m_pInput_Device->Get_DIKeyState(ubyKeyID);
+	return m_pInput_Device->Get_DIKeyState(ubyKeyID, eState);
 }
 
-_byte	CGameInstance::Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID)
+_byte	CGameInstance::Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID, CInput_Device::KEYSTATE eState)
 {
 	if (nullptr == m_pInput_Device)
 		return 0;
 
-	return m_pInput_Device->Get_DIMouseState(eMouseID);
+	return m_pInput_Device->Get_DIMouseState(eMouseID, eState);
 }
 
 _long	CGameInstance::Get_DIMouseMove(CInput_Device::MOUSEMOVESTATE eMouseMoveID)
@@ -253,6 +255,14 @@ _float4 CGameInstance::Get_CamPosition() const
 	return m_pPipeLine->Get_CamPosition();
 }
 
+HRESULT CGameInstance::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)
+{
+	if (nullptr == m_pCalculator)
+		return E_FAIL;
+
+	return m_pCalculator->Get_MouseRay(pContext, hWnd, vRayPos, vRayDir);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -261,12 +271,14 @@ void CGameInstance::Release_Engine()
 	CComponent_Manager::GetInstance()->DestroyInstance();
 	CLevel_Manager::GetInstance()->DestroyInstance();
 	CTimer_Manager::GetInstance()->DestroyInstance();
+	CCalculator::GetInstance()->DestroyInstance();
 	CInput_Device::GetInstance()->DestroyInstance();
 	CGraphic_Device::GetInstance()->DestroyInstance();
 }
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pCalculator);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pComponent_Manager);

@@ -3,7 +3,6 @@
 #include "Terrain.h"
 #include "Camera_Free.h"
 #include "Axis.h"
-#include "DummyObject.h"
 
 BEGIN(Tool)
 
@@ -24,14 +23,12 @@ private:
 	_float							m_fFreeCamSpeed = { 5.f };
 	_float							m_fAxisDistance = { 3.f };
 	array<_bool, CAxis::AXIS_END>	m_AxisState;
-	_float4							m_vPickPos;
 
 	CCamera_Free*					m_pCamera_Free = { nullptr };
 	CTerrain*						m_pTerrain = { nullptr };
 	CAxis*							m_pAxisUI = { nullptr };
 	CAxis*							m_pAxisOrigin = { nullptr };
 	CAxis*							m_pAxisCenter = { nullptr };
-	CDummyObject*					m_pDummy = { nullptr };
 
 private:
 	void TerrainSizeXZ();
@@ -39,8 +36,6 @@ private:
 	void WireFrame();
 	void CamSpeedAndAxisDist();
 	void AxisRendering();
-
-	HRESULT MakeObject(_double dTimeDelta);
 
 public:
 	static CWindow_Tool* Create(void* pArg = nullptr);

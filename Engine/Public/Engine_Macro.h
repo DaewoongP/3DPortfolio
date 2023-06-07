@@ -2,6 +2,7 @@
 ///////////////////////// My Macros /////////////////////////////
 #define			PURE						= 0
 #define			MAX_STR						256
+#define			MAX_DIK						256
 #define			ZEROMEM(_ptr)				ZeroMemory(_ptr, sizeof _ptr)
 #define			ZEROMEMSIZE(_ptr, _size)	ZeroMemory(_ptr, sizeof _size)
 
