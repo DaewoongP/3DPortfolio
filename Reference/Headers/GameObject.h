@@ -18,10 +18,6 @@ public:
 	virtual void Late_Tick(_double dTimeDelta);
 	virtual HRESULT Render();
 
-protected:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual void Free() override;

@@ -184,7 +184,7 @@ void CAxis::Set_Center(CGameInstance* pGameInstance)
 
 CAxis* CAxis::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CAxis* pInstance = new CAxis(pDevice, pContext);
+	CAxis* pInstance = New CAxis(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -196,7 +196,7 @@ CAxis* CAxis::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CGameObject* CAxis::Clone(void* pArg)
 {
-	CAxis* pInstance = new CAxis(*this);
+	CAxis* pInstance = New CAxis(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

@@ -72,7 +72,7 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 
 CWindow_Model* CWindow_Model::Create(void* pArg)
 {
-	CWindow_Model* pInstance = new CWindow_Model();
+	CWindow_Model* pInstance = New CWindow_Model();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

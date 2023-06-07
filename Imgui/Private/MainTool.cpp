@@ -217,7 +217,7 @@ void CMainTool::Render_FPS(_double dTimeDelta)
 
 CMainTool* CMainTool::Create()
 {
-	CMainTool* pInstance = new CMainTool();
+	CMainTool* pInstance = New CMainTool();
 
 	if (FAILED(pInstance->Initialize()))
 	{

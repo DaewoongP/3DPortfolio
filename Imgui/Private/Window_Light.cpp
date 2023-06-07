@@ -24,7 +24,7 @@ void CWindow_Light::Tick(_double dTimeDelta)
 
 CWindow_Light* CWindow_Light::Create(void* pArg)
 {
-	CWindow_Light* pInstance = new CWindow_Light();
+	CWindow_Light* pInstance = New CWindow_Light();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

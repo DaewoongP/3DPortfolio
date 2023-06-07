@@ -90,7 +90,7 @@ HRESULT CLevel_Tool::Ready_For_Layer_Tool(const _tchar* pLayerTag)
 
 CLevel_Tool* CLevel_Tool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CLevel_Tool* pInstance = new CLevel_Tool(pDevice, pContext);
+	CLevel_Tool* pInstance = New CLevel_Tool(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{

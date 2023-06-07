@@ -104,7 +104,7 @@ HRESULT CDummyObject::SetUp_ShaderResources()
 
 CDummyObject* CDummyObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-    CDummyObject* pInstance = new CDummyObject(pDevice, pContext);
+    CDummyObject* pInstance = New CDummyObject(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
     {
@@ -116,7 +116,7 @@ CDummyObject* CDummyObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 CGameObject* CDummyObject::Clone(void* pArg)
 {
-    CDummyObject* pInstance = new CDummyObject(*this);
+    CDummyObject* pInstance = New CDummyObject(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
     {

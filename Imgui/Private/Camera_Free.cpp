@@ -74,22 +74,22 @@ void CCamera_Free::Key_Input(const _double& dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_PRESSING))
+	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
 		m_pCamera->Go_Straight(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_S, CInput_Device::KEY_PRESSING))
+	if (pGameInstance->Get_DIKeyState(DIK_S))
 	{
 		m_pCamera->Go_Backward(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_A, CInput_Device::KEY_PRESSING))
+	if (pGameInstance->Get_DIKeyState(DIK_A))
 	{
 		m_pCamera->Go_Left(dTimeDelta);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_D, CInput_Device::KEY_PRESSING))
+	if (pGameInstance->Get_DIKeyState(DIK_D))
 	{
 		m_pCamera->Go_Right(dTimeDelta);
 	}
@@ -182,7 +182,7 @@ _vector CCamera_Free::Picking()
 
 CCamera_Free* CCamera_Free::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCamera_Free* pInstance = new CCamera_Free(pDevice, pContext);
+	CCamera_Free* pInstance = New CCamera_Free(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -194,7 +194,7 @@ CCamera_Free* CCamera_Free::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 CGameObject* CCamera_Free::Clone(void* pArg)
 {
-	CCamera_Free* pInstance = new CCamera_Free(*this);
+	CCamera_Free* pInstance = New CCamera_Free(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

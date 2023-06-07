@@ -25,7 +25,7 @@ void CWindow_Camera::Tick(_double dTimeDelta)
 
 CWindow_Camera* CWindow_Camera::Create(void* pArg)
 {
-	CWindow_Camera* pInstance = new CWindow_Camera();
+	CWindow_Camera* pInstance = New CWindow_Camera();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

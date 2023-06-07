@@ -3,20 +3,12 @@
 
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComposite(pDevice, pContext)
-	, m_pDevice(pDevice)
-	, m_pContext(pContext)
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
 	: CComposite(rhs)
-	, m_pDevice(rhs.m_pDevice)
-	, m_pContext(rhs.m_pContext)
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
 }
 
 HRESULT CGameObject::Initialize_Prototype()
@@ -48,7 +40,4 @@ HRESULT CGameObject::Render()
 void CGameObject::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pContext);
-	Safe_Release(m_pDevice);
 }

@@ -43,7 +43,7 @@ void CWindow_UI::Tick(_double dTimeDelta)
 
 CWindow_UI* CWindow_UI::Create(void* pArg)
 {
-	CWindow_UI* pInstance = new CWindow_UI();
+	CWindow_UI* pInstance = New CWindow_UI();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

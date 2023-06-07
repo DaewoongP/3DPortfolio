@@ -155,7 +155,7 @@ void CWindow_Tool::AxisRendering()
 
 CWindow_Tool* CWindow_Tool::Create(void* pArg)
 {
-	CWindow_Tool* pInstance = new CWindow_Tool();
+	CWindow_Tool* pInstance = New CWindow_Tool();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

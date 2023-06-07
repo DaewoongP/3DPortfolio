@@ -168,7 +168,7 @@ HRESULT CTerrain::SetUp_ShaderResources()
 
 CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-    CTerrain* pInstance = new CTerrain(pDevice, pContext);
+    CTerrain* pInstance = New CTerrain(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
     {
@@ -180,7 +180,7 @@ CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CGameObject* CTerrain::Clone(void* pArg)
 {
-    CTerrain* pInstance = new CTerrain(*this);
+    CTerrain* pInstance = New CTerrain(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
