@@ -60,7 +60,7 @@ public: /* For.PipeLine*/
 	_float4	Get_CamPosition() const;
 
 public: /* For. Calculator */
-	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
+	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

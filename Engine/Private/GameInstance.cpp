@@ -255,12 +255,12 @@ _float4 CGameInstance::Get_CamPosition() const
 	return m_pPipeLine->Get_CamPosition();
 }
 
-HRESULT CGameInstance::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)
+HRESULT CGameInstance::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)
 {
 	if (nullptr == m_pCalculator)
 		return E_FAIL;
 
-	return m_pCalculator->Get_MouseRay(pContext, hWnd, vRayPos, vRayDir);
+	return m_pCalculator->Get_MouseRay(pContext, hWnd, PickingWorldMatrix_Inverse, vRayPos, vRayDir);
 }
 
 void CGameInstance::Release_Engine()

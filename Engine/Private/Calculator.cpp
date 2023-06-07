@@ -7,7 +7,7 @@ CCalculator::CCalculator()
 {
 }
 
-HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)
+HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)
 {
     D3D11_VIEWPORT ViewPort;
     UINT iNumViewPorts = 1;
@@ -48,6 +48,11 @@ HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _Ino
 
 	vPickPos = XMVector3TransformCoord(vPickPos, ViewMatrix_Inverse);
 	vPickDir = XMVector3TransformNormal(vPickDir, ViewMatrix_Inverse);
+
+	vPickPos = XMVector3TransformCoord(vPickPos, PickingWorldMatrix_Inverse);
+	vPickDir = XMVector3TransformNormal(vPickDir, PickingWorldMatrix_Inverse);
+
+	
 
 	XMStoreFloat4(vRayPos, vPickPos);
 	XMStoreFloat4(vRayDir, vPickDir);

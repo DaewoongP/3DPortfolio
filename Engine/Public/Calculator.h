@@ -12,7 +12,7 @@ public:
 	virtual ~CCalculator() = default;
 
 public:
-	HRESULT Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir);
+	HRESULT Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir);
 
 public:
 	virtual void Free() override;

@@ -74,7 +74,7 @@ HRESULT CTerrain::PickingOnTerrain(_Inout_ _float4* vPickPos)
     Safe_AddRef(pGameInstance);
 
     _float4 vRayPos, vRayDir;
-    if (FAILED(pGameInstance->Get_MouseRay(m_pContext, g_hWnd, &vRayPos, &vRayDir)))
+    if (FAILED(pGameInstance->Get_MouseRay(m_pContext, g_hWnd, m_pTransformCom->Get_WorldMatrix_Inverse(), &vRayPos, &vRayDir)))
     {
         Safe_Release(pGameInstance);
         return E_FAIL;
@@ -116,6 +116,11 @@ HRESULT CTerrain::Add_Component()
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+        return E_FAIL;
+
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_Transform"),
+        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
         return E_FAIL;
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
@@ -195,6 +200,7 @@ void CTerrain::Free()
     __super::Free();
     Safe_Release(m_pTextureCom);
     Safe_Release(m_pShaderCom);
+    Safe_Release(m_pTransformCom);
     Safe_Release(m_pTerrainCom);
     Safe_Release(m_pRendererCom);
 }
