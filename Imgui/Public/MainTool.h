@@ -24,6 +24,8 @@ public:
 
 public:
 	HRESULT Ready_Prototype_Component();
+	HRESULT Ready_Prototype_Component_Shader();
+	HRESULT Ready_Prototype_Component_Model();
 	HRESULT Ready_Prototype_Object();
 	HRESULT Open_Level();
 	HRESULT Add_Windows();

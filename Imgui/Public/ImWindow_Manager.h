@@ -7,6 +7,7 @@
 #include "Window_Camera.h"
 #include "Window_UI.h"
 #include "Window_Light.h"
+#include "Window_Model.h"
 
 BEGIN(Tool)
 
@@ -20,6 +21,7 @@ public:
         CAMERA,
         UI,
         LIGHT,
+        MODEL,
         WINDOW_END
     };
 

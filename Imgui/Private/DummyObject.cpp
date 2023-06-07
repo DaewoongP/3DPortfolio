@@ -25,6 +25,7 @@ HRESULT CDummyObject::Initialize(void* pArg)
     if (nullptr != pArg)
         m_pTransformCom->Set_State(CTransform::STATE_POSITION, *static_cast<_vector*>(pArg));
 
+    m_pTransformCom->Set_Scale(_float3(0.01f, 0.01f, 0.01f));
 	return S_OK;
 }
 
@@ -64,7 +65,7 @@ HRESULT CDummyObject::Add_Component()
         return E_FAIL;
 
     CTransform::TRANSFORMDESC TransformDesc;
-    TransformDesc.dSpeedPerSec = 50.f;
+    TransformDesc.dSpeedPerSec = 10.f;
     TransformDesc.dRotationPerSec = 5.f;
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Transform"),
@@ -72,13 +73,18 @@ HRESULT CDummyObject::Add_Component()
         return E_FAIL;
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Shader_Cube"),
+        TEXT("Prototype_Component_Shader_DummyMesh"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
-    if (FAILED(__super::Add_Component(LEVEL_TOOL, 
+    /*if (FAILED(__super::Add_Component(LEVEL_TOOL, 
         TEXT("Prototype_Component_VIBuffer_Cube"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
+        return E_FAIL;*/
+
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_Model_TestWall"),
+        TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
         return E_FAIL;
 
 	return S_OK;
@@ -131,7 +137,7 @@ void CDummyObject::Free()
     Safe_Release(m_pBufferCom);
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pTransformCom);
-    //Safe_Release(m_pMeshCom);
+    Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     //Safe_Release(m_pColliderCom);
     //Safe_Release(m_pTextureCom);

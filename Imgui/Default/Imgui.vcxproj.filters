@@ -67,6 +67,9 @@
     <ClCompile Include="..\private\DummyObject.cpp">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Window_Model.cpp">
+      <Filter>01. ImWindow\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -150,6 +153,9 @@
     <ClInclude Include="..\public\DummyObject.h">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Window_Model.h">
+      <Filter>01. ImWindow\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Headers">
@@ -200,9 +206,6 @@
     <Filter Include="01. ImWindow\Light">
       <UniqueIdentifier>{08763a61-47f1-4480-a559-c5cafbb514a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Mesh">
-      <UniqueIdentifier>{22ee1db2-a7d9-4979-801f-4e3c7e455b82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. ImWindow\UI">
       <UniqueIdentifier>{940470a4-51a9-434b-9968-118ceb59f3f9}</UniqueIdentifier>
     </Filter>
@@ -211,6 +214,9 @@
     </Filter>
     <Filter Include="02. ToolObject\DummyObject">
       <UniqueIdentifier>{cd3c57c5-f724-44cb-8cd6-d08239b5078a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Model">
+      <UniqueIdentifier>{22ee1db2-a7d9-4979-801f-4e3c7e455b82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +237,9 @@
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Texture.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyMesh.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

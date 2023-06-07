@@ -84,24 +84,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* Prototype_Component_Shader_VtxNorTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_VtxNorTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Texture.hlsl"),
-			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
-		return E_FAIL;
-
-	/* Prototype_Component_Shader_Nontex */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Nontex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_NonTex.hlsl"),
-			VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
-		return E_FAIL;
-
-	/* Prototype_Component_Shader_Cube */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Cube"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cube.hlsl"), 
-			VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
-		return E_FAIL;
-
+	
 	/* Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
@@ -127,6 +110,49 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	
+
+	Ready_Prototype_Component_Shader();
+	Ready_Prototype_Component_Model();
+
+	return S_OK;
+}
+
+HRESULT CMainTool::Ready_Prototype_Component_Shader()
+{
+	/* Prototype_Component_Shader_VtxNorTex */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_VtxNorTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Texture.hlsl"),
+			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_Nontex */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Nontex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_NonTex.hlsl"),
+			VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Cube"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cube.hlsl"),
+			VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_DummyMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_DummyMesh"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_DummyMesh.hlsl"),
+			VTXMESH_DECL::Elements, VTXMESH_DECL::iNumElements))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainTool::Ready_Prototype_Component_Model()
+{
+	/* Prototype_Component_Model_TestWall */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_TestWall"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/TestWall.fbx"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -166,6 +192,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Camera::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Model::Create());
 
 	return S_OK;
 }

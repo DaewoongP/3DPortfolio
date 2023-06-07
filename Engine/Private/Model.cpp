@@ -18,7 +18,7 @@ CModel::CModel(const CModel& rhs)
 HRESULT CModel::Initialize_Prototype(const char* pModelFilePath)
 {
 	
-	m_pAIScene = m_Importer.ReadFile(pModelFilePath, aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast);
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast);
 
 	if (nullptr == m_pAIScene)
 		return E_FAIL;

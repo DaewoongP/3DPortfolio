@@ -175,6 +175,7 @@
     <ClCompile Include="..\private\ToolInstance.cpp" />
     <ClCompile Include="..\private\Window_Camera.cpp" />
     <ClCompile Include="..\private\Window_Light.cpp" />
+    <ClCompile Include="..\private\Window_Model.cpp" />
     <ClCompile Include="..\private\Window_Tool.cpp" />
     <ClCompile Include="..\private\Window_UI.cpp" />
     <ClCompile Include="backends\imgui_impl_dx11.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="..\Public\Tool_Struct.h" />
     <ClInclude Include="..\public\Window_Camera.h" />
     <ClInclude Include="..\public\Window_Light.h" />
+    <ClInclude Include="..\public\Window_Model.h" />
     <ClInclude Include="..\public\Window_Tool.h" />
     <ClInclude Include="..\public\Window_UI.h" />
     <ClInclude Include="backends\imgui_impl_dx11.h" />
@@ -224,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_NonTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Texture.hlsl" />
   </ItemGroup>
