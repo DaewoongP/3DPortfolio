@@ -59,7 +59,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
-    Out.vColor = vector(0.f, 0.f, 1.f, 1.f);
+    Out.vColor = vDiffuse;
 	
     return Out;
 }

@@ -47,13 +47,25 @@ void CDummyObject::Late_Tick(_double dTimeDelta)
 
 HRESULT CDummyObject::Render()
 {
-    FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+    if (FAILED(__super::Render()))
+        return E_FAIL;
 
-    m_pShaderCom->Begin(0);
+    if (FAILED(SetUp_ShaderResources()))
+        return E_FAIL;
 
-    FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+    _uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	return S_OK;
+    for (size_t i = 0; i < iNumMeshes; i++)
+    {
+        m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+        // m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
+
+        m_pShaderCom->Begin(0);
+
+        m_pModelCom->Render(i);
+    }
+
+    return S_OK;
 }
 
 void CDummyObject::Move_Position(_fvector vPos, _double dTimeDelta)

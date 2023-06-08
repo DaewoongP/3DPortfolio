@@ -149,14 +149,17 @@ HRESULT CMainTool::Ready_Prototype_Component_Shader()
 
 HRESULT CMainTool::Ready_Prototype_Component_Model()
 {
-	/* Prototype_Component_Model_TestWall */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_TestWall"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/TestWall.fbx"))))
+	_matrix		PivotMatrix = XMMatrixIdentity();
+
+	/* Prototype_Component_Model_Train */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Train"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Train/SM_Train_01.fbx"))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_Fiona */
+	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Fiona.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Fiona.fbx", PivotMatrix))))
 		return E_FAIL;
 
 	return S_OK;
