@@ -18,7 +18,7 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 	for (auto& Pair : m_ModelPrototypes)
 	{
 		_char* pName = New _char[MAX_STR];
-		strcpy_s(pName, MAX_STR, WStringToString(Pair.first).c_str());
+		WCharToChar(Pair.first, pName);
 		m_MeshItems.push_back(pName);
 	}
 
@@ -98,10 +98,9 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 		wstring strName = TEXT("GameObject_DummyObject");
 		wstring strNum = to_wstring(m_iDummyNum++);
 		strName = strName + strNum;
-
+		
 		CDummyObject::OBJECTDESC ObjectDesc;
-		wstring strTest = StringToWString(m_MeshItems[m_iCur_Mesh]);
-		ObjectDesc.pModelPrototypeTag = strTest.c_str();
+		CharToWChar(m_MeshItems[m_iCur_Mesh], ObjectDesc.pModelPrototypeTag);
 		ObjectDesc.vPosition = vPickPos;
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
 			TEXT("Prototype_GameObject_DummyObject"), TEXT("Layer_Tool"), strName.c_str(), &ObjectDesc)))

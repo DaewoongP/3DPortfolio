@@ -106,10 +106,9 @@ void CWindow_Tool::TerrainHeightMap()
 		// action if OK
 		if (IMFILE->IsOk())
 		{
-			string str = IMFILE->GetFilePathName();
+			_tchar* pPath = TEXT("");
 
-			wstring wStr = StringToWString(str);
-			const _tchar* pPath = wStr.c_str();
+			CharToWChar(IMFILE->GetFilePathName().c_str(), pPath);
 
 			m_pTerrain->RemakeTerrain(pPath);
 		}

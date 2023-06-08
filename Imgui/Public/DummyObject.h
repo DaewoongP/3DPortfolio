@@ -21,7 +21,7 @@ class CDummyObject : public CGameObject
 public:
 	typedef struct tagDummyObjectDesc
 	{
-		const _tchar* pModelPrototypeTag = TEXT("");
+		_tchar pModelPrototypeTag[MAX_STR] = TEXT("");
 		_float4 vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}OBJECTDESC;
 private:
@@ -52,7 +52,7 @@ private:
 	CVIBuffer_Cube* m_pBufferCom = { nullptr };
 
 private:
-	HRESULT	Add_Component();
+	HRESULT	Add_Component(OBJECTDESC ObjectDesc);
 	HRESULT	SetUp_ShaderResources();
 
 public:

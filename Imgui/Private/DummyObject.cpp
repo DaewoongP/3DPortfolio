@@ -19,13 +19,17 @@ HRESULT CDummyObject::Initialize_Prototype()
 
 HRESULT CDummyObject::Initialize(void* pArg)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-
+    OBJECTDESC ObjectDesc;
     if (nullptr != pArg)
-        m_pTransformCom->Set_State(CTransform::STATE_POSITION, *static_cast<_vector*>(pArg));
+        ObjectDesc = *(static_cast<OBJECTDESC*>(pArg));
+    else
+        return E_FAIL;
 
-    m_pTransformCom->Set_Scale(_float3(0.01f, 0.01f, 0.01f));
+	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
+	FAILED_CHECK_RETURN(Add_Component(ObjectDesc), E_FAIL);
+    
+    
+    m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&ObjectDesc.vPosition));
 	return S_OK;
 }
 
@@ -57,7 +61,7 @@ void CDummyObject::Move_Position(_fvector vPos, _double dTimeDelta)
     m_pTransformCom->Chase(vPos, dTimeDelta);
 }
 
-HRESULT CDummyObject::Add_Component()
+HRESULT CDummyObject::Add_Component(OBJECTDESC ObjectDesc)
 {
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Renderer"),
@@ -78,7 +82,7 @@ HRESULT CDummyObject::Add_Component()
         return E_FAIL;
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Model_TestWall"),
+        ObjectDesc.pModelPrototypeTag,
         TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
         return E_FAIL;
 

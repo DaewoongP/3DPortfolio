@@ -1,10 +1,12 @@
 #pragma once
 ///////////////////////// My Macros /////////////////////////////
-#define			PURE						= 0
-#define			MAX_STR						256
-#define			MAX_DIK						256
-#define			ZEROMEM(_ptr)				ZeroMemory(_ptr, sizeof _ptr)
-#define			ZEROMEMSIZE(_ptr, _size)	ZeroMemory(_ptr, sizeof _size)
+#define			PURE							= 0
+#define			MAX_STR							256
+#define			MAX_DIK							256
+#define			ZEROMEM(_ptr)					ZeroMemory(_ptr, sizeof _ptr)
+#define			ZEROMEMSIZE(_ptr, _size)		ZeroMemory(_ptr, sizeof _size)
+#define			CharToWChar(_pChar, _pWchar)	MultiByteToWideChar(CP_ACP, 0, _pChar, strlen(_pChar), _pWchar, MAX_PATH);
+#define			WCharToChar(_pWchar, _pChar)	WideCharToMultiByte(CP_ACP, 0, _pWchar, -1, _pChar, MAX_PATH, nullptr, nullptr);
 
 
 ///////////////////////// default Macros /////////////////////////////
