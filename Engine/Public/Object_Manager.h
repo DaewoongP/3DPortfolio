@@ -12,6 +12,9 @@ private:
 	virtual ~CObject_Manager() = default;
 
 public:
+	class CGameObject* Get_LastGameObject();
+
+public:
 	HRESULT Reserve_Containers(_uint iNumLevels);
 	HRESULT Add_Prototype(const _tchar* pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, const _tchar* pObjectTag, void* pArg);
@@ -30,6 +33,9 @@ private:
 	LAYERS*												m_pLayers = { nullptr };
 
 	_uint												m_iNumLevels = { 0 };
+
+private:
+	class CGameObject*			m_pLastGameObject = { nullptr };
 
 private:
 	class CGameObject*	Find_Prototype(const _tchar* pPrototypeTag);

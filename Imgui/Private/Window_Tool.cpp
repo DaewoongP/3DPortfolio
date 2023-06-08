@@ -106,8 +106,7 @@ void CWindow_Tool::TerrainHeightMap()
 		// action if OK
 		if (IMFILE->IsOk())
 		{
-			_tchar* pPath = TEXT("");
-
+			_tchar pPath[MAX_PATH] = TEXT("");
 			CharToWChar(IMFILE->GetFilePathName().c_str(), pPath);
 
 			m_pTerrain->RemakeTerrain(pPath);

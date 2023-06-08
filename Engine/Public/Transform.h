@@ -52,6 +52,7 @@ public:
 	void Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
 	void LookAt(_fvector vTargetPosition);
 	void Rotation(_fvector vAxis, _float fRadian);
+	void Rotation(_float3 vDegrees);
 	void Turn(_fvector vAxis, _double dTimeDelta);
 	
 private:

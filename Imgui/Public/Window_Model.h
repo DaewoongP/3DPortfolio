@@ -22,6 +22,9 @@ private:
 	_uint					m_iMaxSelection = { 20 };
 	_int					m_iCur_Mesh = { 0 };
 	_bool					m_bPickMeshes = { false };
+	_float3					m_vScale;
+	_float3					m_vRotate;
+	_float4					m_vTransform;
 
 private:
 	map<string, string>					m_SelectionMap;
@@ -33,6 +36,8 @@ private:
 	HRESULT Open_Dialog();
 	HRESULT Setting_Transform();
 	HRESULT MakeObject(_double dTimeDelta);
+
+	HRESULT Initialize_Transforms();
 
 public:
 	static CWindow_Model* Create(void* pArg = nullptr);

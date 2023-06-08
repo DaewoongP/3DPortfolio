@@ -9,6 +9,11 @@ CObject_Manager::CObject_Manager()
 
 }
 
+CGameObject* CObject_Manager::Get_LastGameObject()
+{
+	return m_pLastGameObject;
+}
+
 HRESULT CObject_Manager::Reserve_Containers(_uint iNumLevels)
 {
 	if (nullptr != m_pLayers)
@@ -59,6 +64,20 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	}
 	else
 		FAILED_CHECK_RETURN(pLayer->Add_GameObjects(pObjectTag, pGameObject),E_FAIL);
+
+
+	if (nullptr == m_pLastGameObject)
+	{
+		m_pLastGameObject = pGameObject;
+		Safe_AddRef(m_pLastGameObject);
+	}
+	else
+	{
+		Safe_Release(m_pLastGameObject);
+		m_pLastGameObject = pGameObject;
+		Safe_AddRef(m_pLastGameObject);
+	}
+		
 
 	return S_OK;
 }
@@ -140,4 +159,6 @@ void CObject_Manager::Free()
 	}
 
 	m_Prototypes.clear();
+
+	Safe_Release(m_pLastGameObject);
 }

@@ -30,6 +30,9 @@ private:
 	virtual ~CDummyObject() = default;
 
 public:
+	CTransform* Get_TransformCom() const { return m_pTransformCom; }
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_double dTimeDelta) override;
