@@ -156,6 +156,9 @@
     <ClInclude Include="..\public\Window_Model.h">
       <Filter>01. ImWindow\Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Tool_Function.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="99. Headers">

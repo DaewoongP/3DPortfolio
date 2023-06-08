@@ -21,8 +21,8 @@ class CDummyObject : public CGameObject
 public:
 	typedef struct tagDummyObjectDesc
 	{
-		_tchar* pModelPrototypeTag = TEXT("");
-		_float4 vPosition;
+		const _tchar* pModelPrototypeTag = TEXT("");
+		_float4 vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}OBJECTDESC;
 private:
 	explicit CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

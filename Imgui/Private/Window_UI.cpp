@@ -8,7 +8,6 @@ HRESULT CWindow_UI::Initialize(void* pArg)
 {
 	m_vWindowPos = ImVec2(0, 200);
 	m_vWindowSize = ImVec2(500, 400);
-	m_iMaxSelection = 10;
 	return S_OK;
 }
 
@@ -32,7 +31,7 @@ void CWindow_UI::Tick(_double dTimeDelta)
 			
 			wstring fPath;
 			fPath.assign(filePathName.begin(), filePathName.end());
-			const _tchar* test = fPath.c_str();
+			//const _tchar* test = fPath.c_str();
 		}
 
 		// close

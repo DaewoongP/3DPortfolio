@@ -199,6 +199,7 @@
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\ToolInstance.h" />
     <ClInclude Include="..\Public\Tool_Defines.h" />
+    <ClInclude Include="..\Public\Tool_Function.h" />
     <ClInclude Include="..\Public\Tool_Struct.h" />
     <ClInclude Include="..\public\Window_Camera.h" />
     <ClInclude Include="..\public\Window_Light.h" />

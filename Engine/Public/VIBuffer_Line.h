@@ -8,11 +8,6 @@ class ENGINE_DLL CVIBuffer_Line final : public CVIBuffer
 public:
 	struct Line_Desc
 	{
-		Line_Desc(_uint n, const _float3* p)
-		{
-			iNum = n;
-			pLines = p;
-		}
 		_uint iNum = { 0 };
 		const _float3* pLines = { nullptr };
 	};

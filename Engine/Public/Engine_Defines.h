@@ -5,7 +5,9 @@
 #pragma warning (disable : 26812)
 #pragma warning (disable : 4828)
 #pragma warning (disable : 4702)
-
+#pragma warning (disable : 4505)
+#pragma warning (disable : 4244)
+#pragma warning (disable : 4100)
 
 #define DIRECTINPUT_VERSION		0x0800
 #include <dinput.h>

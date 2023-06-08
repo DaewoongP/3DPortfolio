@@ -99,10 +99,12 @@ HRESULT CAxis::Add_Component()
 		// Z_Axis
 		_float3(0.f, 0.f, 0.f), _float3(0.f, 0.f, 1.f)
 	};
-
+	CVIBuffer_Line::Line_Desc LineDesc;
+	LineDesc.iNum = 6;
+	LineDesc.pLines = LinePoints;
 	if (FAILED(__super::Add_Component(LEVEL_TOOL,
 		TEXT("Prototype_Component_VIBuffer_Line"),
-		TEXT("Com_Line"), reinterpret_cast<CComponent**>(&m_pLineCom), &CVIBuffer_Line::Line_Desc(6, LinePoints))))
+		TEXT("Com_Line"), reinterpret_cast<CComponent**>(&m_pLineCom), &LineDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -170,7 +172,8 @@ void CAxis::Set_UI(CGameInstance* pGameInstance)
 void CAxis::Set_Center(CGameInstance* pGameInstance)
 {
 	m_pTransformCom->Set_Scale(_float3(0.5f, 0.5f, 0.5f));
-	_vector vCamPos = XMLoadFloat4(&pGameInstance->Get_CamPosition());
+	_float4 CamPos = pGameInstance->Get_CamPosition();
+	_vector vCamPos = XMLoadFloat4(&CamPos);
 	_vector vCamLook = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW).r[2];
 	_vector vAxisPos = vCamPos + XMVector4Normalize(vCamLook) * m_fDistance;
 

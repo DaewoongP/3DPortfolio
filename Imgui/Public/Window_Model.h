@@ -20,12 +20,13 @@ private:
 private:
 	_uint					m_iDummyNum = { 0 };
 	_uint					m_iMaxSelection = { 20 };
-	_int					m_iCur_Mesh = { 1 };
+	_int					m_iCur_Mesh = { 0 };
 	_bool					m_bPickMeshes = { false };
 
 private:
-	map<string, string>		m_SelectionMap;
+	map<string, string>					m_SelectionMap;
 	unordered_map<const _tchar*, CComponent*> m_ModelPrototypes;
+	vector<const _char*>				m_MeshItems;
 
 private:
 	HRESULT	Select_MeshFiles();
