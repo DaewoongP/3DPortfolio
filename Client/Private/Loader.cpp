@@ -103,13 +103,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+	_matrix		PivotMatrix = XMMatrixIdentity();
+
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 10, 10)), E_FAIL);
-
+	
+	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	/* For.Prototype_Component_Model_Fiona */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Fiona/Fiona.fbx")), E_FAIL);
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Fiona/Fiona.fbx", PivotMatrix)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 

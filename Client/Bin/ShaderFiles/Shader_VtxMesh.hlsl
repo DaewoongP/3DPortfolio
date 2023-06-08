@@ -68,6 +68,9 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
+    if (vDiffuse.a <= 0.1f)
+        discard;
+    
     float fShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f);
 
     vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));

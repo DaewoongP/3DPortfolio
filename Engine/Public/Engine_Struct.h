@@ -10,6 +10,11 @@ namespace Engine
 		WINMODE			eWinMode;
 	}GRAPHICDESC;
 
+	typedef struct tagMeshMaterial
+	{
+		class CTexture* pMtrlTexture[AI_TEXTURE_TYPE_MAX];
+	}MESHMATERIAL;
+
 	typedef struct tagVertex_Position_TexCoord
 	{
 		XMFLOAT3		vPosition;
