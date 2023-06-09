@@ -51,8 +51,8 @@ void CCamera_Free::Tick(_double dTimeDelta)
 HRESULT CCamera_Free::Add_Components()
 {
 	CCamera::CAMERADESC CameraDesc;
-	CameraDesc.vEye = _float4(0.f, 0.f, 0.f, 1.f);
-	CameraDesc.vAt = _float4(0.f, 0.f, 1.f, 1.f);
+	CameraDesc.vEye = _float4(0.f, 2.f, 0.f, 1.f);
+	CameraDesc.vAt = _float4(2.f, 0.f, 2.f, 1.f);
 	CameraDesc.vUp = _float4(0.f, 1.f, 0.f, 0.f);
 
 	CameraDesc.fFovy = XMConvertToRadians(90.f);

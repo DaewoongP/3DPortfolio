@@ -65,4 +65,20 @@ namespace Engine
 		static const unsigned int				iNumElements = { 4 };
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXMESH_DECL;
+
+	typedef struct tagVertex_AnimMesh
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexCoord;
+		XMFLOAT3		vTangent;
+		XMUINT4			vBlendIndices;
+		XMFLOAT4		vBlendWeights;
+	}VTXANIMMESH;
+
+	typedef struct ENGINE_DLL tagVertex_AnimMesh_Declaration
+	{
+		static const unsigned int				iNumElements = { 6 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXANIMMESH_DECL;
 }

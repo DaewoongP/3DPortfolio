@@ -153,34 +153,34 @@ HRESULT CMainTool::Ready_Prototype_Component_Model()
 
 	/* Prototype_Component_Model_Wall_neon_01 */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Wall_neon_01"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Wallneon/Wall_neon_01.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Wallneon/Wall_neon_01.fbx"))))
 		return E_FAIL;
 	
 	/* Prototype_Component_Model_Ghostrunner */
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Ghostrunner"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Ghostrunner/Ghostrunner.fbx", PivotMatrix))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Ghostrunner/Ghostrunner.fbx", PivotMatrix))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_CeilingSimple11 */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_CeilingSimple11"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Ceiling/SM_MC_CeilingSimple11.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Ceiling/SM_MC_CeilingSimple11.fbx"))))
 		return E_FAIL;
 	
 	/* Prototype_Component_Model_FoodBuilding */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_FoodBuilding"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/FoodBuilding/FoodBuilding.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/FoodBuilding/FoodBuilding.fbx"))))
 		return E_FAIL;
 	
 	/* Prototype_Component_Model_Train */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Train1"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Train/Train.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Train/Train.fbx"))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_Fiona */
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Fiona.fbx", PivotMatrix))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Fiona.fbx", PivotMatrix))))
 		return E_FAIL;
 
 	return S_OK;

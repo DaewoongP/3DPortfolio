@@ -98,11 +98,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
+
 	/* For.Prototype_Component_Texture_Terrain */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
@@ -112,12 +114,30 @@ HRESULT CLoader::Loading_For_GamePlay()
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	/* For.Prototype_Component_Model_Fiona */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Fiona/Fiona.fbx", PivotMatrix)), E_FAIL);
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", PivotMatrix)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
+	/* Prototype_Component_Shader_VtxNorTex */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"),
+			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_VtxMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"),
+			VTXMESH_DECL::Elements, VTXMESH_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_VtxAnimMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"),
+			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
+
 	/* For.Prototype_GameObject_Camera_Free */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pDevice, m_pContext)), E_FAIL);

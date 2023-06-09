@@ -5,6 +5,8 @@ BEGIN(Engine)
 
 class ENGINE_DLL CModel : public CComponent
 {
+public:
+	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
 private:
 	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CModel(const CModel& rhs);
@@ -14,15 +16,16 @@ public:
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
 
 public:
-	virtual HRESULT Initialize_Prototype(const char* pModelFilePath, _fmatrix PivotMatrix);
+	virtual HRESULT Initialize_Prototype(TYPE eType, const char* pModelFilePath, _fmatrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg) override;
-
-public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	HRESULT Bind_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType MaterialType);
+	void Play_Animation();
 
+public:
+	HRESULT Bind_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType MaterialType);
+	HRESULT Bind_BoneMatrices(class CShader* pShader, const char* pConstantName, _uint iMeshIndex);
 private:
 	const aiScene*			m_pAIScene = { nullptr };
 	Assimp::Importer		m_Importer;
@@ -35,13 +38,19 @@ private: /* For.Materials */
 	_uint					m_iNumMaterials = { 0 };
 	vector<MESHMATERIAL>	m_Materials;
 
-private:
-	HRESULT Ready_Meshes(_fmatrix PivotMatrix);
-	HRESULT Ready_Materials(const char* pModelFilePath);
+private: /* For.Bones*/
+	vector<class CBone*>	m_Bones;
+public:
+	typedef vector<class CBone*>	BONES;
 
+private:
+	HRESULT Ready_Bones(aiNode* pNode, class CBone* pParent);
+	HRESULT Ready_Meshes(TYPE eType, _fmatrix PivotMatrix);
+	HRESULT Ready_Materials(const char* pModelFilePath);
+	
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const char* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };
