@@ -13,9 +13,6 @@
     <Filter Include="01. Model">
       <UniqueIdentifier>{f1202bd3-c8e9-435a-b8d7-3799b2b77dd2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Model\Mesh">
-      <UniqueIdentifier>{c8d4a62e-855b-42c7-a570-97cbe744cac8}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Assimp.cpp">
