@@ -25,7 +25,7 @@ HRESULT CMainApp::Initialize()
 #endif // _DEBUG
 
 	GRAPHICDESC		GraphicDesc;
-	ZeroMemory(&GraphicDesc, sizeof GraphicDesc);
+	ZEROMEM(&GraphicDesc);
 
 	GraphicDesc.hWnd = g_hWnd;
 	GraphicDesc.iViewportSizeX = g_iWinSizeX;

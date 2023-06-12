@@ -15,6 +15,14 @@ namespace Engine
 		class CTexture* pMtrlTexture[AI_TEXTURE_TYPE_MAX];
 	}MESHMATERIAL;
 
+	typedef struct tagKeyFrame
+	{
+		XMFLOAT3		vScale;
+		XMFLOAT4		vRotation;
+		XMFLOAT3		vTranslation;
+		double			dTime;
+	}KEYFRAME;
+
 	typedef struct tagVertex_Position_TexCoord
 	{
 		XMFLOAT3		vPosition;

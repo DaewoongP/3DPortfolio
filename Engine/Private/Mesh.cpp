@@ -182,7 +182,7 @@ HRESULT CMesh::Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONE
 
 		m_BoneIndices.push_back(iIndex);
 
-		for (size_t j = 0; j < pBone->mNumWeights; ++j)
+		for (_uint j = 0; j < pBone->mNumWeights; ++j)
 		{
 			aiVertexWeight pVertexWeight = pBone->mWeights[j];
 			

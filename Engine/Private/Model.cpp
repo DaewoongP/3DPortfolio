@@ -1,8 +1,9 @@
 #include "..\Public\Model.h"
 #include "Mesh.h"
-#include "Texture.h"
 #include "Bone.h"
 #include "Shader.h"
+#include "Texture.h"
+#include "Animation.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -16,7 +17,10 @@ CModel::CModel(const CModel& rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_Bones(rhs.m_Bones)
+	, m_Animations(rhs.m_Animations)
 {
+	for (auto& pAnimation : m_Animations)
+		Safe_AddRef(pAnimation);
 	for (auto& pBone : m_Bones)
 		Safe_AddRef(pBone);
 	for (auto& pMesh : m_Meshes)
@@ -27,6 +31,8 @@ CModel::CModel(const CModel& rhs)
 		for (auto& pTexture : Material.pMtrlTexture)
 			Safe_AddRef(pTexture);
 	}
+
+
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const char* pModelFilePath, _fmatrix PivotMatrix)
@@ -52,6 +58,9 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const char* pModelFilePath, _fm
 	if (FAILED(Ready_Materials(pModelFilePath)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Animations()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -66,8 +75,10 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation()
+void CModel::Play_Animation(_double dTimeDelta)
 {
+	m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(dTimeDelta);
+
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Invalidate_CombinedTransformationMatrix();
@@ -136,7 +147,7 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 		MESHMATERIAL		MeshMaterial;
 		ZEROMEM(&MeshMaterial);
 
-		for (size_t j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
+		for (_int j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
 		{
 			aiString strPath;
 			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
@@ -168,6 +179,23 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 
 		m_Materials.push_back(MeshMaterial);
 	}
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Animations()
+{
+	m_iNumAnimations = m_pAIScene->mNumAnimations;
+	
+	for (size_t i = 0; i < m_iNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i]);
+
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
 	return S_OK;
 }
 
@@ -212,4 +240,8 @@ void CModel::Free()
 	for (auto& pBone : m_Bones)
 		Safe_Release(pBone);
 	m_Bones.clear();
+
+	for (auto& pAnimation : m_Animations)
+		Safe_Release(pAnimation);
+	m_Animations.clear();
 }

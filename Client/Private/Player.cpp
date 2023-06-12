@@ -30,7 +30,7 @@ void CPlayer::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	m_pModelCom->Play_Animation();
+	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CPlayer::Late_Tick(_double dTimeDelta)
