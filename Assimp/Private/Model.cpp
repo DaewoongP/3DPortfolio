@@ -240,7 +240,7 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 	_tchar szPath[MAX_PATH] = TEXT("../../Resources/ParsingData/");
 
 	lstrcat(szPath, pFileName);
-	lstrcat(szPath, TEXT(".txt"));
+	lstrcat(szPath, TEXT(".dat"));
 
 	HANDLE hFile = CreateFile(szPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (INVALID_HANDLE_VALUE == hFile)
