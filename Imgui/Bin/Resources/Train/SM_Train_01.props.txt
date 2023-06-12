@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Visual/Props/Train/M_Train_01.M_Train_01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Props/Train/M_Train_01.M_Train_01'
+        MaterialSlotName = ID1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1572.67, 4832.13, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-7.164, Y=250, Z=190 }
+    BoxExtent = { X=362.532, Y=1482.29, Z=220 }
+    SphereRadius = 1499.16
+}

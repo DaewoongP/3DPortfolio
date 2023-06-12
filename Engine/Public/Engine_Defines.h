@@ -64,4 +64,10 @@ using namespace DirectX;
 #endif // DBG_NEW
 #endif // _DEBUG
 
+#ifndef _DEBUG
+
+#define New new
+
+#endif // _DEBUG
+
 using namespace Engine;

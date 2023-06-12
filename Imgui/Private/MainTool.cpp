@@ -150,30 +150,9 @@ HRESULT CMainTool::Ready_Prototype_Component_Shader()
 HRESULT CMainTool::Ready_Prototype_Component_Model()
 {
 	_matrix		PivotMatrix = XMMatrixIdentity();
-
-	/* Prototype_Component_Model_Wall_neon_01 */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Wall_neon_01"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Wallneon/Wall_neon_01.fbx"))))
-		return E_FAIL;
-	
-	/* Prototype_Component_Model_Ghostrunner */
-	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Ghostrunner"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Ghostrunner/Ghostrunner.fbx", PivotMatrix))))
-		return E_FAIL;
-
-	/* Prototype_Component_Model_CeilingSimple11 */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_CeilingSimple11"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Ceiling/SM_MC_CeilingSimple11.fbx"))))
-		return E_FAIL;
-	
-	/* Prototype_Component_Model_FoodBuilding */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_FoodBuilding"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/FoodBuilding/FoodBuilding.fbx"))))
-		return E_FAIL;
 	
 	/* Prototype_Component_Model_Train */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Train1"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Train"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Train/Train.fbx"))))
 		return E_FAIL;
 
