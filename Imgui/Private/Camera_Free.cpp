@@ -119,21 +119,27 @@ void CCamera_Free::Mouse_Move(_double dTimeDelta)
 	_long		dwMouseMove = 0;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
+	Safe_AddRef(pGameInstance);
+	dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X);
+	if (dwMouseMove)
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 		m_pCamera->Turn(vUp, dwMouseMove * dTimeDelta * 0.1f);
+
+		dwMouseMove = 0;
 	}
 
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
+	dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
+	if (dwMouseMove)
 	{
 		_vector	vRight = m_pCamera->Get_TransformState(CTransform::STATE_RIGHT);
 
 		m_pCamera->Turn(vRight, dwMouseMove * dTimeDelta * 0.1f);
-	}
 
+		dwMouseMove = 0;
+	}
+	Safe_Release(pGameInstance);
 }
 
 void CCamera_Free::Fix_Mouse(void)

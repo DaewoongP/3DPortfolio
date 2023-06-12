@@ -157,7 +157,7 @@ HRESULT CMesh::Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONE
 
 	m_iNumBones = pAIMesh->mNumBones;
 
-	for (size_t i = 0; i < pAIMesh->mNumBones; ++i)
+	for (_uint i = 0; i < pAIMesh->mNumBones; ++i)
 	{
 		aiBone* pBone = pAIMesh->mBones[i];
 

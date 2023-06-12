@@ -3,7 +3,10 @@
 
 CWindow_Model::CWindow_Model()
 {
-	
+	ZEROMEM(&m_vScale);
+	ZEROMEM(&m_vRotate);
+	ZEROMEM(&m_vTransform);
+	m_vTransform.w = 1.f;
 }
 
 HRESULT CWindow_Model::Initialize(void* pArg)
