@@ -35,8 +35,5 @@
     <ClInclude Include="..\Public\Model.h">
       <Filter>01. Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Assimp_Struct.h">
-      <Filter>99. Headers</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

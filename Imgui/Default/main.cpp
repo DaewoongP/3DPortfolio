@@ -1,7 +1,3 @@
-// Dear ImGui: standalone example application for DirectX 11
-// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
-// Read online: https://github.com/ocornut/imgui/tree/master/docs
-
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -11,7 +7,7 @@
 
 // Data
 UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
-HINSTANCE g_hInst;                                // 현재 인스턴스입니다.
+HINSTANCE g_hInst;
 HWND	g_hWnd;
 
 // Forward declarations of helper functions
@@ -65,7 +61,6 @@ int main(int, char**)
         pGameInstance->Tick_Timer(TEXT("Timer_Default"));
         dTimerAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
 
-        /* MainApp 객체의 처리. */
         if (dTimerAcc >= 1.0 / 60.0)
         {
             pGameInstance->Tick_Timer(TEXT("Timer_60"));

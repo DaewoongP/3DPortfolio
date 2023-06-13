@@ -82,9 +82,6 @@
     <Filter Include="01. Utility\03. Components\Model">
       <UniqueIdentifier>{97908b8a-2f1b-44bd-880a-9410393e6aed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Components\Model\Mesh">
-      <UniqueIdentifier>{fcca76fc-ae7f-4c6f-a08d-f56860347e76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\04. PipeLine">
       <UniqueIdentifier>{e9197bc8-5ee0-4874-8977-ecb624f880e7}</UniqueIdentifier>
     </Filter>
@@ -98,13 +95,10 @@
       <UniqueIdentifier>{3865fd73-fc4b-4182-bec8-21cdb1ae8407}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Utility\03. Components\Model\Bone">
-      <UniqueIdentifier>{beecddb0-19a1-439f-8356-a5a275478163}</UniqueIdentifier>
+      <UniqueIdentifier>{c3db3c4a-af79-41c2-a603-0b810337c8d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Components\Model\Animation">
-      <UniqueIdentifier>{299baafc-8e98-4107-833c-7e3ffd72ccce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\03. Components\Model\Animation\Channel">
-      <UniqueIdentifier>{baed4602-6761-45f6-84c7-56b9cb2045fd}</UniqueIdentifier>
+    <Filter Include="01. Utility\03. Components\Model\Mesh">
+      <UniqueIdentifier>{1019b75d-8009-49ab-a9c7-09336d9b8864}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,23 +195,20 @@
     <ClInclude Include="..\Public\Model.h">
       <Filter>01. Utility\03. Components\Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Mesh.h">
-      <Filter>01. Utility\03. Components\Model\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>01. Utility\04. PipeLine</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Calculator.h">
       <Filter>01. Utility\05. Calculator</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Bone.h">
+    <ClInclude Include="..\Public\Engine_Converter.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bone.h">
       <Filter>01. Utility\03. Components\Model\Bone</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Animation.h">
-      <Filter>01. Utility\03. Components\Model\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Channel.h">
-      <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
+    <ClInclude Include="..\Public\Mesh.h">
+      <Filter>01. Utility\03. Components\Model\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,23 +290,17 @@
     <ClCompile Include="..\Private\Model.cpp">
       <Filter>01. Utility\03. Components\Model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Mesh.cpp">
-      <Filter>01. Utility\03. Components\Model\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp">
       <Filter>01. Utility\04. PipeLine</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Calculator.cpp">
       <Filter>01. Utility\05. Calculator</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Bone.cpp">
+    <ClCompile Include="..\Private\Bone.cpp">
       <Filter>01. Utility\03. Components\Model\Bone</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Animation.cpp">
-      <Filter>01. Utility\03. Components\Model\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Channel.cpp">
-      <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
+    <ClCompile Include="..\Private\Mesh.cpp">
+      <Filter>01. Utility\03. Components\Model\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

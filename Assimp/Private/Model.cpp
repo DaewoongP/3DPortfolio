@@ -5,7 +5,7 @@ CModel::CModel()
 	ZEROMEM(&m_Model);
 }
 
-HRESULT CModel::Initialize(TYPE eType, const _char* pModelFilePath)
+HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 {
 	_uint		iFlag = 0;
 
@@ -18,19 +18,21 @@ HRESULT CModel::Initialize(TYPE eType, const _char* pModelFilePath)
 	
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
-
+	cout << "Convert Bones..." << endl;
 	if (FAILED(Convert_Bones(m_pAIScene->mRootNode, 0, nullptr, true)))
 	{
 		MSG_BOX("Failed Convert_Bones");
 		return E_FAIL;
 	}
+	Sort_Bones();
 
+	cout << "Convert Meshes..." << endl;
 	if (FAILED(Convert_Meshes()))
 	{
 		MSG_BOX("Failed Convert_Meshes");
 		return E_FAIL;
 	}
-
+	cout << "Convert Materials..." << endl;
 	if (FAILED(Convert_Materials(pModelFilePath)))
 	{
 		MSG_BOX("Failed Convert_Materials");
@@ -42,13 +44,14 @@ HRESULT CModel::Initialize(TYPE eType, const _char* pModelFilePath)
 	CharToWChar(pModelFilePath, FullPath);
 	_wsplitpath_s(FullPath, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
 
-	if (FAILED(Write_File(szFileName)))
+	cout << "Writing Files..." << endl;
+	if (FAILED(Write_File(eType, szFileName)))
 	{
 		MSG_BOX("Failed Write_File");
 		return E_FAIL;
 	}
 		
-
+	cout << "Convert Success!" << endl;
 	return S_OK;
 }
 
@@ -66,7 +69,7 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 	_float4x4 TransposeMatrix;
 	memcpy(&TransposeMatrix, &pNode->mTransformation, sizeof(_float4x4));
 	XMStoreFloat4x4(&TransposeMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransposeMatrix)));
-	memcpy(&Node.Transformation, &TransposeMatrix, sizeof MATRIX4X4);
+	memcpy(&Node.Transformation, &TransposeMatrix, sizeof _float4x4);
 	
 	/// For.Node
 	// root
@@ -101,10 +104,24 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 	return S_OK;
 }
 
+HRESULT CModel::Sort_Bones()
+{
+	sort(m_Nodes.begin(), m_Nodes.end(), [](NODE& Sour, NODE& Dest) {
+
+		if (Sour.NodeIndex < Dest.NodeIndex)
+			return true;
+		else
+			return false;
+	});
+	return S_OK;
+}
+
 
 HRESULT CModel::Convert_Meshes()
 {
 	ZEROMEM(&m_Model);
+
+	m_Model.NumNodes = (_uint)m_Nodes.size();
 
 	m_Model.NumMeshes = m_pAIScene->mNumMeshes;
 
@@ -137,19 +154,32 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	lstrcpy(outMesh->Name, MeshName);
 
 	outMesh->NumVertices = pAIMesh->mNumVertices;
-	outMesh->NumIndices = pAIMesh->mNumFaces * 3;
+	outMesh->NumFaces = pAIMesh->mNumFaces;
+	outMesh->Faces = new FACE[outMesh->NumFaces];
 
-	outMesh->Positions = new FLOAT3[pAIMesh->mNumVertices];
-	outMesh->Normals = new FLOAT3[pAIMesh->mNumVertices];
-	outMesh->TexCoords = new FLOAT2[pAIMesh->mNumVertices];
-	outMesh->Tangents = new FLOAT3[pAIMesh->mNumVertices];
+	for (_uint i = 0; i < pAIMesh->mNumFaces; ++i)
+	{
+		outMesh->Faces[i].NumIndices = pAIMesh->mFaces[i].mNumIndices;
+
+		outMesh->Faces[i].Indices = new _uint[outMesh->Faces[i].NumIndices];
+
+		for (_uint j = 0; j < outMesh->Faces[i].NumIndices; ++j)
+		{
+			outMesh->Faces[i].Indices[j] = pAIMesh->mFaces[i].mIndices[j];
+		}
+	}
+
+	outMesh->Positions = new _float3[pAIMesh->mNumVertices];
+	outMesh->Normals = new _float3[pAIMesh->mNumVertices];
+	outMesh->TexCoords = new _float2[pAIMesh->mNumVertices];
+	outMesh->Tangents = new _float3[pAIMesh->mNumVertices];
 
 	for (_uint i = 0; i < pAIMesh->mNumVertices; i++)
 	{
-		memcpy(&outMesh->Positions[i], &pAIMesh->mVertices[i], sizeof FLOAT3);
-		memcpy(&outMesh->Normals[i], &pAIMesh->mNormals[i], sizeof FLOAT3);
-		memcpy(&outMesh->TexCoords[i], &pAIMesh->mTextureCoords[0][i], sizeof FLOAT2);
-		memcpy(&outMesh->Tangents[i], &pAIMesh->mTangents[i], sizeof FLOAT3);
+		memcpy(&outMesh->Positions[i], &pAIMesh->mVertices[i], sizeof _float3);
+		memcpy(&outMesh->Normals[i], &pAIMesh->mNormals[i], sizeof _float3);
+		memcpy(&outMesh->TexCoords[i], &pAIMesh->mTextureCoords[0][i], sizeof _float2);
+		memcpy(&outMesh->Tangents[i], &pAIMesh->mTangents[i], sizeof _float3);
 	}
 
 
@@ -172,7 +202,7 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 		_float4x4 TransposeMatrix;
 		memcpy(&TransposeMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
 		XMStoreFloat4x4(&TransposeMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransposeMatrix)));
-		memcpy(&Bone.OffsetMatrix, &TransposeMatrix, sizeof MATRIX4X4);
+		memcpy(&Bone.OffsetMatrix, &TransposeMatrix, sizeof _float4x4);
 		
 		// Mesh Bone Weight
 		Bone.NumWeights = pAIBone->mNumWeights;
@@ -217,10 +247,25 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 
 			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
 				continue;
-			// name
-			_tchar TexturePath[256] = TEXT("");
-			CharToWChar(strPath.data, TexturePath);
-			lstrcpy(Material.MaterialTexture[j].TexPath, TexturePath);
+
+			char		szDrive[MAX_PATH] = "";
+			char		szDirectory[MAX_PATH] = "";
+			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			char		szFileName[MAX_PATH] = "";
+			char		szExt[MAX_PATH] = "";
+			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
+
+			char		szFullPath[MAX_PATH] = "";
+			strcpy_s(szFullPath, szDrive);
+			strcat_s(szFullPath, szDirectory);
+			strcat_s(szFullPath, szFileName);
+			strcat_s(szFullPath, szExt);
+
+			_tchar		wszFullPath[MAX_PATH] = TEXT("");
+
+			CharToWChar(szFullPath, wszFullPath);
+			lstrcpy(Material.MaterialTexture[j].TexPath, wszFullPath);
 
 			Material.MaterialTexture[j].TexType = TEXTYPE(j);
 		}
@@ -235,9 +280,19 @@ HRESULT CModel::Convert_Animations()
 	return S_OK;
 }
 
-HRESULT CModel::Write_File(const _tchar* pFileName)
+HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 {
 	_tchar szPath[MAX_PATH] = TEXT("../../Resources/ParsingData/");
+	// Write Anim
+	if (TYPE_ANIM == eType)
+	{
+		lstrcat(szPath, TEXT("Anim/"));
+	}
+	// Write NonAnim
+	else
+	{
+		lstrcat(szPath, TEXT("NonAnim/"));
+	}
 
 	lstrcat(szPath, pFileName);
 	lstrcat(szPath, TEXT(".dat"));
@@ -246,19 +301,23 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
-	DWORD	dwByte = 0;
-	DWORD	dwStrByte = 0;
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
 
 	// Write Nodes
+
+	// Nodes NumNodes
+	WriteFile(hFile, &(m_Model.NumNodes), sizeof(_uint), &dwByte, nullptr);
+
 	for (auto& Node : m_Nodes)
 	{
 		// Node Name
 		dwStrByte = sizeof(_tchar) * (lstrlen(Node.Name) + 1);
-		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, Node.Name, dwStrByte, &dwByte, nullptr);
 
 		// Node Transformation
-		WriteFile(hFile, &(Node.Transformation), sizeof(MATRIX4X4), &dwByte, nullptr);
+		WriteFile(hFile, &(Node.Transformation), sizeof(_float4x4), &dwByte, nullptr);
 
 		// Node NodeIndex
 		WriteFile(hFile, &(Node.NodeIndex), sizeof(_uint), &dwByte, nullptr);
@@ -284,7 +343,7 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 
 		// Mesh Name
 		dwStrByte = sizeof(_tchar) * (lstrlen(Mesh.Name) + 1);
-		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, Mesh.Name, dwStrByte, &dwByte, nullptr);
 
 		// Mesh MaterialIndex
@@ -293,20 +352,30 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 		// Mesh NumVertices
 		WriteFile(hFile, &(Mesh.NumVertices), sizeof(_uint), &dwByte, nullptr);
 		
-		// Mesh NumIndices
-		WriteFile(hFile, &(Mesh.NumIndices), sizeof(_uint), &dwByte, nullptr);
+		// Mesh NumFaces
+		WriteFile(hFile, &(Mesh.NumFaces), sizeof(_uint), &dwByte, nullptr);
+
+		for (_uint j = 0; j < Mesh.NumFaces; ++j)
+		{
+			FACE Face = Mesh.Faces[j];
+			// Face NumIndices
+			WriteFile(hFile, &(Face.NumIndices), sizeof(_uint), &dwByte, nullptr);
+
+			// Face Indices
+			WriteFile(hFile, Face.Indices, sizeof(_uint) * Face.NumIndices, &dwByte, nullptr);
+		}
 		
 		// Mesh Positions
-		WriteFile(hFile, Mesh.Positions, sizeof(FLOAT3) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.Positions, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh Normals
-		WriteFile(hFile, Mesh.Normals, sizeof(FLOAT3) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.Normals, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh TexCoords
-		WriteFile(hFile, Mesh.TexCoords, sizeof(FLOAT2) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.TexCoords, sizeof(_float2) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh Tangents
-		WriteFile(hFile, Mesh.Tangents, sizeof(FLOAT3) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.Tangents, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh NumBones
 		WriteFile(hFile, &(Mesh.NumBones), sizeof(_uint), &dwByte, nullptr);
@@ -317,12 +386,12 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 			BONE Bone = Mesh.Bones[j];
 
 			// Bone Name
-			dwStrByte = sizeof(_tchar) * (lstrlen(Bone.Name) + 1);
-			WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+			dwStrByte = (_ulong)sizeof(_tchar) * (lstrlen(Bone.Name) + 1);
+			WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 			WriteFile(hFile, Bone.Name, dwStrByte, &dwByte, nullptr);
 
 			// Mesh OffsetMatrix
-			WriteFile(hFile, &(Bone.OffsetMatrix), sizeof(MATRIX4X4), &dwByte, nullptr);
+			WriteFile(hFile, &(Bone.OffsetMatrix), sizeof(_float4x4), &dwByte, nullptr);
 			
 			// Mesh NumWeights
 			WriteFile(hFile, &(Bone.NumWeights), sizeof(_uint), &dwByte, nullptr);
@@ -359,16 +428,21 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 	return S_OK;
 }
 
-CModel* CModel::Create(TYPE eType, const _char* pModelFilePath)
+HRESULT CModel::Convert(TYPE eType, const _char* pModelFilePath)
 {
 	CModel* pInstance = new CModel();
 
-	if (FAILED(pInstance->Initialize(eType, pModelFilePath)))
+	if (FAILED(pInstance->Convert_Model(eType, pModelFilePath)))
 	{
 		MSG_BOX("Failed to Created CModel");
 		Safe_Release(pInstance);
+		return E_FAIL;
 	}
-	return pInstance;
+	else
+	{
+		Safe_Release(pInstance);
+		return S_OK;
+	}
 }
 
 void CModel::Free()
@@ -382,6 +456,13 @@ void CModel::Free()
 	for (_uint i = 0; i < m_Model.NumMeshes; ++i)
 	{
 		MESH Mesh = m_Model.Meshes[i];
+
+		for (_uint j = 0; j < Mesh.NumFaces; j++)
+		{
+			Safe_Delete_Array(Mesh.Faces[j].Indices);
+		}
+		Safe_Delete_Array(Mesh.Faces);
+
 		Safe_Delete_Array(Mesh.Positions);
 		Safe_Delete_Array(Mesh.Normals);
 		Safe_Delete_Array(Mesh.TexCoords);

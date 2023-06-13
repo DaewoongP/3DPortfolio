@@ -12,7 +12,7 @@ CMesh::CMesh(const CMesh& rhs)
 	, m_iNumBones(rhs.m_iNumBones)
 	, m_BoneIndices(rhs.m_BoneIndices)
 {
-	strcpy_s(m_szName, MAX_PATH, rhs.m_szName);
+	lstrcpy(m_szName, rhs.m_szName);
 }
 
 void CMesh::Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices)
@@ -27,14 +27,14 @@ void CMesh::Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices)
 	}
 }
 
-HRESULT CMesh::Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bones, const aiMesh* pAIMesh, _fmatrix PivotMatrix)
+HRESULT CMesh::Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bones, const Engine::MESH* pMesh, _fmatrix PivotMatrix)
 {
-	m_iMaterialIndex = pAIMesh->mMaterialIndex;
-	strcpy_s(m_szName, pAIMesh->mName.data);
+	m_iMaterialIndex = pMesh->MaterialIndex;
+	lstrcpy(m_szName, pMesh->Name);
 	m_iNumVertexBuffers = { 1 };
-	m_iNumVertices = { pAIMesh->mNumVertices };
+	m_iNumVertices = { pMesh->NumVertices };
 	m_iIndexStride = { sizeof(_ulong) };
-	m_iNumIndices = { pAIMesh->mNumFaces * 3 };
+	m_iNumIndices = { pMesh->NumFaces * 3 };
 	m_eFormat = DXGI_FORMAT_R32_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	
@@ -42,11 +42,11 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bon
 
 	if (CModel::TYPE_NONANIM == eType)
 	{
-		hr = Ready_VertexBuffer_NonAnim(pAIMesh, PivotMatrix);
+		hr = Ready_VertexBuffer_NonAnim(pMesh, PivotMatrix);
 	}
 	else
 	{
-		hr = Ready_VertexBuffer_Anim(pAIMesh, Bones);
+		hr = Ready_VertexBuffer_Anim(pMesh, Bones);
 	}
 	
 	FAILED_CHECK_RETURN(hr, E_FAIL);
@@ -67,11 +67,11 @@ HRESULT CMesh::Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bon
 
 	_uint		iNumFaces = { 0 };
 
-	for (size_t i = 0; i < pAIMesh->mNumFaces; i++)
+	for (_uint i = 0; i < pMesh->NumFaces; ++i)
 	{
-		pIndices[iNumFaces++] = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[iNumFaces++] = pAIMesh->mFaces[i].mIndices[1];
-		pIndices[iNumFaces++] = pAIMesh->mFaces[i].mIndices[2];
+		pIndices[iNumFaces++] = pMesh->Faces[i].Indices[0];
+		pIndices[iNumFaces++] = pMesh->Faces[i].Indices[1];
+		pIndices[iNumFaces++] = pMesh->Faces[i].Indices[2];
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
@@ -90,7 +90,7 @@ HRESULT CMesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_VertexBuffer_NonAnim(const aiMesh* pAIMesh, _fmatrix PivotMatrix)
+HRESULT CMesh::Ready_VertexBuffer_NonAnim(const Engine::MESH* pMesh, _fmatrix PivotMatrix)
 {
 	m_iStride = { sizeof(VTXMESH) };
 
@@ -108,16 +108,16 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnim(const aiMesh* pAIMesh, _fmatrix PivotM
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
+		memcpy(&pVertices[i].vPosition, &pMesh->Positions[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vPosition,
 			XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PivotMatrix));
 
-		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
+		memcpy(&pVertices[i].vNormal, &pMesh->Normals[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vNormal,
 			XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PivotMatrix));
 
-		memcpy(&pVertices[i].vTexCoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
-		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
+		memcpy(&pVertices[i].vTexCoord, &pMesh->TexCoords[i], sizeof(_float2));
+		memcpy(&pVertices[i].vTangent, &pMesh->Tangents[i], sizeof(_float3));
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
@@ -130,7 +130,7 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnim(const aiMesh* pAIMesh, _fmatrix PivotM
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONES& Bones)
+HRESULT CMesh::Ready_VertexBuffer_Anim(const Engine::MESH* pMesh, const CModel::BONES& Bones)
 {
 	m_iStride = { sizeof(VTXANIMMESH) };
 
@@ -149,22 +149,22 @@ HRESULT CMesh::Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONE
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
-		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
-		memcpy(&pVertices[i].vTexCoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
-		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
+		memcpy(&pVertices[i].vPosition, &pMesh->Positions[i], sizeof(_float3));
+		memcpy(&pVertices[i].vNormal, &pMesh->Normals[i], sizeof(_float3));
+		memcpy(&pVertices[i].vTexCoord, &pMesh->TexCoords[i], sizeof(_float2));
+		memcpy(&pVertices[i].vTangent, &pMesh->Tangents[i], sizeof(_float3));
 	}
 
-	m_iNumBones = pAIMesh->mNumBones;
+	m_iNumBones = pMesh->NumBones;
 
-	for (_uint i = 0; i < pAIMesh->mNumBones; ++i)
+	for (_uint i = 0; i < pMesh->NumBones; ++i)
 	{
-		aiBone* pBone = pAIMesh->mBones[i];
+		Engine::BONE Bone = pMesh->Bones[i];
 
 		_uint iIndex = { 0 };
 
-		auto iter = find_if(Bones.begin(), Bones.end(), [&](auto& pValue) {
-			if (!strcmp(pBone->mName.data, pValue->Get_Name()))
+		auto iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pValue) {
+			if (!lstrcmp(Bone.Name, pValue->Get_Name()))
 				return true;
 			else
 			{
@@ -172,39 +172,37 @@ HRESULT CMesh::Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONE
 				return false;
 			}
 		});
-
+		
 		_float4x4		OffsetMatrix;
-		memcpy(&OffsetMatrix, &pBone->mOffsetMatrix, sizeof(_float4x4));
-		XMStoreFloat4x4(&OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
-
+		memcpy(&OffsetMatrix, &Bone.OffsetMatrix, sizeof(_float4x4));
 
 		Bones[iIndex]->Set_OffsetMatrix(OffsetMatrix);
 
 		m_BoneIndices.push_back(iIndex);
 
-		for (_uint j = 0; j < pBone->mNumWeights; ++j)
+		for (_uint j = 0; j < Bone.NumWeights; ++j)
 		{
-			aiVertexWeight pVertexWeight = pBone->mWeights[j];
+			Engine::WEIGHT VertexWeight = Bone.Weights[j];
 			
-			if (0.f == pVertices[pVertexWeight.mVertexId].vBlendWeights.x)
+			if (0.f == pVertices[VertexWeight.VertexId].vBlendWeights.x)
 			{
-				pVertices[pVertexWeight.mVertexId].vBlendIndices.x = i;
-				pVertices[pVertexWeight.mVertexId].vBlendWeights.x = pVertexWeight.mWeight;
+				pVertices[VertexWeight.VertexId].vBlendIndices.x = i;
+				pVertices[VertexWeight.VertexId].vBlendWeights.x = VertexWeight.Weight;
 			}
-			else if (0.f == pVertices[pVertexWeight.mVertexId].vBlendWeights.y)
+			else if (0.f == pVertices[VertexWeight.VertexId].vBlendWeights.y)
 			{
-				pVertices[pVertexWeight.mVertexId].vBlendIndices.y = i;
-				pVertices[pVertexWeight.mVertexId].vBlendWeights.y = pVertexWeight.mWeight;
+				pVertices[VertexWeight.VertexId].vBlendIndices.y = i;
+				pVertices[VertexWeight.VertexId].vBlendWeights.y = VertexWeight.Weight;
 			}
-			else if (0.f == pVertices[pVertexWeight.mVertexId].vBlendWeights.z)
+			else if (0.f == pVertices[VertexWeight.VertexId].vBlendWeights.z)
 			{
-				pVertices[pVertexWeight.mVertexId].vBlendIndices.z = i;
-				pVertices[pVertexWeight.mVertexId].vBlendWeights.z = pVertexWeight.mWeight;
+				pVertices[VertexWeight.VertexId].vBlendIndices.z = i;
+				pVertices[VertexWeight.VertexId].vBlendWeights.z = VertexWeight.Weight;
 			}
-			else if (0.f == pVertices[pVertexWeight.mVertexId].vBlendWeights.w)
+			else if (0.f == pVertices[VertexWeight.VertexId].vBlendWeights.w)
 			{
-				pVertices[pVertexWeight.mVertexId].vBlendIndices.w = i;
-				pVertices[pVertexWeight.mVertexId].vBlendWeights.w = pVertexWeight.mWeight;
+				pVertices[VertexWeight.VertexId].vBlendIndices.w = i;
+				pVertices[VertexWeight.VertexId].vBlendWeights.w = VertexWeight.Weight;
 			}
 		}
 	}
@@ -219,11 +217,11 @@ HRESULT CMesh::Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONE
 	return S_OK;
 }
 
-CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eType, const CModel::BONES& Bones, const aiMesh* pAIMesh, _fmatrix PivotMatrix)
+CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eType, const CModel::BONES& Bones, const Engine::MESH* pMesh, _fmatrix PivotMatrix)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, Bones, pAIMesh, PivotMatrix)))
+	if (FAILED(pInstance->Initialize_Prototype(eType, Bones, pMesh, PivotMatrix)))
 	{
 		MSG_BOX("Failed to Created CMesh");
 		Safe_Release(pInstance);

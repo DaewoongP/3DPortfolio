@@ -1,9 +1,11 @@
 #pragma once
-#include "Assimp_Struct.h"
 #include "assimp\Importer.hpp"
 #include "assimp\scene.h"
 #include "assimp\postprocess.h"
 
+// file system - c++ 17
+#include <filesystem>
+namespace fs = std::filesystem;
 
 namespace Converter
 {

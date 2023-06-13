@@ -23,13 +23,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(5.f, 0.f, 10.f, 1.f));
+
 	return S_OK;
 }
 
 void CPlayer::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
@@ -48,16 +49,18 @@ HRESULT CPlayer::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	for (_uint i = 0; i < iNumMeshes; i++)
+	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		
+
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
+		// m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
+
 		m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
 	}
-	
+
 	return S_OK;
 }
 

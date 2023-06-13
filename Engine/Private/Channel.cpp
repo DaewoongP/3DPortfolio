@@ -86,9 +86,9 @@ void CChannel::Invalidate_TransformationMatrix(_double dTimeAcc)
 		_vector vDestRotation = XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrame + 1].vRotation);
 		_vector vDestTraslation = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrame + 1].vTranslation);
 
-		vScale = XMVectorLerp(vSourScale, vDestScale, dRatio);
-		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, dRatio);
-		vTranslation = XMVectorLerp(vSourTraslation, vDestTraslation, dRatio);
+		vScale = XMVectorLerp(vSourScale, vDestScale, static_cast<_float>(dRatio));
+		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, static_cast<_float>(dRatio));
+		vTranslation = XMVectorLerp(vSourTraslation, vDestTraslation, static_cast<_float>(dRatio));
 	}
 
 	_matrix TransformationMatrix;

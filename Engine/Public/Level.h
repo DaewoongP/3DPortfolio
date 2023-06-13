@@ -10,8 +10,6 @@ protected:
 
 public:
 	virtual HRESULT Initialize();
-
-	/* 이 레벨에서 보여주고하는 디버깅적 요소. */
 	virtual void Tick(_double dTimeDelta);
 	virtual HRESULT Render();
 
