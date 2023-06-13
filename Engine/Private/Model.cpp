@@ -139,7 +139,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 	// Meshes NumMeshes
 	ReadFile(hFile, &(m_Model.NumMeshes), sizeof(_uint), &dwByte, nullptr);
 
-	for (_uint i = 0; i < m_Model.NumMeshes; i++)
+	for (_uint i = 0; i < m_Model.NumMeshes; ++i)
 	{
 		MESH* pMesh = new MESH;
 
@@ -281,7 +281,7 @@ HRESULT CModel::Ready_Meshes(TYPE eType, _fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_Model.NumMeshes;
 
-	for (size_t i = 0; i < m_iNumMeshes; i++)
+	for (size_t i = 0; i < m_iNumMeshes; ++i)
 	{
 		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, eType, m_Bones, m_MeshDatas[i], PivotMatrix);
 		if (nullptr == pMesh)
