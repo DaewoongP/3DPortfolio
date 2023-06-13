@@ -129,11 +129,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 
 		// Node Children (array)
 		pNode->Children = new _uint[pNode->NumChildren];
-
-		for (_uint j = 0; j < pNode->NumChildren; ++j)
-		{
-			ReadFile(hFile, &pNode->Children[j], sizeof(_uint), &dwByte, nullptr);
-		}
+		ReadFile(hFile, pNode->Children, sizeof(_uint) * (pNode->NumChildren), &dwByte, nullptr);
 
 		m_NodeDatas.push_back(pNode);
 	}
@@ -177,26 +173,26 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 
 			// Face Indices
 			Face.Indices = new _uint[Face.NumIndices];
-			for (_uint k = 0; k < Face.NumIndices; ++k)
-			{
-				ReadFile(hFile, &(Face.Indices[k]), sizeof(_uint), &dwByte, nullptr);
-			}
-
+			ReadFile(hFile, Face.Indices, sizeof(_uint) * (Face.NumIndices), &dwByte, nullptr);
+			
 			pMesh->Faces[j] = Face;
 		}
 
 		// Mesh Positions
 		pMesh->Positions = new _float3[pMesh->NumVertices];
+		ReadFile(hFile, pMesh->Positions, sizeof(_float3) * (pMesh->NumVertices), &dwByte, nullptr);
+
+		// Mesh Normals
 		pMesh->Normals = new _float3[pMesh->NumVertices];
+		ReadFile(hFile, pMesh->Normals, sizeof(_float3) * (pMesh->NumVertices), &dwByte, nullptr);
+
+		// Mesh TexCoords
 		pMesh->TexCoords = new _float2[pMesh->NumVertices];
+		ReadFile(hFile, pMesh->TexCoords, sizeof(_float2) * (pMesh->NumVertices), &dwByte, nullptr);
+
+		// Mesh Tangents
 		pMesh->Tangents = new _float3[pMesh->NumVertices];
-		for (_uint j = 0; j < pMesh->NumVertices; ++j)
-		{
-			ReadFile(hFile, &pMesh->Positions[j], sizeof(_float3), &dwByte, nullptr);
-			ReadFile(hFile, &pMesh->Normals[j], sizeof(_float3), &dwByte, nullptr);
-			ReadFile(hFile, &pMesh->TexCoords[j], sizeof(_float2), &dwByte, nullptr);
-			ReadFile(hFile, &pMesh->Tangents[j], sizeof(_float3), &dwByte, nullptr);
-		}
+		ReadFile(hFile, pMesh->Tangents, sizeof(_float3) * (pMesh->NumVertices), &dwByte, nullptr);
 
 		// Mesh NumBones
 		ReadFile(hFile, &(pMesh->NumBones), sizeof(_uint), &dwByte, nullptr);
