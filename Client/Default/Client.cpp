@@ -81,7 +81,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         pGameInstance->Tick_Timer(TEXT("Timer_Default"));
         dTimerAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
 
-        /* MainApp 객체의 처리. */
         if (dTimerAcc >= 1.0 / 60.0)
         {
             pGameInstance->Tick_Timer(TEXT("Timer_60"));

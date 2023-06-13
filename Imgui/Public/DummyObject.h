@@ -1,8 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Tool_Defines.h"
-// 클라이언트의 오브젝트에게 공통적으로 필요한 컴포넌트를 대기시켜야함.
-//만약 여러개가 필요할경우 벡터, 리스트 형식으로 계속 push하는 형태가 좋을듯.
+
 BEGIN(Engine)
 class CMesh;
 class CModel;

@@ -17,7 +17,7 @@ void CImWindow::Tick(_double dTimeDelta)
     RECT rc;
     GetWindowRect(g_hWnd, &rc);
 
-    ImVec2 vPos = ImVec2(rc.right, rc.top);
+    ImVec2 vPos = ImVec2((_float)rc.right, (_float)rc.top);
     ImGui::SetNextWindowPos(vPos + m_vWindowPos);
     SetNextWindowSize(m_vWindowSize);
 }

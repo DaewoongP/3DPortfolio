@@ -2,7 +2,7 @@
 
 namespace Engine
 {
-	template <typename T>			// 클래스 포인터들을 해제
+	template <typename T>
 	unsigned long Safe_AddRef(T& pointer)
 	{
 		unsigned long	dwRefCnt = 0;
@@ -14,7 +14,7 @@ namespace Engine
 	}
 
 
-	template <typename T>			// 클래스 포인터들을 해제
+	template <typename T>
 	unsigned long Safe_Release(T& pointer)
 	{
 		unsigned long	dwRefCnt = 0;
@@ -31,7 +31,7 @@ namespace Engine
 
 
 
-	template <typename T>			// 원시 자료형, 구조체 포인터 해제
+	template <typename T>
 	void Safe_Delete(T& pointer)
 	{
 		if (nullptr != pointer)
@@ -41,7 +41,7 @@ namespace Engine
 		}
 	}
 
-	template <typename T>			// 동적 배열을 삭제하는 용도
+	template <typename T>
 	void Safe_Delete_Array(T& pointer)
 	{
 		if (nullptr != pointer)
@@ -50,8 +50,6 @@ namespace Engine
 			pointer = nullptr;
 		}
 	}
-	//////////////////////////////////////////////////////////////////
-	/////////////////////////////////Functor 함수객체//////////////////////////
 
 	class CTag_Finder
 	{
