@@ -30,7 +30,6 @@ void CPlayer::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CPlayer::Late_Tick(_double dTimeDelta)
@@ -46,18 +45,6 @@ HRESULT CPlayer::Render()
 	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
 	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		
-		m_pShaderCom->Begin(0);
-
-		m_pModelCom->Render(i);
-	}
-	
 	return S_OK;
 }
 

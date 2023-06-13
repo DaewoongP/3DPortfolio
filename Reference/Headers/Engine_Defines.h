@@ -4,6 +4,7 @@
 #pragma warning (disable : 4251) // __declspec(dllexport)
 #pragma warning (disable : 26812) // enum class
 #pragma warning (disable : 4100) // unused variable
+#pragma warning (disable : 6031) // except return
 
 #define DIRECTINPUT_VERSION		0x0800
 #include <dinput.h>
@@ -25,6 +26,7 @@
 #include <array>
 #include <unordered_map>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 using namespace DirectX;
@@ -34,6 +36,8 @@ using namespace DirectX;
 #include "Engine_TypeDef.h"
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
+
+#include "Engine_Converter.h"
 
 #ifdef _DEBUG
 

@@ -24,6 +24,8 @@ HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 		MSG_BOX("Failed Convert_Bones");
 		return E_FAIL;
 	}
+	Sort_Bones();
+
 	cout << "Convert Meshes..." << endl;
 	if (FAILED(Convert_Meshes()))
 	{
@@ -67,7 +69,7 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 	_float4x4 TransposeMatrix;
 	memcpy(&TransposeMatrix, &pNode->mTransformation, sizeof(_float4x4));
 	XMStoreFloat4x4(&TransposeMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransposeMatrix)));
-	memcpy(&Node.Transformation, &TransposeMatrix, sizeof MATRIX4X4);
+	memcpy(&Node.Transformation, &TransposeMatrix, sizeof _float4x4);
 	
 	/// For.Node
 	// root
@@ -99,6 +101,18 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 
 	m_Nodes.push_back(Node);
 
+	return S_OK;
+}
+
+HRESULT CModel::Sort_Bones()
+{
+	sort(m_Nodes.begin(), m_Nodes.end(), [](NODE& Sour, NODE& Dest) {
+
+		if (Sour.NodeIndex < Dest.NodeIndex)
+			return true;
+		else
+			return false;
+	});
 	return S_OK;
 }
 
@@ -142,17 +156,17 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	outMesh->NumVertices = pAIMesh->mNumVertices;
 	outMesh->NumIndices = pAIMesh->mNumFaces * 3;
 
-	outMesh->Positions = new FLOAT3[pAIMesh->mNumVertices];
-	outMesh->Normals = new FLOAT3[pAIMesh->mNumVertices];
-	outMesh->TexCoords = new FLOAT2[pAIMesh->mNumVertices];
-	outMesh->Tangents = new FLOAT3[pAIMesh->mNumVertices];
+	outMesh->Positions = new _float3[pAIMesh->mNumVertices];
+	outMesh->Normals = new _float3[pAIMesh->mNumVertices];
+	outMesh->TexCoords = new _float2[pAIMesh->mNumVertices];
+	outMesh->Tangents = new _float3[pAIMesh->mNumVertices];
 
 	for (_uint i = 0; i < pAIMesh->mNumVertices; i++)
 	{
-		memcpy(&outMesh->Positions[i], &pAIMesh->mVertices[i], sizeof FLOAT3);
-		memcpy(&outMesh->Normals[i], &pAIMesh->mNormals[i], sizeof FLOAT3);
-		memcpy(&outMesh->TexCoords[i], &pAIMesh->mTextureCoords[0][i], sizeof FLOAT2);
-		memcpy(&outMesh->Tangents[i], &pAIMesh->mTangents[i], sizeof FLOAT3);
+		memcpy(&outMesh->Positions[i], &pAIMesh->mVertices[i], sizeof _float3);
+		memcpy(&outMesh->Normals[i], &pAIMesh->mNormals[i], sizeof _float3);
+		memcpy(&outMesh->TexCoords[i], &pAIMesh->mTextureCoords[0][i], sizeof _float2);
+		memcpy(&outMesh->Tangents[i], &pAIMesh->mTangents[i], sizeof _float3);
 	}
 
 
@@ -175,7 +189,7 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 		_float4x4 TransposeMatrix;
 		memcpy(&TransposeMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
 		XMStoreFloat4x4(&TransposeMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransposeMatrix)));
-		memcpy(&Bone.OffsetMatrix, &TransposeMatrix, sizeof MATRIX4X4);
+		memcpy(&Bone.OffsetMatrix, &TransposeMatrix, sizeof _float4x4);
 		
 		// Mesh Bone Weight
 		Bone.NumWeights = pAIBone->mNumWeights;
@@ -275,7 +289,7 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 		WriteFile(hFile, Node.Name, dwStrByte, &dwByte, nullptr);
 
 		// Node Transformation
-		WriteFile(hFile, &(Node.Transformation), sizeof(MATRIX4X4), &dwByte, nullptr);
+		WriteFile(hFile, &(Node.Transformation), sizeof(_float4x4), &dwByte, nullptr);
 
 		// Node NodeIndex
 		WriteFile(hFile, &(Node.NodeIndex), sizeof(_uint), &dwByte, nullptr);
@@ -314,16 +328,16 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 		WriteFile(hFile, &(Mesh.NumIndices), sizeof(_uint), &dwByte, nullptr);
 		
 		// Mesh Positions
-		WriteFile(hFile, Mesh.Positions, sizeof(FLOAT3) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.Positions, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh Normals
-		WriteFile(hFile, Mesh.Normals, sizeof(FLOAT3) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.Normals, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh TexCoords
-		WriteFile(hFile, Mesh.TexCoords, sizeof(FLOAT2) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.TexCoords, sizeof(_float2) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh Tangents
-		WriteFile(hFile, Mesh.Tangents, sizeof(FLOAT3) * Mesh.NumVertices, &dwByte, nullptr);
+		WriteFile(hFile, Mesh.Tangents, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
 		
 		// Mesh NumBones
 		WriteFile(hFile, &(Mesh.NumBones), sizeof(_uint), &dwByte, nullptr);
@@ -339,7 +353,7 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 			WriteFile(hFile, Bone.Name, dwStrByte, &dwByte, nullptr);
 
 			// Mesh OffsetMatrix
-			WriteFile(hFile, &(Bone.OffsetMatrix), sizeof(MATRIX4X4), &dwByte, nullptr);
+			WriteFile(hFile, &(Bone.OffsetMatrix), sizeof(_float4x4), &dwByte, nullptr);
 			
 			// Mesh NumWeights
 			WriteFile(hFile, &(Bone.NumWeights), sizeof(_uint), &dwByte, nullptr);

@@ -4,10 +4,10 @@ CBone::CBone()
 {
 }
 
-HRESULT CBone::Initialize(aiNode* pAINode, CBone* pParent)
+HRESULT CBone::Initialize(Engine::NODE* pNode, CBone* pParent)
 {
-	strcpy_s(m_szName, MAX_STR, pAINode->mName.data);
-	memcpy(&m_TransformationMatrix, &pAINode->mTransformation, sizeof _float4x4);
+	lstrcpy(m_szName, pNode->Name);
+	memcpy(&m_TransformationMatrix, &pNode->Transformation, sizeof _float4x4);
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 	m_pParent = pParent;
@@ -28,10 +28,10 @@ void CBone::Invalidate_CombinedTransformationMatrix()
 	}
 }
 
-CBone* CBone::Create(aiNode* pAINode, CBone* pParent)
+CBone* CBone::Create(Engine::NODE* pNode, CBone* pParent)
 {
 	CBone* pInstance = new CBone();
-	if (FAILED(pInstance->Initialize(pAINode, pParent)))
+	if (FAILED(pInstance->Initialize(pNode, pParent)))
 	{
 		MSG_BOX("Failed to Created CBone");
 		Safe_Release(pInstance);

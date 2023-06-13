@@ -1,33 +1,13 @@
 #pragma once
+#include <DirectXMath.h>
+using namespace DirectX;
+
 namespace Engine
 {
-	typedef struct tagFloat2
-	{
-		float x, y;
-	}FLOAT2;
-
-	typedef struct tagFloat3
-	{
-		float x, y, z;
-	}FLOAT3;
-	
-	typedef struct tagFloat4
-	{
-		float x, y, z, w;
-	}FLOAT4;
-
-	typedef struct tagMatrix4x4
-	{
-		float _11, _12, _13, _14;
-		float _21, _22, _23, _24;
-		float _31, _32, _33, _34;
-		float _41, _42, _43, _44;
-	}MATRIX4X4;
-
 	typedef struct tagNode
 	{
 		wchar_t				Name[256];
-		MATRIX4X4			Transformation; // row major
+		XMFLOAT4X4			Transformation; // row major
 
 		unsigned int		NodeIndex;
 		unsigned int		Parent;
@@ -44,7 +24,7 @@ namespace Engine
 	typedef struct tagBone
 	{
 		wchar_t				Name[256];
-		MATRIX4X4			OffsetMatrix; // row major
+		XMFLOAT4X4			OffsetMatrix; // row major
 		unsigned int		NumWeights;
 		WEIGHT*				Weights; // array
 	}BONE;
@@ -55,10 +35,10 @@ namespace Engine
 		unsigned int		MaterialIndex;
 		unsigned int		NumVertices;
 		unsigned int		NumIndices;
-		FLOAT3*				Positions; // array
-		FLOAT3*				Normals; // array
-		FLOAT2*				TexCoords; // array
-		FLOAT3*				Tangents; // array
+		XMFLOAT3*			Positions; // array
+		XMFLOAT3*			Normals; // array
+		XMFLOAT2*			TexCoords; // array
+		XMFLOAT3*			Tangents; // array
 
 		unsigned int		NumBones;
 		BONE*				Bones; // array

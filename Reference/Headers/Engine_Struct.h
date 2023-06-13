@@ -12,7 +12,7 @@ namespace Engine
 
 	typedef struct tagMeshMaterial
 	{
-		class CTexture* pMtrlTexture[AI_TEXTURE_TYPE_MAX];
+		class CTexture* pMtrlTexture[20];
 	}MESHMATERIAL;
 
 	typedef struct tagKeyFrame

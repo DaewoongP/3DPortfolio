@@ -1,6 +1,6 @@
 #pragma once
-#include "Base.h"
 #include "Assimp_Defines.h"
+#include "Base.h"
 
 BEGIN(Converter)
 
@@ -29,6 +29,7 @@ private:
 
 private:
 	HRESULT Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot = false);
+	HRESULT Sort_Bones();
 	HRESULT Convert_Meshes();
 	HRESULT Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh);
 	HRESULT Convert_Materials(const char* pModelFilePath);
