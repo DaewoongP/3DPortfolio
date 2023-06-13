@@ -104,6 +104,8 @@ namespace Converter
 
 	typedef struct tagModel
 	{
+		unsigned int		NumNodes;
+
 		unsigned int		NumMeshes;
 		MESH*				Meshes; // array
 		unsigned int		NumMaterials;

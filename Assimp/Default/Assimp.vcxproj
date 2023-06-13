@@ -155,7 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Assimp_Defines.h" />
-    <ClInclude Include="..\Public\Assimp_Struct.h" />
     <ClInclude Include="..\public\MainConverter.h" />
     <ClInclude Include="..\Public\Model.h" />
   </ItemGroup>

@@ -26,9 +26,6 @@ public:
 public:
 	HRESULT Bind_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, aiTextureType MaterialType);
 	HRESULT Bind_BoneMatrices(class CShader* pShader, const char* pConstantName, _uint iMeshIndex);
-private:
-	const aiScene*			m_pAIScene = { nullptr };
-	Assimp::Importer		m_Importer;
 
 private: /* For.Meshes  */
 	_uint					m_iNumMeshes = { 0 };

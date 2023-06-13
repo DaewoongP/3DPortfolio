@@ -107,6 +107,8 @@ HRESULT CModel::Convert_Meshes()
 {
 	ZEROMEM(&m_Model);
 
+	m_Model.NumNodes = (_uint)m_Nodes.size();
+
 	m_Model.NumMeshes = m_pAIScene->mNumMeshes;
 
 	m_Model.Meshes = new MESH[m_pAIScene->mNumMeshes];
@@ -261,6 +263,10 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 	_ulong	dwStrByte = 0;
 
 	// Write Nodes
+
+	// Nodes NumNodes
+	WriteFile(hFile, &(m_Model.NumNodes), sizeof(_uint), &dwByte, nullptr);
+
 	for (auto& Node : m_Nodes)
 	{
 		// Node Name

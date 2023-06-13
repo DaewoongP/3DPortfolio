@@ -219,6 +219,9 @@
     <ClInclude Include="..\public\Channel.h">
       <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Reference\Headers\Engine_Converter.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
