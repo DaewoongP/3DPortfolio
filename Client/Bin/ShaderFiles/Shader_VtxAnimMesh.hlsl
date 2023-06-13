@@ -43,20 +43,20 @@ VS_OUT VS_MAIN(VS_IN In)
 
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
-    
-    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
-    
-    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
-        g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
-        g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
-        g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
-    
-    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
 
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+	
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vector(In.vNormal, 1.f), g_WorldMatrix));
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
     Out.vTexUV = In.vTexUV;
-    Out.vWorldPos = mul(vPosition, g_WorldMatrix);
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	
 	return Out;
 }
@@ -92,7 +92,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vColor = (g_vLightDiffuse * vDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
 		+ (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-	
+
     return Out;
 }
 

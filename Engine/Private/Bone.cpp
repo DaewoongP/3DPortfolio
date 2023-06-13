@@ -8,7 +8,7 @@ HRESULT CBone::Initialize(Engine::NODE* pNode, CBone* pParent)
 {
 	lstrcpy(m_szName, pNode->Name);
 	memcpy(&m_TransformationMatrix, &pNode->Transformation, sizeof _float4x4);
-	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
+	XMStoreFloat4x4(&m_TransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix));
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 	m_pParent = pParent;
 	Safe_AddRef(m_pParent);

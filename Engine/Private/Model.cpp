@@ -1,5 +1,8 @@
 #include "..\Public\Model.h"
 #include "Bone.h"
+#include "Mesh.h"
+#include "Shader.h"
+#include "Texture.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -10,8 +13,13 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CModel::CModel(const CModel& rhs)
 	: CComponent(rhs)
 	, m_Model(rhs.m_Model)
-	, m_Nodes(rhs.m_Nodes)
+	, m_NodeDatas(rhs.m_NodeDatas)
+	, m_MeshDatas(rhs.m_MeshDatas)
+	, m_MaterialDatas(rhs.m_MaterialDatas)
+	, m_Bones(rhs.m_Bones)
+	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
+	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 {
 }
@@ -21,7 +29,13 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _
 	if (FAILED(Ready_File(pModelFilePath)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Bones(m_Nodes.front(), nullptr)))
+	if (FAILED(Ready_Bones(m_NodeDatas.front(), nullptr)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Meshes(eType, PivotMatrix)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Materials(pModelFilePath)))
 		return E_FAIL;
 
 	return S_OK;
@@ -34,6 +48,37 @@ HRESULT CModel::Initialize(void* pArg)
 
 HRESULT CModel::Render(_uint iMeshIndex)
 {
+	m_Meshes[iMeshIndex]->Render();
+
+	return S_OK;
+}
+
+void CModel::Play_Animation(_double dTimeDelta)
+{
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Invalidate_CombinedTransformationMatrix();
+	}
+}
+
+HRESULT CModel::Bind_Material(CShader* pShader, const char* pConstantName, _uint iMeshIndex, Engine::TextureType MaterialType)
+{
+	if (iMeshIndex >= m_iNumMeshes ||
+		MaterialType >= TextureType_MAX)
+		return E_FAIL;
+
+	return m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMtrlTexture[MaterialType]->Bind_ShaderResource(pShader, pConstantName);
+}
+
+HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* pConstantName, _uint iMeshIndex)
+{
+	_float4x4		BoneMatrices[256];
+	ZeroMemory(BoneMatrices, sizeof(_float4x4) * 256);
+
+	m_Meshes[iMeshIndex]->Get_Matrices(m_Bones, BoneMatrices);
+
+	pShader->Bind_Matrices(pConstantName, BoneMatrices, 256);
+
 	return S_OK;
 }
 
@@ -49,8 +94,8 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
-	DWORD	dwByte = 0;
-	DWORD	dwStrByte = 0;
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
 
 	ZEROMEM(&m_Model);
 
@@ -90,7 +135,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 			ReadFile(hFile, &pNode->Children[j], sizeof(_uint), &dwByte, nullptr);
 		}
 
-		m_Nodes.push_back(pNode);
+		m_NodeDatas.push_back(pNode);
 	}
 
 	// Write Meshes
@@ -117,8 +162,28 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 		// Mesh NumVertices
 		ReadFile(hFile, &(pMesh->NumVertices), sizeof(_uint), &dwByte, nullptr);
 
-		// Mesh NumIndices
-		ReadFile(hFile, &(pMesh->NumIndices), sizeof(_uint), &dwByte, nullptr);
+		// Mesh NumFaces
+		ReadFile(hFile, &(pMesh->NumFaces), sizeof(_uint), &dwByte, nullptr);
+
+		pMesh->Faces = new FACE[pMesh->NumFaces];
+
+		for (_uint j = 0; j < pMesh->NumFaces; ++j)
+		{
+			FACE Face;
+			ZEROMEM(&Face);
+
+			// Face NumIndices
+			ReadFile(hFile, &(Face.NumIndices), sizeof(_uint), &dwByte, nullptr);
+
+			// Face Indices
+			Face.Indices = new _uint[Face.NumIndices];
+			for (_uint k = 0; k < Face.NumIndices; ++k)
+			{
+				ReadFile(hFile, &(Face.Indices[k]), sizeof(_uint), &dwByte, nullptr);
+			}
+
+			pMesh->Faces[j] = Face;
+		}
 
 		// Mesh Positions
 		pMesh->Positions = new _float3[pMesh->NumVertices];
@@ -178,7 +243,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 			pMesh->Bones[j] = Bone;
 		}
 
-		m_Meshes.push_back(pMesh);
+		m_MeshDatas.push_back(pMesh);
 	}
 
 	// Write Materials
@@ -193,7 +258,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 		// MaterialTex
 		ReadFile(hFile, pMaterial->MaterialTexture, sizeof(MATERIALTEX) * TextureType_MAX, &dwByte, nullptr);
 
-		m_Materials.push_back(pMaterial);
+		m_MaterialDatas.push_back(pMaterial);
 	}
 
 	CloseHandle(hFile);
@@ -210,7 +275,49 @@ HRESULT CModel::Ready_Bones(Engine::NODE* pNode, CBone* pParent)
 
 	for (size_t i = 0; i < pNode->NumChildren; ++i)
 	{
-		Ready_Bones(m_Nodes[pNode->Children[i]], pBone);
+		Ready_Bones(m_NodeDatas[pNode->Children[i]], pBone);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Meshes(TYPE eType, _fmatrix PivotMatrix)
+{
+	m_iNumMeshes = m_Model.NumMeshes;
+
+	for (size_t i = 0; i < m_iNumMeshes; i++)
+	{
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, eType, m_Bones, m_MeshDatas[i], PivotMatrix);
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		m_Meshes.push_back(pMesh);
+	}
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
+{
+	m_iNumMaterials = m_Model.NumMaterials;
+
+	for (size_t i = 0; i < m_iNumMaterials; ++i)
+	{
+		MESHMATERIAL			MeshMaterial;
+		ZeroMemory(&MeshMaterial, sizeof MeshMaterial);
+
+		for (size_t j = 0; j < TextureType_MAX; ++j)
+		{
+			if (!lstrcmp(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("")))
+				continue;
+
+			MeshMaterial.pMtrlTexture[j] = CTexture::Create(m_pDevice, m_pContext, 
+				m_MaterialDatas[i]->MaterialTexture[j].TexPath, 1);
+
+			if (nullptr == MeshMaterial.pMtrlTexture[j])
+				return E_FAIL;
+		}
+
+		m_Materials.push_back(MeshMaterial);
 	}
 
 	return S_OK;
@@ -242,17 +349,27 @@ CComponent* CModel::Clone(void* pArg)
 void CModel::Free()
 {
 	__super::Free();
+	// delete
+	if (m_bIsClone)
+		return;
 
-	for (auto& pNode : m_Nodes)
+	for (auto& pNode : m_NodeDatas)
 	{
 		Safe_Delete_Array(pNode->Children);
 		
 		Safe_Delete(pNode);
 	}
-	m_Nodes.clear();
+	m_NodeDatas.clear();
 
-	for (auto& pMesh : m_Meshes)
+	for (auto& pMesh : m_MeshDatas)
 	{
+		for (_uint i = 0; i < pMesh->NumFaces; ++i)
+		{
+			Safe_Delete_Array(pMesh->Faces[i].Indices);
+		}
+
+		Safe_Delete_Array(pMesh->Faces);
+
 		Safe_Delete_Array(pMesh->Positions);
 		Safe_Delete_Array(pMesh->Normals);
 		Safe_Delete_Array(pMesh->TexCoords);
@@ -267,11 +384,30 @@ void CModel::Free()
 
 		Safe_Delete(pMesh);
 	}
-	m_Meshes.clear();
+	m_MeshDatas.clear();
 
-	for (auto& pMaterial : m_Materials)
+	for (auto& pMaterial : m_MaterialDatas)
 	{
 		Safe_Delete(pMaterial);
+	}
+	m_MaterialDatas.clear();
+
+	for (auto& pBone : m_Bones)
+	{
+		Safe_Release(pBone);
+	}
+	m_Bones.clear();
+
+	for (auto& pMesh : m_Meshes)
+	{
+		Safe_Release(pMesh);
+	}
+	m_Meshes.clear();
+
+	for (auto& Material : m_Materials)
+	{
+		for (auto& pTexture : Material.pMtrlTexture)
+			Safe_Release(pTexture);
 	}
 	m_Materials.clear();
 }

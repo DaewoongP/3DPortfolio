@@ -154,7 +154,20 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	lstrcpy(outMesh->Name, MeshName);
 
 	outMesh->NumVertices = pAIMesh->mNumVertices;
-	outMesh->NumIndices = pAIMesh->mNumFaces * 3;
+	outMesh->NumFaces = pAIMesh->mNumFaces;
+	outMesh->Faces = new FACE[outMesh->NumFaces];
+
+	for (_uint i = 0; i < pAIMesh->mNumFaces; ++i)
+	{
+		outMesh->Faces[i].NumIndices = pAIMesh->mFaces[i].mNumIndices;
+
+		outMesh->Faces[i].Indices = new _uint[outMesh->Faces[i].NumIndices];
+
+		for (_uint j = 0; j < outMesh->Faces[i].NumIndices; ++j)
+		{
+			outMesh->Faces[i].Indices[j] = pAIMesh->mFaces[i].mIndices[j];
+		}
+	}
 
 	outMesh->Positions = new _float3[pAIMesh->mNumVertices];
 	outMesh->Normals = new _float3[pAIMesh->mNumVertices];
@@ -234,10 +247,25 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 
 			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
 				continue;
-			// name
-			_tchar TexturePath[256] = TEXT("");
-			CharToWChar(strPath.data, TexturePath);
-			lstrcpy(Material.MaterialTexture[j].TexPath, TexturePath);
+
+			char		szDrive[MAX_PATH] = "";
+			char		szDirectory[MAX_PATH] = "";
+			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			char		szFileName[MAX_PATH] = "";
+			char		szExt[MAX_PATH] = "";
+			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
+
+			char		szFullPath[MAX_PATH] = "";
+			strcpy_s(szFullPath, szDrive);
+			strcat_s(szFullPath, szDirectory);
+			strcat_s(szFullPath, szFileName);
+			strcat_s(szFullPath, szExt);
+
+			_tchar		wszFullPath[MAX_PATH] = TEXT("");
+
+			CharToWChar(szFullPath, wszFullPath);
+			lstrcpy(Material.MaterialTexture[j].TexPath, wszFullPath);
 
 			Material.MaterialTexture[j].TexType = TEXTYPE(j);
 		}
@@ -324,8 +352,18 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 		// Mesh NumVertices
 		WriteFile(hFile, &(Mesh.NumVertices), sizeof(_uint), &dwByte, nullptr);
 		
-		// Mesh NumIndices
-		WriteFile(hFile, &(Mesh.NumIndices), sizeof(_uint), &dwByte, nullptr);
+		// Mesh NumFaces
+		WriteFile(hFile, &(Mesh.NumFaces), sizeof(_uint), &dwByte, nullptr);
+
+		for (_uint j = 0; j < Mesh.NumFaces; ++j)
+		{
+			FACE Face = Mesh.Faces[j];
+			// Face NumIndices
+			WriteFile(hFile, &(Face.NumIndices), sizeof(_uint), &dwByte, nullptr);
+
+			// Face Indices
+			WriteFile(hFile, Face.Indices, sizeof(_uint) * Face.NumIndices, &dwByte, nullptr);
+		}
 		
 		// Mesh Positions
 		WriteFile(hFile, Mesh.Positions, sizeof(_float3) * Mesh.NumVertices, &dwByte, nullptr);
@@ -418,6 +456,13 @@ void CModel::Free()
 	for (_uint i = 0; i < m_Model.NumMeshes; ++i)
 	{
 		MESH Mesh = m_Model.Meshes[i];
+
+		for (_uint j = 0; j < Mesh.NumFaces; j++)
+		{
+			Safe_Delete_Array(Mesh.Faces[j].Indices);
+		}
+		Safe_Delete_Array(Mesh.Faces);
+
 		Safe_Delete_Array(Mesh.Positions);
 		Safe_Delete_Array(Mesh.Normals);
 		Safe_Delete_Array(Mesh.TexCoords);

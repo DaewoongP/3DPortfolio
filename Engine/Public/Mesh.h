@@ -16,11 +16,11 @@ public:
 	void Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices);
 
 public:
-	virtual HRESULT Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bones, const aiMesh* pAIMesh, _fmatrix PivotMatrix);
+	virtual HRESULT Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bones, const Engine::MESH* pMesh, _fmatrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	_char			m_szName[MAX_PATH] = "";
+	_tchar			m_szName[MAX_PATH] = TEXT("");
 	_uint			m_iMaterialIndex = { 0 };
 
 private:
@@ -28,11 +28,11 @@ private:
 	vector<_uint>	m_BoneIndices;
 
 private:
-	HRESULT Ready_VertexBuffer_NonAnim(const aiMesh* pAIMesh, _fmatrix PivotMatrix);
-	HRESULT Ready_VertexBuffer_Anim(const aiMesh* pAIMesh, const CModel::BONES& Bones);
+	HRESULT Ready_VertexBuffer_NonAnim(const Engine::MESH* pMesh, _fmatrix PivotMatrix);
+	HRESULT Ready_VertexBuffer_Anim(const Engine::MESH* pMesh, const CModel::BONES& Bones);
 
 public:
-	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eType, const CModel::BONES& Bones, const aiMesh* pAIMesh, _fmatrix PivotMatrix);
+	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CModel::TYPE eType, const CModel::BONES& Bones, const Engine::MESH* pMesh, _fmatrix PivotMatrix);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

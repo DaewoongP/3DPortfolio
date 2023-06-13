@@ -29,12 +29,19 @@ namespace Engine
 		WEIGHT*				Weights; // array
 	}BONE;
 
+	typedef struct tagFace
+	{
+		unsigned int		NumIndices;
+		unsigned int*		Indices; // array
+	}FACE;
+
 	typedef struct tagMesh
 	{
 		wchar_t				Name[256];
 		unsigned int		MaterialIndex;
 		unsigned int		NumVertices;
-		unsigned int		NumIndices;
+		unsigned int		NumFaces;
+		FACE*				Faces; // array
 		XMFLOAT3*			Positions; // array
 		XMFLOAT3*			Normals; // array
 		XMFLOAT2*			TexCoords; // array
