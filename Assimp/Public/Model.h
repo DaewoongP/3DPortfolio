@@ -14,7 +14,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	HRESULT Initialize(TYPE eType, const _char* pModelFilePath);
+	HRESULT Convert_Model(TYPE eType, const _char* pModelFilePath);
 
 private:
 	const aiScene*			m_pAIScene = { nullptr };
@@ -35,10 +35,10 @@ private:
 	HRESULT Convert_Animations();
 
 private:
-	HRESULT Write_File(const _tchar* pFileName);
+	HRESULT Write_File(TYPE eType, const _tchar* pFileName);
 
 public:
-	static CModel* Create(TYPE eType, const _char* pModelFilePath);
+	static HRESULT Convert(TYPE eType, const _char* pModelFilePath);
 	virtual void Free() override;
 };
 

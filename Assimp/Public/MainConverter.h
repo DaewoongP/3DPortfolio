@@ -10,14 +10,16 @@ private:
 	virtual ~CMainConverter() = default;
 
 public:
-	HRESULT Initialize();
 	HRESULT Convert();
 
 private:
-	Converter::CModel* m_pModel = { nullptr };
+	HRESULT ReadFileInDirectory(CModel::TYPE eType, const _tchar* pDirectoryPath);
+
+private:
+	vector<const _tchar*>		m_Files;
 
 public:
-	static CMainConverter* Create();
+	static void Start();
 	virtual void Free() override;
 };
 

@@ -5,7 +5,7 @@ CModel::CModel()
 	ZEROMEM(&m_Model);
 }
 
-HRESULT CModel::Initialize(TYPE eType, const _char* pModelFilePath)
+HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 {
 	_uint		iFlag = 0;
 
@@ -18,19 +18,19 @@ HRESULT CModel::Initialize(TYPE eType, const _char* pModelFilePath)
 	
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
-
+	cout << "Convert Bones..." << endl;
 	if (FAILED(Convert_Bones(m_pAIScene->mRootNode, 0, nullptr, true)))
 	{
 		MSG_BOX("Failed Convert_Bones");
 		return E_FAIL;
 	}
-
+	cout << "Convert Meshes..." << endl;
 	if (FAILED(Convert_Meshes()))
 	{
 		MSG_BOX("Failed Convert_Meshes");
 		return E_FAIL;
 	}
-
+	cout << "Convert Materials..." << endl;
 	if (FAILED(Convert_Materials(pModelFilePath)))
 	{
 		MSG_BOX("Failed Convert_Materials");
@@ -42,13 +42,14 @@ HRESULT CModel::Initialize(TYPE eType, const _char* pModelFilePath)
 	CharToWChar(pModelFilePath, FullPath);
 	_wsplitpath_s(FullPath, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
 
-	if (FAILED(Write_File(szFileName)))
+	cout << "Writing Files..." << endl;
+	if (FAILED(Write_File(eType, szFileName)))
 	{
 		MSG_BOX("Failed Write_File");
 		return E_FAIL;
 	}
 		
-
+	cout << "Convert Success!" << endl;
 	return S_OK;
 }
 
@@ -235,9 +236,19 @@ HRESULT CModel::Convert_Animations()
 	return S_OK;
 }
 
-HRESULT CModel::Write_File(const _tchar* pFileName)
+HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 {
 	_tchar szPath[MAX_PATH] = TEXT("../../Resources/ParsingData/");
+	// Write Anim
+	if (TYPE_ANIM == eType)
+	{
+		lstrcat(szPath, TEXT("Anim/"));
+	}
+	// Write NonAnim
+	else
+	{
+		lstrcat(szPath, TEXT("NonAnim/"));
+	}
 
 	lstrcat(szPath, pFileName);
 	lstrcat(szPath, TEXT(".dat"));
@@ -246,15 +257,15 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
-	DWORD	dwByte = 0;
-	DWORD	dwStrByte = 0;
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
 
 	// Write Nodes
 	for (auto& Node : m_Nodes)
 	{
 		// Node Name
 		dwStrByte = sizeof(_tchar) * (lstrlen(Node.Name) + 1);
-		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, Node.Name, dwStrByte, &dwByte, nullptr);
 
 		// Node Transformation
@@ -284,7 +295,7 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 
 		// Mesh Name
 		dwStrByte = sizeof(_tchar) * (lstrlen(Mesh.Name) + 1);
-		WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, Mesh.Name, dwStrByte, &dwByte, nullptr);
 
 		// Mesh MaterialIndex
@@ -317,8 +328,8 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 			BONE Bone = Mesh.Bones[j];
 
 			// Bone Name
-			dwStrByte = sizeof(_tchar) * (lstrlen(Bone.Name) + 1);
-			WriteFile(hFile, &dwStrByte, sizeof(DWORD), &dwByte, nullptr);
+			dwStrByte = (_ulong)sizeof(_tchar) * (lstrlen(Bone.Name) + 1);
+			WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 			WriteFile(hFile, Bone.Name, dwStrByte, &dwByte, nullptr);
 
 			// Mesh OffsetMatrix
@@ -359,16 +370,21 @@ HRESULT CModel::Write_File(const _tchar* pFileName)
 	return S_OK;
 }
 
-CModel* CModel::Create(TYPE eType, const _char* pModelFilePath)
+HRESULT CModel::Convert(TYPE eType, const _char* pModelFilePath)
 {
 	CModel* pInstance = new CModel();
 
-	if (FAILED(pInstance->Initialize(eType, pModelFilePath)))
+	if (FAILED(pInstance->Convert_Model(eType, pModelFilePath)))
 	{
 		MSG_BOX("Failed to Created CModel");
 		Safe_Release(pInstance);
+		return E_FAIL;
 	}
-	return pInstance;
+	else
+	{
+		Safe_Release(pInstance);
+		return S_OK;
+	}
 }
 
 void CModel::Free()
