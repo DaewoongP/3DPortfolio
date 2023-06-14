@@ -10,6 +10,7 @@ HRESULT CBone::Initialize(Engine::NODE* pNode, CBone* pParent)
 	memcpy(&m_TransformationMatrix, &pNode->Transformation, sizeof _float4x4);
 	XMStoreFloat4x4(&m_TransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix));
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_OffsetMatrix, XMMatrixIdentity());
 	m_pParent = pParent;
 	Safe_AddRef(m_pParent);
 	return S_OK;

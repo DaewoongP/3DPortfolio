@@ -23,6 +23,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pModelCom->Set_AnimIndex(0);
 	return S_OK;
 }
 

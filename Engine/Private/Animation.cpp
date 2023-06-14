@@ -5,16 +5,19 @@ CAnimation::CAnimation()
 {
 }
 
-HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation)
+HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
-	strcpy_s(m_szName, MAX_PATH, pAIAnimation->mName.data);
-	m_iNumChannels = pAIAnimation->mNumChannels;
-	m_Duration = pAIAnimation->mDuration;
-	m_TickPerSecond = pAIAnimation->mTicksPerSecond;
+	m_bIsLoop = true;
 
-	for (size_t i = 0; i < m_iNumChannels; i++)
+	lstrcpy(m_szName, pAnimation->Name);
+	m_dDuration = pAnimation->Duration;
+	m_dTickPerSecond = pAnimation->TickPerSecond;
+	
+	m_iNumChannels = pAnimation->NumChannels;
+
+	for (_uint i = 0; i < m_iNumChannels; i++)
 	{
-		CChannel* pChannel = CChannel::Create(pAIAnimation->mChannels[i]);
+		CChannel* pChannel = CChannel::Create(pAnimation->Channels[i], Bones);
 
 		if (nullptr == pChannel)
 			return E_FAIL;
@@ -22,38 +25,55 @@ HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation)
 		m_Channels.push_back(pChannel);
 	}
 
+	m_ChannelCurrentKeyFrames.resize(m_iNumChannels);
+
 	return S_OK;
 }
 
-void CAnimation::Invalidate_TransformationMatrix(_double dTimeDelta)
+void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta)
 {
-	m_TimeAcc += m_TickPerSecond * dTimeDelta;
+	m_dTimeAcc += m_dTickPerSecond * TimeDelta;
 
-	/* 현재 재생된 시간에 맞도록 모든 뼈의 상태를 키프레임정보를 기반으로하여 갱신한다. */
+	if (m_dTimeAcc >= m_dDuration)
+	{
+		if (true == m_bIsLoop)
+		{
+			m_dTimeAcc = 0.f;
+		}
+	}
+
+	_uint		iChannelIndex = 0;
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
 			return;
 
-		pChannel->Invalidate_TransformationMatrix(m_TimeAcc);
+		pChannel->Invalidate_TransformationMatrix(Bones, m_dTimeAcc, &m_ChannelCurrentKeyFrames[iChannelIndex++]);
 	}
 }
 
-CAnimation* CAnimation::Create(const aiAnimation* pAIAnimation)
+CAnimation* CAnimation::Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
 	CAnimation* pInstance = new CAnimation();
-	if (FAILED(pInstance->Initialize(pAIAnimation)))
+
+	if (FAILED(pInstance->Initialize(pAnimation, Bones)))
 	{
 		MSG_BOX("Failed to Created CAnimation");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
+}
+
+CAnimation* CAnimation::Clone()
+{
+	return new CAnimation(*this);
 }
 
 void CAnimation::Free()
 {
 	for (auto& pChannel : m_Channels)
 		Safe_Release(pChannel);
+
 	m_Channels.clear();
+
 }

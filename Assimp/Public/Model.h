@@ -28,6 +28,11 @@ private:
 	MODEL					m_Model;
 
 private:
+	MESH*					m_pMesh = { nullptr };
+	MATERIAL*				m_pMaterial = { nullptr };
+	ANIMATION*				m_pAnimation = { nullptr };
+
+private:
 	HRESULT Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot = false);
 	HRESULT Sort_Bones();
 	HRESULT Convert_Meshes();

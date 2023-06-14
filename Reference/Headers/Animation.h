@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.h"
+#include "Model.h"
 
 BEGIN(Engine)
 
@@ -10,20 +10,23 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize(const aiAnimation* pAIAnimation);
-	void Invalidate_TransformationMatrix(_double dTimeDelta);
-
-private:
-	_char						m_szName[MAX_PATH] = "";
-	_uint						m_iNumChannels = { 0 };
-	vector<class CChannel*>		m_Channels;
-	_double						m_Duration = { 0.0 };
-	_double						m_TickPerSecond = { 0.0 };
-
-	_double						m_TimeAcc = { 0.0 };
+	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
+	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
 
 public:
-	static CAnimation* Create(const aiAnimation* pAIAnimation);
+	_tchar						m_szName[MAX_STR] = TEXT("");
+	_uint						m_iNumChannels = { 0 };
+	vector<class CChannel*>		m_Channels;
+	vector<_uint>				m_ChannelCurrentKeyFrames;
+	_double						m_dDuration = { 0.0 };
+	_double						m_dTickPerSecond = { 0.0 };
+	_double						m_dTimeAcc = { 0.0 };
+
+	_bool						m_bIsLoop = { false };
+
+public:
+	static CAnimation* Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
+	CAnimation* Clone();
 	virtual void Free() override;
 };
 

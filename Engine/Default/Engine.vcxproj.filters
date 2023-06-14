@@ -100,6 +100,12 @@
     <Filter Include="01. Utility\03. Components\Model\Mesh">
       <UniqueIdentifier>{1019b75d-8009-49ab-a9c7-09336d9b8864}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\Model\Animation">
+      <UniqueIdentifier>{0af68008-257d-423c-b5be-1bb30366b132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Model\Animation\Channel">
+      <UniqueIdentifier>{3fef96f7-70e4-49c0-8b31-fa806d60ac16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -210,6 +216,12 @@
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>01. Utility\03. Components\Model\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01. Utility\03. Components\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -301,6 +313,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>01. Utility\03. Components\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01. Utility\03. Components\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

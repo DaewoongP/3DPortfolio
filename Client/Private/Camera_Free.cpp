@@ -48,15 +48,15 @@ void CCamera_Free::Late_Tick(_double dTimeDelta)
 HRESULT CCamera_Free::Add_Component()
 {
 	CCamera::CAMERADESC CameraDesc;
-	CameraDesc.vEye = _float4(0.f, 10.f, 0.f, 1.f);
-	CameraDesc.vAt = _float4(0.f, 0.f, 5.f, 1.f);
+	CameraDesc.vEye = _float4(-2.f, 3.f, -2.f, 1.f);
+	CameraDesc.vAt = _float4(5.f, 0.f, 5.f, 1.f);
 	CameraDesc.vUp = _float4(0.f, 1.f, 0.f, 0.f);
 	
 	CameraDesc.fFovy = XMConvertToRadians(60.f);
 	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 1000.f;
-	CameraDesc.TransformDesc.dSpeedPerSec = 5.f;
+	CameraDesc.TransformDesc.dSpeedPerSec = 100.f;
 	CameraDesc.TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Camera */

@@ -1,110 +1,115 @@
 #include "..\Public\Channel.h"
+#include "Bone.h"
 
 CChannel::CChannel()
 {
 }
 
-HRESULT CChannel::Initialize(const aiNodeAnim* pAIChannel)
+HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
-	strcpy_s(m_szName, MAX_PATH, pAIChannel->mNodeName.data);
+	lstrcpy(m_szName, Channel.Name);
 
-	m_iNumKeyFrames = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
-	m_iNumKeyFrames = max(m_iNumKeyFrames, pAIChannel->mNumPositionKeys);
+	auto iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pValue) {
+		if (!lstrcmp(m_szName, pValue->Get_Name()))
+			return true;
+		else
+		{
+			++m_iBoneIndex;
+			return false;
+		}
+		});
 
-	_float3 vScale;
-	ZEROMEM(&vScale);
-	_float4 vRotation;
-	ZEROMEM(&vRotation);
-	_float3 vPosition;
-	ZEROMEM(&vPosition);
+	m_iNumKeyFrames = max(Channel.NumScalingKeys, Channel.NumRotationKeys);
+	m_iNumKeyFrames = max(m_iNumKeyFrames, Channel.NumPositionKeys);
 
-	for (size_t i = 0; i < m_iNumKeyFrames; i++)
+	_float3			vScale;
+	_float4			vRotation;
+	_float3			vTranslation;
+
+	for (_uint i = 0; i < m_iNumKeyFrames; ++i)
 	{
-		KEYFRAME	KeyFrame;
+		KEYFRAME				Keyframe;
 
-		if (pAIChannel->mNumScalingKeys > i)
+		if (Channel.NumScalingKeys > i)
 		{
-			memcpy(&vScale, &pAIChannel->mScalingKeys[i].mValue, sizeof _float3);
-
-			KeyFrame.dTime = pAIChannel->mScalingKeys[i].mTime;
+			vScale = Channel.ScalingKeys[i].Value;
+			Keyframe.dTime = Channel.ScalingKeys[i].Time;
 		}
 
-		if (pAIChannel->mNumRotationKeys > i)
+		if (Channel.NumRotationKeys > i)
 		{
-			vRotation.x = pAIChannel->mRotationKeys[i].mValue.x;
-			vRotation.y = pAIChannel->mRotationKeys[i].mValue.y;
-			vRotation.z = pAIChannel->mRotationKeys[i].mValue.z;
-			vRotation.w = pAIChannel->mRotationKeys[i].mValue.w;
-
-			KeyFrame.dTime = pAIChannel->mRotationKeys[i].mTime;
+			vRotation = Channel.RotationKeys[i].Value;
+			Keyframe.dTime = Channel.RotationKeys[i].Time;
 		}
 
-		if (pAIChannel->mNumPositionKeys > i)
+		if (Channel.NumPositionKeys > i)
 		{
-			memcpy(&vPosition, &pAIChannel->mPositionKeys[i].mValue, sizeof _float3);
-
-			KeyFrame.dTime = pAIChannel->mPositionKeys[i].mTime;
+			vTranslation = Channel.PositionKeys[i].Value;
+			Keyframe.dTime = Channel.PositionKeys[i].Time;
 		}
 
-		KeyFrame.vScale = vScale;
-		KeyFrame.vRotation = vRotation;
-		KeyFrame.vTranslation = vPosition;
+		Keyframe.vScale = vScale;
+		Keyframe.vRotation = vRotation;
+		Keyframe.vTranslation = vTranslation;
 
-		m_KeyFrames.push_back(KeyFrame);
+		m_KeyFrames.push_back(Keyframe);
 	}
 
 	return S_OK;
 }
 
-void CChannel::Invalidate_TransformationMatrix(_double dTimeAcc)
+void CChannel::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTimeAcc, _uint* pCurrentKeyFrameIndex)
 {
-	KEYFRAME LastKeyFrame = m_KeyFrames.back();
+	if (0.0 == dTimeAcc)
+		*pCurrentKeyFrameIndex = 0;
 
-	_vector			vScale;
-	_vector			vRotation;
-	_vector			vTranslation;
+	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
+
+	_float3			vScale;
+	_float4			vRotation;
+	_float3			vTranslation;
 
 	if (dTimeAcc >= LastKeyFrame.dTime)
 	{
-		vScale = XMLoadFloat3(&LastKeyFrame.vScale);
-		vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
-		vTranslation = XMLoadFloat3(&LastKeyFrame.vTranslation);
+		vScale = LastKeyFrame.vScale;
+		vRotation = LastKeyFrame.vRotation;
+		vTranslation = LastKeyFrame.vTranslation;
 	}
 	else
 	{
-		if (dTimeAcc >= m_KeyFrames[m_iCurrentKeyFrame + 1].dTime)
-			++m_iCurrentKeyFrame;
+		while (dTimeAcc >= m_KeyFrames[(*pCurrentKeyFrameIndex) + 1].dTime)
+			++(*pCurrentKeyFrameIndex);
 
-		_double dRatio = (dTimeAcc - m_KeyFrames[m_iCurrentKeyFrame].dTime)
-			/ (m_KeyFrames[m_iCurrentKeyFrame + 1].dTime - m_KeyFrames[m_iCurrentKeyFrame].dTime);
+		_double		Ratio = (dTimeAcc - m_KeyFrames[(*pCurrentKeyFrameIndex)].dTime) /
+			(m_KeyFrames[(*pCurrentKeyFrameIndex) + 1].dTime - m_KeyFrames[(*pCurrentKeyFrameIndex)].dTime);
 
-		_vector vSourScale = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrame].vScale);
-		_vector vSourRotation = XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrame].vRotation);
-		_vector vSourTraslation = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrame].vTranslation);
-		
-		_vector vDestScale = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrame + 1].vScale);
-		_vector vDestRotation = XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrame + 1].vRotation);
-		_vector vDestTraslation = XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrame + 1].vTranslation);
+		_float3		vSourScale = m_KeyFrames[(*pCurrentKeyFrameIndex)].vScale;
+		_float4		vSourRotation = m_KeyFrames[(*pCurrentKeyFrameIndex)].vRotation;
+		_float3		vSourTranslation = m_KeyFrames[(*pCurrentKeyFrameIndex)].vTranslation;
 
-		vScale = XMVectorLerp(vSourScale, vDestScale, static_cast<_float>(dRatio));
-		vRotation = XMQuaternionSlerp(vSourRotation, vDestRotation, static_cast<_float>(dRatio));
-		vTranslation = XMVectorLerp(vSourTraslation, vDestTraslation, static_cast<_float>(dRatio));
+		_float3		vDestScale = m_KeyFrames[(*pCurrentKeyFrameIndex) + 1].vScale;
+		_float4		vDestRotation = m_KeyFrames[(*pCurrentKeyFrameIndex) + 1].vRotation;
+		_float3		vDestTranslation = m_KeyFrames[(*pCurrentKeyFrameIndex) + 1].vTranslation;
+
+		XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), (_float)Ratio));
+		XMStoreFloat4(&vRotation, XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), (_float)Ratio));
+		XMStoreFloat3(&vTranslation, XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), (_float)Ratio));
 	}
 
-	_matrix TransformationMatrix;
-	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
-	// 반환해야함.
+	_matrix		TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&vRotation), XMLoadFloat3(&vTranslation));
+
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 }
 
-CChannel* CChannel::Create(const aiNodeAnim* pAIChannel)
+CChannel* CChannel::Create(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
 	CChannel* pInstance = new CChannel();
-	if (FAILED(pInstance->Initialize(pAIChannel)))
+
+	if (FAILED(pInstance->Initialize(Channel, Bones)))
 	{
 		MSG_BOX("Failed to Created CChannel");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 

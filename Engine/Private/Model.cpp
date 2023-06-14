@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Animation.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -16,17 +17,22 @@ CModel::CModel(const CModel& rhs)
 	, m_NodeDatas(rhs.m_NodeDatas)
 	, m_MeshDatas(rhs.m_MeshDatas)
 	, m_MaterialDatas(rhs.m_MaterialDatas)
+	, m_AnimationDatas(rhs.m_AnimationDatas)
 	, m_Bones(rhs.m_Bones)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
+	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
+	, m_iNumAnimations(rhs.m_iNumAnimations)
+	, m_Animations(rhs.m_Animations)
+	, m_PivotMatrix(rhs.m_PivotMatrix)
 {
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
 {
-	if (FAILED(Ready_File(pModelFilePath)))
+	if (FAILED(Ready_File(eType, pModelFilePath)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Bones(m_NodeDatas.front(), nullptr)))
@@ -36,6 +42,9 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _
 		return E_FAIL;
 
 	if (FAILED(Ready_Materials(pModelFilePath)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Animations()))
 		return E_FAIL;
 
 	return S_OK;
@@ -55,6 +64,8 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 void CModel::Play_Animation(_double dTimeDelta)
 {
+	m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
+
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Invalidate_CombinedTransformationMatrix();
@@ -83,7 +94,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* pConstantName, _
 	return S_OK;
 }
 
-HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
+HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 {
 	HANDLE hFile = CreateFile(pModelFilePath,
 		GENERIC_READ,
@@ -123,13 +134,14 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 		ReadFile(hFile, &(pNode->NodeIndex), sizeof(_uint), &dwByte, nullptr);
 
 		// Node Parent
-		ReadFile(hFile, &(pNode->Parent), sizeof(_uint), &dwByte, nullptr);
+		ReadFile(hFile, &(pNode->Parent), sizeof(_int), &dwByte, nullptr);
 
 		// Node NumChildren
 		ReadFile(hFile, &(pNode->NumChildren), sizeof(_uint), &dwByte, nullptr);
 
 		// Node Children (array)
 		pNode->Children = new _uint[pNode->NumChildren];
+		ZeroMemory(pNode->Children, sizeof(_uint) * (pNode->NumChildren));
 		ReadFile(hFile, pNode->Children, sizeof(_uint) * (pNode->NumChildren), &dwByte, nullptr);
 
 		m_NodeDatas.push_back(pNode);
@@ -163,6 +175,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 		ReadFile(hFile, &(pMesh->NumFaces), sizeof(_uint), &dwByte, nullptr);
 
 		pMesh->Faces = new FACE[pMesh->NumFaces];
+		ZeroMemory(pMesh->Faces, sizeof(FACE) * (pMesh->NumFaces));
 
 		for (_uint j = 0; j < pMesh->NumFaces; ++j)
 		{
@@ -174,6 +187,7 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 
 			// Face Indices
 			Face.Indices = new _uint[Face.NumIndices];
+			ZeroMemory(Face.Indices, sizeof(_uint) * (Face.NumIndices));
 			ReadFile(hFile, Face.Indices, sizeof(_uint) * (Face.NumIndices), &dwByte, nullptr);
 			
 			pMesh->Faces[j] = Face;
@@ -181,24 +195,29 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 
 		// Mesh Positions
 		pMesh->Positions = new _float3[pMesh->NumVertices];
+		ZeroMemory(pMesh->Positions, sizeof(_float3) * (pMesh->NumVertices));
 		ReadFile(hFile, pMesh->Positions, sizeof(_float3) * (pMesh->NumVertices), &dwByte, nullptr);
 
 		// Mesh Normals
 		pMesh->Normals = new _float3[pMesh->NumVertices];
+		ZeroMemory(pMesh->Normals, sizeof(_float3) * (pMesh->NumVertices));
 		ReadFile(hFile, pMesh->Normals, sizeof(_float3) * (pMesh->NumVertices), &dwByte, nullptr);
 
 		// Mesh TexCoords
 		pMesh->TexCoords = new _float2[pMesh->NumVertices];
+		ZeroMemory(pMesh->TexCoords, sizeof(_float2) * (pMesh->NumVertices));
 		ReadFile(hFile, pMesh->TexCoords, sizeof(_float2) * (pMesh->NumVertices), &dwByte, nullptr);
 
 		// Mesh Tangents
 		pMesh->Tangents = new _float3[pMesh->NumVertices];
+		ZeroMemory(pMesh->Tangents, sizeof(_float3) * (pMesh->NumVertices));
 		ReadFile(hFile, pMesh->Tangents, sizeof(_float3) * (pMesh->NumVertices), &dwByte, nullptr);
 
 		// Mesh NumBones
 		ReadFile(hFile, &(pMesh->NumBones), sizeof(_uint), &dwByte, nullptr);
 
 		pMesh->Bones = new BONE[pMesh->NumBones];
+		ZeroMemory(pMesh->Bones, sizeof(BONE) * (pMesh->NumBones));
 
 		// Write Bones
 		for (_uint j = 0; j < pMesh->NumBones; ++j)
@@ -222,6 +241,8 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 			ReadFile(hFile, &(Bone.NumWeights), sizeof(_uint), &dwByte, nullptr);
 
 			Bone.Weights = new WEIGHT[Bone.NumWeights];
+			ZeroMemory(Bone.Weights, sizeof(WEIGHT)* (Bone.NumWeights));
+
 			// Write Weights
 			for (_uint k = 0; k < Bone.NumWeights; ++k)
 			{
@@ -243,12 +264,12 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 		m_MeshDatas.push_back(pMesh);
 	}
 
-	// Write Materials
+	// Read Materials
 
 	// Material NumMaterials
 	ReadFile(hFile, &(m_Model.NumMaterials), sizeof(_uint), &dwByte, nullptr);
 
-	for (_uint i = 0; i < m_Model.NumMaterials; i++)
+	for (_uint i = 0; i < m_Model.NumMaterials; ++i)
 	{
 		MATERIAL* pMaterial = new MATERIAL;
 
@@ -256,6 +277,86 @@ HRESULT CModel::Ready_File(const _tchar* pModelFilePath)
 		ReadFile(hFile, pMaterial->MaterialTexture, sizeof(MATERIALTEX) * TextureType_MAX, &dwByte, nullptr);
 
 		m_MaterialDatas.push_back(pMaterial);
+	}
+
+	// Read Animations
+	if (TYPE_ANIM == eType)
+	{
+		// Animation NumAnimations
+		ReadFile(hFile, &(m_Model.NumAnimations), sizeof(_uint), &dwByte, nullptr);
+
+		for (_uint i = 0; i < m_Model.NumAnimations; ++i)
+		{
+			ANIMATION* pAnimation = new ANIMATION;
+
+			// Animation Name
+			ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+			ReadFile(hFile, pAnimation->Name, dwStrByte, &dwByte, nullptr);
+			if (0 == dwByte)
+			{
+				MSG_BOX("Failed Read String Data");
+				return E_FAIL;
+			}
+
+			// Animation Duration
+			ReadFile(hFile, &(pAnimation->Duration), sizeof(_double), &dwByte, nullptr);
+
+			// Animation TickPerSecond
+			ReadFile(hFile, &(pAnimation->TickPerSecond), sizeof(_double), &dwByte, nullptr);
+
+			// Animation NumChannels
+			ReadFile(hFile, &(pAnimation->NumChannels), sizeof(_uint), &dwByte, nullptr);
+
+			pAnimation->Channels = new CHANNEL[pAnimation->NumChannels];
+			ZeroMemory(pAnimation->Channels, sizeof(CHANNEL) * (pAnimation->NumChannels));
+
+			for (_uint j = 0; j < pAnimation->NumChannels; ++j)
+			{
+				CHANNEL Channel;
+				ZEROMEM(&Channel);
+
+				// Animation Name
+				ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+				ReadFile(hFile, Channel.Name, dwStrByte, &dwByte, nullptr);
+				if (0 == dwByte)
+				{
+					MSG_BOX("Failed Read String Data");
+					return E_FAIL;
+				}
+
+				// Channel NumScalingKeys
+				ReadFile(hFile, &(Channel.NumScalingKeys), sizeof(_uint), &dwByte, nullptr);
+
+				// Channel ScalingKeys
+				Channel.ScalingKeys = new VECTORKEY[Channel.NumScalingKeys];
+				ZeroMemory(Channel.ScalingKeys, sizeof(VECTORKEY)* (Channel.NumScalingKeys));
+				ReadFile(hFile, Channel.ScalingKeys, sizeof(VECTORKEY) * (Channel.NumScalingKeys), &dwByte, nullptr);
+
+				// Channel NumRotationKeys
+				ReadFile(hFile, &(Channel.NumRotationKeys), sizeof(_uint), &dwByte, nullptr);
+
+				// Channel RotationKeys
+				Channel.RotationKeys = new QUATERNIONKEY[Channel.NumRotationKeys];
+				ZeroMemory(Channel.RotationKeys, sizeof(QUATERNIONKEY)* (Channel.NumRotationKeys));
+				ReadFile(hFile, Channel.RotationKeys, sizeof(QUATERNIONKEY) * (Channel.NumRotationKeys), &dwByte, nullptr);
+
+				// Channel NumPositionKeys
+				ReadFile(hFile, &(Channel.NumPositionKeys), sizeof(_uint), &dwByte, nullptr);
+
+				// Channel PositionKeys
+				Channel.PositionKeys = new VECTORKEY[Channel.NumPositionKeys];
+				ZeroMemory(Channel.PositionKeys, sizeof(VECTORKEY)* (Channel.NumPositionKeys));
+				ReadFile(hFile, Channel.PositionKeys, sizeof(VECTORKEY) * (Channel.NumPositionKeys), &dwByte, nullptr);
+
+				pAnimation->Channels[j] = Channel;
+			}
+
+			m_AnimationDatas.push_back(pAnimation);
+		}
+	}
+	else // NonAnim
+	{
+		m_Model.NumAnimations = 0;
 	}
 
 	CloseHandle(hFile);
@@ -315,6 +416,22 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 		}
 
 		m_Materials.push_back(MeshMaterial);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Animations()
+{
+	m_iNumAnimations = m_Model.NumAnimations;
+
+	for (_uint i = 0; i < m_Model.NumAnimations; ++i)
+	{
+		CAnimation* pAnimation = CAnimation::Create(m_AnimationDatas[i], m_Bones);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
 	}
 
 	return S_OK;
@@ -389,6 +506,20 @@ void CModel::Free()
 	}
 	m_MaterialDatas.clear();
 
+	for (auto& pAnimation : m_AnimationDatas)
+	{
+		for (_uint i = 0; i < pAnimation->NumChannels; ++i)
+		{
+			Safe_Delete_Array(pAnimation->Channels[i].ScalingKeys);
+			Safe_Delete_Array(pAnimation->Channels[i].RotationKeys);
+			Safe_Delete_Array(pAnimation->Channels[i].PositionKeys);
+		}
+		Safe_Delete_Array(pAnimation->Channels);
+
+		Safe_Delete(pAnimation);
+	}
+	m_AnimationDatas.clear();
+
 	for (auto& pBone : m_Bones)
 	{
 		Safe_Release(pBone);
@@ -407,4 +538,10 @@ void CModel::Free()
 			Safe_Release(pTexture);
 	}
 	m_Materials.clear();
+
+	for (auto& pAnimation : m_Animations)
+	{
+		Safe_Release(pAnimation);
+	}
+	m_Animations.clear();
 }

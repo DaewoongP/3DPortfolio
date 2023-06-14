@@ -10,7 +10,7 @@ namespace Engine
 		XMFLOAT4X4			Transformation; // row major
 
 		unsigned int		NodeIndex;
-		unsigned int		Parent;
+		int					Parent; // Root Index = -1
 		unsigned int		NumChildren;
 		unsigned int*		Children; // array
 	}NODE;
@@ -25,6 +25,8 @@ namespace Engine
 	{
 		wchar_t				Name[256];
 		XMFLOAT4X4			OffsetMatrix; // row major
+
+		// Weight
 		unsigned int		NumWeights;
 		WEIGHT*				Weights; // array
 	}BONE;
@@ -47,6 +49,7 @@ namespace Engine
 		XMFLOAT2*			TexCoords; // array
 		XMFLOAT3*			Tangents; // array
 
+		// Mesh_Bone
 		unsigned int		NumBones;
 		BONE*				Bones; // array
 	}MESH;
@@ -89,13 +92,59 @@ namespace Engine
 		MATERIALTEX			MaterialTexture[TextureType_MAX];
 	}MATERIAL;
 
+	typedef struct tagVectorKey
+	{
+		double				Time;
+		XMFLOAT3			Value;
+	}VECTORKEY;
+
+	typedef struct tagQuaternionKey
+	{
+		double				Time;
+		XMFLOAT4			Value;
+	}QUATERNIONKEY;
+
+	typedef struct tagChannel
+	{
+		// Same as Node Name
+		wchar_t				Name[256];
+
+		// Scale
+		unsigned int		NumScalingKeys;
+		VECTORKEY*			ScalingKeys; // array
+
+		// Rotation
+		unsigned int		NumRotationKeys;
+		QUATERNIONKEY*		RotationKeys; // array
+
+		// Position
+		unsigned int		NumPositionKeys;
+		VECTORKEY*			PositionKeys;
+	}CHANNEL;
+
+	typedef struct tagAnimation
+	{
+		wchar_t				Name[256];
+		double				Duration;
+		double				TickPerSecond;
+
+		// Channel
+		unsigned int		NumChannels;
+		CHANNEL*			Channels; // array
+	}ANIMATION;
+
 	typedef struct tagModel
 	{
+		// Node
 		unsigned int		NumNodes;
 
+		// Mesh
 		unsigned int		NumMeshes;
-		MESH*				Meshes; // array
+
+		// Material
 		unsigned int		NumMaterials;
-		MATERIAL*			Materials; // array
+
+		// Animation
+		unsigned int		NumAnimations;
 	}MODEL;
 }

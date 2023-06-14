@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.h"
+#include "Model.h"
 
 BEGIN(Engine)
 
@@ -10,17 +10,17 @@ private:
 	virtual ~CChannel() = default;
 
 public:
-	HRESULT Initialize(const aiNodeAnim* pAIChannel);
-	void Invalidate_TransformationMatrix(_double dTimeAcc);
-
-private:
-	_char				m_szName[MAX_PATH] = "";
-	_uint				m_iNumKeyFrames = { 0 };
-	vector<KEYFRAME>	m_KeyFrames;
-	_uint				m_iCurrentKeyFrame = { 0 };
+	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);
+	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTimeAcc, _uint* pCurrentKeyFrameIndex);
 
 public:
-	static CChannel* Create(const aiNodeAnim* pAIChannel);
+	_tchar				m_szName[MAX_STR] = TEXT("");
+	_uint				m_iNumKeyFrames = { 0 };
+	vector<KEYFRAME>	m_KeyFrames;
+	_uint				m_iBoneIndex = { 0 };
+
+public:
+	static CChannel* Create(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);
 	virtual void Free() override;
 };
 

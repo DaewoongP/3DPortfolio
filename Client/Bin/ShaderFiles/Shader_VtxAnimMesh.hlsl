@@ -52,13 +52,14 @@ VS_OUT VS_MAIN(VS_IN In)
 		g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
 
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
 	
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
     Out.vTexUV = In.vTexUV;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-	
-	return Out;
+
+    return Out;
 }
 
 struct PS_IN

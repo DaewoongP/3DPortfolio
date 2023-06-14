@@ -32,11 +32,22 @@ HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 		MSG_BOX("Failed Convert_Meshes");
 		return E_FAIL;
 	}
+	
 	cout << "Convert Materials..." << endl;
 	if (FAILED(Convert_Materials(pModelFilePath)))
 	{
 		MSG_BOX("Failed Convert_Materials");
 		return E_FAIL;
+	}
+
+	if (TYPE_ANIM == eType)
+	{
+		cout << "Convert Animations..." << endl;
+		if (FAILED(Convert_Animations()))
+		{
+			MSG_BOX("Failed Convert_Animations");
+			return E_FAIL;
+		}
 	}
 
 	_tchar szFileName[MAX_PATH] = TEXT("");
@@ -52,6 +63,7 @@ HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 	}
 		
 	cout << "Convert Success!" << endl;
+	cout << "=====================================" << endl;
 	return S_OK;
 }
 
@@ -90,7 +102,11 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 	Node.NumChildren = pNode->mNumChildren;
 
 	if (0 != pNode->mNumChildren)
+	{
 		Node.Children = new _uint[pNode->mNumChildren];
+		ZeroMemory(Node.Children, sizeof(_uint) * pNode->mNumChildren);
+	}
+		
 
 	for (_uint i = 0; i < pNode->mNumChildren; i++)
 	{
@@ -125,7 +141,8 @@ HRESULT CModel::Convert_Meshes()
 
 	m_Model.NumMeshes = m_pAIScene->mNumMeshes;
 
-	m_Model.Meshes = new MESH[m_pAIScene->mNumMeshes];
+	m_pMesh = new MESH[m_pAIScene->mNumMeshes];
+	ZeroMemory(m_pMesh, sizeof(MESH) * m_pAIScene->mNumMeshes);
 
 	for (_uint i = 0; i < m_pAIScene->mNumMeshes; i++)
 	{
@@ -139,7 +156,7 @@ HRESULT CModel::Convert_Meshes()
 			return E_FAIL;
 		}
 
-		m_Model.Meshes[i] = Mesh;
+		m_pMesh[i] = Mesh;
 	}
 
 	return S_OK;
@@ -156,12 +173,14 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	outMesh->NumVertices = pAIMesh->mNumVertices;
 	outMesh->NumFaces = pAIMesh->mNumFaces;
 	outMesh->Faces = new FACE[outMesh->NumFaces];
+	ZeroMemory(outMesh->Faces, sizeof(FACE) * outMesh->NumFaces);
 
 	for (_uint i = 0; i < pAIMesh->mNumFaces; ++i)
 	{
 		outMesh->Faces[i].NumIndices = pAIMesh->mFaces[i].mNumIndices;
 
 		outMesh->Faces[i].Indices = new _uint[outMesh->Faces[i].NumIndices];
+		ZeroMemory(outMesh->Faces[i].Indices, sizeof(_uint) * outMesh->Faces[i].NumIndices);
 
 		for (_uint j = 0; j < outMesh->Faces[i].NumIndices; ++j)
 		{
@@ -170,9 +189,16 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	}
 
 	outMesh->Positions = new _float3[pAIMesh->mNumVertices];
+	ZeroMemory(outMesh->Positions, sizeof(_float3) * pAIMesh->mNumVertices);
+
 	outMesh->Normals = new _float3[pAIMesh->mNumVertices];
+	ZeroMemory(outMesh->Normals, sizeof(_float3) * pAIMesh->mNumVertices);
+
 	outMesh->TexCoords = new _float2[pAIMesh->mNumVertices];
+	ZeroMemory(outMesh->TexCoords, sizeof(_float2) * pAIMesh->mNumVertices);
+
 	outMesh->Tangents = new _float3[pAIMesh->mNumVertices];
+	ZeroMemory(outMesh->Tangents, sizeof(_float3) * pAIMesh->mNumVertices);
 
 	for (_uint i = 0; i < pAIMesh->mNumVertices; i++)
 	{
@@ -187,6 +213,7 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	outMesh->NumBones = pAIMesh->mNumBones;
 
 	outMesh->Bones = new BONE[pAIMesh->mNumBones];
+	ZeroMemory(outMesh->Bones, sizeof(BONE) * pAIMesh->mNumBones);
 
 	for (_uint i = 0; i < pAIMesh->mNumBones; i++)
 	{
@@ -208,6 +235,7 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 		Bone.NumWeights = pAIBone->mNumWeights;
 		
 		Bone.Weights = new WEIGHT[pAIBone->mNumWeights];
+		ZeroMemory(Bone.Weights, sizeof(WEIGHT) * pAIBone->mNumWeights);
 
 		for (_uint j = 0; j < pAIBone->mNumWeights; j++)
 		{
@@ -234,7 +262,8 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 {
 	m_Model.NumMaterials = m_pAIScene->mNumMaterials;
 
-	m_Model.Materials = new MATERIAL[m_pAIScene->mNumMaterials];
+	m_pMaterial = new MATERIAL[m_pAIScene->mNumMaterials];
+	ZeroMemory(m_pMaterial, sizeof(MATERIAL) * m_pAIScene->mNumMaterials);
 
 	for (_uint i = 0; i < m_pAIScene->mNumMaterials; i++)
 	{
@@ -248,15 +277,15 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
 				continue;
 
-			char		szDrive[MAX_PATH] = "";
-			char		szDirectory[MAX_PATH] = "";
+			_char		szDrive[MAX_PATH] = "";
+			_char		szDirectory[MAX_PATH] = "";
 			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			char		szFileName[MAX_PATH] = "";
-			char		szExt[MAX_PATH] = "";
+			_char		szFileName[MAX_PATH] = "";
+			_char		szExt[MAX_PATH] = "";
 			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
-			char		szFullPath[MAX_PATH] = "";
+			_char		szFullPath[MAX_PATH] = "";
 			strcpy_s(szFullPath, szDrive);
 			strcat_s(szFullPath, szDirectory);
 			strcat_s(szFullPath, szFileName);
@@ -270,13 +299,90 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 			Material.MaterialTexture[j].TexType = TEXTYPE(j);
 		}
 
-		m_Model.Materials[i] = Material;
+		m_pMaterial[i] = Material;
 	}
 	return S_OK;
 }
 
 HRESULT CModel::Convert_Animations()
 {
+	m_Model.NumAnimations = m_pAIScene->mNumAnimations;
+
+	m_pAnimation = new ANIMATION[m_pAIScene->mNumAnimations];
+	ZeroMemory(m_pAnimation, sizeof(ANIMATION) * m_pAIScene->mNumAnimations);
+
+	for (_uint i = 0; i < m_pAIScene->mNumAnimations; ++i)
+	{
+		aiAnimation* pAIAnimation = m_pAIScene->mAnimations[i];
+
+		ANIMATION Animation;
+		ZEROMEM(&Animation);
+		// name
+		_tchar AnimName[256] = TEXT("");
+		CharToWChar(pAIAnimation->mName.data, AnimName);
+		lstrcpy(Animation.Name, AnimName);
+		
+		Animation.Duration = pAIAnimation->mDuration;
+		Animation.TickPerSecond = pAIAnimation->mTicksPerSecond;
+		Animation.NumChannels = pAIAnimation->mNumChannels;
+
+		Animation.Channels = new CHANNEL[pAIAnimation->mNumChannels];
+		ZeroMemory(Animation.Channels, sizeof(CHANNEL) * pAIAnimation->mNumChannels);
+
+		for (_uint j = 0; j < pAIAnimation->mNumChannels; ++j)
+		{
+			aiNodeAnim* pAIChannel = pAIAnimation->mChannels[j];
+			
+			CHANNEL Channel;
+			ZEROMEM(&Channel);
+			// name
+			_tchar ChannelName[256] = TEXT("");
+			CharToWChar(pAIChannel->mNodeName.data, ChannelName);
+			lstrcpy(Channel.Name, ChannelName);
+			
+			// Scale
+			Channel.NumScalingKeys = pAIChannel->mNumScalingKeys;
+			Channel.ScalingKeys = new VECTORKEY[pAIChannel->mNumScalingKeys];
+			ZeroMemory(Channel.ScalingKeys, sizeof(VECTORKEY) * pAIChannel->mNumScalingKeys);
+
+			for (_uint k = 0; k < pAIChannel->mNumScalingKeys; ++k)
+			{
+				Channel.ScalingKeys[k].Time = pAIChannel->mScalingKeys[k].mTime;
+				memcpy(&Channel.ScalingKeys[k].Value, &pAIChannel->mScalingKeys[k].mValue, sizeof _float3);
+			}
+
+			// Rotation
+			Channel.NumRotationKeys = pAIChannel->mNumRotationKeys;
+			Channel.RotationKeys = new QUATERNIONKEY[pAIChannel->mNumRotationKeys];
+			ZeroMemory(Channel.RotationKeys, sizeof(QUATERNIONKEY) * pAIChannel->mNumRotationKeys);
+
+			for (_uint k = 0; k < pAIChannel->mNumRotationKeys; ++k)
+			{
+				Channel.RotationKeys[k].Time = pAIChannel->mRotationKeys[k].mTime;
+
+				Channel.RotationKeys[k].Value.x = pAIChannel->mRotationKeys[k].mValue.x;
+				Channel.RotationKeys[k].Value.y = pAIChannel->mRotationKeys[k].mValue.y;
+				Channel.RotationKeys[k].Value.z = pAIChannel->mRotationKeys[k].mValue.z;
+				Channel.RotationKeys[k].Value.w = pAIChannel->mRotationKeys[k].mValue.w;
+			}
+
+			// Position
+			Channel.NumPositionKeys = pAIChannel->mNumPositionKeys;
+			Channel.PositionKeys = new VECTORKEY[pAIChannel->mNumPositionKeys];
+			ZeroMemory(Channel.PositionKeys, sizeof(VECTORKEY) * pAIChannel->mNumPositionKeys);
+
+			for (_uint k = 0; k < pAIChannel->mNumPositionKeys; ++k)
+			{
+				Channel.PositionKeys[k].Time = pAIChannel->mPositionKeys[k].mTime;
+				memcpy(&Channel.PositionKeys[k].Value, &pAIChannel->mPositionKeys[k].mValue, sizeof _float3);
+			}
+
+			Animation.Channels[j] = Channel;
+		}
+
+		m_pAnimation[i] = Animation;
+	}
+
 	return S_OK;
 }
 
@@ -323,7 +429,7 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 		WriteFile(hFile, &(Node.NodeIndex), sizeof(_uint), &dwByte, nullptr);
 
 		// Node Parent
-		WriteFile(hFile, &(Node.Parent), sizeof(_uint), &dwByte, nullptr);
+		WriteFile(hFile, &(Node.Parent), sizeof(_int), &dwByte, nullptr);
 
 		// Node NumChildren
 		WriteFile(hFile, &(Node.NumChildren), sizeof(_uint), &dwByte, nullptr);
@@ -339,7 +445,7 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 	
 	for (_uint i = 0; i < m_Model.NumMeshes; i++)
 	{
-		MESH Mesh = m_Model.Meshes[i];
+		MESH Mesh = m_pMesh[i];
 
 		// Mesh Name
 		dwStrByte = sizeof(_tchar) * (lstrlen(Mesh.Name) + 1);
@@ -415,12 +521,66 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 	// Material NumMaterials
 	WriteFile(hFile, &(m_Model.NumMaterials), sizeof(_uint), &dwByte, nullptr);
 
-	for (_uint i = 0; i < m_Model.NumMaterials; i++)
+	for (_uint i = 0; i < m_Model.NumMaterials; ++i)
 	{
-		MATERIAL Material = m_Model.Materials[i];
+		MATERIAL Material = m_pMaterial[i];
 
 		// MaterialTex
 		WriteFile(hFile, Material.MaterialTexture, sizeof(MATERIALTEX) * TextureType_MAX, &dwByte, nullptr);
+	}
+
+	// Write Animations
+	if (TYPE_ANIM == eType)
+	{
+		// Animation NumAnimations
+		WriteFile(hFile, &(m_Model.NumAnimations), sizeof(_uint), &dwByte, nullptr);
+
+		for (_uint i = 0; i < m_Model.NumAnimations; ++i)
+		{
+			ANIMATION Animation = m_pAnimation[i];
+
+			// Animation Name
+			dwStrByte = (_ulong)sizeof(_tchar) * (lstrlen(Animation.Name) + 1);
+			WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+			WriteFile(hFile, Animation.Name, dwStrByte, &dwByte, nullptr);
+
+			// Animation Duration
+			WriteFile(hFile, &(Animation.Duration), sizeof(_double), &dwByte, nullptr);
+			
+			// Animation TickPerSecond
+			WriteFile(hFile, &(Animation.TickPerSecond), sizeof(_double), &dwByte, nullptr);
+			
+			// Animation NumChannels
+			WriteFile(hFile, &(Animation.NumChannels), sizeof(_uint), &dwByte, nullptr);
+
+			for (_uint j = 0; j < Animation.NumChannels; ++j)
+			{
+				CHANNEL Channel = Animation.Channels[j];
+
+				// Channel Name
+				dwStrByte = (_ulong)sizeof(_tchar) * (lstrlen(Channel.Name) + 1);
+				WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+				WriteFile(hFile, Channel.Name, dwStrByte, &dwByte, nullptr);
+
+				// Channel NumScalingKeys
+				WriteFile(hFile, &(Channel.NumScalingKeys), sizeof(_uint), &dwByte, nullptr);
+
+				// Channel ScalingKeys
+				WriteFile(hFile, Channel.ScalingKeys, sizeof(VECTORKEY) * (Channel.NumScalingKeys), &dwByte, nullptr);
+				
+				// Channel NumRotationKeys
+				WriteFile(hFile, &(Channel.NumRotationKeys), sizeof(_uint), &dwByte, nullptr);
+
+				// Channel RotationKeys
+				WriteFile(hFile, Channel.RotationKeys, sizeof(QUATERNIONKEY) * (Channel.NumRotationKeys), &dwByte, nullptr);
+
+				// Channel NumPositionKeys
+				WriteFile(hFile, &(Channel.NumPositionKeys), sizeof(_uint), &dwByte, nullptr);
+
+				// Channel PositionKeys
+				WriteFile(hFile, Channel.PositionKeys, sizeof(VECTORKEY) * (Channel.NumPositionKeys), &dwByte, nullptr);
+			}
+		}
 	}
 
 	CloseHandle(hFile);
@@ -447,17 +607,19 @@ HRESULT CModel::Convert(TYPE eType, const _char* pModelFilePath)
 
 void CModel::Free()
 {
+	// delete Nodes
 	for (auto& iter : m_Nodes)
 	{
 		Safe_Delete_Array(iter.Children);
 	}
 	m_Nodes.clear();
 
+	// delete Meshes
 	for (_uint i = 0; i < m_Model.NumMeshes; ++i)
 	{
-		MESH Mesh = m_Model.Meshes[i];
+		MESH Mesh = m_pMesh[i];
 
-		for (_uint j = 0; j < Mesh.NumFaces; j++)
+		for (_uint j = 0; j < Mesh.NumFaces; ++j)
 		{
 			Safe_Delete_Array(Mesh.Faces[j].Indices);
 		}
@@ -474,6 +636,25 @@ void CModel::Free()
 		}
 		Safe_Delete_Array(Mesh.Bones);
 	}
-	Safe_Delete_Array(m_Model.Meshes);
-	Safe_Delete_Array(m_Model.Materials);
+
+	Safe_Delete_Array(m_pMesh);
+
+	// delete Materials
+	Safe_Delete_Array(m_pMaterial);
+
+	// delete Animations
+	for (_uint i = 0; i < m_Model.NumAnimations; ++i)
+	{
+		ANIMATION Animation = m_pAnimation[i];
+
+		for (_uint j = 0; j < Animation.NumChannels; ++j)
+		{
+			Safe_Delete_Array(Animation.Channels[j].ScalingKeys);
+			Safe_Delete_Array(Animation.Channels[j].RotationKeys);
+			Safe_Delete_Array(Animation.Channels[j].PositionKeys);
+		}
+
+		Safe_Delete_Array(Animation.Channels);
+	}
+	Safe_Delete_Array(m_pAnimation);
 }
