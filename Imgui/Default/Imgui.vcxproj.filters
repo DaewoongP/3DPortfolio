@@ -245,5 +245,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyMesh.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyAnimMesh.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

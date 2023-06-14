@@ -7,6 +7,7 @@ class CAnimation final : public CBase
 {
 private:
 	explicit CAnimation();
+	explicit CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 
 public:

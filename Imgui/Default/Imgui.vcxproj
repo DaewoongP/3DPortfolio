@@ -227,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_NonTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Texture.hlsl" />

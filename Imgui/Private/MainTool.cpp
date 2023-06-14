@@ -144,6 +144,12 @@ HRESULT CMainTool::Ready_Prototype_Component_Shader()
 			VTXMESH_DECL::Elements, VTXMESH_DECL::iNumElements))))
 		return E_FAIL;
 
+	/* Prototype_Component_Shader_DummyAnimMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_DummyAnimMesh"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_DummyAnimMesh.hlsl"),
+			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -153,13 +159,13 @@ HRESULT CMainTool::Ready_Prototype_Component_Model()
 	
 	/* Prototype_Component_Model_Train */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Train"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Train/Train.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Train.dat")))))
 		return E_FAIL;
 
 	/* Prototype_Component_Model_Fiona */
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Fiona.fbx", PivotMatrix))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat"), PivotMatrix))))
 		return E_FAIL;
 
 	return S_OK;

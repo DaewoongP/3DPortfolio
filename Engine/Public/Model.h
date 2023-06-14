@@ -63,10 +63,13 @@ private:
 
 private:
 	HRESULT Ready_File(TYPE eType, const _tchar* pModelFilePath);
-	HRESULT Ready_Bones(Engine::NODE* pNode, class CBone* pParent);
+	HRESULT Ready_Bones(Engine::NODE* pNode);
 	HRESULT Ready_Meshes(TYPE eType, _fmatrix PivotMatrix);
 	HRESULT Ready_Materials(const _tchar* pModelFilePath);
 	HRESULT Ready_Animations();
+
+private:
+	void Release_FileDatas();
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix = XMMatrixIdentity());

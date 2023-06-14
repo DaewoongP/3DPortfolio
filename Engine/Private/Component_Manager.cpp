@@ -101,6 +101,7 @@ HRESULT CComponent_Manager::Delete_Prototype(_uint iLevelIndex, const _tchar* pP
 unordered_map<const _tchar*, class CComponent*> CComponent_Manager::Find_PrototypesBySubTag(_uint iLevelIndex, const _tchar* pSubTag)
 {
 	unordered_map<const _tchar*, class CComponent*> Components;
+
 	for_each(m_pPrototypes[iLevelIndex].begin(), m_pPrototypes[iLevelIndex].end(), [&](auto& pair) {
 		if (nullptr != wcswcs(pair.first, pSubTag))
 			Components.insert(pair);

@@ -36,6 +36,7 @@ HRESULT CDummyObject::Initialize(void* pArg)
 void CDummyObject::Tick(_double dTimeDelta)
 {
     __super::Tick(dTimeDelta);
+    m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CDummyObject::Late_Tick(_double dTimeDelta)
@@ -55,9 +56,11 @@ HRESULT CDummyObject::Render()
 
     _uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-    for (_uint i = 0; i < iNumMeshes; i++)
+    for (_uint i = 0; i < iNumMeshes; ++i)
     {
-        m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+        m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
+
+        m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
         // m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
 
         m_pShaderCom->Begin(0);
@@ -89,7 +92,7 @@ HRESULT CDummyObject::Add_Component(OBJECTDESC ObjectDesc)
         return E_FAIL;
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Shader_DummyMesh"),
+        TEXT("Prototype_Component_Shader_DummyAnimMesh"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 

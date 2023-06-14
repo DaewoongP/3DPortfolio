@@ -18,16 +18,34 @@ CModel::CModel(const CModel& rhs)
 	, m_MeshDatas(rhs.m_MeshDatas)
 	, m_MaterialDatas(rhs.m_MaterialDatas)
 	, m_AnimationDatas(rhs.m_AnimationDatas)
-	, m_Bones(rhs.m_Bones)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
-	, m_Animations(rhs.m_Animations)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
 {
+	for (auto& pOriginalBone : rhs.m_Bones)
+	{
+		m_Bones.push_back(pOriginalBone->Clone());
+	}
+
+	for (auto& pMesh : m_Meshes)
+	{
+		Safe_AddRef(pMesh);
+	}
+
+	for (auto& Material : m_Materials)
+	{
+		for (auto& pTexture : Material.pMtrlTexture)
+			Safe_AddRef(pTexture);
+	}
+
+	for (auto& pOriginalAnimation : rhs.m_Animations)
+	{
+		m_Animations.push_back(pOriginalAnimation->Clone());
+	}
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
@@ -35,7 +53,7 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _
 	if (FAILED(Ready_File(eType, pModelFilePath)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Bones(m_NodeDatas.front(), nullptr)))
+	if (FAILED(Ready_Bones(m_NodeDatas.front())))
 		return E_FAIL;
 
 	if (FAILED(Ready_Meshes(eType, PivotMatrix)))
@@ -68,7 +86,7 @@ void CModel::Play_Animation(_double dTimeDelta)
 
 	for (auto& pBone : m_Bones)
 	{
-		pBone->Invalidate_CombinedTransformationMatrix();
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones);
 	}
 }
 
@@ -363,9 +381,10 @@ HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Bones(Engine::NODE* pNode, CBone* pParent)
+HRESULT CModel::Ready_Bones(Engine::NODE* pNode)
 {
-	CBone* pBone = CBone::Create(pNode, pParent);
+	CBone* pBone = CBone::Create(pNode);
+
 	if (nullptr == pBone)
 		return E_FAIL;
 
@@ -373,7 +392,7 @@ HRESULT CModel::Ready_Bones(Engine::NODE* pNode, CBone* pParent)
 
 	for (_uint i = 0; i < pNode->NumChildren; ++i)
 	{
-		Ready_Bones(m_NodeDatas[pNode->Children[i]], pBone);
+		Ready_Bones(m_NodeDatas[pNode->Children[i]]);
 	}
 
 	return S_OK;
@@ -460,17 +479,13 @@ CComponent* CModel::Clone(void* pArg)
 	return pInstance;
 }
 
-void CModel::Free()
-{
-	__super::Free();
-	// delete
-	if (m_bIsClone)
-		return;
 
+void CModel::Release_FileDatas()
+{
 	for (auto& pNode : m_NodeDatas)
 	{
 		Safe_Delete_Array(pNode->Children);
-		
+
 		Safe_Delete(pNode);
 	}
 	m_NodeDatas.clear();
@@ -519,6 +534,17 @@ void CModel::Free()
 		Safe_Delete(pAnimation);
 	}
 	m_AnimationDatas.clear();
+}
+
+
+void CModel::Free()
+{
+	__super::Free();
+	
+	if (!m_bIsClone)
+	{
+		Release_FileDatas();
+	}
 
 	for (auto& pBone : m_Bones)
 	{

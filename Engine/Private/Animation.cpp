@@ -5,6 +5,23 @@ CAnimation::CAnimation()
 {
 }
 
+CAnimation::CAnimation(const CAnimation& rhs)
+	: m_iNumChannels(rhs.m_iNumChannels)
+	, m_Channels(rhs.m_Channels)
+	, m_ChannelCurrentKeyFrames(rhs.m_ChannelCurrentKeyFrames)
+	, m_dDuration(rhs.m_dDuration)
+	, m_dTickPerSecond(rhs.m_dTickPerSecond)
+	, m_dTimeAcc(rhs.m_dTimeAcc)
+	, m_bIsLoop(rhs.m_bIsLoop)
+{
+	lstrcpy(m_szName, rhs.m_szName);
+
+	for (auto& pChannel : m_Channels)
+	{
+		Safe_AddRef(pChannel);
+	}
+}
+
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
 	m_bIsLoop = true;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.h"
+#include "Model.h"
 
 BEGIN(Engine)
 
@@ -7,6 +7,7 @@ class CBone final : public CBase
 {
 private:
 	explicit CBone();
+	explicit CBone(const CBone& rhs);
 	virtual ~CBone() = default;
 
 public:
@@ -16,18 +17,21 @@ public:
 	void Set_OffsetMatrix(const _float4x4& OffsetMatrix) { m_OffsetMatrix = OffsetMatrix; }
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
 public:
-	HRESULT Initialize(Engine::NODE* pNode, CBone* pParent);
-	void Invalidate_CombinedTransformationMatrix();
+	HRESULT Initialize(Engine::NODE* pNode);
+	void Invalidate_CombinedTransformationMatrix(const CModel::BONES& Bones);
 
 private:
 	_tchar			m_szName[MAX_STR] = TEXT("");
 	_float4x4		m_TransformationMatrix;
 	_float4x4		m_CombinedTransformationMatrix;
 	_float4x4		m_OffsetMatrix;
-	CBone*			m_pParent = { nullptr };
+
+	_int			m_iParentIndex = { -1 };
+	_uint			m_iIndex = { 0 };
 
 public:
-	static CBone* Create(Engine::NODE* pNode, CBone* pParent);
+	static CBone* Create(Engine::NODE* pNode);
+	CBone* Clone();
 	virtual void Free() override;
 };
 
