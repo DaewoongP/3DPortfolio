@@ -114,7 +114,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	/* For.Prototype_Component_Model_Fiona */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Warrior.dat"), PivotMatrix)), E_FAIL);
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/TestHand.dat"), PivotMatrix)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
