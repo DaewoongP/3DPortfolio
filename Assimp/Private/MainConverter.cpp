@@ -35,10 +35,9 @@ HRESULT CMainConverter::ReadFileInDirectory(CModel::TYPE eType, const _tchar* pD
 			if (!lstrcmp(entry.path().extension().c_str(), TEXT(".fbx")) ||
 				!lstrcmp(entry.path().extension().c_str(), TEXT(".FBX")))
 			{
+				std::cout << entry.path() << std::endl;
 				// extension file store
 				Converter::CModel::Convert(eType, entry.path().string().c_str());
-
-				std::cout << entry.path() << std::endl;
 			}
 		}
 

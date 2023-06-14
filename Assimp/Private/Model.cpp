@@ -76,7 +76,7 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 	if (true == isRoot)
 	{
 		// Parent except
-		Node.Parent = 0;
+		Node.Parent = -1;
 	}
 	// child
 	else

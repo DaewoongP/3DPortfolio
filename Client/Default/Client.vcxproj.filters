@@ -43,6 +43,9 @@
     <Filter Include="02. GameObjects\Player">
       <UniqueIdentifier>{df0bf52c-230e-4ea0-8d0f-1028bddfee5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\ForkLift">
+      <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -86,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Player.h">
       <Filter>02. GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ForkLift.h">
+      <Filter>02. GameObjects\ForkLift</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
       <Filter>02. GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ForkLift.cpp">
+      <Filter>02. GameObjects\ForkLift</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

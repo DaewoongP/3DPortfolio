@@ -64,7 +64,8 @@ void CModel::Play_Animation(_double dTimeDelta)
 HRESULT CModel::Bind_Material(CShader* pShader, const char* pConstantName, _uint iMeshIndex, Engine::TextureType MaterialType)
 {
 	if (iMeshIndex >= m_iNumMeshes ||
-		MaterialType >= TextureType_MAX)
+		MaterialType >= TextureType_MAX ||
+		MaterialType < 0)
 		return E_FAIL;
 
 	return m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMtrlTexture[MaterialType]->Bind_ShaderResource(pShader, pConstantName);
@@ -269,7 +270,7 @@ HRESULT CModel::Ready_Bones(Engine::NODE* pNode, CBone* pParent)
 
 	m_Bones.push_back(pBone);
 
-	for (size_t i = 0; i < pNode->NumChildren; ++i)
+	for (_uint i = 0; i < pNode->NumChildren; ++i)
 	{
 		Ready_Bones(m_NodeDatas[pNode->Children[i]], pBone);
 	}
@@ -281,7 +282,7 @@ HRESULT CModel::Ready_Meshes(TYPE eType, _fmatrix PivotMatrix)
 {
 	m_iNumMeshes = m_Model.NumMeshes;
 
-	for (size_t i = 0; i < m_iNumMeshes; ++i)
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
 		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, eType, m_Bones, m_MeshDatas[i], PivotMatrix);
 		if (nullptr == pMesh)
@@ -296,12 +297,12 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 {
 	m_iNumMaterials = m_Model.NumMaterials;
 
-	for (size_t i = 0; i < m_iNumMaterials; ++i)
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
 	{
 		MESHMATERIAL			MeshMaterial;
 		ZeroMemory(&MeshMaterial, sizeof MeshMaterial);
 
-		for (size_t j = 0; j < TextureType_MAX; ++j)
+		for (_uint j = 0; j < TextureType_MAX; ++j)
 		{
 			if (!lstrcmp(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("")))
 				continue;

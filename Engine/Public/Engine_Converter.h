@@ -10,7 +10,7 @@ namespace Engine
 		XMFLOAT4X4			Transformation; // row major
 
 		unsigned int		NodeIndex;
-		unsigned int		Parent;
+		int					Parent; // Root Index = -1
 		unsigned int		NumChildren;
 		unsigned int*		Children; // array
 	}NODE;
