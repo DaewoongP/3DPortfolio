@@ -10,12 +10,15 @@ public:
 	enum RADIO { NONANIM, ANIM, RADIO_END };
 
 private:
-	explicit CWindow_Model();
+	explicit CWindow_Model(ID3D11DeviceContext* pContext);
 	virtual ~CWindow_Model() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
+
+private:
+	ID3D11DeviceContext*	m_pContext = { nullptr };
 
 private:
 	CTerrain*				m_pTerrain = { nullptr };
@@ -31,6 +34,7 @@ private:
 	_float3					m_vRotate;
 	_float4					m_vTransform;
 	_char					m_szObjectName[MAX_STR] = "";
+	_uint					m_iCur_Mesh_Index = { 0 };
 
 private:
 	map<string, string>					m_SelectionMap;
@@ -41,7 +45,6 @@ private:
 
 private:
 	HRESULT	Select_ModelFiles();
-	HRESULT Open_Dialog();
 	HRESULT Setting_Transform();
 	HRESULT MakeObject(_double dTimeDelta);
 
@@ -50,8 +53,9 @@ private:
 	HRESULT MakeNonAnimModel(const _tchar* pName, _float4 vPickPos);
 	HRESULT MakeAnimModel(const _tchar* pName, _float4 vPickPos);
 
+	HRESULT MakeTag(RADIO eType);
 public:
-	static CWindow_Model* Create(void* pArg = nullptr);
+	static CWindow_Model* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

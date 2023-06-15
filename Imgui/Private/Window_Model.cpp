@@ -1,9 +1,13 @@
 #include "..\Public\Window_Model.h"
 #include "AnimModel.h"
 #include "NonAnimModel.h"
+#include "ImWindow_Manager.h"
+#include "Window_Object.h"
 
-CWindow_Model::CWindow_Model()
+CWindow_Model::CWindow_Model(ID3D11DeviceContext* pContext)
+	: m_pContext(pContext)
 {
+	Safe_AddRef(m_pContext);
 	ZEROMEM(&m_vScale);
 	ZEROMEM(&m_vRotate);
 	ZEROMEM(&m_vTransform);
@@ -55,7 +59,7 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		return E_FAIL;
 	Safe_AddRef(m_pTerrain);
 
-	strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
+	MakeTag(NONANIM);
 	return S_OK;
 }
 
@@ -70,8 +74,6 @@ void CWindow_Model::Tick(_double dTimeDelta)
 
 	Setting_Transform();
 
-	Open_Dialog();
-	
 	End();
 }
 
@@ -83,46 +85,35 @@ HRESULT CWindow_Model::Select_ModelFiles()
 
 	if (RadioButton("Non Anim", &m_iCurRadio, 0))
 	{
-		strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
 		m_iCur_Mesh = 0;
+		MakeTag(NONANIM);
 	}
 		
 	SameLine();
 
 	if (RadioButton("Anim", &m_iCurRadio, 1))
 	{
-		strcpy_s(m_szObjectName, MAX_STR, "GameObject_AnimModel_");
 		m_iCur_Mesh = 0;
+		MakeTag(ANIM);
 	}
 		
 
 	if (NONANIM == m_iCurRadio)
-		ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 4);
-	else if (ANIM == m_iCurRadio)
-		ListBox("Models", &m_iCur_Mesh, m_AnimModelItems.data(), (_int)m_AnimModelItems.size(), 4);
-
-	return S_OK;
-}
-
-HRESULT CWindow_Model::Open_Dialog()
-{
-	if (Button("Open File Dialog"))
-		IMFILE->OpenDialog("ChooseFileDlgKey", "Choose File", ".png, .dds, .fbx", ".", m_iMaxSelection);
-
-	// display
-	if (IMFILE->Display("ChooseFileDlgKey"))
 	{
-		// action if OK
-		if (IMFILE->IsOk())
+		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 4))
 		{
-			/*m_SelectionMap = IMFILE->GetSelection();
-			string filePathName = IMFILE->GetFilePathName();
-			string filePath = IMFILE->GetCurrentPath();*/
+			MakeTag(NONANIM);
 		}
-
-		// close
-		IMFILE->Close();
 	}
+	else if (ANIM == m_iCurRadio)
+	{
+		if (ListBox("Models", &m_iCur_Mesh, m_AnimModelItems.data(), (_int)m_AnimModelItems.size(), 4))
+		{
+			MakeTag(ANIM);
+		}
+	}
+		
+
 	return S_OK;
 }
 
@@ -171,7 +162,9 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 {
 	ImGui::InputText("Object Tag", m_szObjectName, MAX_STR);
 
-	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) && m_bPickMeshes)
+	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) && 
+		m_bPickMeshes &&
+		CGameInstance::GetInstance()->IsMouseInClient(m_pContext, g_hWnd))
 	{
 		_tchar wszName[MAX_STR] = TEXT("");
 		CharToWChar(m_szObjectName, wszName);
@@ -227,6 +220,11 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	if (nullptr == m_pLastObject)
 		MSG_BOX("Failed Get LastObject");
+
+	OBJECTWINDOW->Set_Object(m_pLastObject);
+	
+	m_iCur_Mesh_Index++;
+	MakeTag(NONANIM);
 	return S_OK;
 }
 
@@ -254,12 +252,41 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	if (nullptr == m_pLastObject)
 		MSG_BOX("Failed Get LastObject");
+
+	OBJECTWINDOW->Set_Object(m_pLastObject);
+
+	m_iCur_Mesh_Index++;
+	MakeTag(ANIM);
 	return S_OK;
 }
 
-CWindow_Model* CWindow_Model::Create(void* pArg)
+HRESULT CWindow_Model::MakeTag(RADIO eType)
 {
-	CWindow_Model* pInstance = New CWindow_Model();
+	if (NONANIM == eType)
+	{
+		strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
+		if (m_NonAnimModelItems.size() <= m_iCur_Mesh)
+			return E_FAIL;
+		strcat_s(m_szObjectName, MAX_STR, m_NonAnimModelItems[m_iCur_Mesh]);
+	}
+	else if (ANIM == eType)
+	{
+		strcpy_s(m_szObjectName, MAX_STR, "GameObject_AnimModel_");
+		if (m_AnimModelItems.size() <= m_iCur_Mesh)
+			return E_FAIL;
+		strcat_s(m_szObjectName, MAX_STR, m_AnimModelItems[m_iCur_Mesh]);
+	}
+	
+	_char szIndex[MAX_STR] = "";
+	_itoa_s(m_iCur_Mesh_Index, szIndex, MAX_STR, 36);
+	strcat_s(m_szObjectName, MAX_STR, szIndex);
+
+	return S_OK;
+}
+
+CWindow_Model* CWindow_Model::Create(ID3D11DeviceContext* pContext, void* pArg)
+{
+	CWindow_Model* pInstance = New CWindow_Model(pContext);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -281,4 +308,5 @@ void CWindow_Model::Free()
 	for (auto& iter : m_AnimModelItems)
 		Safe_Delete(iter);
 	m_AnimModelItems.clear();
+	Safe_Release(m_pContext);
 }

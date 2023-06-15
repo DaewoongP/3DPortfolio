@@ -225,7 +225,7 @@ HRESULT CMainTool::Ready_Prototype_Object()
 HRESULT CMainTool::Open_Level()
 {
 	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
-
+	
 	return m_pGameInstance->Open_Level(LEVEL_TOOL, CLevel_Tool::Create(m_pDevice, m_pContext));
 }
 
@@ -236,7 +236,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Camera::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Model::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Model::Create(m_pContext));
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Object::Create());
 
 	return S_OK;

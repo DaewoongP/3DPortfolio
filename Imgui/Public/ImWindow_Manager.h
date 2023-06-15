@@ -42,8 +42,28 @@ private:
 public:
     vector<CImWindow*>      m_ImWindows;
 
+
 public:
     virtual void Free(void) override;
 };
 
 END
+
+#define TOOLWINDOW  \
+dynamic_cast<CWindow_Tool*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::TOOL])
+
+#define CAMERAWINDOW  \
+dynamic_cast<CWindow_Camera*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::CAMERA])
+
+#define UIWINDOW  \
+dynamic_cast<CWindow_UI*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::UI])
+
+#define LIGHTWINDOW  \
+dynamic_cast<CWindow_Light*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::LIGHT])
+
+#define MODELWINDOW  \
+dynamic_cast<CWindow_Model*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::MODEL])
+
+#define OBJECTWINDOW  \
+dynamic_cast<CWindow_Object*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::OBJECT])
+

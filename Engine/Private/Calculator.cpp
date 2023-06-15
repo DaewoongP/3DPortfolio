@@ -20,7 +20,7 @@ HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fma
 	POINT	pt{};
 	GetCursorPos(&pt);
 	ScreenToClient(hWnd, &pt);
-	
+
 	_vector		vMouse;
 	vMouse = XMVectorSet(
 		pt.x / (ViewPort.Width * 0.5f) - 1.f,
@@ -58,6 +58,31 @@ HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fma
 	XMStoreFloat4(vRayDir, vPickDir);
 
 	return S_OK;
+}
+
+_bool CCalculator::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
+{
+	D3D11_VIEWPORT ViewPort;
+	UINT iNumViewPorts = 1;
+
+	ZEROMEM(&ViewPort);
+	if (nullptr == pContext)
+		return false;
+	pContext->RSGetViewports(&iNumViewPorts, &ViewPort);
+
+	POINT	pt{};
+	GetCursorPos(&pt);
+
+	RECT rc{};
+	GetWindowRect(hWnd, &rc);
+
+	if (rc.left <= pt.x &&
+		rc.right >= pt.x &&
+		rc.top <= pt.y &&
+		rc.bottom >= pt.y)
+		return true;
+
+	return false;
 }
 
 void CCalculator::Free()

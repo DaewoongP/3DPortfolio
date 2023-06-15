@@ -64,6 +64,7 @@ public: /* For.PipeLine*/
 
 public: /* For. Calculator */
 	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
+	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

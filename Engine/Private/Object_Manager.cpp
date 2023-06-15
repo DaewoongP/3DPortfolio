@@ -61,6 +61,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 		if (FAILED(pLayer->Add_GameObjects(pObjectTag, pGameObject)))
 		{
 			Safe_Release(pLayer);
+			Safe_Release(pGameObject);
 			return E_FAIL;
 		}
 
@@ -69,9 +70,14 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	else
 	{
 		if (FAILED(pLayer->Add_GameObjects(pObjectTag, pGameObject)))
+		{
+			Safe_Release(pGameObject);
 			return E_FAIL;
+		}
 	}
-	
+		
+
+
 	if (nullptr == m_pLastGameObject)
 	{
 		m_pLastGameObject = pGameObject;

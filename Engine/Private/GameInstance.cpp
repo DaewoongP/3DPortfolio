@@ -286,6 +286,13 @@ HRESULT CGameInstance::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _f
 	return m_pCalculator->Get_MouseRay(pContext, hWnd, PickingWorldMatrix_Inverse, vRayPos, vRayDir);
 }
 
+_bool CGameInstance::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
+{
+	if (nullptr == m_pCalculator)
+		return false;
+	return m_pCalculator->IsMouseInClient(pContext, hWnd);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
