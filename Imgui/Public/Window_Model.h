@@ -59,6 +59,9 @@ private:
 	HRESULT MakeAnimModel(const _tchar* pName, _float4 vPickPos);
 
 	HRESULT MakeTag(RADIO eType);
+
+	HRESULT SaveLoad();
+
 public:
 	static CWindow_Model* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;

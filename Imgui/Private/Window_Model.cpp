@@ -25,6 +25,7 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 	Safe_AddRef(pGameInstance);
 	m_NonAnimModelPrototypes = pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_NonAnimModel"));
 	m_AnimModelPrototypes = pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_AnimModel"));
+
 	for (auto& Pair : m_NonAnimModelPrototypes)
 	{
 		_char pName[MAX_STR] = "";
@@ -73,6 +74,8 @@ void CWindow_Model::Tick(_double dTimeDelta)
 	Select_ModelFiles();
 
 	Setting_Transform();
+
+	SaveLoad();
 
 	End();
 }
@@ -289,6 +292,12 @@ HRESULT CWindow_Model::MakeTag(RADIO eType)
 	_itoa_s(m_iCur_Mesh_Index, szIndex, MAX_STR, 10);
 	strcat_s(m_szObjectName, MAX_STR, szIndex);
 
+	return S_OK;
+}
+
+HRESULT CWindow_Model::SaveLoad()
+{
+	ImGui::ColorButton("Save", ImVec4(0.f, 1.f, 0.2f, 1.f));
 	return S_OK;
 }
 
