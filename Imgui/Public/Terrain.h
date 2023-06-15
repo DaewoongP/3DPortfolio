@@ -20,6 +20,8 @@ private:
 	virtual ~CTerrain() = default;
 
 public:
+	_uint Get_NumTextures();
+	void Set_NumTexture(_int iIndex);
 	void Set_WireFrame(_bool isWireFrame) { m_bIsWireFrame = isWireFrame; }
 
 public:
@@ -32,16 +34,19 @@ public:
 public:
 	HRESULT RemakeTerrain(const _tchar* pHeightMap);
 	HRESULT RemakeTerrain(_uint iSizeX, _uint iSizeY);
-
+	HRESULT RemakeTerrain(_uint iTextureIndex);
 	HRESULT PickingOnTerrain(_Inout_ _float4* vPickPos);
 
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
+	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
-	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
+	
 
+private:
+	_uint					m_iTextureIndex = { 0 };
 	_bool					m_bIsWireFrame = { false };
 
 private:

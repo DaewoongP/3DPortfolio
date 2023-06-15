@@ -12,6 +12,18 @@ CTerrain::CTerrain(const CTerrain& rhs)
 {
 }
 
+_uint CTerrain::Get_NumTextures()
+{
+    if (nullptr == m_pTextureCom)
+        return 0;
+    return m_pTextureCom->Get_NumTextures();
+}
+
+void CTerrain::Set_NumTexture(_int iIndex)
+{
+    m_iTextureIndex = iIndex;
+}
+
 HRESULT CTerrain::Initialize_Prototype()
 {
     FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
@@ -64,6 +76,13 @@ HRESULT CTerrain::RemakeTerrain(_uint iSizeX, _uint iSizeY)
         return S_OK;
     if (FAILED(m_pTerrainCom->RemakeTerrain(iSizeX, iSizeY)))
         return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CTerrain::RemakeTerrain(_uint iTextureIndex)
+{
+    m_iTextureIndex = iTextureIndex;
 
     return S_OK;
 }
@@ -155,7 +174,7 @@ HRESULT CTerrain::SetUp_ShaderResources()
 
     Safe_Release(pGameInstance);
 
-    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_iTextureIndex)))
         return E_FAIL;
     return S_OK;
 }

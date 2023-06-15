@@ -42,6 +42,11 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 		return E_FAIL;
 	Safe_AddRef(m_pAxisCenter);
 
+	m_AxisState[CAxis::AXIS_ORIGIN] = true;
+	m_AxisState[CAxis::AXIS_UI] = true;
+	m_AxisState[CAxis::AXIS_CENTER] = false;
+	m_pAxisCenter->Set_Rendering(m_AxisState[CAxis::AXIS_CENTER]);
+
 	return S_OK;
 }
 
@@ -54,6 +59,8 @@ void CWindow_Tool::Tick(_double dTimeDelta)
 	TerrainSizeXZ();
 
 	TerrainHeightMap();
+	
+	TerrainTexture();
 
 	WireFrame();
 	
@@ -66,6 +73,7 @@ void CWindow_Tool::Tick(_double dTimeDelta)
 
 void CWindow_Tool::TerrainSizeXZ()
 {
+	SetNextItemWidth(100.f);
 	if (InputInt2("Terrain Size X, Z", m_TerrainSize.data(), ImGuiInputTextFlags_CharsNoBlank))
 	{
 		if (m_TerrainOverflowSize[0] < m_TerrainSize[0] ||
@@ -115,6 +123,32 @@ void CWindow_Tool::TerrainHeightMap()
 		// close
 		IMFILE->Close();
 	}
+}
+
+void CWindow_Tool::TerrainTexture()
+{
+	_char szNum[MAX_STR] = "";
+	_itoa_s(m_pTerrain->Get_NumTextures() - 1, szNum, MAX_STR, 36);
+	
+	_int iIndex = m_iTextureIndex;
+	SetNextItemWidth(100.f);
+	if (ImGui::InputInt("Texture Index", &iIndex))
+	{
+		if (m_pTerrain->Get_NumTextures() - 1 < (_uint)iIndex ||
+			0 > iIndex)
+		{
+			return;
+		}
+		else
+		{
+			m_iTextureIndex = iIndex;
+			m_pTerrain->Set_NumTexture(m_iTextureIndex);
+		}
+	}
+	SameLine();
+	ImGui::Text("Max : ");
+	SameLine();
+	ImGui::TextColored(ImVec4(1.f, 0.f, 1.f, 1.f), szNum);
 }
 
 void CWindow_Tool::CamSpeedAndAxisDist()

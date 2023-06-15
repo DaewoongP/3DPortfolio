@@ -42,7 +42,7 @@ HRESULT CAxis::Initialize(void* pArg)
 	m_fY = 80.f;
 
 	m_fDistance = 3.f;
-	m_vOriginAxisScale = _float3(0.5f, 0.5f, 0.5f);
+	m_vOriginAxisScale = _float3(1.f, 1.f, 1.f);
 	return S_OK;
 }
 
@@ -162,7 +162,7 @@ void CAxis::Set_UI(CGameInstance* pGameInstance)
 	m_pTransformCom->Set_Scale(_float3(m_fUIAxisSize, m_fUIAxisSize, m_fUIAxisSize));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, m_fUIAxisSize));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, -m_fUIAxisSize, m_fUIAxisSize));
 	
 	m_WorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
 	m_ViewMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);

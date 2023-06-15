@@ -17,6 +17,8 @@ void CWindow_Object::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 	Begin("Object", nullptr, m_WindowFlag);
 
+
+
 	End();
 }
 

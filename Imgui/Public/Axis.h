@@ -24,6 +24,7 @@ private:
 
 public:
 	void Set_AxisDistance(_float fDistance) { m_fDistance = fDistance; }
+	void Set_AxisOriginScale(_float fScale) { XMStoreFloat3(&m_vOriginAxisScale, XMLoadFloat3(&m_vOriginAxisScale) * fScale); }
 	void Set_Rendering(_bool bRender) { m_isRendering = bRender; }
 
 public:
@@ -48,7 +49,7 @@ private:
 	_float			m_fY = { 0.f };
 	_float			m_fUIAxisSize = { 0.f };
 
-	_bool			m_isRendering = { false };
+	_bool			m_isRendering = { true };
 
 	_float4x4		m_WorldMatrix;
 	_float4x4		m_ViewMatrix;

@@ -85,6 +85,12 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
+	/* Prototype_Component_Texture_Terrain */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Terrain/Terrain%d.dds"), 3))))
+		return E_FAIL;
+
 	
 	/* Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Rect"),
@@ -94,11 +100,6 @@ HRESULT CMainTool::Ready_Prototype_Component()
 	/* Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 5, 5))))
-		return E_FAIL;
-
-	/* Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Tile%d.dds"), 2))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Line */
