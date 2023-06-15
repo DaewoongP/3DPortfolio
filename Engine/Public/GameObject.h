@@ -13,7 +13,7 @@ protected:
 
 public:
 	void Set_Tag(const _tchar * pTag) {
-		wcscpy_s(m_pTag, MAX_STR, pTag);
+		lstrcpy(m_pTag, pTag);
 	}
 	const _tchar* Get_Tag() const { return m_pTag; }
 

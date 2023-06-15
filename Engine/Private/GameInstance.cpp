@@ -160,6 +160,14 @@ CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const _tchar* pLa
 	return m_pObject_Manager->Find_GameObject(iLevelIndex, pLayerTag, pGameObjectTag);
 }
 
+CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Find_Layer(iLevelIndex, pLayerTag);
+}
+
 CGameObject* CGameInstance::Get_LastGameObject()
 {
 	if (nullptr == m_pObject_Manager)

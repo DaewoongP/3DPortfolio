@@ -21,6 +21,7 @@ public:
 	void	Clear_LevelResources(_uint iLevelIndex);
 	
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
+	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 public:
 	void	Tick(_double dTimeDelta);
@@ -39,7 +40,6 @@ private:
 
 private:
 	class CGameObject*	Find_Prototype(const _tchar* pPrototypeTag);
-	class CLayer*		Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 public:
 	virtual void Free() override;

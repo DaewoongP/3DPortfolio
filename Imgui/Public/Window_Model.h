@@ -30,6 +30,7 @@ private:
 	_float3					m_vScale;
 	_float3					m_vRotate;
 	_float4					m_vTransform;
+	_char					m_szObjectName[MAX_STR] = "";
 
 private:
 	map<string, string>					m_SelectionMap;
@@ -39,15 +40,15 @@ private:
 	vector<const _char*>				m_AnimModelItems;
 
 private:
-	HRESULT	Select_MeshFiles();
+	HRESULT	Select_ModelFiles();
 	HRESULT Open_Dialog();
 	HRESULT Setting_Transform();
 	HRESULT MakeObject(_double dTimeDelta);
 
 	HRESULT Initialize_Transforms();
 
-	HRESULT MakeAnimModel(_float4 vPickPos);
-	HRESULT MakeNonAnimModel(_float4 vPickPos);
+	HRESULT MakeNonAnimModel(const _tchar* pName, _float4 vPickPos);
+	HRESULT MakeAnimModel(const _tchar* pName, _float4 vPickPos);
 
 public:
 	static CWindow_Model* Create(void* pArg = nullptr);

@@ -58,14 +58,20 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	{
 		pLayer = CLayer::Create();
 
-		FAILED_CHECK_RETURN(pLayer->Add_GameObjects(pObjectTag, pGameObject), E_FAIL);
+		if (FAILED(pLayer->Add_GameObjects(pObjectTag, pGameObject)))
+		{
+			Safe_Release(pLayer);
+			return E_FAIL;
+		}
 
 		m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
 	}
 	else
-		FAILED_CHECK_RETURN(pLayer->Add_GameObjects(pObjectTag, pGameObject),E_FAIL);
-
-
+	{
+		if (FAILED(pLayer->Add_GameObjects(pObjectTag, pGameObject)))
+			return E_FAIL;
+	}
+	
 	if (nullptr == m_pLastGameObject)
 	{
 		m_pLastGameObject = pGameObject;

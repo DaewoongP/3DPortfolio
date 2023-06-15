@@ -55,6 +55,7 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		return E_FAIL;
 	Safe_AddRef(m_pTerrain);
 
+	strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
 	return S_OK;
 }
 
@@ -65,8 +66,8 @@ void CWindow_Model::Tick(_double dTimeDelta)
 
 	MakeObject(dTimeDelta);
 
-	Select_MeshFiles();
-	
+	Select_ModelFiles();
+
 	Setting_Transform();
 
 	Open_Dialog();
@@ -74,18 +75,26 @@ void CWindow_Model::Tick(_double dTimeDelta)
 	End();
 }
 
-HRESULT CWindow_Model::Select_MeshFiles()
+HRESULT CWindow_Model::Select_ModelFiles()
 {
 	Checkbox("Pick Meshes", &m_bPickMeshes);
 	SameLine();
 	SetNextItemWidth(200.f);
 
 	if (RadioButton("Non Anim", &m_iCurRadio, 0))
+	{
+		strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
 		m_iCur_Mesh = 0;
+	}
+		
 	SameLine();
 
 	if (RadioButton("Anim", &m_iCurRadio, 1))
+	{
+		strcpy_s(m_szObjectName, MAX_STR, "GameObject_AnimModel_");
 		m_iCur_Mesh = 0;
+	}
+		
 
 	if (NONANIM == m_iCurRadio)
 		ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 4);
@@ -160,8 +169,13 @@ HRESULT CWindow_Model::Setting_Transform()
 
 HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 {
+	ImGui::InputText("Object Tag", m_szObjectName, MAX_STR);
+
 	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) && m_bPickMeshes)
 	{
+		_tchar wszName[MAX_STR] = TEXT("");
+		CharToWChar(m_szObjectName, wszName);
+
 		_float4 vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
 		if (FAILED(m_pTerrain->PickingOnTerrain(&vPickPos)))
 			return E_FAIL;
@@ -170,11 +184,11 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 
 		if (NONANIM == m_iCurRadio)
 		{
-			MakeNonAnimModel(vPickPos);
+			MakeNonAnimModel(wszName, vPickPos);
 		}
 		else if (ANIM == m_iCurRadio)
 		{
-			MakeAnimModel(vPickPos);
+			MakeAnimModel(wszName, vPickPos);
 		}
 
 	}
@@ -189,24 +203,20 @@ HRESULT CWindow_Model::Initialize_Transforms()
 	return S_OK;
 }
 
-HRESULT CWindow_Model::MakeAnimModel(_float4 vPickPos)
+HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 {
-	wstring strName = TEXT("GameObject_AnimModel");
-	wstring strNum = to_wstring(m_iDummyNum++);
-	strName = strName + strNum;
-
 	CAnimModel::OBJECTDESC ObjectDesc;
-	_char szProtoName[MAX_STR] = "Prototype_Component_AnimModel_";
-	strcat_s(szProtoName, MAX_STR, m_AnimModelItems[m_iCur_Mesh]);
+	_char szProtoName[MAX_STR] = "Prototype_Component_NonAnimModel_";
+	strcat_s(szProtoName, MAX_STR, m_NonAnimModelItems[m_iCur_Mesh]);
 	CharToWChar(szProtoName, ObjectDesc.pModelPrototypeTag);
 
 	ObjectDesc.vPosition = vPickPos;
 	m_vTransform = vPickPos;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
-		TEXT("Prototype_GameObject_AnimModel"), TEXT("Layer_Tool"), strName.c_str(), &ObjectDesc)))
+		TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), pName, &ObjectDesc)))
 	{
-		MSG_BOX("Failed Add GameObject AnimModel");
+		MSG_BOX("Failed Add GameObject NonAnimModel");
 		return E_FAIL;
 	}
 
@@ -220,24 +230,20 @@ HRESULT CWindow_Model::MakeAnimModel(_float4 vPickPos)
 	return S_OK;
 }
 
-HRESULT CWindow_Model::MakeNonAnimModel(_float4 vPickPos)
+HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 {
-	wstring strName = TEXT("GameObject_NonAnimModel");
-	wstring strNum = to_wstring(m_iDummyNum++);
-	strName = strName + strNum;
-
 	CAnimModel::OBJECTDESC ObjectDesc;
-	_char szProtoName[MAX_STR] = "Prototype_Component_NonAnimModel_";
-	strcat_s(szProtoName, MAX_STR, m_NonAnimModelItems[m_iCur_Mesh]);
+	_char szProtoName[MAX_STR] = "Prototype_Component_AnimModel_";
+	strcat_s(szProtoName, MAX_STR, m_AnimModelItems[m_iCur_Mesh]);
 	CharToWChar(szProtoName, ObjectDesc.pModelPrototypeTag);
 
 	ObjectDesc.vPosition = vPickPos;
 	m_vTransform = vPickPos;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
-		TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), strName.c_str(), &ObjectDesc)))
+		TEXT("Prototype_GameObject_AnimModel"), TEXT("Layer_Tool"), pName, &ObjectDesc)))
 	{
-		MSG_BOX("Failed Add GameObject NonAnimModel");
+		MSG_BOX("Failed Add GameObject AnimModel");
 		return E_FAIL;
 	}
 
