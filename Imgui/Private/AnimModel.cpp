@@ -2,12 +2,12 @@
 #include "GameInstance.h"
 
 CAnimModel::CAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CDummy(pDevice, pContext)
 {
 }
 
 CAnimModel::CAnimModel(const CAnimModel& rhs)
-	: CGameObject(rhs)
+	: CDummy(rhs)
 {
 }
 
@@ -69,11 +69,6 @@ HRESULT CAnimModel::Render()
     }
 
     return S_OK;
-}
-
-void CAnimModel::Move_Position(_fvector vPos, _double dTimeDelta)
-{
-    m_pTransformCom->Chase(vPos, dTimeDelta);
 }
 
 HRESULT CAnimModel::Add_Component(OBJECTDESC ObjectDesc)
@@ -152,7 +147,6 @@ void CAnimModel::Free()
 {
     __super::Free();
     Safe_Release(m_pRendererCom);
-    Safe_Release(m_pTransformCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     //Safe_Release(m_pColliderCom);

@@ -175,6 +175,14 @@ CGameObject* CGameInstance::Get_LastGameObject()
 	return m_pObject_Manager->Get_LastGameObject();
 }
 
+HRESULT CGameInstance::Set_LastGameObject(CGameObject* pGameObject)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Set_LastGameObject(pGameObject);
+}
+
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, CComponent* pPrototype)
 {
 	NULL_CHECK_RETURN(m_pComponent_Manager, E_FAIL);

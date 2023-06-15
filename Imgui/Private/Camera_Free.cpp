@@ -20,6 +20,23 @@ void CCamera_Free::Set_Speed(_float fSpeed)
 	m_pCamera->Set_TransformDesc(CTransform::TRANSFORMDESC(fSpeed, 3.f));
 }
 
+void CCamera_Free::Set_CameraView(_float4 vEye, _float4 vAt, _float4 vUp)
+{
+	CCamera::CAMERADESC CameraDesc;
+	ZEROMEM(&CameraDesc);
+
+	CameraDesc.vEye = vEye;
+	CameraDesc.vAt = vAt;
+	CameraDesc.vUp = vUp;
+
+	CameraDesc.fFovy = XMConvertToRadians(90.f);
+	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 1000.f;
+
+	m_pCamera->Set_CameraDesc(CameraDesc);
+}
+
 HRESULT CCamera_Free::Initialize_Prototype()
 {
 	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);

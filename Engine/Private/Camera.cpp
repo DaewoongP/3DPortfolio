@@ -30,6 +30,21 @@ CCamera::CCamera(const CCamera& rhs)
 	m_pTransform = static_cast<CTransform*>(rhs.m_pTransform->Clone(nullptr));
 }
 
+void CCamera::Set_CameraDesc(CAMERADESC CameraDesc)
+{
+	m_vEye = CameraDesc.vEye;
+	m_vAt = CameraDesc.vAt;
+	m_vUp = CameraDesc.vUp;
+
+	m_fFovy = CameraDesc.fFovy;
+	m_fAspect = CameraDesc.fAspect;
+	m_fNear = CameraDesc.fNear;
+	m_fFar = CameraDesc.fFar;
+
+	m_pTransform->Set_State(CTransform::STATE::STATE_POSITION, XMLoadFloat4(&m_vEye));
+	m_pTransform->LookAt(XMLoadFloat4(&m_vAt));
+}
+
 HRESULT CCamera::Initialize_Prototype()
 {
 	m_pTransform = CTransform::Create(m_pDevice, m_pContext);
@@ -45,14 +60,7 @@ HRESULT CCamera::Initialize(void* pArg)
 	{
 		CAMERADESC CameraDesc = *static_cast<CAMERADESC*>(pArg);
 
-		m_vEye = CameraDesc.vEye;
-		m_vAt = CameraDesc.vAt;
-		m_vUp = CameraDesc.vUp;
-
-		m_fFovy = CameraDesc.fFovy;
-		m_fAspect = CameraDesc.fAspect;
-		m_fNear = CameraDesc.fNear;
-		m_fFar = CameraDesc.fFar;
+		Set_CameraDesc(CameraDesc);
 
 		m_pTransform->Set_Desc(CameraDesc.TransformDesc);
 	}

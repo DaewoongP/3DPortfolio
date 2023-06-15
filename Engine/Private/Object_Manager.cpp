@@ -14,6 +14,17 @@ CGameObject* CObject_Manager::Get_LastGameObject()
 	return m_pLastGameObject;
 }
 
+HRESULT CObject_Manager::Set_LastGameObject(class CGameObject* pGameObject)
+{
+	Safe_Release(m_pLastGameObject);
+
+	m_pLastGameObject = pGameObject;
+
+	Safe_AddRef(m_pLastGameObject);
+
+	return S_OK;
+}
+
 HRESULT CObject_Manager::Reserve_Containers(_uint iNumLevels)
 {
 	if (nullptr != m_pLayers)

@@ -9,7 +9,7 @@ CWindow_Model::CWindow_Model(ID3D11DeviceContext* pContext)
 {
 	Safe_AddRef(m_pContext);
 	ZEROMEM(&m_vScale);
-	ZEROMEM(&m_vRotate);
+	ZEROMEM(&m_vRotation);
 	ZEROMEM(&m_vTransform);
 	m_vTransform.w = 1.f;
 }
@@ -112,7 +112,6 @@ HRESULT CWindow_Model::Select_ModelFiles()
 			MakeTag(ANIM);
 		}
 	}
-		
 
 	return S_OK;
 }
@@ -131,27 +130,23 @@ HRESULT CWindow_Model::Setting_Transform()
 			m_vScale.y = 0.1f;
 		if (m_vScale.z <= 0.001f)
 			m_vScale.z = 0.1f;
-
-		if (dynamic_cast<CAnimModel*>(m_pLastObject))
-			static_cast<CAnimModel*>(m_pLastObject)->Get_TransformCom()->Set_Scale(m_vScale);
-		else if (dynamic_cast<CNonAnimModel*>(m_pLastObject))
-			static_cast<CNonAnimModel*>(m_pLastObject)->Get_TransformCom()->Set_Scale(m_vScale);
+		CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject());
+		pDummy->Get_TransformCom()->Set_Scale(m_vScale);
+		pDummy->Set_PreToolScale(m_vScale);
 	}
 	SetNextItemWidth(300.f);
-	if (InputFloat3("Rotation", reinterpret_cast<_float*>(&m_vRotate)))
+	if (InputFloat3("Rotation", reinterpret_cast<_float*>(&m_vRotation)))
 	{
-		if (dynamic_cast<CAnimModel*>(m_pLastObject))
-			static_cast<CAnimModel*>(m_pLastObject)->Get_TransformCom()->Rotation(m_vRotate);
-		if (dynamic_cast<CNonAnimModel*>(m_pLastObject))
-			static_cast<CNonAnimModel*>(m_pLastObject)->Get_TransformCom()->Rotation(m_vRotate);
+		CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject());
+		pDummy->Get_TransformCom()->Rotation(m_vRotation);
+		pDummy->Set_PreToolRotation(m_vRotation);
 	}
 	SetNextItemWidth(300.f);
 	if (InputFloat3("Transform", reinterpret_cast<_float*>(&m_vTransform)))
 	{
-		if (dynamic_cast<CAnimModel*>(m_pLastObject))
-			static_cast<CAnimModel*>(m_pLastObject)->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vTransform));
-		if (dynamic_cast<CNonAnimModel*>(m_pLastObject))
-			static_cast<CNonAnimModel*>(m_pLastObject)->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vTransform));
+		CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject()); 
+		pDummy->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vTransform));
+		pDummy->Set_PreToolTransform(m_vTransform);
 	}
 
 	Safe_Release(pGameInstance);
@@ -184,6 +179,7 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 			MakeAnimModel(wszName, vPickPos);
 		}
 
+		Initialize_DummyTransforms();
 	}
 	return S_OK;
 }
@@ -191,8 +187,26 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 HRESULT CWindow_Model::Initialize_Transforms()
 {
 	m_vScale = _float3(1.f, 1.f, 1.f);
-	ZEROMEM(&m_vRotate);
+	ZEROMEM(&m_vRotation);
 	m_vTransform = _float4(0.f, 0.f, 0.f, 1.f);
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::Initialize_DummyTransforms()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject());
+	if (nullptr == pDummy)
+		return E_FAIL;
+
+	pDummy->Set_PreToolScale(m_vScale);
+	pDummy->Set_PreToolRotation(m_vRotation);
+	pDummy->Set_PreToolTransform(m_vTransform);
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
@@ -215,14 +229,11 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-	m_pLastObject = pGameInstance->Get_LastGameObject();
+		
+	OBJECTWINDOW->Set_Object(pGameInstance->Get_LastGameObject());
+
 	Safe_Release(pGameInstance);
 
-	if (nullptr == m_pLastObject)
-		MSG_BOX("Failed Get LastObject");
-
-	OBJECTWINDOW->Set_Object(m_pLastObject);
-	
 	m_iCur_Mesh_Index++;
 	MakeTag(NONANIM);
 	return S_OK;
@@ -247,13 +258,10 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-	m_pLastObject = pGameInstance->Get_LastGameObject();
+
+	OBJECTWINDOW->Set_Object(pGameInstance->Get_LastGameObject());
+
 	Safe_Release(pGameInstance);
-
-	if (nullptr == m_pLastObject)
-		MSG_BOX("Failed Get LastObject");
-
-	OBJECTWINDOW->Set_Object(m_pLastObject);
 
 	m_iCur_Mesh_Index++;
 	MakeTag(ANIM);
@@ -278,7 +286,7 @@ HRESULT CWindow_Model::MakeTag(RADIO eType)
 	}
 	
 	_char szIndex[MAX_STR] = "";
-	_itoa_s(m_iCur_Mesh_Index, szIndex, MAX_STR, 36);
+	_itoa_s(m_iCur_Mesh_Index, szIndex, MAX_STR, 10);
 	strcat_s(m_szObjectName, MAX_STR, szIndex);
 
 	return S_OK;
@@ -308,5 +316,6 @@ void CWindow_Model::Free()
 	for (auto& iter : m_AnimModelItems)
 		Safe_Delete(iter);
 	m_AnimModelItems.clear();
+
 	Safe_Release(m_pContext);
 }

@@ -2,12 +2,12 @@
 #include "GameInstance.h"
 
 CNonAnimModel::CNonAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : CGameObject(pDevice, pContext)
+    : CDummy(pDevice, pContext)
 {
 }
 
 CNonAnimModel::CNonAnimModel(const CNonAnimModel& rhs)
-    : CGameObject(rhs)
+    : CDummy(rhs)
 {
 }
 
@@ -66,11 +66,6 @@ HRESULT CNonAnimModel::Render()
     }
 
     return S_OK;
-}
-
-void CNonAnimModel::Move_Position(_fvector vPos, _double dTimeDelta)
-{
-    m_pTransformCom->Chase(vPos, dTimeDelta);
 }
 
 HRESULT CNonAnimModel::Add_Component(OBJECTDESC ObjectDesc)
@@ -146,7 +141,6 @@ void CNonAnimModel::Free()
 {
     __super::Free();
     Safe_Release(m_pRendererCom);
-    Safe_Release(m_pTransformCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     //Safe_Release(m_pColliderCom);

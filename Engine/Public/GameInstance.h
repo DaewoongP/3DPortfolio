@@ -42,6 +42,7 @@ public: /* For.Object_Manager */
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pGameObjectTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
 	class CGameObject* Get_LastGameObject();
+	HRESULT Set_LastGameObject(class CGameObject* pGameObject);
 
 public: /* For.Component_Manager*/
 	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar * pPrototypeTag, class CComponent* pPrototype);

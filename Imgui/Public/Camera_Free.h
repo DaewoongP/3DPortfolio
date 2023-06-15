@@ -17,6 +17,7 @@ private:
 
 public:
 	void Set_Speed(_float fSpeed);
+	void Set_CameraView(_float4 vEye, _float4 vAt, _float4 vUp);
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

@@ -13,6 +13,7 @@ private:
 
 public:
 	class CGameObject* Get_LastGameObject();
+	HRESULT Set_LastGameObject(class CGameObject* pGameObject);
 
 public:
 	HRESULT Reserve_Containers(_uint iNumLevels);

@@ -20,6 +20,9 @@ private:
 	virtual ~CCamera() = default;
 
 public:
+	void Set_CameraDesc(CAMERADESC CameraDesc);
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;

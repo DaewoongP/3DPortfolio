@@ -128,7 +128,7 @@ void CWindow_Tool::TerrainHeightMap()
 void CWindow_Tool::TerrainTexture()
 {
 	_char szNum[MAX_STR] = "";
-	_itoa_s(m_pTerrain->Get_NumTextures() - 1, szNum, MAX_STR, 36);
+	_itoa_s(m_pTerrain->Get_NumTextures() - 1, szNum, MAX_STR, 10);
 	
 	_int iIndex = m_iTextureIndex;
 	SetNextItemWidth(100.f);
