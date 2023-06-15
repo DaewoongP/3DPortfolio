@@ -13,7 +13,7 @@ private:
 
 public:
 	_uint Get_MaterialIndex() const { return m_iMaterialIndex; }
-	void Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices);
+	void Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices, _fmatrix PivotMatrix);
 
 public:
 	virtual HRESULT Initialize_Prototype(CModel::TYPE eType, const CModel::BONES& Bones, const Engine::MESH* pMesh, _fmatrix PivotMatrix);

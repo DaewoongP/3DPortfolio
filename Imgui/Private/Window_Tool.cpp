@@ -1,5 +1,5 @@
 #include "..\Public\Window_Tool.h"
-#include "DummyObject.h"
+#include "AnimModel.h"
 
 CWindow_Tool::CWindow_Tool()
 {

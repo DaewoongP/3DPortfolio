@@ -8,11 +8,11 @@ CModel::CModel()
 HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 {
 	_uint		iFlag = 0;
-
+	
 	if (TYPE_NONANIM == eType)
-		iFlag = aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+		iFlag = aiProcess_PreTransformVertices | aiProcess_GlobalScale | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 	else
-		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+		iFlag = aiProcess_GlobalScale | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 	

@@ -15,7 +15,7 @@ CMesh::CMesh(const CMesh& rhs)
 	lstrcpy(m_szName, rhs.m_szName);
 }
 
-void CMesh::Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices)
+void CMesh::Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices, _fmatrix PivotMatrix)
 {
 	_uint		iIndex = 0;
 
@@ -23,7 +23,7 @@ void CMesh::Get_Matrices(CModel::BONES Bones, _float4x4* pMatrices)
 	{
 		_float4x4 OffsetMatrix = Bones[iBoneIndex]->Get_OffsetMatrix();
 		_float4x4 CombinedMatrix = Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
-		XMStoreFloat4x4(&pMatrices[iIndex++], XMLoadFloat4x4(&OffsetMatrix) * XMLoadFloat4x4(&CombinedMatrix));
+		XMStoreFloat4x4(&pMatrices[iIndex++], XMLoadFloat4x4(&OffsetMatrix) * XMLoadFloat4x4(&CombinedMatrix) * PivotMatrix);
 	}
 }
 
@@ -205,6 +205,27 @@ HRESULT CMesh::Ready_VertexBuffer_Anim(const Engine::MESH* pMesh, const CModel::
 				pVertices[VertexWeight.VertexId].vBlendWeights.w = VertexWeight.Weight;
 			}
 		}
+	}
+
+	if (0 == m_iNumBones)
+	{
+		m_iNumBones = 1;
+
+		_uint	iBoneIndex = 0;
+
+		auto	iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pValue)
+			{
+				if (!lstrcmp(m_szName, pValue->Get_Name()))
+					return true;
+				else
+				{
+					++iBoneIndex;
+					return false;
+				}
+			});
+
+
+		m_BoneIndices.push_back(iBoneIndex);
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);

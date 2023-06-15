@@ -8,6 +8,7 @@
 #include "Window_UI.h"
 #include "Window_Light.h"
 #include "Window_Model.h"
+#include "Window_Object.h"
 
 BEGIN(Tool)
 
@@ -22,6 +23,7 @@ public:
         UI,
         LIGHT,
         MODEL,
+        OBJECT,
         WINDOW_END
     };
 

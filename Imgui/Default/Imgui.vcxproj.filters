@@ -64,11 +64,17 @@
     <ClCompile Include="..\private\Axis.cpp">
       <Filter>02. ToolObject\Axis</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\DummyObject.cpp">
+    <ClCompile Include="..\private\AnimModel.cpp">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Model.cpp">
       <Filter>01. ImWindow\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NonAnimModel.cpp">
+      <Filter>02. ToolObject\DummyObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Window_Object.cpp">
+      <Filter>01. ImWindow\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +156,7 @@
     <ClInclude Include="..\public\Axis.h">
       <Filter>02. ToolObject\Axis</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\DummyObject.h">
+    <ClInclude Include="..\public\AnimModel.h">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Model.h">
@@ -158,6 +164,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Tool_Function.h">
       <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NonAnimModel.h">
+      <Filter>02. ToolObject\DummyObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Window_Object.h">
+      <Filter>01. ImWindow\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +233,9 @@
     <Filter Include="01. ImWindow\Tool &amp; Terrain">
       <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. ImWindow\Animation">
+      <UniqueIdentifier>{705ffff4-2ba7-41ce-9bf8-b88dc8b699b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="misc\debuggers\imgui.natstepfilter">
@@ -239,13 +254,13 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_NonTex.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Texture.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Terrain.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyMesh.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_NonAnimModel.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyAnimMesh.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

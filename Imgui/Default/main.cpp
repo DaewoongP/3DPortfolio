@@ -24,7 +24,7 @@ int main(int, char**)
     //ImGui_ImplWin32_EnableDpiAwareness();
     WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
     ::RegisterClassExW(&wc);
-    g_hWnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX11 Example", WS_OVERLAPPEDWINDOW, 100, 100, g_iWinSizeX, g_iWinSizeY, nullptr, nullptr, wc.hInstance, nullptr);
+    g_hWnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX11 Example", WS_OVERLAPPEDWINDOW, 10, 10, g_iWinSizeX, g_iWinSizeY, nullptr, nullptr, wc.hInstance, nullptr);
     g_hInst = wc.hInstance;
 
     // Initialize Direct3D

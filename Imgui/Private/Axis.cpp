@@ -172,11 +172,10 @@ void CAxis::Set_UI(CGameInstance* pGameInstance)
 void CAxis::Set_Center(CGameInstance* pGameInstance)
 {
 	m_pTransformCom->Set_Scale(_float3(0.5f, 0.5f, 0.5f));
-	_float4 CamPos = pGameInstance->Get_CamPosition();
+	_float4 CamPos = *pGameInstance->Get_CamPosition();
 	_vector vCamPos = XMLoadFloat4(&CamPos);
 	_vector vCamLook = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW).r[2];
 	_vector vAxisPos = vCamPos + XMVector4Normalize(vCamLook) * m_fDistance;
-
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vAxisPos);
 

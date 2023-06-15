@@ -38,9 +38,9 @@ _float4x4* CPipeLine::Get_TransformFloat4x4_Inverse(D3DTRANSFORMSTATE eTransform
 	return &m_TransformMatrix_Inverse[eTransformState];
 }
 
-_float4 CPipeLine::Get_CamPosition() const
+_float4* CPipeLine::Get_CamPosition()
 {
-	return m_vCameraPos;
+	return &m_vCameraPos;
 }
 
 void CPipeLine::Tick()

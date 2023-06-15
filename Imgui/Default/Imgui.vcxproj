@@ -166,13 +166,15 @@
   <ItemGroup>
     <ClCompile Include="..\private\Axis.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
-    <ClCompile Include="..\private\DummyObject.cpp" />
+    <ClCompile Include="..\private\AnimModel.cpp" />
     <ClCompile Include="..\private\ImWindow.cpp" />
     <ClCompile Include="..\private\ImWindow_Manager.cpp" />
     <ClCompile Include="..\private\Level_Tool.cpp" />
     <ClCompile Include="..\private\MainTool.cpp" />
+    <ClCompile Include="..\private\NonAnimModel.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\ToolInstance.cpp" />
+    <ClCompile Include="..\private\Window_Object.cpp" />
     <ClCompile Include="..\private\Window_Camera.cpp" />
     <ClCompile Include="..\private\Window_Light.cpp" />
     <ClCompile Include="..\private\Window_Model.cpp" />
@@ -191,16 +193,18 @@
   <ItemGroup>
     <ClInclude Include="..\public\Axis.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
-    <ClInclude Include="..\public\DummyObject.h" />
+    <ClInclude Include="..\public\AnimModel.h" />
     <ClInclude Include="..\public\ImWindow.h" />
     <ClInclude Include="..\public\ImWindow_Manager.h" />
     <ClInclude Include="..\public\Level_Tool.h" />
     <ClInclude Include="..\public\MainTool.h" />
+    <ClInclude Include="..\public\NonAnimModel.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\ToolInstance.h" />
     <ClInclude Include="..\Public\Tool_Defines.h" />
     <ClInclude Include="..\Public\Tool_Function.h" />
     <ClInclude Include="..\Public\Tool_Struct.h" />
+    <ClInclude Include="..\public\Window_Object.h" />
     <ClInclude Include="..\public\Window_Camera.h" />
     <ClInclude Include="..\public\Window_Light.h" />
     <ClInclude Include="..\public\Window_Model.h" />
@@ -227,10 +231,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cube.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyAnimMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_DummyMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_NonAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_NonTex.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Texture.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Terrain.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

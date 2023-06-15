@@ -124,7 +124,7 @@ HRESULT CTerrain::Add_Component()
         return E_FAIL;
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Shader_VtxNorTex"),
+        TEXT("Prototype_Component_Shader_Terrain"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
 
@@ -143,31 +143,20 @@ HRESULT CTerrain::Add_Component()
 
 HRESULT CTerrain::SetUp_ShaderResources()
 {
-    _float4x4 WorldMatrix;
-    XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
-        return E_FAIL;
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     Safe_AddRef(pGameInstance);
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW))))
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
         return E_FAIL;
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ))))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
+        return E_FAIL;
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
         return E_FAIL;
 
-    D3D11_RASTERIZER_DESC rasterizer;
-    ZeroMemory(&rasterizer, sizeof rasterizer);
-    rasterizer.CullMode = D3D11_CULL_NONE;
-    if (m_bIsWireFrame)
-        rasterizer.FillMode = D3D11_FILL_WIREFRAME;
-    else
-        rasterizer.FillMode = D3D11_FILL_SOLID;
-
-    if (FAILED(m_pShaderCom->Bind_Rasterizer("g_Rasterizer", &rasterizer)))
-        return E_FAIL;
-
-    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
-        return E_FAIL;
     Safe_Release(pGameInstance);
+
+    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+        return E_FAIL;
     return S_OK;
 }
 

@@ -50,6 +50,8 @@ CModel::CModel(const CModel& rhs)
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
 {
+	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
+
 	if (FAILED(Ready_File(eType, pModelFilePath)))
 		return E_FAIL;
 
@@ -82,7 +84,8 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 void CModel::Play_Animation(_double dTimeDelta)
 {
-	m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
+	if(0 < m_iNumAnimations)
+		m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
 
 	for (auto& pBone : m_Bones)
 	{
@@ -105,7 +108,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const char* pConstantName, _
 	_float4x4		BoneMatrices[256];
 	ZeroMemory(BoneMatrices, sizeof(_float4x4) * 256);
 
-	m_Meshes[iMeshIndex]->Get_Matrices(m_Bones, BoneMatrices);
+	m_Meshes[iMeshIndex]->Get_Matrices(m_Bones, BoneMatrices, XMLoadFloat4x4(&m_PivotMatrix));
 
 	pShader->Bind_Matrices(pConstantName, BoneMatrices, 256);
 

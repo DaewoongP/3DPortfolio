@@ -3,7 +3,8 @@
 #include "Terrain.h"
 #include "Camera_Free.h"
 #include "Axis.h"
-#include "DummyObject.h"
+#include "AnimModel.h"
+#include "NonAnimModel.h"
 
 CMainTool::CMainTool()
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -113,7 +114,8 @@ HRESULT CMainTool::Ready_Prototype_Component()
 	
 
 	Ready_Prototype_Component_Shader();
-	Ready_Prototype_Component_Model();
+	Ready_Prototype_Component_NonAnimModel();
+	Ready_Prototype_Component_AnimModel();
 
 	return S_OK;
 }
@@ -121,8 +123,8 @@ HRESULT CMainTool::Ready_Prototype_Component()
 HRESULT CMainTool::Ready_Prototype_Component_Shader()
 {
 	/* Prototype_Component_Shader_VtxNorTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_VtxNorTex"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Texture.hlsl"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Terrain"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Terrain.hlsl"),
 			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
 		return E_FAIL;
 
@@ -138,34 +140,57 @@ HRESULT CMainTool::Ready_Prototype_Component_Shader()
 			VTXPOSCUBE_DECL::Elements, VTXPOSCUBE_DECL::iNumElements))))
 		return E_FAIL;
 
-	/* Prototype_Component_Shader_DummyMesh */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_DummyMesh"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_DummyMesh.hlsl"),
+	/* Prototype_Component_Shader_NonAnimModel */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_NonAnimModel"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_NonAnimModel.hlsl"),
 			VTXMESH_DECL::Elements, VTXMESH_DECL::iNumElements))))
 		return E_FAIL;
 
-	/* Prototype_Component_Shader_DummyAnimMesh */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_DummyAnimMesh"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_DummyAnimMesh.hlsl"),
+	/* Prototype_Component_Shader_AnimModel */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_AnimModel"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_AnimModel.hlsl"),
 			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CMainTool::Ready_Prototype_Component_Model()
+HRESULT CMainTool::Ready_Prototype_Component_NonAnimModel()
 {
 	_matrix		PivotMatrix = XMMatrixIdentity();
-	
-	/* Prototype_Component_Model_Train */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Train"),
+
+	/* Prototype_Component_NonAnimModel_Train */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_Train"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Train.dat")))))
 		return E_FAIL;
+	
+	/* Prototype_Component_NonAnimModel_ForkLift */
+	PivotMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_ForkLift"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/ForkLift.dat"), PivotMatrix))))
+		return E_FAIL;
 
-	/* Prototype_Component_Model_Fiona */
+	return S_OK;
+}
+
+HRESULT CMainTool::Ready_Prototype_Component_AnimModel()
+{
+	_matrix		PivotMatrix = XMMatrixIdentity();
+
+	/* Prototype_Component_AnimModel_Fiona */
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Fiona"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Fiona"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat"), PivotMatrix))))
+		return E_FAIL;
+
+	/* Prototype_Component_AnimModel_Hand */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Hand"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Hand.dat")))))
+		return E_FAIL;
+
+	/* Prototype_Component_AnimModel_Warrior */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Warrior"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Warrior.dat")))))
 		return E_FAIL;
 
 	return S_OK;
@@ -185,8 +210,12 @@ HRESULT CMainTool::Ready_Prototype_Object()
 		CAxis::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DummyObject"),
-		CDummyObject::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_AnimModel"),
+		CAnimModel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnimModel"),
+		CNonAnimModel::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -207,6 +236,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Model::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Object::Create());
 
 	return S_OK;
 }
