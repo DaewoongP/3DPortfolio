@@ -68,7 +68,7 @@
       <Filter>01. ImWindow\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Object.cpp">
-      <Filter>01. ImWindow\Animation</Filter>
+      <Filter>01. ImWindow\Object</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimModel.cpp">
       <Filter>02. ToolObject\DummyObject\Model</Filter>
@@ -166,7 +166,7 @@
       <Filter>99. Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Object.h">
-      <Filter>01. ImWindow\Animation</Filter>
+      <Filter>01. ImWindow\Object</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NonAnimModel.h">
       <Filter>02. ToolObject\DummyObject\Model</Filter>
@@ -239,11 +239,11 @@
     <Filter Include="01. ImWindow\Tool &amp; Terrain">
       <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Animation">
-      <UniqueIdentifier>{705ffff4-2ba7-41ce-9bf8-b88dc8b699b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. ToolObject\DummyObject\Model">
       <UniqueIdentifier>{88f4677f-1c34-419e-9e5a-b754ffabc18e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Object">
+      <UniqueIdentifier>{705ffff4-2ba7-41ce-9bf8-b88dc8b699b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

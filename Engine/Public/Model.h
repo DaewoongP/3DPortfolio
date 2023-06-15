@@ -14,6 +14,8 @@ private:
 
 public:
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
+	_uint Get_NumAnimations() { return m_iNumAnimations; }
+	class CAnimation* Get_Animation() { return m_Animations[m_iCurrentAnimIndex]; }
 	void Set_AnimIndex(_uint iAnimIndex) 
 	{
 		if (iAnimIndex >= m_iNumAnimations)

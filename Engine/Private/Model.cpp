@@ -84,7 +84,7 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 void CModel::Play_Animation(_double dTimeDelta)
 {
-	if(0 < m_iNumAnimations)
+	if (0 < m_iNumAnimations)
 		m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
 
 	for (auto& pBone : m_Bones)

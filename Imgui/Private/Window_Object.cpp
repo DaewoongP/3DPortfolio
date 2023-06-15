@@ -4,7 +4,9 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "ImWindow_Manager.h"
+#include "AnimModel.h"
 #include "Camera_Free.h"
+#include "AnimModel.h"
 
 CWindow_Object::CWindow_Object()
 {
@@ -26,19 +28,6 @@ HRESULT CWindow_Object::Initialize(void* pArg)
 	m_vWindowPos = ImVec2(-870, g_iWinSizeY);
 	m_vWindowSize = ImVec2(400, 300);
 
-	/*CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	CLayer* pLayer = pGameInstance->Find_Layer(LEVEL_TOOL, TEXT("Layer_Tool"));
-	m_Objects.reserve(pLayer->Get_AllGameObject().size());
-
-	for (auto& pair : pLayer->Get_AllGameObject())
-	{
-		m_Objects.push_back(pair.second);
-		Safe_AddRef(pair.second);
-	}
-	
-	Safe_Release(pGameInstance);*/
 	return S_OK;
 }
 
@@ -49,13 +38,17 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 	CurrentObjectListBox();
 
+	AnimationIndex();
+
 	End();
 }
 
 HRESULT CWindow_Object::CurrentObjectListBox()
 {
-	if (ImGui::ListBox("Current Objects", &m_iCurrentListIndex, m_ObjectNames.data(), (_int)m_ObjectNames.size()))
+	if (ImGui::ListBox("Current Objects", &m_iCurrentListIndex, m_ObjectNames.data(), (_int)m_ObjectNames.size(), 5))
 	{
+		m_iAnimationIndex = 0;
+
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 		
@@ -75,12 +68,61 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		MODELWINDOW->Set_InputTransform(pDummy->Get_PreToolTransform());
 
 		_float4 vTransform = pDummy->Get_PreToolTransform();
-		vTransform.y += 15.f;
-		vTransform.z -= 15.f;
+		vTransform.y += 1.f;
+		vTransform.z += 1.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
 
 		Safe_Release(pGameInstance);
 	}
+	return S_OK;
+}
+
+HRESULT CWindow_Object::AnimationIndex()
+{
+	CAnimModel* pAnimModel = { nullptr };
+	if (0 < m_Objects.size() &&
+		(pAnimModel = dynamic_cast<CAnimModel*>(m_Objects[m_iCurrentListIndex])))
+	{
+		_char szNum[MAX_STR] = "";
+		_itoa_s(pAnimModel->Get_NumAnimations() - 1, szNum, MAX_STR, 10);
+
+		_int iIndex = pAnimModel->Get_PreToolAnimationIndex();
+
+		SetNextItemWidth(100.f);
+		if (ImGui::InputInt("Animation Index", &iIndex))
+		{
+			if (pAnimModel->Get_NumAnimations() - 1 < (_uint)iIndex ||
+				0 > iIndex)
+			{
+				return E_FAIL;
+			}
+			else
+			{
+				m_iAnimationIndex = iIndex;
+				pAnimModel->Set_AnimIndex(m_iAnimationIndex);
+				pAnimModel->Set_PreToolAnimationIndex(m_iAnimationIndex);
+			}
+		}
+		SameLine();
+		ImGui::Text("Max : ");
+		SameLine();
+		ImGui::TextColored(ImVec4(1.f, 0.f, 1.f, 1.f), szNum);
+
+		AnimationSpeed(pAnimModel);
+	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_Object::AnimationSpeed(CAnimModel* pAnimModel)
+{
+	m_dAnimationSpeed = pAnimModel->Get_PreToolAnimationSpeed();
+	if (ImGui::InputDouble("Animation Speed", &m_dAnimationSpeed))
+	{
+		pAnimModel->Set_AnimationSpeed(m_dAnimationSpeed);
+		pAnimModel->Set_PreToolAnimationSpeed(m_dAnimationSpeed);
+	}
+	
 	return S_OK;
 }
 

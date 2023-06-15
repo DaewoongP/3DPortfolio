@@ -10,6 +10,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_Channels(rhs.m_Channels)
 	, m_ChannelCurrentKeyFrames(rhs.m_ChannelCurrentKeyFrames)
 	, m_dDuration(rhs.m_dDuration)
+	, m_dOriginTickPerSecond(rhs.m_dOriginTickPerSecond)
 	, m_dTickPerSecond(rhs.m_dTickPerSecond)
 	, m_dTimeAcc(rhs.m_dTimeAcc)
 	, m_bIsLoop(rhs.m_bIsLoop)
@@ -28,6 +29,8 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 
 	lstrcpy(m_szName, pAnimation->Name);
 	m_dDuration = pAnimation->Duration;
+
+	m_dOriginTickPerSecond = pAnimation->TickPerSecond;
 	m_dTickPerSecond = pAnimation->TickPerSecond;
 	
 	m_iNumChannels = pAnimation->NumChannels;

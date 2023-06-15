@@ -11,6 +11,14 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
+	void Set_TickPerSecond(_double dMultiply) 
+	{
+		if (0 >= dMultiply)
+			return;
+		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
+	}
+
+public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
 
@@ -20,6 +28,7 @@ public:
 	vector<class CChannel*>		m_Channels;
 	vector<_uint>				m_ChannelCurrentKeyFrames;
 	_double						m_dDuration = { 0.0 };
+	_double						m_dOriginTickPerSecond = { 0.0 };
 	_double						m_dTickPerSecond = { 0.0 };
 	_double						m_dTimeAcc = { 0.0 };
 

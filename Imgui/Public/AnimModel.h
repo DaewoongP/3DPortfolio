@@ -20,6 +20,11 @@ private:
 	virtual ~CAnimModel() = default;
 
 public:
+	_uint Get_NumAnimations();
+	void Set_AnimIndex(_uint iIndex);
+	void Set_AnimationSpeed(_double dTime);
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_double dTimeDelta) override;

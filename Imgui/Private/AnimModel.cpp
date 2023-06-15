@@ -1,4 +1,5 @@
 #include "..\Public\AnimModel.h"
+#include "Animation.h"
 #include "GameInstance.h"
 
 CAnimModel::CAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -9,6 +10,27 @@ CAnimModel::CAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CAnimModel::CAnimModel(const CAnimModel& rhs)
 	: CDummy(rhs)
 {
+}
+
+_uint CAnimModel::Get_NumAnimations()
+{
+    if (nullptr == m_pModelCom)
+        return 0;
+    return m_pModelCom->Get_NumAnimations();
+}
+
+void CAnimModel::Set_AnimIndex(_uint iIndex)
+{
+    if (nullptr == m_pModelCom)
+        return;
+    m_pModelCom->Set_AnimIndex(iIndex);
+}
+
+void CAnimModel::Set_AnimationSpeed(_double dTime)
+{
+    if (nullptr == m_pModelCom)
+        return;
+    m_pModelCom->Get_Animation()->Set_TickPerSecond(dTime);
 }
 
 HRESULT CAnimModel::Initialize_Prototype()
