@@ -25,8 +25,7 @@ public:
 public:
 	HRESULT Ready_Prototype_Component();
 	HRESULT Ready_Prototype_Component_Shader();
-	HRESULT Ready_Prototype_Component_NonAnimModel();
-	HRESULT Ready_Prototype_Component_AnimModel();
+	HRESULT Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag);
 	HRESULT Ready_Prototype_Object();
 	HRESULT Open_Level();
 	HRESULT Add_Windows();

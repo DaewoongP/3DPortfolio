@@ -26,11 +26,14 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 {
 	if (nullptr != Find_Prototype(iLevelIndex, pPrototypeTag))
 	{
-		MSG_BOX("Already have Protorype In CComponent_Manager");
+		Safe_Release(pPrototype);
+		MSG_BOX("Already have Prototype In CComponent_Manager");
 		return E_FAIL;
 	}
 
-	m_pPrototypes[iLevelIndex].emplace(pPrototypeTag, pPrototype);
+	pPrototype->Set_Tag(pPrototypeTag);
+
+	m_pPrototypes[iLevelIndex].emplace(pPrototype->Get_Tag(), pPrototype);
 
 	return S_OK;
 }

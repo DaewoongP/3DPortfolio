@@ -115,8 +115,8 @@ HRESULT CMainTool::Ready_Prototype_Component()
 	
 
 	Ready_Prototype_Component_Shader();
-	Ready_Prototype_Component_NonAnimModel();
-	Ready_Prototype_Component_AnimModel();
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
 
 	return S_OK;
 }
@@ -156,38 +156,28 @@ HRESULT CMainTool::Ready_Prototype_Component_Shader()
 	return S_OK;
 }
 
-HRESULT CMainTool::Ready_Prototype_Component_NonAnimModel()
+HRESULT CMainTool::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag)
 {
-	_matrix		PivotMatrix = XMMatrixIdentity();
+	fs::directory_iterator iter(pPath);
 
-	/* Prototype_Component_NonAnimModel_ForkLift */
-	PivotMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_ForkLift"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/ForkLift.dat"), PivotMatrix))))
-		return E_FAIL;
+	while (iter != fs::end(iter))
+	{
+		const fs::directory_entry& entry = *iter;
 
-	/* Prototype_Component_NonAnimModel_Concrete_Floor */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_Concrete_Floor"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Concrete_Floor.dat")))))
-		return E_FAIL;
+		if (!lstrcmp(entry.path().extension().c_str(), TEXT(".dat")))
+		{
+			wstring wstrProto = pPrototypeTag;
+			wstring wstrFileName = entry.path().filename().c_str();
 
-	return S_OK;
-}
+			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
 
-HRESULT CMainTool::Ready_Prototype_Component_AnimModel()
-{
-	_matrix		PivotMatrix = XMMatrixIdentity();
+			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrProto.c_str(),
+				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str()))))
+				return E_FAIL;
+		}
 
-	/* Prototype_Component_AnimModel_Fiona */
-	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat"), PivotMatrix))))
-		return E_FAIL;
-
-	/* Prototype_Component_AnimModel_Warrior */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Warrior"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Warrior.dat")))))
-		return E_FAIL;
+		iter++;
+	}
 
 	return S_OK;
 }

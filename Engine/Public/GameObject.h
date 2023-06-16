@@ -24,7 +24,7 @@ public:
 	virtual void Late_Tick(_double dTimeDelta);
 	virtual HRESULT Render();
 
-private:
+protected:
 	_tchar m_pTag[MAX_STR];
 
 public:

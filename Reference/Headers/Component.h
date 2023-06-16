@@ -12,6 +12,12 @@ protected:
 	virtual ~CComponent() = default;
 
 public:
+	void Set_Tag(const _tchar * pTag) {
+		lstrcpy(m_pPrototypeTag, pTag);
+	}
+	const _tchar* Get_Tag() const { return m_pPrototypeTag; }
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Tick(_double dTimeDelta);
@@ -24,6 +30,9 @@ protected:
 
 protected:
 	_bool			m_bIsClone = { false };
+
+protected:
+	_tchar			m_pPrototypeTag[MAX_STR];
 
 public:
 	virtual CComponent* Clone(void* pArg) PURE;

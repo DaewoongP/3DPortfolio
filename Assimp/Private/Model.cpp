@@ -278,16 +278,25 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 
 			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
 				continue;
+			_char		strExt[MAX_PATH] = "";
+			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, nullptr, 0, strExt, MAX_PATH);
+
+			if (strcmp(strExt, ".dds") &&
+				strcmp(strExt, ".png"))
+				continue;
+
 			_tchar		wszFullPath[MAX_PATH] = TEXT("");
 			string str = strPath.data;
 			size_t nPos = str.find("GhostRunner");
 
 			if (nPos != string::npos) 
 			{
-				_char		szFullPath[MAX_PATH] = "";
-				_fullpath(szFullPath, strPath.data, MAX_PATH);
+				string substr = str.substr(nPos, str.size());
+				string absPath = "C:\\Users\\msi\\Desktop\\";
+				string	szFullPath = "";
+				szFullPath = absPath + substr;
 
-				CharToWChar(szFullPath, wszFullPath);
+				CharToWChar(szFullPath.data(), wszFullPath);
 
 				if (aiTextureType_DIFFUSE == aiTextureType(j))
 					Check_ORMTexture(wszFullPath);
