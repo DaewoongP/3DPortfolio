@@ -31,7 +31,6 @@ void CWindow_UI::Tick(_double dTimeDelta)
 			
 			wstring fPath;
 			fPath.assign(filePathName.begin(), filePathName.end());
-			//const _tchar* test = fPath.c_str();
 		}
 
 		// close

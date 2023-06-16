@@ -49,30 +49,24 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 	{
 		m_iAnimationIndex = 0;
 
-		CGameInstance* pGameInstance = CGameInstance::GetInstance();
-		Safe_AddRef(pGameInstance);
-		
 		CDummy* pDummy = dynamic_cast<CDummy*>(m_Objects[m_iCurrentListIndex]);
-		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
+		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
 		
 		if (nullptr == pDummy ||
 			nullptr == pCam)
 		{
-			Safe_Release(pGameInstance);
 			return E_FAIL;
 		}
 
-		pGameInstance->Set_LastGameObject(m_Objects[m_iCurrentListIndex]);
+		m_pGameInstance->Set_LastGameObject(m_Objects[m_iCurrentListIndex]);
 		MODELWINDOW->Set_InputScale(pDummy->Get_PreToolScale());
 		MODELWINDOW->Set_InputRotation(pDummy->Get_PreToolRotation());
 		MODELWINDOW->Set_InputTransform(pDummy->Get_PreToolTransform());
 
 		_float4 vTransform = pDummy->Get_PreToolTransform();
-		vTransform.y += 1.f;
-		vTransform.z += 1.f;
+		vTransform.y += 10.f;
+		vTransform.z += 10.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
-
-		Safe_Release(pGameInstance);
 	}
 	return S_OK;
 }

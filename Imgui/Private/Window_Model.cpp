@@ -21,10 +21,8 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 
 	Initialize_Transforms();
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-	m_NonAnimModelPrototypes = pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_NonAnimModel"));
-	m_AnimModelPrototypes = pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_AnimModel"));
+	m_NonAnimModelPrototypes = m_pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_NonAnimModel"));
+	m_AnimModelPrototypes = m_pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_AnimModel"));
 
 	for (auto& Pair : m_NonAnimModelPrototypes)
 	{
@@ -40,6 +38,15 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		m_NonAnimModelItems.push_back(pItemName);
 	}
 
+	sort(m_NonAnimModelItems.begin(), m_NonAnimModelItems.end(), [](auto& Sour, auto& Dest) {
+		string strSour = Sour;
+		string strDest = Dest;
+		if (strSour < strDest)
+			return true;
+		else
+			return false;
+		});
+
 	for (auto& Pair : m_AnimModelPrototypes)
 	{
 		_char pName[MAX_STR] = "";
@@ -54,7 +61,15 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		m_AnimModelItems.push_back(pItemName);
 	}
 
-	Safe_Release(pGameInstance);
+	sort(m_AnimModelItems.begin(), m_AnimModelItems.end(), [](auto& Sour, auto& Dest) {
+		string strSour = Sour;
+		string strDest = Dest;
+		if (strSour < strDest)
+			return true;
+		else
+			return false;
+		});
+
 	m_pTerrain = static_cast<CTerrain*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Terrain")));
 	if (nullptr == m_pTerrain)
 		return E_FAIL;
@@ -103,14 +118,14 @@ HRESULT CWindow_Model::Select_ModelFiles()
 
 	if (NONANIM == m_iCurRadio)
 	{
-		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 4))
+		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 7))
 		{
 			MakeTag(NONANIM);
 		}
 	}
 	else if (ANIM == m_iCurRadio)
 	{
-		if (ListBox("Models", &m_iCur_Mesh, m_AnimModelItems.data(), (_int)m_AnimModelItems.size(), 4))
+		if (ListBox("Models", &m_iCur_Mesh, m_AnimModelItems.data(), (_int)m_AnimModelItems.size(), 7))
 		{
 			MakeTag(ANIM);
 		}
@@ -121,9 +136,6 @@ HRESULT CWindow_Model::Select_ModelFiles()
 
 HRESULT CWindow_Model::Setting_Transform()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
 	SetNextItemWidth(300.f);
 	if (InputFloat3("Scale", reinterpret_cast<_float*>(&m_vScale)))
 	{
@@ -133,26 +145,24 @@ HRESULT CWindow_Model::Setting_Transform()
 			m_vScale.y = 0.1f;
 		if (m_vScale.z <= 0.001f)
 			m_vScale.z = 0.1f;
-		CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject());
+		CDummy* pDummy = dynamic_cast<CDummy*>(m_pGameInstance->Get_LastGameObject());
 		pDummy->Get_TransformCom()->Set_Scale(m_vScale);
 		pDummy->Set_PreToolScale(m_vScale);
 	}
 	SetNextItemWidth(300.f);
 	if (InputFloat3("Rotation", reinterpret_cast<_float*>(&m_vRotation)))
 	{
-		CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject());
+		CDummy* pDummy = dynamic_cast<CDummy*>(m_pGameInstance->Get_LastGameObject());
 		pDummy->Get_TransformCom()->Rotation(m_vRotation);
 		pDummy->Set_PreToolRotation(m_vRotation);
 	}
 	SetNextItemWidth(300.f);
 	if (InputFloat3("Transform", reinterpret_cast<_float*>(&m_vTransform)))
 	{
-		CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject()); 
+		CDummy* pDummy = dynamic_cast<CDummy*>(m_pGameInstance->Get_LastGameObject());
 		pDummy->Get_TransformCom()->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vTransform));
 		pDummy->Set_PreToolTransform(m_vTransform);
 	}
-
-	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
@@ -170,6 +180,13 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 		_float4 vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
 		if (FAILED(m_pTerrain->PickingOnTerrain(&vPickPos)))
 			return E_FAIL;
+		
+		if (m_pGameInstance->Get_DIKeyState(DIK_LCONTROL))
+		{
+			vPickPos.x = roundf(vPickPos.x);
+			vPickPos.y = roundf(vPickPos.y);
+			vPickPos.z = roundf(vPickPos.z);
+		}
 
 		Initialize_Transforms();
 
@@ -198,18 +215,13 @@ HRESULT CWindow_Model::Initialize_Transforms()
 
 HRESULT CWindow_Model::Initialize_DummyTransforms()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	CDummy* pDummy = dynamic_cast<CDummy*>(pGameInstance->Get_LastGameObject());
+	CDummy* pDummy = dynamic_cast<CDummy*>(m_pGameInstance->Get_LastGameObject());
 	if (nullptr == pDummy)
 		return E_FAIL;
 
 	pDummy->Set_PreToolScale(m_vScale);
 	pDummy->Set_PreToolRotation(m_vRotation);
 	pDummy->Set_PreToolTransform(m_vTransform);
-
-	Safe_Release(pGameInstance);
 	return S_OK;
 }
 
@@ -230,12 +242,7 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 		return E_FAIL;
 	}
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-		
-	OBJECTWINDOW->Set_Object(pGameInstance->Get_LastGameObject());
-
-	Safe_Release(pGameInstance);
+	OBJECTWINDOW->Set_Object(m_pGameInstance->Get_LastGameObject());
 
 	m_iCur_Mesh_Index++;
 	MakeTag(NONANIM);
@@ -259,12 +266,7 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 		return E_FAIL;
 	}
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	OBJECTWINDOW->Set_Object(pGameInstance->Get_LastGameObject());
-
-	Safe_Release(pGameInstance);
+	OBJECTWINDOW->Set_Object(m_pGameInstance->Get_LastGameObject());
 
 	m_iCur_Mesh_Index++;
 	MakeTag(ANIM);

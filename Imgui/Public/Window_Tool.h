@@ -20,8 +20,8 @@ private:
 	array<_int, 2>					m_TerrainSize;
 	array<_int, 2>					m_TerrainOverflowSize;
 	_bool							m_bIsWireFrame = { false };
-	_float							m_fFreeCamSpeed = { 5.f };
-	_float							m_fAxisDistance = { 3.f };
+	_float							m_fFreeCamSpeed = { 50.f };
+	_float							m_fAxisDistance = { 30.f };
 	array<_bool, CAxis::AXIS_END>	m_AxisState;
 	_int							m_iTextureIndex = { 0 };
 

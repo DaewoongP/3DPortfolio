@@ -1,24 +1,16 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_vLightPos = vector(15.f, 3.f, 15.f, 1.f);
-float g_fLightRange = 7.f;
-
-vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vCamPosition;
-
-texture2D g_DiffuseTexture;
-vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlEmissive;
-
 sampler LinearSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = WRAP;
     AddressV = WRAP;
+};
+
+RasterizerState rasterizer
+{
+    cullmode = NONE;
+    fillmode = WIREFRAME;
 };
 
 struct VS_IN
@@ -65,22 +57,13 @@ struct PS_IN_PHONG
 float4 PS_MAIN_PHONG(PS_IN_PHONG In) : SV_TARGET0
 {
     float4 vColor = (float4) 0;
-
-    vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV * 30.f);
-
-    if (vDiffuse.a < 0.1f)
+    
+    if (In.vWorldPos.x < 1.f && In.vWorldPos.z == 0.f)
         discard;
-
-    float fShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f);
-
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_vCamPosition;
-
-    float fSpecular = pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f);
-
-    vColor = (g_vLightDiffuse * vDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
-		+ (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-
+    if (In.vWorldPos.x == 0.f && In.vWorldPos.z < 1.f)
+        discard;
+    
+    vColor = float4(1.f, 0.7f, 0.7f, 1.f);
     return vColor;
 }
 
@@ -88,6 +71,7 @@ technique11 DefaultTechnique
 {
     pass Terrain_Phong
     {
+        SetRasterizerState(rasterizer);
         VertexShader = compile vs_5_0 VS_MAIN_PHONG();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

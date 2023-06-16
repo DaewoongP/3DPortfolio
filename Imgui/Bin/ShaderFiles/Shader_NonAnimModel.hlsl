@@ -7,6 +7,10 @@ sampler LinearSampler = sampler_state
     filter = MIN_MAG_MIP_LINEAR;
 };
 
+RasterizerState rasterizer
+{
+};
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -68,6 +72,7 @@ technique11 DefaultTechnique
 {
     pass Mesh
     {
+        SetRasterizerState(rasterizer);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

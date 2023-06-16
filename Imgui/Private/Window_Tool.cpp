@@ -12,8 +12,8 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 {
 	m_vWindowSize = ImVec2(500, 200);
 	
-	m_TerrainSize[0] = 5;
-	m_TerrainSize[1] = 5;
+	m_TerrainSize[0] = 500;
+	m_TerrainSize[1] = 500;
 	m_TerrainOverflowSize[0] = 50000;
 	m_TerrainOverflowSize[1] = 50000;
 

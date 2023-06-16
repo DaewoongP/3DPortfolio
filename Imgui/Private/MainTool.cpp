@@ -99,7 +99,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	/* Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 5, 5))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500))))
 		return E_FAIL;
 
 	/* Prototype_Component_VIBuffer_Line */
