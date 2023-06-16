@@ -33,6 +33,9 @@ private:
 	ANIMATION*				m_pAnimation = { nullptr };
 
 private:
+	_uint					m_iORMIndex = { 0 };
+
+private:
 	HRESULT Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot = false);
 	HRESULT Sort_Bones();
 	HRESULT Convert_Meshes();
@@ -42,6 +45,7 @@ private:
 
 private:
 	HRESULT Write_File(TYPE eType, const _tchar* pFileName);
+	HRESULT Check_ORMTexture(const _tchar* pFileName);
 
 public:
 	static HRESULT Convert(TYPE eType, const _char* pModelFilePath);

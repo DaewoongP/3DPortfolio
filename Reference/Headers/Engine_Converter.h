@@ -133,6 +133,11 @@ namespace Engine
 		CHANNEL*			Channels; // array
 	}ANIMATION;
 
+	typedef struct tagORMTexture
+	{
+		wchar_t				Path[256];
+	}ORMTEXTURE;
+
 	typedef struct tagModel
 	{
 		// Node
@@ -146,5 +151,9 @@ namespace Engine
 
 		// Animation
 		unsigned int		NumAnimations;
+
+		// ORM Texture
+		unsigned int		NumORMTextures;
+		ORMTEXTURE*			ORMTextures; // array
 	}MODEL;
 }

@@ -132,6 +132,26 @@ HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 
 	ZEROMEM(&m_Model);
 
+	// Write ORM
+
+	// ORM NumORMTextures
+	ReadFile(hFile, &(m_Model.NumORMTextures), sizeof(_uint), &dwByte, nullptr);
+
+	m_Model.ORMTextures = new ORMTEXTURE[m_Model.NumORMTextures];
+	ZeroMemory(m_Model.ORMTextures, sizeof(ORMTEXTURE) * (m_Model.NumORMTextures));
+
+	for (_uint i = 0; i < m_Model.NumORMTextures; ++i)
+	{
+		// Node Name
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		ReadFile(hFile, m_Model.ORMTextures[i].Path, dwStrByte, &dwByte, nullptr);
+		if (0 == dwByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+	}
+
 	// Nodes NumNodes
 	ReadFile(hFile, &(m_Model.NumNodes), sizeof(_uint), &dwByte, nullptr);
 
@@ -176,7 +196,7 @@ HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 	for (_uint i = 0; i < m_Model.NumMeshes; ++i)
 	{
 		MESH* pMesh = new MESH;
-
+		
 		// Mesh Name
 		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		ReadFile(hFile, pMesh->Name, dwStrByte, &dwByte, nullptr);
@@ -485,6 +505,8 @@ CComponent* CModel::Clone(void* pArg)
 
 void CModel::Release_FileDatas()
 {
+	Safe_Delete_Array(m_Model.ORMTextures);
+
 	for (auto& pNode : m_NodeDatas)
 	{
 		Safe_Delete_Array(pNode->Children);

@@ -264,6 +264,9 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 	m_pMaterial = new MATERIAL[m_pAIScene->mNumMaterials];
 	ZeroMemory(m_pMaterial, sizeof(MATERIAL) * m_pAIScene->mNumMaterials);
 
+	m_Model.ORMTextures = new ORMTEXTURE[20];
+	ZeroMemory(m_Model.ORMTextures, sizeof(ORMTEXTURE) * 20);
+
 	for (_uint i = 0; i < m_pAIScene->mNumMaterials; i++)
 	{
 		MATERIAL Material;
@@ -285,6 +288,9 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 				_fullpath(szFullPath, strPath.data, MAX_PATH);
 
 				CharToWChar(szFullPath, wszFullPath);
+
+				if (aiTextureType_DIFFUSE == aiTextureType(j))
+					Check_ORMTexture(wszFullPath);
 			}
 			else
 			{
@@ -310,6 +316,8 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 
 		m_pMaterial[i] = Material;
 	}
+
+	m_Model.NumORMTextures = m_iORMIndex;
 	return S_OK;
 }
 
@@ -418,6 +426,19 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 
 	_ulong	dwByte = 0;
 	_ulong	dwStrByte = 0;
+
+	// Write ORM
+
+	// ORM NumORMTextures
+	WriteFile(hFile, &(m_Model.NumORMTextures), sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < m_Model.NumORMTextures; ++i)
+	{
+		// ORM Path
+		dwStrByte = sizeof(_tchar) * (lstrlen(m_Model.ORMTextures[i].Path) + 1);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		WriteFile(hFile, m_Model.ORMTextures[i].Path, dwStrByte, &dwByte, nullptr);
+	}
 
 	// Write Nodes
 
@@ -597,6 +618,46 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 	return S_OK;
 }
 
+HRESULT CModel::Check_ORMTexture(const _tchar* pFileName)
+{
+	_tchar		szDrive[MAX_PATH] = TEXT("");
+	_tchar		szDirectory[MAX_PATH] = TEXT("");
+	_tchar		szFileName[MAX_PATH] = TEXT("");
+	_tchar		szExt[MAX_PATH] = TEXT("");
+	_wsplitpath_s(pFileName, szDrive, MAX_PATH, szDirectory, MAX_PATH, szFileName, MAX_PATH, szExt, MAX_PATH);
+
+	fs::directory_iterator iter(fs::absolute(szDirectory));
+
+	while (iter != fs::end(iter))
+	{
+		const fs::directory_entry& entry = *iter;
+
+		// extension find
+		if (nullptr != wcsstr(entry.path().filename().c_str(), TEXT("ORM")) || 
+			nullptr != wcsstr(entry.path().filename().c_str(), TEXT("OcclusionRoughnessMetallic")))
+		{
+			_uint iFlag = 0;
+			for (_uint i = 0; i < m_iORMIndex; ++i)
+			{
+				// same file check
+				if (!lstrcmp(m_Model.ORMTextures[i].Path, entry.path().c_str()))
+					++iFlag;
+			}
+
+			if (0 == iFlag)
+			{
+				// input texture
+				lstrcpy(m_Model.ORMTextures[m_iORMIndex++].Path, entry.path().c_str());
+
+				cout << entry.path().filename() << endl;
+			}
+		}
+		iter++;
+	}
+
+	return S_OK;
+}
+
 HRESULT CModel::Convert(TYPE eType, const _char* pModelFilePath)
 {
 	CModel* pInstance = new CModel();
@@ -650,6 +711,9 @@ void CModel::Free()
 
 	// delete Materials
 	Safe_Delete_Array(m_pMaterial);
+
+	// delete ORM Textures
+	Safe_Delete_Array(m_Model.ORMTextures);
 
 	// delete Animations
 	for (_uint i = 0; i < m_Model.NumAnimations; ++i)
