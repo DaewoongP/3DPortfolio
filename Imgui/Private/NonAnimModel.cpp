@@ -26,7 +26,8 @@ HRESULT CNonAnimModel::Initialize(void* pArg)
         return E_FAIL;
 
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-    FAILED_CHECK_RETURN(Add_Component(ObjectDesc), E_FAIL);
+    if(FAILED(Add_Component(ObjectDesc)))
+        return E_FAIL;
 
 
     m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&ObjectDesc.vPosition));

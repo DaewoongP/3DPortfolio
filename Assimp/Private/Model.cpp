@@ -132,7 +132,6 @@ HRESULT CModel::Sort_Bones()
 	return S_OK;
 }
 
-
 HRESULT CModel::Convert_Meshes()
 {
 	ZEROMEM(&m_Model);
@@ -276,24 +275,34 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 
 			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
 				continue;
-
-			_char		szDrive[MAX_PATH] = "";
-			_char		szDirectory[MAX_PATH] = "";
-			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
-
-			_char		szFileName[MAX_PATH] = "";
-			_char		szExt[MAX_PATH] = "";
-			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
-
-			_char		szFullPath[MAX_PATH] = "";
-			strcpy_s(szFullPath, szDrive);
-			strcat_s(szFullPath, szDirectory);
-			strcat_s(szFullPath, szFileName);
-			strcat_s(szFullPath, szExt);
-
 			_tchar		wszFullPath[MAX_PATH] = TEXT("");
+			string str = strPath.data;
+			size_t nPos = str.find("GhostRunner");
 
-			CharToWChar(szFullPath, wszFullPath);
+			if (nPos != string::npos) 
+			{
+				_char		szFullPath[MAX_PATH] = "";
+				_fullpath(szFullPath, strPath.data, MAX_PATH);
+
+				CharToWChar(szFullPath, wszFullPath);
+			}
+			else
+			{
+				_char		szDrive[MAX_PATH] = "";
+				_char		szDirectory[MAX_PATH] = "";
+				_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
+				_char		szFileName[MAX_PATH] = "";
+				_char		szExt[MAX_PATH] = "";
+				_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
+				_char		szFullPath[MAX_PATH] = "";
+				strcpy_s(szFullPath, szDrive);
+				strcat_s(szFullPath, szDirectory);
+				strcat_s(szFullPath, szFileName);
+				strcat_s(szFullPath, szExt);
+				CharToWChar(szFullPath, wszFullPath);
+			}
+
+			
 			lstrcpy(Material.MaterialTexture[j].TexPath, wszFullPath);
 
 			Material.MaterialTexture[j].TexType = TEXTYPE(j);
@@ -443,7 +452,7 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 	// Meshes NumMeshes
 	WriteFile(hFile, &(m_Model.NumMeshes), sizeof(_uint), &dwByte, nullptr);
 	
-	for (_uint i = 0; i < m_Model.NumMeshes; i++)
+	for (_uint i = 0; i < m_Model.NumMeshes; ++i)
 	{
 		MESH Mesh = m_pMesh[i];
 

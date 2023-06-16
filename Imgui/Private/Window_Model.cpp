@@ -297,7 +297,14 @@ HRESULT CWindow_Model::MakeTag(RADIO eType)
 
 HRESULT CWindow_Model::SaveLoad()
 {
-	ImGui::ColorButton("Save", ImVec4(0.f, 1.f, 0.2f, 1.f));
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
+	ImGui::Button("Save");
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
 	return S_OK;
 }
 

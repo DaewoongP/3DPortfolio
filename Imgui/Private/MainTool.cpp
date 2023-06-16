@@ -160,15 +160,15 @@ HRESULT CMainTool::Ready_Prototype_Component_NonAnimModel()
 {
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
-	/* Prototype_Component_NonAnimModel_Train */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_Train"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Train.dat")))))
-		return E_FAIL;
-	
 	/* Prototype_Component_NonAnimModel_ForkLift */
 	PivotMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_ForkLift"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/ForkLift.dat"), PivotMatrix))))
+		return E_FAIL;
+
+	/* Prototype_Component_NonAnimModel_Concrete_Floor */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_NonAnimModel_Concrete_Floor"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Concrete_Floor.dat")))))
 		return E_FAIL;
 
 	return S_OK;
@@ -182,11 +182,6 @@ HRESULT CMainTool::Ready_Prototype_Component_AnimModel()
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Fiona"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat"), PivotMatrix))))
-		return E_FAIL;
-
-	/* Prototype_Component_AnimModel_Hand */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_AnimModel_Hand"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Hand.dat")))))
 		return E_FAIL;
 
 	/* Prototype_Component_AnimModel_Warrior */
