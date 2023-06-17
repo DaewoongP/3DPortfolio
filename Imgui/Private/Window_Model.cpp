@@ -303,10 +303,105 @@ HRESULT CWindow_Model::SaveLoad()
 	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.7f, 0.7f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
-	ImGui::Button("Save");
+	if (ImGui::Button("All Save"))
+	{
+		m_bPickMeshes = false;
+		IMFILE->OpenDialog("SaveDialog", "Choose Folder", nullptr, ".");
+	}
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
 
+	SaveButton();
+
+	ImGui::SameLine();
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 1.0f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.7f, 1.0f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.8f, 1.0f, 0.8f));
+	if (ImGui::Button("All Load"))
+	{
+		m_bPickMeshes = false;
+		IMFILE->OpenDialog("LoadDialog", "Choose File", ".test", ".");
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	LoadButton();
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::SaveButton()
+{
+	// display
+	if (IMFILE->Display("SaveDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			string filePath = IMFILE->GetCurrentPath();
+			string fileName = "\\ObjectData.test";
+			filePath += fileName;
+			_tchar wszPath[MAX_PATH] = TEXT("");
+			CharToWChar(filePath.c_str(), wszPath);
+			Write_File(wszPath);
+		}
+
+		// close
+		IMFILE->Close();
+	}
+	return S_OK;
+}
+
+HRESULT CWindow_Model::Write_File(const _tchar* pPath)
+{
+	HANDLE hFile = CreateFile(pPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
+	vector<class CGameObject*> Objects = OBJECTWINDOW->Get_Objects();
+
+	for (auto& pObject : Objects)
+	{
+		// Object Tag
+		dwStrByte = sizeof(_tchar) * (lstrlen(pObject->Get_Tag()) + 1);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		WriteFile(hFile, pObject->Get_Tag(), dwStrByte, &dwByte, nullptr);
+		CDummy* pDummy = static_cast<CDummy*>(pObject);
+		
+
+		// Object State
+		WriteFile(hFile, &(pDummy->Get_PreToolScale()), sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &(pDummy->Get_PreToolRotation()), sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &(pDummy->Get_PreToolTransform()), sizeof(_float4), &dwByte, nullptr);
+	}
+
+	CloseHandle(hFile);
+	return S_OK;
+}
+
+HRESULT CWindow_Model::LoadButton()
+{
+	// display
+	if (IMFILE->Display("LoadDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			map<string, string> strMap = IMFILE->GetSelection();
+			string filePathName = IMFILE->GetFilePathName();
+			string filePath = IMFILE->GetCurrentPath();
+
+			wstring fPath;
+			fPath.assign(filePathName.begin(), filePathName.end());
+		}
+
+		// close
+		IMFILE->Close();
+	}
 	return S_OK;
 }
 

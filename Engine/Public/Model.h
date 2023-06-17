@@ -16,6 +16,7 @@ public:
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
 	_uint Get_NumAnimations() { return m_iNumAnimations; }
 	class CAnimation* Get_Animation() { return m_Animations[m_iCurrentAnimIndex]; }
+	_float4x4 Get_BoneCombinedTransformationMatrix(_uint iIndex);
 	void Set_AnimIndex(_uint iAnimIndex) 
 	{
 		if (iAnimIndex >= m_iNumAnimations)

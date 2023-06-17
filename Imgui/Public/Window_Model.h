@@ -61,6 +61,9 @@ private:
 	HRESULT MakeTag(RADIO eType);
 
 	HRESULT SaveLoad();
+	HRESULT SaveButton();
+	HRESULT Write_File(const _tchar* pPath);
+	HRESULT LoadButton();
 
 public:
 	static CWindow_Model* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);

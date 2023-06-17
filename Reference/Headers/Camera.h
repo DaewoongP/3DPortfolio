@@ -21,6 +21,7 @@ private:
 
 public:
 	void Set_CameraDesc(CAMERADESC CameraDesc);
+	void Set_CameraWorldMatrix(_fmatrix CamWorldMatrix) { m_pTransform->Set_WorldMatrix(CamWorldMatrix); }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

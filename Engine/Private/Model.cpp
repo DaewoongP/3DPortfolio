@@ -48,6 +48,11 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
+_float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
+{
+	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
 {
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);

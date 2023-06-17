@@ -38,6 +38,8 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 	CurrentObjectListBox();
 
+	DeleteObject();
+
 	AnimationIndex();
 
 	End();
@@ -45,7 +47,8 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 HRESULT CWindow_Object::CurrentObjectListBox()
 {
-	if (ImGui::ListBox("Current Objects", &m_iCurrentListIndex, m_ObjectNames.data(), (_int)m_ObjectNames.size(), 5))
+	ImGui::SetNextItemWidth(300.f);
+	if (ImGui::ListBox("Objects", &m_iCurrentListIndex, m_ObjectNames.data(), (_int)m_ObjectNames.size(), 5))
 	{
 		m_iAnimationIndex = 0;
 
@@ -54,9 +57,7 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		
 		if (nullptr == pDummy ||
 			nullptr == pCam)
-		{
 			return E_FAIL;
-		}
 
 		m_pGameInstance->Set_LastGameObject(m_Objects[m_iCurrentListIndex]);
 		MODELWINDOW->Set_InputScale(pDummy->Get_PreToolScale());
@@ -68,6 +69,84 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		vTransform.z += 10.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
 	}
+	return S_OK;
+}
+
+HRESULT CWindow_Object::DeleteObject()
+{
+	if (ImGui::Button("Delete Select Object"))
+	{
+		_int iIndex = { 0 };
+		for (auto iter = m_Objects.begin(); iter != m_Objects.end();)
+		{
+			if (m_iCurrentListIndex == iIndex)
+			{
+				m_pGameInstance->Delete_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), (*iter)->Get_Tag());
+				Safe_Release(*iter);
+				iter = m_Objects.erase(iter);
+				break;
+			}
+			else
+			{
+				++iter;
+				++iIndex;
+			}
+		}
+		iIndex = 0;
+		for (auto iter = m_ObjectNames.begin(); iter != m_ObjectNames.end();)
+		{
+			if (m_iCurrentListIndex == iIndex)
+			{
+				Safe_Delete_Array(*iter);
+				iter = m_ObjectNames.erase(iter);
+				break;
+			}
+			else
+			{
+				++iter;
+				++iIndex;
+			}
+		}
+		if (0 < m_iCurrentListIndex)
+			--m_iCurrentListIndex;
+	}
+
+	if (!m_bClearButton)
+	{
+		if (ImGui::Button("Clear ALL Object"))
+		{
+			m_bClearButton = true;
+		}
+	}	
+	else
+	{
+		SameLine();
+		if (ImGui::Button("Clear ALL"))
+		{
+			for (auto& iter : m_Objects)
+			{
+				m_pGameInstance->Delete_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), iter->Get_Tag());
+				Safe_Release(iter);
+			}
+			m_Objects.clear();
+
+			for (auto& iter : m_ObjectNames)
+			{
+				Safe_Delete_Array(iter);
+			}
+			m_ObjectNames.clear();
+
+			m_bClearButton = false;
+		}
+		m_iCurrentListIndex = 0;
+
+		SameLine();
+		if (ImGui::Button("Nope"))
+		{
+			m_bClearButton = false;
+		}
+	}
+
 	return S_OK;
 }
 

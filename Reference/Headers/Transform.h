@@ -38,6 +38,7 @@ public:
 	void Set_State(STATE _eState, _fvector _vState);
 	void Set_Scale(const _float3& vScale);
 	void Set_Desc(TRANSFORMDESC TransformDesc) { m_TransformDesc = TransformDesc; }
+	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

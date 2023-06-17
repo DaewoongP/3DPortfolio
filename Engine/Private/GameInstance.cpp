@@ -168,6 +168,22 @@ CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	return m_pObject_Manager->Find_Layer(iLevelIndex, pLayerTag);
 }
 
+HRESULT CGameInstance::Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Delete_GameObject(iLevelIndex, pLayerTag, pGameObjectTag);
+}
+
+HRESULT CGameInstance::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	return m_pObject_Manager->Clear_Layer(iLevelIndex, pLayerTag);
+}
+
 CGameObject* CGameInstance::Get_LastGameObject()
 {
 	if (nullptr == m_pObject_Manager)

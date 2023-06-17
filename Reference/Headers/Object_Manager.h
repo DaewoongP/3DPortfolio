@@ -23,6 +23,8 @@ public:
 	
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
+	HRESULT Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
+	HRESULT Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 
 public:
 	void	Tick(_double dTimeDelta);

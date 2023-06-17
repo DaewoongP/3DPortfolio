@@ -12,10 +12,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Katana(TEXT("Layer_Katana")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
-
-
-
+	//FAILED_CHECK_RETURN(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
 
 
 

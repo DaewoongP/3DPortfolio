@@ -13,6 +13,8 @@ public:
 	HRESULT Add_GameObjects(const _tchar* pGameObjectTag, class CGameObject* pGameObject);
 	CGameObject* Find_GameObject(const _tchar* pGameObjectTag);
 	unordered_map<const _tchar*, class CGameObject*>& Get_AllGameObject() { return m_GameObjects; }
+	HRESULT Delete_GameObject(const _tchar* pGameObjectTag);
+	HRESULT Clear_Layer();
 
 public:
 	void Tick(_double dTimeDelta);

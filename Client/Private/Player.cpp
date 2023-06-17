@@ -1,6 +1,5 @@
 #include "..\Public\Player.h"
 #include "GameInstance.h"
-#include "Animation.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -24,8 +23,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	FAILED_CHECK_RETURN(Find_BoneIndices(), E_FAIL);
-
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(5.f, 0.f, 5.f, 1.f));
 	m_pModelCom->Set_AnimIndex(0);
 	return S_OK;
 }
@@ -33,8 +31,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-
 	m_pModelCom->Play_Animation(dTimeDelta);
+	FirstPersonView();
 }
 
 void CPlayer::Late_Tick(_double dTimeDelta)
@@ -73,6 +71,9 @@ HRESULT CPlayer::Add_Component()
 	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)), E_FAIL);
 
+	// Get Model's Bone Index
+	FAILED_CHECK_RETURN(Find_BoneIndices(), E_FAIL);
+
 	/* For.Com_Shader */
 	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)), E_FAIL);
@@ -89,6 +90,25 @@ HRESULT CPlayer::Add_Component()
 	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc), E_FAIL);
 
+	CCamera::CAMERADESC CameraDesc;
+	CameraDesc.vEye = _float4(-2.f, 3.f, -2.f, 1.f);
+	CameraDesc.vAt = _float4(5.f, 0.f, 5.f, 1.f);
+	CameraDesc.vUp = _float4(0.f, 1.f, 0.f, 0.f);
+
+	CameraDesc.fFovy = XMConvertToRadians(60.f);
+	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 1000.f;
+	CameraDesc.TransformDesc.dSpeedPerSec = 5.f;
+	CameraDesc.TransformDesc.dRotationPerSec = 3.f;
+
+	/* For.Com_Camera */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
+		TEXT("Com_Camera"), reinterpret_cast<CComponent**>(&m_pPlayerFirstPersonViewCameraCom), &CameraDesc)))
+		return E_FAIL;
+
+	FirstPersonView();
+	
 	return S_OK;
 }
 
@@ -114,6 +134,17 @@ HRESULT CPlayer::Find_BoneIndices()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CPlayer::FirstPersonView()
+{
+	_float4x4 HeadBoneMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrix(m_iHeadChannelIndex);
+	_float4x4 WorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+	// x, z 로테이션값만 변경해보고 안되면 그냥 포지션만 받자
+
+	_matrix	PivotMatrix = XMMatrixTranslation(-HeadBoneMatrix._41, HeadBoneMatrix._42, -HeadBoneMatrix._43);
+	
+	m_pPlayerFirstPersonViewCameraCom->Set_CameraWorldMatrix(PivotMatrix * XMLoadFloat4x4(&WorldMatrix));
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -143,6 +174,7 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+	Safe_Release(m_pPlayerFirstPersonViewCameraCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);

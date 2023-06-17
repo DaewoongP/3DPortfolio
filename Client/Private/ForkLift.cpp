@@ -27,7 +27,7 @@ HRESULT CForkLift::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;	
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(5.f, 0.f, 3.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(7.f, 0.f, 15.f, 1.f));
 
 	return S_OK;
 }

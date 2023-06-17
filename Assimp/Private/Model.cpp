@@ -264,8 +264,8 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 	m_pMaterial = new MATERIAL[m_pAIScene->mNumMaterials];
 	ZeroMemory(m_pMaterial, sizeof(MATERIAL) * m_pAIScene->mNumMaterials);
 
-	m_Model.ORMTextures = new ORMTEXTURE[20];
-	ZeroMemory(m_Model.ORMTextures, sizeof(ORMTEXTURE) * 20);
+	m_Model.ORMTextures = new ORMTEXTURE[50];
+	ZeroMemory(m_Model.ORMTextures, sizeof(ORMTEXTURE) * 50);
 
 	for (_uint i = 0; i < m_pAIScene->mNumMaterials; i++)
 	{

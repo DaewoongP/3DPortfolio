@@ -43,6 +43,31 @@ CGameObject* CLayer::Find_GameObject(const _tchar* pGameObjectTag)
 	return iter->second;
 }
 
+HRESULT CLayer::Delete_GameObject(const _tchar* pGameObjectTag)
+{
+	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
+	{
+		if (!lstrcmp(pGameObjectTag, iter->second->Get_Tag()))
+		{
+			Safe_Release(iter->second);
+			iter = m_GameObjects.erase(iter);
+		}
+		else
+			++iter;
+	}
+	return S_OK;
+}
+
+HRESULT CLayer::Clear_Layer()
+{
+	for (auto& pGameObject : m_GameObjects)
+		Safe_Release(pGameObject.second);
+
+	m_GameObjects.clear();
+
+	return S_OK;
+}
+
 CLayer* CLayer::Create()
 {
 	return new CLayer();

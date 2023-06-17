@@ -30,6 +30,13 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 void CCamera_Free::Tick(_double dTimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	if (pGameInstance->Get_DIKeyState(DIK_T, CInput_Device::KEY_PRESSING))
+	{
+		return;
+	}
+
 	__super::Tick(dTimeDelta);
 	Key_Input(dTimeDelta);
 

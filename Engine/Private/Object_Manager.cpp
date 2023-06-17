@@ -164,6 +164,28 @@ CLayer* CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	return iter->second;
 }
 
+HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	pLayer->Delete_GameObject(pGameObjectTag);
+
+	return S_OK;
+}
+
+HRESULT CObject_Manager::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	pLayer->Clear_Layer();
+
+	return S_OK;
+}
+
 void CObject_Manager::Free()
 {
 	for (_uint i = 0; i < m_iNumLevels; ++i)
