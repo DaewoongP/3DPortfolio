@@ -364,14 +364,28 @@ HRESULT CWindow_Model::Write_File(const _tchar* pPath)
 	_ulong	dwStrByte = 0;
 	vector<class CGameObject*> Objects = OBJECTWINDOW->Get_Objects();
 
+	_uint iSize = (_uint)Objects.size();
+	WriteFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
 	for (auto& pObject : Objects)
 	{
 		// Object Tag
 		dwStrByte = sizeof(_tchar) * (lstrlen(pObject->Get_Tag()) + 1);
 		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, pObject->Get_Tag(), dwStrByte, &dwByte, nullptr);
+
+		// Model Tag
 		CDummy* pDummy = static_cast<CDummy*>(pObject);
+		dwStrByte = sizeof(_tchar) * (lstrlen(pDummy->Get_ObjectDesc().pModelPrototypeTag) + 1);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		WriteFile(hFile, pDummy->Get_ObjectDesc().pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
 		
+		_bool isAnim = false;
+		if (dynamic_cast<CAnimModel*>(pDummy))
+			isAnim = true;
+		else
+			isAnim = false;
+		WriteFile(hFile, &(isAnim), sizeof(_bool), &dwByte, nullptr);
 
 		// Object State
 		WriteFile(hFile, &(pDummy->Get_PreToolScale()), sizeof(_float3), &dwByte, nullptr);
@@ -393,15 +407,97 @@ HRESULT CWindow_Model::LoadButton()
 		{
 			map<string, string> strMap = IMFILE->GetSelection();
 			string filePathName = IMFILE->GetFilePathName();
-			string filePath = IMFILE->GetCurrentPath();
-
-			wstring fPath;
-			fPath.assign(filePathName.begin(), filePathName.end());
+			_tchar wszName[MAX_PATH] = TEXT("");
+			CharToWChar(filePathName.c_str(), wszName);
+			Read_File(wszName);
 		}
 
 		// close
 		IMFILE->Close();
 	}
+	return S_OK;
+}
+
+HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
+{
+	HANDLE hFile = CreateFile(pFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
+
+	_uint iSize = 0;
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		// Object Tag
+		_tchar wszName[MAX_PATH] = TEXT("");
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		ReadFile(hFile, wszName, dwStrByte, &dwByte, nullptr);
+		if (0 == dwByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+
+		// Model Tag
+		CDummy::OBJECTDESC ObjectDesc;
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		ReadFile(hFile, ObjectDesc.pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
+		if (0 == dwByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+
+
+
+		_bool isAnim = false;
+		ReadFile(hFile, &(isAnim), sizeof(_bool), &dwByte, nullptr);
+
+		_float3 vScale;
+		_float3 vRotation;
+		// Object State
+		ReadFile(hFile, &(vScale), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(ObjectDesc.vPosition), sizeof(_float4), &dwByte, nullptr);
+
+		if (isAnim)
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
+				TEXT("Prototype_GameObject_AnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
+			{
+				MSG_BOX("Failed Add GameObject AnimModel");
+				return E_FAIL;
+			}
+		}
+		else
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
+				TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
+			{
+				MSG_BOX("Failed Add GameObject NonAnimModel");
+				return E_FAIL;
+			}
+		}
+		CGameObject* pObject = m_pGameInstance->Get_LastGameObject();
+		CDummy* pDummy = static_cast<CDummy*>(pObject);
+		CTransform* pTransform = pDummy->Get_TransformCom();
+		pTransform->Set_Scale(vScale);
+		pTransform->Rotation(vRotation);
+		pDummy->Set_PreToolScale(vScale);
+		pDummy->Set_PreToolRotation(vRotation);
+		pDummy->Set_PreToolTransform(ObjectDesc.vPosition);
+		OBJECTWINDOW->Set_Object(pObject);
+	}
+
 	return S_OK;
 }
 

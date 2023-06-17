@@ -64,6 +64,7 @@ private:
 	HRESULT SaveButton();
 	HRESULT Write_File(const _tchar* pPath);
 	HRESULT LoadButton();
+	HRESULT Read_File(const _tchar* pFileName);
 
 public:
 	static CWindow_Model* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);

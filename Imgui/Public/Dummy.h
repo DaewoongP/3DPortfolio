@@ -23,6 +23,7 @@ protected:
 	virtual ~CDummy() = default;
 
 public:
+	OBJECTDESC Get_ObjectDesc() { return m_ObjectDesc; }
 	_float3 Get_PreToolScale() { return m_vPreScale; }
 	_float3 Get_PreToolRotation() { return m_vPreRotation; }
 	_float4 Get_PreToolTransform() { return m_vPreTransform; }
@@ -41,6 +42,7 @@ protected:
 	CTransform*			m_pTransformCom = { nullptr };
 
 protected:
+	OBJECTDESC				m_ObjectDesc;
 	_float3					m_vPreScale;
 	_float3					m_vPreRotation;
 	_float4					m_vPreTransform;

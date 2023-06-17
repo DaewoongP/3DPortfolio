@@ -11,6 +11,7 @@ CDummy::CDummy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CDummy::CDummy(const CDummy& rhs)
 	: CGameObject(rhs)
+	, m_ObjectDesc(rhs.m_ObjectDesc)
 	, m_vPreScale(rhs.m_vPreScale)
 	, m_vPreRotation(rhs.m_vPreRotation)
 	, m_vPreTransform(rhs.m_vPreTransform)

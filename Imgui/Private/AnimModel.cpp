@@ -41,17 +41,16 @@ HRESULT CAnimModel::Initialize_Prototype()
 
 HRESULT CAnimModel::Initialize(void* pArg)
 {
-    OBJECTDESC ObjectDesc;
     if (nullptr != pArg)
-        ObjectDesc = *(static_cast<OBJECTDESC*>(pArg));
+        m_ObjectDesc = *(static_cast<OBJECTDESC*>(pArg));
     else
         return E_FAIL;
 
 	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Component(ObjectDesc), E_FAIL);
+	FAILED_CHECK_RETURN(Add_Component(m_ObjectDesc), E_FAIL);
     
     
-    m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&ObjectDesc.vPosition));
+    m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_ObjectDesc.vPosition));
 	return S_OK;
 }
 
