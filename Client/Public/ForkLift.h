@@ -13,8 +13,7 @@ BEGIN(Client)
 
 class CForkLift final : public CGameObject
 {
-
-protected:
+private:
 	CForkLift(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CForkLift(const CForkLift& rhs);
 	virtual ~CForkLift() = default;

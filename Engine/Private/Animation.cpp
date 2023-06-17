@@ -35,7 +35,7 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 	
 	m_iNumChannels = pAnimation->NumChannels;
 
-	for (_uint i = 0; i < m_iNumChannels; i++)
+	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
 		CChannel* pChannel = CChannel::Create(pAnimation->Channels[i], Bones);
 

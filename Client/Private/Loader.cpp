@@ -5,6 +5,8 @@
 #include "Terrain.h"
 #include "Camera_Free.h"
 #include "Player.h"
+#include "Katana.h"
+#include "ForkLift.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -114,8 +116,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 	PivotMatrix = XMMatrixScaling(50.f, 50.f, 50.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	/* For.Prototype_Component_Model_Fiona */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat"), PivotMatrix)), E_FAIL);
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Lookat_1_straight.dat"), PivotMatrix)), E_FAIL);
 
+	/* For.Prototype_Component_Model_Katana */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/Katana.dat"))), E_FAIL);
+
+	/* For.Prototype_Component_Model_ForkLift */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/ForkLift.dat"))), E_FAIL);
+
+
+	
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
 	/* Prototype_Component_Shader_VtxNorTex */
@@ -149,6 +161,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_Player */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext)), E_FAIL);
+
+	/* For.Prototype_GameObject_Katana */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Katana"),
+		CKatana::Create(m_pDevice, m_pContext)), E_FAIL);
+	
+	/* For.Prototype_GameObject_ForkLift */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
+		CForkLift::Create(m_pDevice, m_pContext)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 

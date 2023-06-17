@@ -10,8 +10,17 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Katana(TEXT("Layer_Katana")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
+
+
+
+
+
+
+
+	FAILED_CHECK_RETURN(Ready_Layer_Test(TEXT("Layer_Test")), E_FAIL);
 
 
 	return S_OK;
@@ -41,6 +50,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Katana(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Katana"), pLayerTag, TEXT("GameObject_Katana"))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -64,6 +86,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar* pLayerTag)
 
 	Safe_Release(pGameInstance);
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Test(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_ForkLift"), pLayerTag, TEXT("GameObject_ForkLift"))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

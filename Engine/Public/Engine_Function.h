@@ -58,7 +58,7 @@ namespace Engine
 			: m_pTargetTag(pTag)
 		{
 		}
-		~CTag_Finder() {		}
+		~CTag_Finder() = default;
 	public:
 		template<typename T>
 		bool operator()(const T& pair)
@@ -75,4 +75,5 @@ namespace Engine
 		const wchar_t* m_pTargetTag = nullptr;
 	};
 
+	
 }

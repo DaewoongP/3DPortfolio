@@ -46,6 +46,9 @@
     <Filter Include="02. GameObjects\ForkLift">
       <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\Katana">
+      <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -92,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\ForkLift.h">
       <Filter>02. GameObjects\ForkLift</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Katana.h">
+      <Filter>02. GameObjects\Katana</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
       <Filter>02. GameObjects\ForkLift</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Katana.cpp">
+      <Filter>02. GameObjects\Katana</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

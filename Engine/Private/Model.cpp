@@ -93,12 +93,34 @@ void CModel::Play_Animation(_double dTimeDelta)
 	}
 }
 
+HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)
+{
+	*iIndex = 0;
+	auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pValue) {
+		if (!lstrcmp(pBoneName, pValue->Get_Name()))
+			return true;
+		else
+		{
+			++(*iIndex);
+			return false;
+		}
+	});
+
+	if (m_Bones.end() == iter)
+	{
+		MSG_BOX("Failed Find BoneIndex");
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CModel::Bind_Material(CShader* pShader, const char* pConstantName, _uint iMeshIndex, Engine::TextureType MaterialType)
 {
 	if (iMeshIndex >= m_iNumMeshes ||
 		MaterialType >= TextureType_MAX ||
 		MaterialType < 0 ||
-		m_iNumMaterials <= 0 ||
+		m_iNumMaterials == 0 ||
 		nullptr == m_Materials[m_Meshes[iMeshIndex]->Get_MaterialIndex()].pMtrlTexture[MaterialType])
 		return E_FAIL;
 

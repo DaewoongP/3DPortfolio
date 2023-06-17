@@ -56,7 +56,7 @@ HRESULT CCamera_Free::Add_Component()
 	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 1000.f;
-	CameraDesc.TransformDesc.dSpeedPerSec = 50.f;
+	CameraDesc.TransformDesc.dSpeedPerSec = 5.f;
 	CameraDesc.TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Camera */

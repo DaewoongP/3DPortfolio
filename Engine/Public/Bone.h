@@ -16,6 +16,7 @@ public:
 	_float4x4 Get_OffsetMatrix() const { return m_OffsetMatrix; }
 	void Set_OffsetMatrix(const _float4x4& OffsetMatrix) { m_OffsetMatrix = OffsetMatrix; }
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
+
 public:
 	HRESULT Initialize(Engine::NODE* pNode);
 	void Invalidate_CombinedTransformationMatrix(const CModel::BONES& Bones);

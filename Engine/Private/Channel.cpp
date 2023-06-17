@@ -8,7 +8,7 @@ CChannel::CChannel()
 HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
 	lstrcpy(m_szName, Channel.Name);
-
+	
 	auto iter = find_if(Bones.begin(), Bones.end(), [&](CBone* pValue) {
 		if (!lstrcmp(m_szName, pValue->Get_Name()))
 			return true;
@@ -18,7 +18,7 @@ HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES
 			return false;
 		}
 		});
-
+	
 	m_iNumKeyFrames = max(Channel.NumScalingKeys, Channel.NumRotationKeys);
 	m_iNumKeyFrames = max(m_iNumKeyFrames, Channel.NumPositionKeys);
 

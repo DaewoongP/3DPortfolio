@@ -1,5 +1,6 @@
 #include "..\Public\Player.h"
 #include "GameInstance.h"
+#include "Animation.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -22,6 +23,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+
+	FAILED_CHECK_RETURN(Find_BoneIndices(), E_FAIL);
 
 	m_pModelCom->Set_AnimIndex(0);
 	return S_OK;
@@ -102,6 +105,14 @@ HRESULT CPlayer::SetUp_ShaderResources()
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CPlayer::Find_BoneIndices()
+{
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("head"), &m_iHeadChannelIndex)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

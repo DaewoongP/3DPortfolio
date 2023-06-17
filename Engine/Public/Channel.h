@@ -13,7 +13,7 @@ public:
 	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTimeAcc, _uint* pCurrentKeyFrameIndex);
 
-public:
+private:
 	_tchar				m_szName[MAX_STR] = TEXT("");
 	_uint				m_iNumKeyFrames = { 0 };
 	vector<KEYFRAME>	m_KeyFrames;

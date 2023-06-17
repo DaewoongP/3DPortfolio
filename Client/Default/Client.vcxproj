@@ -123,7 +123,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../Reference/Librarys/</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -169,6 +169,7 @@
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
+    <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
+    <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />

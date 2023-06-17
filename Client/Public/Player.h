@@ -32,8 +32,12 @@ private:
 	CTransform*				m_pTransformCom = { nullptr };
 
 private:
+	_uint					m_iHeadChannelIndex = { 0 };
+
+private:
 	HRESULT Add_Component();
 	HRESULT SetUp_ShaderResources();
+	HRESULT Find_BoneIndices();
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
