@@ -306,7 +306,7 @@ HRESULT CWindow_Model::SaveLoad()
 	if (ImGui::Button("All Save"))
 	{
 		m_bPickMeshes = false;
-		IMFILE->OpenDialog("SaveDialog", "Choose Folder", nullptr, ".");
+		IMFILE->OpenDialog("SaveDialog", "Choose Folder", ".MapDat", "Map.MapDat");
 	}
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
@@ -321,7 +321,7 @@ HRESULT CWindow_Model::SaveLoad()
 	if (ImGui::Button("All Load"))
 	{
 		m_bPickMeshes = false;
-		IMFILE->OpenDialog("LoadDialog", "Choose File", ".test", ".");
+		IMFILE->OpenDialog("LoadDialog", "Choose File", ".MapDat", ".");
 	}
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
@@ -339,12 +339,11 @@ HRESULT CWindow_Model::SaveButton()
 		// action if OK
 		if (IMFILE->IsOk())
 		{
-			string filePath = IMFILE->GetCurrentPath();
-			string fileName = "\\ObjectData.test";
-			filePath += fileName;
+			string filePath = IMFILE->GetFilePathName();
 			_tchar wszPath[MAX_PATH] = TEXT("");
 			CharToWChar(filePath.c_str(), wszPath);
-			Write_File(wszPath);
+			if (FAILED(Write_File(wszPath)))
+				MSG_BOX("Failed File Write");
 		}
 
 		// close
@@ -388,12 +387,17 @@ HRESULT CWindow_Model::Write_File(const _tchar* pPath)
 		WriteFile(hFile, &(isAnim), sizeof(_bool), &dwByte, nullptr);
 
 		// Object State
-		WriteFile(hFile, &(pDummy->Get_PreToolScale()), sizeof(_float3), &dwByte, nullptr);
-		WriteFile(hFile, &(pDummy->Get_PreToolRotation()), sizeof(_float3), &dwByte, nullptr);
-		WriteFile(hFile, &(pDummy->Get_PreToolTransform()), sizeof(_float4), &dwByte, nullptr);
+		_float3 vScale = pDummy->Get_PreToolScale();
+		_float3 vRotation = pDummy->Get_PreToolRotation();
+		_float4 vTransform = pDummy->Get_PreToolTransform();
+		WriteFile(hFile, &(vScale), sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &(vTransform), sizeof(_float4), &dwByte, nullptr);
 	}
 
 	CloseHandle(hFile);
+
+	MSG_BOX("File Save Success");
 	return S_OK;
 }
 
@@ -409,7 +413,8 @@ HRESULT CWindow_Model::LoadButton()
 			string filePathName = IMFILE->GetFilePathName();
 			_tchar wszName[MAX_PATH] = TEXT("");
 			CharToWChar(filePathName.c_str(), wszName);
-			Read_File(wszName);
+			if (FAILED(Read_File(wszName)))
+				MSG_BOX("Failed File Read");
 		}
 
 		// close
@@ -498,6 +503,7 @@ HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
 		OBJECTWINDOW->Set_Object(pObject);
 	}
 
+	MSG_BOX("File Load Success");
 	return S_OK;
 }
 
