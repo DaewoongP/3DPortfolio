@@ -34,16 +34,17 @@ void CCamera_Free::Tick(_double dTimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_T, CInput_Device::KEY_PRESSING))
 	{
-		return;
-	}
+		_vector vPos = m_pCameraCom->Get_TransformState(CTransform::STATE_POSITION);
+		cout << "Current Cam Pos | ";
+		cout << "X ( " << vPos.m128_f32[0] << " ) Y ( " << vPos.m128_f32[1] << " ) Z (" << vPos.m128_f32[2] << " )" << endl;
+		__super::Tick(dTimeDelta);
+		Key_Input(dTimeDelta);
 
-	__super::Tick(dTimeDelta);
-	Key_Input(dTimeDelta);
-
-	if (m_bFix)
-	{
-		Fix_Mouse();
-		Mouse_Move(dTimeDelta);
+		if (m_bFix)
+		{
+			Fix_Mouse();
+			Mouse_Move(dTimeDelta);
+		}
 	}
 }
 

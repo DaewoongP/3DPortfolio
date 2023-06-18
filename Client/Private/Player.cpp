@@ -95,7 +95,7 @@ HRESULT CPlayer::Add_Component()
 	CameraDesc.vAt = _float4(5.f, 0.f, 5.f, 1.f);
 	CameraDesc.vUp = _float4(0.f, 1.f, 0.f, 0.f);
 
-	CameraDesc.fFovy = XMConvertToRadians(60.f);
+	CameraDesc.fFovy = XMConvertToRadians(90.f);
 	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 1000.f;
@@ -130,7 +130,7 @@ HRESULT CPlayer::SetUp_ShaderResources()
 
 HRESULT CPlayer::Find_BoneIndices()
 {
-	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("head"), &m_iHeadChannelIndex)))
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("head_end"), &m_iHeadChannelIndex)))
 		return E_FAIL;
 
 	return S_OK;
@@ -140,11 +140,10 @@ void CPlayer::FirstPersonView()
 {
 	_float4x4 HeadBoneMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrix(m_iHeadChannelIndex);
 	_float4x4 WorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
-	// x, z 로테이션값만 변경해보고 안되면 그냥 포지션만 받자
 
-	_matrix	PivotMatrix = XMMatrixTranslation(-HeadBoneMatrix._41, HeadBoneMatrix._42, -HeadBoneMatrix._43);
-	
-	m_pPlayerFirstPersonViewCameraCom->Set_CameraWorldMatrix(PivotMatrix * XMLoadFloat4x4(&WorldMatrix));
+	_matrix	PivotMatrix = XMMatrixTranslation(-HeadBoneMatrix._41, HeadBoneMatrix._42, -HeadBoneMatrix._43 + 0.5f);
+	_matrix CamMatrix = PivotMatrix * XMLoadFloat4x4(&WorldMatrix);
+	m_pPlayerFirstPersonViewCameraCom->Set_CameraWorldMatrix(CamMatrix);
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

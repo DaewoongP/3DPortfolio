@@ -1,14 +1,12 @@
 #pragma once
 #include "ImWindow.h"
 #include "Terrain.h"
+#include "Dummy.h"
 
 BEGIN(Tool)
 
 class CWindow_Model : public CImWindow
 {
-public:
-	enum RADIO { NONANIM, ANIM, RADIO_END };
-
 private:
 	explicit CWindow_Model(ID3D11DeviceContext* pContext);
 	virtual ~CWindow_Model() = default;
@@ -58,13 +56,13 @@ private:
 	HRESULT MakeNonAnimModel(const _tchar* pName, _float4 vPickPos);
 	HRESULT MakeAnimModel(const _tchar* pName, _float4 vPickPos);
 
-	HRESULT MakeTag(RADIO eType);
+	HRESULT MakeTag(CDummy::DUMMYTYPE eType);
 
-	HRESULT SaveLoad();
-	HRESULT SaveButton();
-	HRESULT Write_File(const _tchar* pPath);
-	HRESULT LoadButton();
-	HRESULT Read_File(const _tchar* pFileName);
+	HRESULT MapSaveLoad();
+	HRESULT MapSaveButton();
+	HRESULT MapWrite_File(const _tchar* pPath);
+	HRESULT MapLoadButton();
+	HRESULT MapRead_File(const _tchar* pFileName);
 
 public:
 	static CWindow_Model* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);

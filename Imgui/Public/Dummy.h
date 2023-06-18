@@ -11,6 +11,9 @@ BEGIN(Tool)
 class CDummy abstract : public CGameObject
 {
 public:
+	enum DUMMYTYPE { DUMMY_NONANIM, DUMMY_ANIM, DUMMY_END };
+
+public:
 	typedef struct tagDummyObjectDesc
 	{
 		_tchar pModelPrototypeTag[MAX_STR] = TEXT("");

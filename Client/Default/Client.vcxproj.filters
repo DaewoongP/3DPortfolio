@@ -22,9 +22,6 @@
     <Filter Include="01. Levels\99. Loading">
       <UniqueIdentifier>{2f771559-dfe4-47f2-95cc-936ac85b0dc4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\99. Loading\Loader">
-      <UniqueIdentifier>{3d035121-0897-4bde-af8e-a95982bbbebf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects">
       <UniqueIdentifier>{a527309f-c54d-4a88-b17a-74827b92292c}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="02. GameObjects\Katana">
       <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\Props">
+      <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,12 +75,6 @@
     <ClInclude Include="..\Public\Level_Loading.h">
       <Filter>01. Levels\99. Loading</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Loader.h">
-      <Filter>01. Levels\99. Loading\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BackGround.h">
-      <Filter>02. GameObjects\BackGround</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Level_GamePlay.h">
       <Filter>01. Levels\01. GamePlay</Filter>
     </ClInclude>
@@ -98,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="..\public\Katana.h">
       <Filter>02. GameObjects\Katana</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01. Levels\99. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BackGround.h">
+      <Filter>02. GameObjects\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Prop.h">
+      <Filter>02. GameObjects\Props</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,9 +129,6 @@
     <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01. Levels\99. Loading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>01. Levels\99. Loading\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
       <Filter>02. GameObjects\BackGround</Filter>
     </ClCompile>
@@ -149,6 +149,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Katana.cpp">
       <Filter>02. GameObjects\Katana</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01. Levels\99. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Prop.cpp">
+      <Filter>02. GameObjects\Props</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

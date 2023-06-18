@@ -8,7 +8,6 @@ class CCamera;
 class CShader;
 class CRenderer;
 class CTransform;
-
 END
 
 BEGIN(Client)

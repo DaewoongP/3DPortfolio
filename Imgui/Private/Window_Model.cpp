@@ -75,7 +75,7 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		return E_FAIL;
 	Safe_AddRef(m_pTerrain);
 
-	MakeTag(NONANIM);
+	MakeTag(CDummy::DUMMY_NONANIM);
 	return S_OK;
 }
 
@@ -90,7 +90,7 @@ void CWindow_Model::Tick(_double dTimeDelta)
 
 	Setting_Transform();
 
-	SaveLoad();
+	MapSaveLoad();
 
 	End();
 }
@@ -101,33 +101,33 @@ HRESULT CWindow_Model::Select_ModelFiles()
 	SameLine();
 	SetNextItemWidth(200.f);
 
-	if (RadioButton("Non Anim", &m_iCurRadio, 0))
+	if (RadioButton("Non Anim", &m_iCurRadio, CDummy::DUMMY_NONANIM))
 	{
 		m_iCur_Mesh = 0;
-		MakeTag(NONANIM);
+		MakeTag(CDummy::DUMMY_NONANIM);
 	}
 		
 	SameLine();
 
-	if (RadioButton("Anim", &m_iCurRadio, 1))
+	if (RadioButton("Anim", &m_iCurRadio, CDummy::DUMMY_ANIM))
 	{
 		m_iCur_Mesh = 0;
-		MakeTag(ANIM);
+		MakeTag(CDummy::DUMMY_ANIM);
 	}
 		
 
-	if (NONANIM == m_iCurRadio)
+	if (CDummy::DUMMY_NONANIM == m_iCurRadio)
 	{
 		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 7))
 		{
-			MakeTag(NONANIM);
+			MakeTag(CDummy::DUMMY_NONANIM);
 		}
 	}
-	else if (ANIM == m_iCurRadio)
+	else if (CDummy::DUMMY_ANIM == m_iCurRadio)
 	{
 		if (ListBox("Models", &m_iCur_Mesh, m_AnimModelItems.data(), (_int)m_AnimModelItems.size(), 7))
 		{
-			MakeTag(ANIM);
+			MakeTag(CDummy::DUMMY_ANIM);
 		}
 	}
 
@@ -190,11 +190,11 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 
 		Initialize_Transforms();
 
-		if (NONANIM == m_iCurRadio)
+		if (CDummy::DUMMY_NONANIM == m_iCurRadio)
 		{
 			MakeNonAnimModel(wszName, vPickPos);
 		}
-		else if (ANIM == m_iCurRadio)
+		else if (CDummy::DUMMY_ANIM == m_iCurRadio)
 		{
 			MakeAnimModel(wszName, vPickPos);
 		}
@@ -242,10 +242,10 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 		return E_FAIL;
 	}
 
-	OBJECTWINDOW->Set_Object(m_pGameInstance->Get_LastGameObject());
+	OBJECTWINDOW->Set_Object(CDummy::DUMMY_NONANIM, m_pGameInstance->Get_LastGameObject());
 
 	m_iCur_Mesh_Index++;
-	MakeTag(NONANIM);
+	MakeTag(CDummy::DUMMY_NONANIM);
 	return S_OK;
 }
 
@@ -266,23 +266,23 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 		return E_FAIL;
 	}
 
-	OBJECTWINDOW->Set_Object(m_pGameInstance->Get_LastGameObject());
+	OBJECTWINDOW->Set_Object(CDummy::DUMMY_ANIM, m_pGameInstance->Get_LastGameObject());
 
 	m_iCur_Mesh_Index++;
-	MakeTag(ANIM);
+	MakeTag(CDummy::DUMMY_ANIM);
 	return S_OK;
 }
 
-HRESULT CWindow_Model::MakeTag(RADIO eType)
+HRESULT CWindow_Model::MakeTag(CDummy::DUMMYTYPE eType)
 {
-	if (NONANIM == eType)
+	if (CDummy::DUMMY_NONANIM == eType)
 	{
 		strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
 		if (m_NonAnimModelItems.size() <= m_iCur_Mesh)
 			return E_FAIL;
 		strcat_s(m_szObjectName, MAX_STR, m_NonAnimModelItems[m_iCur_Mesh]);
 	}
-	else if (ANIM == eType)
+	else if (CDummy::DUMMY_ANIM == eType)
 	{
 		strcpy_s(m_szObjectName, MAX_STR, "GameObject_AnimModel_");
 		if (m_AnimModelItems.size() <= m_iCur_Mesh)
@@ -297,7 +297,7 @@ HRESULT CWindow_Model::MakeTag(RADIO eType)
 	return S_OK;
 }
 
-HRESULT CWindow_Model::SaveLoad()
+HRESULT CWindow_Model::MapSaveLoad()
 {
 	ImGui::PushID(0);
 	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
@@ -311,7 +311,7 @@ HRESULT CWindow_Model::SaveLoad()
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
 
-	SaveButton();
+	MapSaveButton();
 
 	ImGui::SameLine();
 	ImGui::PushID(0);
@@ -326,12 +326,12 @@ HRESULT CWindow_Model::SaveLoad()
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
 
-	LoadButton();
+	MapLoadButton();
 
 	return S_OK;
 }
 
-HRESULT CWindow_Model::SaveButton()
+HRESULT CWindow_Model::MapSaveButton()
 {
 	// display
 	if (IMFILE->Display("SaveDialog"))
@@ -342,7 +342,7 @@ HRESULT CWindow_Model::SaveButton()
 			string filePath = IMFILE->GetFilePathName();
 			_tchar wszPath[MAX_PATH] = TEXT("");
 			CharToWChar(filePath.c_str(), wszPath);
-			if (FAILED(Write_File(wszPath)))
+			if (FAILED(MapWrite_File(wszPath)))
 				MSG_BOX("Failed File Write");
 		}
 
@@ -352,7 +352,7 @@ HRESULT CWindow_Model::SaveButton()
 	return S_OK;
 }
 
-HRESULT CWindow_Model::Write_File(const _tchar* pPath)
+HRESULT CWindow_Model::MapWrite_File(const _tchar* pPath)
 {
 	HANDLE hFile = CreateFile(pPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
@@ -361,7 +361,7 @@ HRESULT CWindow_Model::Write_File(const _tchar* pPath)
 
 	_ulong	dwByte = 0;
 	_ulong	dwStrByte = 0;
-	vector<class CGameObject*> Objects = OBJECTWINDOW->Get_Objects();
+	vector<class CGameObject*> Objects = OBJECTWINDOW->Get_Objects(CDummy::DUMMY_NONANIM);
 
 	_uint iSize = (_uint)Objects.size();
 	WriteFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
@@ -373,18 +373,11 @@ HRESULT CWindow_Model::Write_File(const _tchar* pPath)
 		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, pObject->Get_Tag(), dwStrByte, &dwByte, nullptr);
 
-		// Model Tag
+		// Model Prototype Tag
 		CDummy* pDummy = static_cast<CDummy*>(pObject);
 		dwStrByte = sizeof(_tchar) * (lstrlen(pDummy->Get_ObjectDesc().pModelPrototypeTag) + 1);
 		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		WriteFile(hFile, pDummy->Get_ObjectDesc().pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
-		
-		_bool isAnim = false;
-		if (dynamic_cast<CAnimModel*>(pDummy))
-			isAnim = true;
-		else
-			isAnim = false;
-		WriteFile(hFile, &(isAnim), sizeof(_bool), &dwByte, nullptr);
 
 		// Object State
 		_float3 vScale = pDummy->Get_PreToolScale();
@@ -401,7 +394,7 @@ HRESULT CWindow_Model::Write_File(const _tchar* pPath)
 	return S_OK;
 }
 
-HRESULT CWindow_Model::LoadButton()
+HRESULT CWindow_Model::MapLoadButton()
 {
 	// display
 	if (IMFILE->Display("LoadDialog"))
@@ -413,7 +406,7 @@ HRESULT CWindow_Model::LoadButton()
 			string filePathName = IMFILE->GetFilePathName();
 			_tchar wszName[MAX_PATH] = TEXT("");
 			CharToWChar(filePathName.c_str(), wszName);
-			if (FAILED(Read_File(wszName)))
+			if (FAILED(MapRead_File(wszName)))
 				MSG_BOX("Failed File Read");
 		}
 
@@ -423,7 +416,7 @@ HRESULT CWindow_Model::LoadButton()
 	return S_OK;
 }
 
-HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
+HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 {
 	HANDLE hFile = CreateFile(pFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
@@ -450,7 +443,7 @@ HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
 			return E_FAIL;
 		}
 
-		// Model Tag
+		// Model Prototype Tag
 		CDummy::OBJECTDESC ObjectDesc;
 		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
 		if (0 == dwByte)
@@ -462,11 +455,6 @@ HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
 			return E_FAIL;
 		}
 
-
-
-		_bool isAnim = false;
-		ReadFile(hFile, &(isAnim), sizeof(_bool), &dwByte, nullptr);
-
 		_float3 vScale;
 		_float3 vRotation;
 		// Object State
@@ -474,24 +462,13 @@ HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
 		ReadFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
 		ReadFile(hFile, &(ObjectDesc.vPosition), sizeof(_float4), &dwByte, nullptr);
 
-		if (isAnim)
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
+			TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
 		{
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
-				TEXT("Prototype_GameObject_AnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
-			{
-				MSG_BOX("Failed Add GameObject AnimModel");
-				return E_FAIL;
-			}
+			MSG_BOX("Failed Add GameObject NonAnimModel");
+			return E_FAIL;
 		}
-		else
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
-				TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
-			{
-				MSG_BOX("Failed Add GameObject NonAnimModel");
-				return E_FAIL;
-			}
-		}
+
 		CGameObject* pObject = m_pGameInstance->Get_LastGameObject();
 		CDummy* pDummy = static_cast<CDummy*>(pObject);
 		CTransform* pTransform = pDummy->Get_TransformCom();
@@ -500,7 +477,7 @@ HRESULT CWindow_Model::Read_File(const _tchar* pFileName)
 		pDummy->Set_PreToolScale(vScale);
 		pDummy->Set_PreToolRotation(vRotation);
 		pDummy->Set_PreToolTransform(ObjectDesc.vPosition);
-		OBJECTWINDOW->Set_Object(pObject);
+		OBJECTWINDOW->Set_Object(CDummy::DUMMY_NONANIM, pObject);
 	}
 
 	MSG_BOX("File Load Success");

@@ -19,9 +19,10 @@ private:
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Katana(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
-	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
-	
+	HRESULT Ready_Layer_Props(const _tchar* pLayerTag);
 
+
+	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Test(const _tchar* pLayerTag);
 
 public:
