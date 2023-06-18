@@ -27,8 +27,6 @@ public:
 private:
 	CDummy::DUMMYTYPE			m_eCurRadio = { CDummy::DUMMY_NONANIM };
 	_int						m_iCurrentListIndex = { 0 };
-	_int						m_iAnimationIndex = { 0 };
-	_double						m_dAnimationSpeed = { 1.0 };
 	_bool						m_bClearButton = { false };
 	vector<class CGameObject*>	m_Objects[CDummy::DUMMY_END];
 	vector<_char*>				m_ObjectNames[CDummy::DUMMY_END];
@@ -38,7 +36,6 @@ private:
 	HRESULT CurrentObjectListBox();
 	HRESULT DeleteObject();
 	HRESULT AnimationIndex();
-	HRESULT AnimationSpeed(class CAnimModel* pAnimModel);
 
 public:
 	static CWindow_Object* Create(void* pArg = nullptr);

@@ -9,6 +9,7 @@
 #include "Window_Light.h"
 #include "Window_Model.h"
 #include "Window_Object.h"
+#include "Window_Animation.h"
 
 BEGIN(Tool)
 
@@ -24,6 +25,7 @@ public:
         LIGHT,
         MODEL,
         OBJECT,
+        ANIMATION,
         WINDOW_END
     };
 
@@ -67,3 +69,5 @@ dynamic_cast<CWindow_Model*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWi
 #define OBJECTWINDOW  \
 dynamic_cast<CWindow_Object*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::OBJECT])
 
+#define ANIMATIONWINDOW  \
+dynamic_cast<CWindow_Animation*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::ANIMATION])

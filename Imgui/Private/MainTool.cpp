@@ -223,6 +223,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Model::Create(m_pContext));
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Object::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Animation::Create());
 
 	return S_OK;
 }

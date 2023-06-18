@@ -177,6 +177,7 @@
     <ClCompile Include="..\private\NonAnimModel.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\ToolInstance.cpp" />
+    <ClCompile Include="..\Private\Window_Animation.cpp" />
     <ClCompile Include="..\private\Window_Object.cpp" />
     <ClCompile Include="..\private\Window_Camera.cpp" />
     <ClCompile Include="..\private\Window_Light.cpp" />
@@ -205,9 +206,7 @@
     <ClInclude Include="..\public\NonAnimModel.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\ToolInstance.h" />
-    <ClInclude Include="..\Public\Tool_Defines.h" />
-    <ClInclude Include="..\Public\Tool_Function.h" />
-    <ClInclude Include="..\Public\Tool_Struct.h" />
+    <ClInclude Include="..\Public\Window_Animation.h" />
     <ClInclude Include="..\public\Window_Object.h" />
     <ClInclude Include="..\public\Window_Camera.h" />
     <ClInclude Include="..\public\Window_Light.h" />

@@ -64,8 +64,6 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 	ImGui::SetNextItemWidth(300.f);
 	if (ImGui::ListBox("Objects", &m_iCurrentListIndex, m_ObjectNames[m_eCurRadio].data(), (_int)m_ObjectNames[m_eCurRadio].size(), 5))
 	{
-		m_iAnimationIndex = 0;
-
 		CDummy* pDummy = dynamic_cast<CDummy*>(m_Objects[m_eCurRadio][m_iCurrentListIndex]);
 		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
 		
@@ -170,46 +168,13 @@ HRESULT CWindow_Object::AnimationIndex()
 	if (0 < m_Objects[m_eCurRadio].size() &&
 		(pAnimModel = dynamic_cast<CAnimModel*>(m_Objects[m_eCurRadio][m_iCurrentListIndex])))
 	{
-		_char szNum[MAX_STR] = "";
-		_itoa_s(pAnimModel->Get_NumAnimations() - 1, szNum, MAX_STR, 10);
-
-		_int iIndex = pAnimModel->Get_PreToolAnimationIndex();
-
-		SetNextItemWidth(100.f);
-		if (ImGui::InputInt("Animation Index", &iIndex))
-		{
-			if (pAnimModel->Get_NumAnimations() - 1 < (_uint)iIndex ||
-				0 > iIndex)
-			{
-				return E_FAIL;
-			}
-			else
-			{
-				m_iAnimationIndex = iIndex;
-				pAnimModel->Set_AnimIndex(m_iAnimationIndex);
-				pAnimModel->Set_PreToolAnimationIndex(m_iAnimationIndex);
-			}
-		}
-		SameLine();
-		ImGui::Text("Max : ");
-		SameLine();
-		ImGui::TextColored(ImVec4(1.f, 0.f, 1.f, 1.f), szNum);
-
-		AnimationSpeed(pAnimModel);
+		ANIMATIONWINDOW->Set_CurrentAnimModel(pAnimModel);
 	}
-
-	return S_OK;
-}
-
-HRESULT CWindow_Object::AnimationSpeed(CAnimModel* pAnimModel)
-{
-	m_dAnimationSpeed = pAnimModel->Get_PreToolAnimationSpeed();
-	if (ImGui::InputDouble("Animation Speed", &m_dAnimationSpeed))
+	else
 	{
-		pAnimModel->Set_AnimationSpeed(m_dAnimationSpeed);
-		pAnimModel->Set_PreToolAnimationSpeed(m_dAnimationSpeed);
+		ANIMATIONWINDOW->Set_CurrentAnimModel(nullptr);
 	}
-	
+
 	return S_OK;
 }
 

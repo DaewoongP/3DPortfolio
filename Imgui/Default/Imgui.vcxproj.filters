@@ -79,6 +79,9 @@
     <ClCompile Include="..\Private\Dummy.cpp">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Window_Animation.cpp">
+      <Filter>01. ImWindow\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -108,9 +111,6 @@
     <ClInclude Include="..\public\MainTool.h">
       <Filter>00. MainTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tool_Defines.h">
-      <Filter>99. Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\ImWindow.h">
       <Filter>01. ImWindow</Filter>
     </ClInclude>
@@ -125,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="..\public\ToolInstance.h">
       <Filter>96. Managers\Instance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tool_Struct.h">
-      <Filter>99. Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02. ToolObject\Terrain</Filter>
@@ -162,9 +159,6 @@
     <ClInclude Include="..\public\Window_Model.h">
       <Filter>01. ImWindow\Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tool_Function.h">
-      <Filter>99. Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Window_Object.h">
       <Filter>01. ImWindow\Object</Filter>
     </ClInclude>
@@ -177,11 +171,11 @@
     <ClInclude Include="..\Public\Dummy.h">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Window_Animation.h">
+      <Filter>01. ImWindow\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="99. Headers">
-      <UniqueIdentifier>{23da519b-8f9d-40de-b6a9-4f27ad00e006}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98. Imgui">
       <UniqueIdentifier>{6be37c11-855d-4a7c-8181-4618948d0fbd}</UniqueIdentifier>
     </Filter>
@@ -244,6 +238,9 @@
     </Filter>
     <Filter Include="01. ImWindow\Object">
       <UniqueIdentifier>{705ffff4-2ba7-41ce-9bf8-b88dc8b699b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Animation">
+      <UniqueIdentifier>{a090a46a-59f3-4e5e-ac17-8a7a1befb87e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
