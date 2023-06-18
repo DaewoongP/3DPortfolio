@@ -123,7 +123,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 HRESULT CMainTool::Ready_Prototype_Component_Shader()
 {
-	/* Prototype_Component_Shader_VtxNorTex */
+	/* Prototype_Component_Shader_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Terrain"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Terrain.hlsl"),
 			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))

@@ -13,6 +13,13 @@ BEGIN(Client)
 
 class CProp final : public CGameObject
 {
+public:
+	typedef struct tagPropDesc
+	{
+		_tchar pModelPrototypeTag[MAX_STR] = TEXT("");
+		_float4 vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+	}PROPDESC;
+
 private:
 	explicit CProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CProp(const CProp& rhs);
@@ -32,7 +39,7 @@ private:
 	CTransform* m_pTransformCom = { nullptr };
 
 public:
-	HRESULT Add_Components();
+	HRESULT Add_Components(PROPDESC PropDesc);
 	HRESULT SetUp_ShaderResources();
 
 public:

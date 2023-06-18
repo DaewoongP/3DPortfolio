@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Katana.h"
 #include "ForkLift.h"
+#include "Prop.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -101,34 +102,46 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
+#ifdef _DEBUG
 	/* For.Prototype_Component_Texture_Terrain */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2)), E_FAIL);
+#endif // _DEBUG
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
+#ifdef _DEBUG
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500)), E_FAIL);
+
+	/* For.Prototype_Component_Model_ForkLift */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/ForkLift.dat"))), E_FAIL);
+#endif // _DEBUG
 	
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	/* For.Prototype_Component_Model_Fiona */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+	/* For.Prototype_Component_Model_Player */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Idle_02.dat"), PivotMatrix)), E_FAIL);
 
 	/* For.Prototype_Component_Model_Katana */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/Katana.dat"))), E_FAIL);
 
-	/* For.Prototype_Component_Model_ForkLift */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/ForkLift.dat"))), E_FAIL);
-
-
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
+
+#ifdef _DEBUG
+	/* Prototype_Component_Shader_VtxNorTex */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Terrain.hlsl"),
+			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+		return E_FAIL;
+#endif // _DEBUG
 
 	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
@@ -149,7 +162,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
-
+		
+#ifdef _DEBUG
 	/* For.Prototype_GameObject_Camera_Free */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pDevice, m_pContext)), E_FAIL);
@@ -158,6 +172,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
 		CTerrain::Create(m_pDevice, m_pContext)), E_FAIL);
 
+	/* For.Prototype_GameObject_ForkLift */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
+		CForkLift::Create(m_pDevice, m_pContext)), E_FAIL);
+#endif // _DEBUG
+	
 	/* For.Prototype_GameObject_Player */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext)), E_FAIL);
@@ -165,14 +184,40 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_Katana */
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Katana"),
 		CKatana::Create(m_pDevice, m_pContext)), E_FAIL);
-	
-	/* For.Prototype_GameObject_ForkLift */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
-		CForkLift::Create(m_pDevice, m_pContext)), E_FAIL);
+
+	/* For.Prototype_GameObject_Prop */
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Prop"),
+		CProp::Create(m_pDevice, m_pContext)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 
 	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag)
+{
+	fs::directory_iterator iter(pPath);
+
+	while (iter != fs::end(iter))
+	{
+		const fs::directory_entry& entry = *iter;
+
+		if (!lstrcmp(entry.path().extension().c_str(), TEXT(".dat")))
+		{
+			wstring wstrProto = pPrototypeTag;
+			wstring wstrFileName = entry.path().filename().c_str();
+
+			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
+
+			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, wstrProto.c_str(),
+				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str()))))
+				return E_FAIL;
+		}
+
+		iter++;
+	}
 
 	return S_OK;
 }

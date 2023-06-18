@@ -67,13 +67,8 @@ HRESULT CTerrain::Add_Component()
         return E_FAIL;
 
     /* For.Com_Shader */
-    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
+    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-        return E_FAIL;
-
-    /* For.Com_Texture */
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
     return S_OK;
@@ -89,9 +84,6 @@ HRESULT CTerrain::SetUp_ShaderResources()
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
         return E_FAIL;
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-        return E_FAIL;
-
-    if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_Texture")))
         return E_FAIL;
 
     Safe_Release(pGameInstance);
@@ -127,7 +119,6 @@ void CTerrain::Free()
     __super::Free();
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pShaderCom);
-    Safe_Release(m_pTextureCom);
     Safe_Release(m_pBufferCom);
     Safe_Release(m_pTransformCom);
 }

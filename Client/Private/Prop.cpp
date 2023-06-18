@@ -21,15 +21,23 @@ HRESULT CProp::Initialize_Prototype()
 
 HRESULT CProp::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	PROPDESC PropDesc;
+	ZEROMEM(&PropDesc);
+
+	if (nullptr != pArg)
+		PropDesc = *(static_cast<PROPDESC*>(pArg));
+	else
+	{
+		MSG_BOX("Failed Read PropDesc");
+		return E_FAIL;
+	}
+
+	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
+	if (FAILED(Add_Components(PropDesc)))
 		return E_FAIL;
 
-	// Static Mesh Struct
 
-	if (FAILED(Add_Components()))
-		return E_FAIL;
-
-
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&PropDesc.vPosition));
 	return S_OK;
 }
 
@@ -69,7 +77,7 @@ HRESULT CProp::Render()
 	return S_OK;
 }
 
-HRESULT CProp::Add_Components()
+HRESULT CProp::Add_Components(PROPDESC PropDesc)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -85,9 +93,9 @@ HRESULT CProp::Add_Components()
 		return E_FAIL;
 
 	/* For.Com_Model */
-	/*if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, PropDesc.pModelPrototypeTag,
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),

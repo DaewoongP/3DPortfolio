@@ -2,6 +2,8 @@
 #include "Base.h"
 #include "Client_Defines.h"
 
+#include "Model.h"
+
 BEGIN(Engine)
 class CGameInstance;
 END
@@ -40,6 +42,7 @@ private:
 private:
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_GamePlay();
+	HRESULT Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag);
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVELID eNextLevel);

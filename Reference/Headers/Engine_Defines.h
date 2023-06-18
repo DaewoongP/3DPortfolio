@@ -28,6 +28,10 @@
 #include <string>
 #include <algorithm>
 
+// file system - c++ 17
+#include <filesystem>
+namespace fs = std::filesystem;
+
 using namespace std;
 using namespace DirectX;
 

@@ -68,7 +68,7 @@ HRESULT CPlayer::Render()
 HRESULT CPlayer::Add_Component()
 {
 	/* For.Com_Model */
-	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)), E_FAIL);
 
 	// Get Model's Bone Index

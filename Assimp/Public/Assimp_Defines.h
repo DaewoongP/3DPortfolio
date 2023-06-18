@@ -3,10 +3,6 @@
 #include "assimp\scene.h"
 #include "assimp\postprocess.h"
 
-// file system - c++ 17
-#include <filesystem>
-namespace fs = std::filesystem;
-
 namespace Converter
 {
 	const unsigned int g_iWinSizeX = 1280;
