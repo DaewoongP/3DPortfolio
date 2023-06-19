@@ -11,7 +11,8 @@ public:
 		_uint iNum = { 0 };
 		const _float3* pLines = { nullptr };
 	};
-protected:
+
+private:
 	explicit CVIBuffer_Line(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	explicit CVIBuffer_Line(const CVIBuffer_Line& rhs);
 	virtual ~CVIBuffer_Line() = default;

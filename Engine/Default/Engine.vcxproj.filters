@@ -106,6 +106,15 @@
     <Filter Include="01. Utility\03. Components\Model\Animation\Channel">
       <UniqueIdentifier>{3fef96f7-70e4-49c0-8b31-fa806d60ac16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\Navigation">
+      <UniqueIdentifier>{0f96e1e0-adc8-4327-b0ef-a9973b9ab793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Navigation\Cell">
+      <UniqueIdentifier>{3d171827-2042-4aae-bb73-532665c6fe61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\VIBuffer\Cell">
+      <UniqueIdentifier>{68675d26-8332-4d47-9317-b61f836f0654}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -222,6 +231,15 @@
     <ClInclude Include="..\Public\Channel.h">
       <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Navigation.h">
+      <Filter>01. Utility\03. Components\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Cell.h">
+      <Filter>01. Utility\03. Components\Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Cell.h">
+      <Filter>01. Utility\03. Components\VIBuffer\Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -319,6 +337,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Channel.cpp">
       <Filter>01. Utility\03. Components\Model\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Navigation.cpp">
+      <Filter>01. Utility\03. Components\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Cell.cpp">
+      <Filter>01. Utility\03. Components\Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Cell.cpp">
+      <Filter>01. Utility\03. Components\VIBuffer\Cell</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

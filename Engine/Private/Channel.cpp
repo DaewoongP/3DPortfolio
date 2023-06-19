@@ -22,9 +22,12 @@ HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES
 	m_iNumKeyFrames = max(Channel.NumScalingKeys, Channel.NumRotationKeys);
 	m_iNumKeyFrames = max(m_iNumKeyFrames, Channel.NumPositionKeys);
 
-	_float3			vScale;
-	_float4			vRotation;
-	_float3			vTranslation;
+	_float3	vScale;
+	ZEROMEM(&vScale);
+	_float4	vRotation;
+	ZEROMEM(&vRotation);
+	_float3	vTranslation;
+	ZEROMEM(&vTranslation);
 
 	for (_uint i = 0; i < m_iNumKeyFrames; ++i)
 	{
@@ -65,9 +68,12 @@ void CChannel::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTi
 
 	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
 
-	_float3			vScale;
-	_float4			vRotation;
-	_float3			vTranslation;
+	_float3	vScale;
+	ZEROMEM(&vScale);
+	_float4	vRotation;
+	ZEROMEM(&vRotation);
+	_float3	vTranslation;
+	ZEROMEM(&vTranslation);
 
 	if (dTimeAcc >= LastKeyFrame.dTime)
 	{

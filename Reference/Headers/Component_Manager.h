@@ -1,14 +1,15 @@
 #pragma once
-#include "Shader.h"
 #include "Model.h"
+#include "Camera.h"
+#include "Shader.h"
+#include "Texture.h"
 #include "Renderer.h"
 #include "Transform.h"
-#include "Texture.h"
-#include "Camera.h"
+#include "Navigation.h"
 #include "VIBuffer_Rect.h"
-#include "VIBuffer_Terrain.h"
 #include "VIBuffer_Line.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Terrain.h"
 
 BEGIN(Engine)
 

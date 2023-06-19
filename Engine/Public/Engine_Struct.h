@@ -23,6 +23,17 @@ namespace Engine
 		double			dTime;
 	}KEYFRAME;
 
+	typedef struct tagVertex_Position
+	{
+		XMFLOAT3		vPosition;
+	}VTXPOS;
+
+	typedef struct ENGINE_DLL tagVertex_Position_Declaration
+	{
+		static const unsigned int				iNumElements = { 1 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXPOS_DECL;
+
 	typedef struct tagVertex_Position_TexCoord
 	{
 		XMFLOAT3		vPosition;

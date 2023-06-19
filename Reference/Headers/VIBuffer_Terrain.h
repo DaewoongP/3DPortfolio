@@ -5,7 +5,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CVIBuffer_Terrain final : public CVIBuffer
 {
-protected:
+private:
 	explicit CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	explicit CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs);
 	virtual ~CVIBuffer_Terrain() = default;
