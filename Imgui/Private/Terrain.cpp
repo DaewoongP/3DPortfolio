@@ -34,7 +34,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 {
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
     FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-
+    m_Cells.clear();
     return S_OK;
 }
 
@@ -53,10 +53,23 @@ void CTerrain::Late_Tick(_double dTimeDelta)
 
 HRESULT CTerrain::Render()
 {
-    FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+    if (FAILED(SetUp_ShaderResources()))
+        return E_FAIL;
+    
+	m_pShaderCom->Begin(0);
+    m_pTerrainCom->Render();
 
-    m_pShaderCom->Begin(0);
-    FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+    m_pCellShaderCom->Begin(0);
+
+    if (0 == m_Cells.size())
+        return S_OK;
+    else
+    {
+        for (auto& pCell : m_Cells)
+        {
+            pCell->Render();
+        }
+    }
 
     return S_OK;
 }
@@ -84,6 +97,24 @@ HRESULT CTerrain::RemakeTerrain(_uint iTextureIndex)
 {
     m_iTextureIndex = iTextureIndex;
 
+    return S_OK;
+}
+
+HRESULT CTerrain::RemakeCells(vector<_float3*>& Cells)
+{
+    for (auto& pCell : m_Cells)
+        Safe_Release(pCell);
+    m_Cells.clear();
+
+    for (auto& pPoints : Cells)
+    {
+        CVIBuffer_Cell* pCell = CVIBuffer_Cell::Create(m_pDevice, m_pContext, pPoints);
+        if (nullptr == pCell)
+            return E_FAIL;
+
+        m_Cells.push_back(pCell);
+    }
+    
     return S_OK;
 }
 
@@ -157,6 +188,11 @@ HRESULT CTerrain::Add_Component()
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
         return E_FAIL;
 
+    if (FAILED(__super::Add_Component(LEVEL_TOOL,
+        TEXT("Prototype_Component_Shader_Navigation"),
+        TEXT("Com_NaviGationShader"), reinterpret_cast<CComponent**>(&m_pCellShaderCom))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -172,6 +208,16 @@ HRESULT CTerrain::SetUp_ShaderResources()
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
         return E_FAIL;
 
+    _float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
+    if (FAILED(m_pCellShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
+        return E_FAIL;
+    if (FAILED(m_pCellShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+        return E_FAIL;
+    if (FAILED(m_pCellShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
+        return E_FAIL;
+    if (FAILED(m_pCellShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+        return E_FAIL;
+    
     Safe_Release(pGameInstance);
     return S_OK;
 }
@@ -203,7 +249,11 @@ CGameObject* CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
     __super::Free();
-    Safe_Release(m_pTextureCom);
+    Safe_Release(m_pCellShaderCom);
+    for (auto& pCell : m_Cells)
+        Safe_Release(pCell);
+    m_Cells.clear();
+    Safe_Release(m_pTextureCom);;
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pTransformCom);
     Safe_Release(m_pTerrainCom);

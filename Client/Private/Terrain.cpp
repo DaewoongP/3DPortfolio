@@ -45,6 +45,10 @@ HRESULT CTerrain::Render()
     m_pShaderCom->Begin(0);
     FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
 
+#ifdef _DEBUG
+    m_pNavigationCom->Render();
+#endif
+
     return S_OK;
 }
 
@@ -70,6 +74,12 @@ HRESULT CTerrain::Add_Component()
     if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
         return E_FAIL;
+
+    /* For.Com_Navigation*/
+    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+        TEXT("Com_Navigation"), (CComponent**)&m_pNavigationCom)))
+        return E_FAIL;
+
 
     return S_OK;
 }
@@ -117,6 +127,7 @@ CGameObject* CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
     __super::Free();
+    Safe_Release(m_pNavigationCom);
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pBufferCom);

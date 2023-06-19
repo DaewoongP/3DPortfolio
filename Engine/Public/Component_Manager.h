@@ -9,6 +9,7 @@
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Line.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Cell.h"
 #include "VIBuffer_Terrain.h"
 
 BEGIN(Engine)

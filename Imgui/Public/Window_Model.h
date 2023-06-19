@@ -12,6 +12,9 @@ private:
 	virtual ~CWindow_Model() = default;
 
 public:
+	void Set_Picking(_bool bPick) { m_bPickMeshes = bPick; }
+
+public:
 	void Set_InputScale(_float3 vScale) { m_vScale = vScale; }
 	void Set_InputRotation(_float3 vRotation) { m_vRotation = vRotation; }
 	void Set_InputTransform(_float4 vTransform) { m_vTransform = vTransform; }

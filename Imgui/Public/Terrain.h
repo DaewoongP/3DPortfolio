@@ -8,6 +8,7 @@ class CTexture;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Terrain;
+class CVIBuffer_Cell;
 END
 
 BEGIN(Tool)
@@ -35,6 +36,7 @@ public:
 	HRESULT RemakeTerrain(const _tchar* pHeightMap);
 	HRESULT RemakeTerrain(_uint iSizeX, _uint iSizeY);
 	HRESULT RemakeTerrain(_uint iTextureIndex);
+	HRESULT RemakeCells(vector<_float3*>& Cells);
 	HRESULT PickingOnTerrain(_Inout_ _float4* vPickPos);
 
 private:
@@ -43,7 +45,8 @@ private:
 	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
-	
+	vector<CVIBuffer_Cell*> m_Cells = { nullptr };
+	CShader*				m_pCellShaderCom = { nullptr };
 
 private:
 	_uint					m_iTextureIndex = { 0 };

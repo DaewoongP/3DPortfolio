@@ -112,8 +112,6 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	
-
 	Ready_Prototype_Component_Shader();
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
@@ -151,6 +149,12 @@ HRESULT CMainTool::Ready_Prototype_Component_Shader()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_AnimModel"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_AnimModel.hlsl"),
 			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
+		return E_FAIL;
+
+	/* Prototype_Component_Shader_Navigation */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Navigation"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Navigation.hlsl"),
+			VTXPOS_DECL::Elements, VTXPOS_DECL::iNumElements))))
 		return E_FAIL;
 
 	return S_OK;
@@ -226,7 +230,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 450), ImVec2(500, 270));
 	
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Navigation::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Navigation::Create(m_pContext));
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 720), ImVec2(500, 300));
 
 	

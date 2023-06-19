@@ -28,8 +28,34 @@ CNavigation::CNavigation(const CNavigation& rhs)
 
 HRESULT CNavigation::Initialize_Prototype(const _tchar* pNavigationFilePath)
 {
-	// file read
+	_ulong		dwByte = { 0 };
 
+	HANDLE		hFile = CreateFile(pNavigationFilePath, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (0 == hFile)
+		return E_FAIL;
+
+	_float3		vPoints[CCell::POINT_END];
+	_uint iSize = 0;
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		ReadFile(hFile, vPoints, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
+
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, (_int)m_Cells.size());
+		if (nullptr == pCell)
+			return E_FAIL;
+
+		m_Cells.push_back(pCell);
+	}
+
+	CloseHandle(hFile);
+
+#ifdef _DEBUG
+	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Navigation.hlsl"), VTXPOS_DECL::Elements, VTXPOS_DECL::iNumElements);
+	if (nullptr == m_pShader)
+		return E_FAIL;
+#endif
 	return S_OK;
 }
 
@@ -98,4 +124,12 @@ CComponent* CNavigation::Clone(void* pArg)
 void CNavigation::Free()
 {
 	__super::Free();
+#ifdef _DEBUG
+	Safe_Release(m_pShader);
+#endif
+
+	for (auto& pCell : m_Cells)
+		Safe_Release(pCell);
+
+	m_Cells.clear();
 }
