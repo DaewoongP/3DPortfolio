@@ -130,7 +130,6 @@ HRESULT CWindow_Object::DeleteObject()
 	}	
 	else
 	{
-		SameLine();
 		if (ImGui::Button("Clear ALL"))
 		{
 			for (auto& iter : m_Objects[m_eCurRadio])

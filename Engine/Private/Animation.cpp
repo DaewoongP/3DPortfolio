@@ -23,6 +23,36 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	}
 }
 
+void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
+{
+	m_FrameSpeeds[iFrameIndex] = fSpeed;
+}
+
+_uint CAnimation::Get_MaxKeyFrameInAnimationChannels()
+{
+	_uint iNumKeyFrame = { 0 };
+	_uint iChannelIndex = { 0 };
+	for (auto& pChannel : m_Channels)
+	{
+		if (pChannel->Get_NumKeyFrames() > iNumKeyFrame)
+		{
+			iNumKeyFrame = pChannel->Get_NumKeyFrames();
+			m_iMaxNumKeyFrameChannelIndex = iChannelIndex;
+		}
+		++iChannelIndex;
+	}
+	
+	for (_uint i = 0; i < m_Channels[m_iMaxNumKeyFrameChannelIndex]->Get_NumKeyFrames(); ++i)
+		m_FrameSpeeds.push_back(1.f);
+
+	return iNumKeyFrame;
+}
+
+_uint CAnimation::Get_CurrentMaxChannelKeyFrameIndex()
+{
+	return m_ChannelCurrentKeyFrames[m_iMaxNumKeyFrameChannelIndex];
+}
+
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
 	m_bIsLoop = true;
@@ -52,7 +82,13 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 
 void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta)
 {
-	m_dTimeAcc += m_dTickPerSecond * TimeDelta;
+	if (m_bIsPaused)
+		return;
+
+	if (m_FrameSpeeds.size() > 0)
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_FrameSpeeds[m_ChannelCurrentKeyFrames[m_iMaxNumKeyFrameChannelIndex]];
+	else
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta;
 
 	if (m_dTimeAcc >= m_dDuration)
 	{
