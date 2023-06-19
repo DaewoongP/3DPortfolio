@@ -16,9 +16,6 @@ CWindow_Model::CWindow_Model(ID3D11DeviceContext* pContext)
 
 HRESULT CWindow_Model::Initialize(void* pArg)
 {
-	m_vWindowPos = ImVec2(-1270, g_iWinSizeY);
-	m_vWindowSize = ImVec2(400, 300);
-
 	Initialize_Transforms();
 
 	m_NonAnimModelPrototypes = m_pGameInstance->Find_PrototypesBySubTag(LEVEL_TOOL, TEXT("Component_NonAnimModel"));

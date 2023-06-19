@@ -12,9 +12,6 @@ void CWindow_Animation::Set_CurrentAnimModel(CAnimModel* pAnimModel)
 
 HRESULT CWindow_Animation::Initialize(void* pArg)
 {
-	m_vWindowPos = ImVec2(-470, g_iWinSizeY);
-	m_vWindowSize = ImVec2(400, 300);
-
 
 	return S_OK;
 }

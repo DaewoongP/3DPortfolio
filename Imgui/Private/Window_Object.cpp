@@ -26,8 +26,6 @@ void CWindow_Object::Set_Object(CDummy::DUMMYTYPE eType, CGameObject* pObject)
 
 HRESULT CWindow_Object::Initialize(void* pArg)
 {
-	m_vWindowPos = ImVec2(-870, g_iWinSizeY);
-	m_vWindowSize = ImVec2(400, 300);
 
 	return S_OK;
 }

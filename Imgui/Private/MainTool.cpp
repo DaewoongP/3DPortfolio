@@ -218,12 +218,26 @@ HRESULT CMainTool::Add_Windows()
 {
 	// enum == pushback
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Tool::Create());
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Camera::Create());
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 0), ImVec2(500, 200));
+	
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 200), ImVec2(500, 250));
+
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 450), ImVec2(500, 270));
+	
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Navigation::Create());
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 720), ImVec2(500, 300));
+
+	
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Model::Create(m_pContext));
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-1270, g_iWinSizeY), ImVec2(430, 300));
+
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Object::Create());
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-840, g_iWinSizeY), ImVec2(420, 300));
+
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Animation::Create());
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-420, g_iWinSizeY), ImVec2(410, 300));
 
 	return S_OK;
 }

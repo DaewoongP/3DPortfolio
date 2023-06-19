@@ -12,6 +12,12 @@ protected:
     virtual ~CImWindow() = default;
 
 public:
+    void Set_Window(ImVec2 WindowPos, ImVec2 WindowSize) {
+        m_vWindowPos = WindowPos;
+        m_vWindowSize = WindowSize;
+    }
+
+public:
     virtual HRESULT Initialize(void* pArg = nullptr) { return S_OK; };
     virtual void Tick(_double dTimeDelta);
 

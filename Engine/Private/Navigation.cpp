@@ -56,7 +56,7 @@ HRESULT CNavigation::Render()
 
 HRESULT CNavigation::SetUp_ShaderResources()
 {
-	_float4x4 WorldMatrix, ViewMatrix, ProjMatrix;
+	_float4x4 WorldMatrix;
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);

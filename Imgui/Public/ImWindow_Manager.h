@@ -4,7 +4,7 @@
 #include "Engine_Defines.h"
 #include "Base.h"
 #include "Window_Tool.h"
-#include "Window_Camera.h"
+#include "Window_Navigation.h"
 #include "Window_UI.h"
 #include "Window_Light.h"
 #include "Window_Model.h"
@@ -20,9 +20,9 @@ public:
     enum TOOLWINDOW 
     {
         TOOL,
-        CAMERA,
         UI,
         LIGHT,
+        NAVIGATION,
         MODEL,
         OBJECT,
         ANIMATION,
@@ -54,8 +54,8 @@ END
 #define TOOLWINDOW  \
 dynamic_cast<CWindow_Tool*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::TOOL])
 
-#define CAMERAWINDOW  \
-dynamic_cast<CWindow_Camera*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::CAMERA])
+#define NAVIGATIONWINDOW  \
+dynamic_cast<CWindow_Navigation*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::NAVIGATION])
 
 #define UIWINDOW  \
 dynamic_cast<CWindow_UI*>(CImWindow_Manager::GetInstance()->m_ImWindows[CImWindow_Manager::UI])

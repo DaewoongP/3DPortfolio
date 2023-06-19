@@ -6,9 +6,6 @@ CWindow_Light::CWindow_Light()
 
 HRESULT CWindow_Light::Initialize(void* pArg)
 {
-	m_vWindowPos = ImVec2(0, 600);
-	m_vWindowSize = ImVec2(500, 300);
-
 
 	return S_OK;
 }

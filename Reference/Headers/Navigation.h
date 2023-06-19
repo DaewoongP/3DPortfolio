@@ -18,7 +18,9 @@ public:
 public:
 	virtual HRESULT Render();
 
+private:
 	HRESULT SetUp_ShaderResources();
+
 #endif // _DEBUG
 	
 private:

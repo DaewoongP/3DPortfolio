@@ -6,8 +6,7 @@ CWindow_UI::CWindow_UI()
 
 HRESULT CWindow_UI::Initialize(void* pArg)
 {
-	m_vWindowPos = ImVec2(0, 200);
-	m_vWindowSize = ImVec2(500, 400);
+
 	return S_OK;
 }
 

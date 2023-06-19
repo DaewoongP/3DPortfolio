@@ -179,7 +179,7 @@
     <ClCompile Include="..\private\ToolInstance.cpp" />
     <ClCompile Include="..\Private\Window_Animation.cpp" />
     <ClCompile Include="..\private\Window_Object.cpp" />
-    <ClCompile Include="..\private\Window_Camera.cpp" />
+    <ClCompile Include="..\private\Window_Navigation.cpp" />
     <ClCompile Include="..\private\Window_Light.cpp" />
     <ClCompile Include="..\private\Window_Model.cpp" />
     <ClCompile Include="..\private\Window_Tool.cpp" />
@@ -208,7 +208,7 @@
     <ClInclude Include="..\public\ToolInstance.h" />
     <ClInclude Include="..\Public\Window_Animation.h" />
     <ClInclude Include="..\public\Window_Object.h" />
-    <ClInclude Include="..\public\Window_Camera.h" />
+    <ClInclude Include="..\public\Window_Navigation.h" />
     <ClInclude Include="..\public\Window_Light.h" />
     <ClInclude Include="..\public\Window_Model.h" />
     <ClInclude Include="..\public\Window_Tool.h" />

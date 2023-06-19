@@ -49,8 +49,8 @@
     <ClCompile Include="..\private\Camera_Free.cpp">
       <Filter>02. ToolObject\Camera_Free</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Window_Camera.cpp">
-      <Filter>01. ImWindow\Camera</Filter>
+    <ClCompile Include="..\private\Window_Navigation.cpp">
+      <Filter>01. ImWindow\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_UI.cpp">
       <Filter>01. ImWindow\UI</Filter>
@@ -132,8 +132,8 @@
     <ClInclude Include="..\public\Camera_Free.h">
       <Filter>02. ToolObject\Camera_Free</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Window_Camera.h">
-      <Filter>01. ImWindow\Camera</Filter>
+    <ClInclude Include="..\public\Window_Navigation.h">
+      <Filter>01. ImWindow\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_UI.h">
       <Filter>01. ImWindow\UI</Filter>
@@ -212,9 +212,6 @@
     <Filter Include="02. ToolObject\Camera_Free">
       <UniqueIdentifier>{c523fe43-2f3e-414a-a531-9c466dca5235}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Camera">
-      <UniqueIdentifier>{860ed18a-9be6-4a39-89da-c43ce5733179}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. ImWindow\Light">
       <UniqueIdentifier>{08763a61-47f1-4480-a559-c5cafbb514a3}</UniqueIdentifier>
     </Filter>
@@ -241,6 +238,9 @@
     </Filter>
     <Filter Include="01. ImWindow\Animation">
       <UniqueIdentifier>{a090a46a-59f3-4e5e-ac17-8a7a1befb87e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Navigation">
+      <UniqueIdentifier>{860ed18a-9be6-4a39-89da-c43ce5733179}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
