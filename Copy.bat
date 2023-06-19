@@ -8,8 +8,11 @@ xcopy				/y			.\Engine\Bin\Engine.dll				.\Tool\
 xcopy				/y			.\Engine\Bin\Engine.dll				.\Imgui\Bin\
 xcopy				/y			.\Engine\Bin\Engine.dll				.\Assimp\Bin\
 
-xcopy				/y			.\Engine\Bin\Engine_d.lib				.\Reference\Librarys\
-xcopy				/y			.\Engine\Bin\Engine_d.dll				.\Client\Bin\
-xcopy				/y			.\Engine\Bin\Engine_d.dll				.\Tool\
-xcopy				/y			.\Engine\Bin\Engine_d.dll				.\Imgui\Bin\
-xcopy				/y			.\Engine\Bin\Engine_d.dll				.\Assimp\Bin\
+xcopy				/y			.\Engine\Bin\Engine_d.lib			.\Reference\Librarys\
+xcopy				/y			.\Engine\Bin\Engine_d.dll			.\Client\Bin\
+xcopy				/y			.\Engine\Bin\Engine_d.dll			.\Tool\
+xcopy				/y			.\Engine\Bin\Engine_d.dll			.\Imgui\Bin\
+xcopy				/y			.\Engine\Bin\Engine_d.dll			.\Assimp\Bin\
+
+xcopy				/y			.\Engine\Bin\ShaderFiles\*.hlsl		.\Client\Bin\ShaderFiles\
+xcopy				/y			.\Engine\Bin\ShaderFiles\*.hlsl		.\Imgui\Bin\ShaderFiles\

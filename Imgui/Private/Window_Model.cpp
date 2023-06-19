@@ -94,7 +94,11 @@ void CWindow_Model::Tick(_double dTimeDelta)
 
 HRESULT CWindow_Model::Select_ModelFiles()
 {
-	Checkbox("Pick Meshes", &m_bPickMeshes);
+	if (Checkbox("Pick Meshes", &m_bPickMeshes))
+	{
+		if (true == m_bPickMeshes)
+			NAVIGATIONWINDOW->Set_Picking(false);
+	}
 	SameLine();
 	SetNextItemWidth(200.f);
 
@@ -169,7 +173,7 @@ HRESULT CWindow_Model::MakeObject(_double dTimeDelta)
 
 	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) && 
 		m_bPickMeshes &&
-		CGameInstance::GetInstance()->IsMouseInClient(m_pContext, g_hWnd))
+		m_pGameInstance->IsMouseInClient(m_pContext, g_hWnd))
 	{
 		_tchar wszName[MAX_STR] = TEXT("");
 		CharToWChar(m_szObjectName, wszName);
@@ -302,7 +306,10 @@ HRESULT CWindow_Model::MapSaveLoad()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
 	if (ImGui::Button("Map Save"))
 	{
+		// Pick Disable
 		m_bPickMeshes = false;
+		NAVIGATIONWINDOW->Set_Picking(false);
+
 		IMFILE->OpenDialog("SaveDialog", "Choose Folder", ".MapDat", "Map.MapDat");
 	}
 	ImGui::PopStyleColor(3);
@@ -318,6 +325,8 @@ HRESULT CWindow_Model::MapSaveLoad()
 	if (ImGui::Button("Map Load"))
 	{
 		m_bPickMeshes = false;
+		NAVIGATIONWINDOW->Set_Picking(false);
+
 		IMFILE->OpenDialog("LoadDialog", "Choose File", ".MapDat", ".");
 	}
 	ImGui::PopStyleColor(3);

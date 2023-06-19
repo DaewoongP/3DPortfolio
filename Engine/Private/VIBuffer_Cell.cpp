@@ -13,6 +13,9 @@ CVIBuffer_Cell::CVIBuffer_Cell(const CVIBuffer_Cell& rhs)
 
 HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 {
+	if (nullptr == pPoints)
+		return E_FAIL;
+
 	m_iNumVertexBuffers = { 1 };
 	m_iStride = { sizeof(VTXPOS) };
 	m_iNumVertices = { 3 };
