@@ -6,7 +6,7 @@ CWindow_Navigation::CWindow_Navigation(ID3D11DeviceContext* pContext)
 	: m_pContext(pContext)
 {
 	Safe_AddRef(m_pContext);
-	ZeroMemory(m_Cell, sizeof(_float3) * CCell::POINT_END);
+	ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
 }
 
 HRESULT CWindow_Navigation::Initialize(void* pArg)
@@ -42,6 +42,11 @@ void CWindow_Navigation::Tick(_double dTimeDelta)
 
 	Navigation_List();
 
+	Delete_Cell();
+
+	if (false == m_bCellModifyMode)
+		NavigationSaveLoad();
+
 	ImGui::End();
 }
 
@@ -70,31 +75,24 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 
 		if (0 == m_iCurrentPickIndex)
 		{
-			ZeroMemory(m_Cell, sizeof(_float3) * CCell::POINT_END);
+			ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
 		}
 
 		if (CCell::POINT_END > m_iCurrentPickIndex)
 		{
-			memcpy(&m_Cell[m_iCurrentPickIndex++], &vPickPos, sizeof _float3);
+			memcpy(&m_vCell[m_iCurrentPickIndex++], &vPickPos, sizeof _float3);
 		}
 		
 		if (CCell::POINT_END == m_iCurrentPickIndex)
 		{
-			for (_uint i = 0; i < CCell::POINT_END; ++i)
-			{
-				m_Cells.push_back({ m_CellIndex, m_Cell[i] });
-			}
-			if (0 != m_Cells.size() % 3)
-			{
-				MSG_BOX("Cell Size Error");
-				return E_FAIL;
-			}
-				
-
-			_char* pIndex = new _char[6];
-			_itoa_s(m_CellIndex++, pIndex, sizeof(6), 10);
+			_char* pIndex = New _char[6];
+			_itoa_s((_uint)m_Cells.size(), pIndex, sizeof(6), 10);
 
 			m_CellIndices.push_back(pIndex);
+
+			_float3* pPoints = New _float3[CCell::POINT_END];
+			memcpy(pPoints, m_vCell, sizeof(_float3) * CCell::POINT_END);
+			m_Cells.push_back(pPoints);
 
 			m_iCurrentPickIndex = 0;
 
@@ -108,21 +106,21 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 HRESULT CWindow_Navigation::CurrentNavigationPosition()
 {
 	SetNextItemWidth(150.f);
-	if (ImGui::InputFloat3("Cell 0", reinterpret_cast<_float*>(&m_Cell[0]), "%.2f") && m_bCellModifyMode)
+	if (ImGui::InputFloat3("Cell 0", reinterpret_cast<_float*>(&m_vCell[0]), "%.2f") && m_bCellModifyMode)
 	{
-		m_Cells[m_iCurrentListBoxIndex * 3].second = m_Cell[0];
+		m_Cells[m_iCurrentListBoxIndex][0] = m_vCell[0];
 		Remake_Cells();
 	}
 	SetNextItemWidth(150.f);
-	if (ImGui::InputFloat3("Cell 1", reinterpret_cast<_float*>(&m_Cell[1]), "%.2f") && m_bCellModifyMode)
+	if (ImGui::InputFloat3("Cell 1", reinterpret_cast<_float*>(&m_vCell[1]), "%.2f") && m_bCellModifyMode)
 	{
-		m_Cells[m_iCurrentListBoxIndex * 3 + 1].second = m_Cell[1];
+		m_Cells[m_iCurrentListBoxIndex][1] = m_vCell[1];
 		Remake_Cells();
 	}
 	SetNextItemWidth(150.f);
-	if (ImGui::InputFloat3("Cell 2", reinterpret_cast<_float*>(&m_Cell[2]), "%.2f") && m_bCellModifyMode)
+	if (ImGui::InputFloat3("Cell 2", reinterpret_cast<_float*>(&m_vCell[2]), "%.2f") && m_bCellModifyMode)
 	{
-		m_Cells[m_iCurrentListBoxIndex * 3 + 2].second = m_Cell[2];
+		m_Cells[m_iCurrentListBoxIndex][2] = m_vCell[2];
 		Remake_Cells();
 	}
 
@@ -135,58 +133,174 @@ HRESULT CWindow_Navigation::Navigation_List()
 	if (ImGui::ListBox("Cell Index", &m_iCurrentListBoxIndex, m_CellIndices.data(), (_int)m_CellIndices.size(), 4))
 	{
 		m_bCellModifyMode = true;
-		ZeroMemory(m_Cell, sizeof(_float3) * CCell::POINT_END);
-		m_Cell[0] = m_Cells[m_iCurrentListBoxIndex * 3].second;
-		m_Cell[1] = m_Cells[m_iCurrentListBoxIndex * 3 + 1].second;
-		m_Cell[2] = m_Cells[m_iCurrentListBoxIndex * 3 + 2].second;
+		ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
+		memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
 	}
 	return S_OK;
 }
 
 HRESULT CWindow_Navigation::Remake_Cells()
 {
-	vector<_float3*> Cells;
+	m_pTerrain->RemakeCells(m_Cells);
 
-	for (auto pair = m_Cells.begin(); pair != m_Cells.end();)
+	return S_OK;
+}
+
+HRESULT CWindow_Navigation::Delete_Cell()
+{
+	if (m_bCellModifyMode && ImGui::Button("Delete Cell", ImVec2(100, 20)) && m_Cells.size() > 0)
 	{
-		_float3 vPoints[CCell::POINT_END];
+		auto iter = m_Cells.begin();
+		Safe_Delete(m_Cells[m_iCurrentListBoxIndex]);
+		m_Cells.erase(iter + m_iCurrentListBoxIndex);
 
-		for (_uint i = 0; i < CCell::POINT_END; i++)
-		{
-			vPoints[i] = (*(pair + i)).second;
-		}
+		auto iterName = m_CellIndices.begin();
+		Safe_Delete_Array(m_CellIndices[m_iCurrentListBoxIndex]);
+		m_CellIndices.erase(iterName + m_iCurrentListBoxIndex);
 
-		Cells.push_back(vPoints);
-		pair += 3;
+		if (0 != m_iCurrentListBoxIndex)
+			--m_iCurrentListBoxIndex;
+
+		if (m_Cells.size() > 0)
+			memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
+
+		m_pTerrain->RemakeCells(m_Cells);
 	}
-
-	m_pTerrain->RemakeCells(Cells);
-
 	return S_OK;
 }
 
 HRESULT CWindow_Navigation::NavigationSaveLoad()
 {
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("Navigation Save"))
+	{
+		// Pick Disable
+		m_bPickNavigation = false;
+		MODELWINDOW->Set_Picking(false);
+
+		IMFILE->OpenDialog("SaveNavigationDialog", "Choose Folder", ".Navi", "Navigation.Navi");
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	NavigationSaveButton();
+
+	ImGui::SameLine();
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 1.0f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.7f, 1.0f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.8f, 1.0f, 0.8f));
+	if (ImGui::Button("Navigation Load"))
+	{
+		m_bPickNavigation = false;
+		MODELWINDOW->Set_Picking(false);
+
+		IMFILE->OpenDialog("LoadNavigationDialog", "Choose File", ".Navi", ".");
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	NavigationLoadButton();
+
 	return S_OK;
 }
 
 HRESULT CWindow_Navigation::NavigationSaveButton()
 {
+	// display
+	if (IMFILE->Display("SaveNavigationDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			string filePath = IMFILE->GetFilePathName();
+			_tchar wszPath[MAX_PATH] = TEXT("");
+			CharToWChar(filePath.c_str(), wszPath);
+			if (FAILED(NavigationWrite_File(wszPath)))
+				MSG_BOX("Failed File Write");
+		}
+
+		// close
+		IMFILE->Close();
+	}
 	return S_OK;
 }
 
 HRESULT CWindow_Navigation::NavigationWrite_File(const _tchar* pPath)
 {
+	HANDLE hFile = CreateFile(pPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	
+	_uint iSize = (_uint)m_Cells.size();
+	WriteFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+	for (auto pCell : m_Cells)
+		WriteFile(hFile, pCell, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
+
+	
+	CloseHandle(hFile);
+
+	MSG_BOX("File Save Success");
 	return S_OK;
 }
 
 HRESULT CWindow_Navigation::NavigationLoadButton()
 {
+	// display
+	if (IMFILE->Display("LoadNavigationDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			map<string, string> strMap = IMFILE->GetSelection();
+			string filePathName = IMFILE->GetFilePathName();
+			_tchar wszName[MAX_PATH] = TEXT("");
+			CharToWChar(filePathName.c_str(), wszName);
+			if (FAILED(NavigationRead_File(wszName)))
+				MSG_BOX("Failed File Read");
+		}
+
+		// close
+		IMFILE->Close();
+	}
 	return S_OK;
 }
 
 HRESULT CWindow_Navigation::NavigationRead_File(const _tchar* pFileName)
 {
+	HANDLE hFile = CreateFile(pFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	_uint iSize = 0;
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		_float3* pCell = New _float3[CCell::POINT_END];
+		ReadFile(hFile, pCell, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
+
+		_char* pIndex = New _char[6];
+		_itoa_s((_uint)m_Cells.size(), pIndex, sizeof(6), 10);
+		m_CellIndices.push_back(pIndex);
+
+		m_Cells.push_back(pCell);
+
+		m_iCurrentPickIndex = 0;
+		Remake_Cells();
+	}
+	memcpy(&m_vCell, m_Cells.front(), sizeof(_float3) * CCell::POINT_END);
+	CloseHandle(hFile);
+
+	MSG_BOX("File Load Success");
 	return S_OK;
 }
 
@@ -205,6 +319,10 @@ CWindow_Navigation* CWindow_Navigation::Create(ID3D11DeviceContext* pContext, vo
 void CWindow_Navigation::Free()
 {
 	__super::Free();
+	for (auto& pCell : m_Cells)
+		Safe_Delete(pCell);
+	m_Cells.clear();
+
 	Safe_Release(m_pTerrain);
 	Safe_Release(m_pContext);
 

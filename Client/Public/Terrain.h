@@ -7,6 +7,7 @@ class CRenderer;
 class CShader;
 class CVIBuffer_Terrain;
 class CTransform;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -34,6 +35,7 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CVIBuffer_Terrain*	m_pBufferCom = { nullptr };
 	CTransform*			m_pTransformCom = { nullptr };
+	CNavigation*		m_pNavigationCom = { nullptr };
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -34,7 +34,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 {
     FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
     FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-
+    m_Cells.clear();
     return S_OK;
 }
 
@@ -61,10 +61,14 @@ HRESULT CTerrain::Render()
 
     m_pCellShaderCom->Begin(0);
 
-    for (auto& pCell : m_Cells)
+    if (0 == m_Cells.size())
+        return S_OK;
+    else
     {
-        if (nullptr != pCell)
+        for (auto& pCell : m_Cells)
+        {
             pCell->Render();
+        }
     }
 
     return S_OK;
@@ -96,8 +100,12 @@ HRESULT CTerrain::RemakeTerrain(_uint iTextureIndex)
     return S_OK;
 }
 
-HRESULT CTerrain::RemakeCells(vector<_float3*> Cells)
+HRESULT CTerrain::RemakeCells(vector<_float3*>& Cells)
 {
+    for (auto& pCell : m_Cells)
+        Safe_Release(pCell);
+    m_Cells.clear();
+
     for (auto& pPoints : Cells)
     {
         CVIBuffer_Cell* pCell = CVIBuffer_Cell::Create(m_pDevice, m_pContext, pPoints);
@@ -244,6 +252,7 @@ void CTerrain::Free()
     Safe_Release(m_pCellShaderCom);
     for (auto& pCell : m_Cells)
         Safe_Release(pCell);
+    m_Cells.clear();
     Safe_Release(m_pTextureCom);;
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pTransformCom);

@@ -26,9 +26,8 @@ private:
 private:
 	_bool							m_bPickNavigation = { false };
 	_uint							m_iCurrentPickIndex = { 0 };
-	_float3							m_Cell[CCell::POINT_END];
-	vector<pair<_uint, _float3>>	m_Cells;
-	_uint							m_CellIndex = { 0 };
+	_float3							m_vCell[CCell::POINT_END];
+	vector<_float3*>				m_Cells;
 
 	vector<_char*>					m_CellIndices;
 
@@ -40,6 +39,7 @@ private:
 	HRESULT CurrentNavigationPosition();
 	HRESULT Navigation_List();
 	HRESULT Remake_Cells();
+	HRESULT Delete_Cell();
 
 	HRESULT NavigationSaveLoad();
 	HRESULT NavigationSaveButton();

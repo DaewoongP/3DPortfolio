@@ -36,7 +36,7 @@ public:
 	HRESULT RemakeTerrain(const _tchar* pHeightMap);
 	HRESULT RemakeTerrain(_uint iSizeX, _uint iSizeY);
 	HRESULT RemakeTerrain(_uint iTextureIndex);
-	HRESULT RemakeCells(vector<_float3*> Cells);
+	HRESULT RemakeCells(vector<_float3*>& Cells);
 	HRESULT PickingOnTerrain(_Inout_ _float4* vPickPos);
 
 private:

@@ -310,7 +310,7 @@ HRESULT CWindow_Model::MapSaveLoad()
 		m_bPickMeshes = false;
 		NAVIGATIONWINDOW->Set_Picking(false);
 
-		IMFILE->OpenDialog("SaveDialog", "Choose Folder", ".MapDat", "Map.MapDat");
+		IMFILE->OpenDialog("SaveMapDialog", "Choose Folder", ".Map", "Map.Map");
 	}
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
@@ -327,7 +327,7 @@ HRESULT CWindow_Model::MapSaveLoad()
 		m_bPickMeshes = false;
 		NAVIGATIONWINDOW->Set_Picking(false);
 
-		IMFILE->OpenDialog("LoadDialog", "Choose File", ".MapDat", ".");
+		IMFILE->OpenDialog("LoadMapDialog", "Choose File", ".Map", ".");
 	}
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
@@ -340,7 +340,7 @@ HRESULT CWindow_Model::MapSaveLoad()
 HRESULT CWindow_Model::MapSaveButton()
 {
 	// display
-	if (IMFILE->Display("SaveDialog"))
+	if (IMFILE->Display("SaveMapDialog"))
 	{
 		// action if OK
 		if (IMFILE->IsOk())
@@ -403,7 +403,7 @@ HRESULT CWindow_Model::MapWrite_File(const _tchar* pPath)
 HRESULT CWindow_Model::MapLoadButton()
 {
 	// display
-	if (IMFILE->Display("LoadDialog"))
+	if (IMFILE->Display("LoadMapDialog"))
 	{
 		// action if OK
 		if (IMFILE->IsOk())
