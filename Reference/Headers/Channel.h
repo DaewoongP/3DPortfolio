@@ -10,6 +10,9 @@ private:
 	virtual ~CChannel() = default;
 
 public:
+	_uint Get_NumKeyFrames() const { return m_iNumKeyFrames; }
+
+public:
 	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTimeAcc, _uint* pCurrentKeyFrameIndex);
 

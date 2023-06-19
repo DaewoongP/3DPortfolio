@@ -11,12 +11,16 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
+	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
+	void Set_Pause(_bool bIsPause) { m_bIsPaused = bIsPause; }
 	void Set_TickPerSecond(_double dMultiply) 
 	{
 		if (0 >= dMultiply)
 			return;
 		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
 	}
+	_uint Get_MaxKeyFrameInAnimationChannels();
+	_uint Get_CurrentMaxChannelKeyFrameIndex();
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
@@ -33,6 +37,10 @@ public:
 	_double						m_dTimeAcc = { 0.0 };
 
 	_bool						m_bIsLoop = { false };
+	_bool						m_bIsPaused = { false };
+	_uint						m_iMaxNumKeyFrameChannelIndex = { 0 };
+	_uint						m_iMaxNumKeyFrames;
+	vector<_float>				m_FrameSpeeds;
 
 public:
 	static CAnimation* Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

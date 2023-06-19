@@ -19,6 +19,27 @@ _uint CAnimModel::Get_NumAnimations()
     return m_pModelCom->Get_NumAnimations();
 }
 
+_uint CAnimModel::Get_MaxKeyFrameInAnimationChannels()
+{
+    if (nullptr == m_pModelCom)
+        return 0;
+    return m_pModelCom->Get_MaxKeyFrameInAnimationChannels();
+}
+
+_uint CAnimModel::Get_CurrentMaxChannelKeyFrameIndex()
+{
+    if (nullptr == m_pModelCom)
+        return 0;
+    return m_pModelCom->Get_CurrentMaxChannelKeyFrameIndex();
+}
+
+void CAnimModel::Set_AnimationPause(_bool bIsPaused)
+{
+    if (nullptr == m_pModelCom)
+        return;
+    return m_pModelCom->Set_AnimationPause(bIsPaused);
+}
+
 void CAnimModel::Set_AnimIndex(_uint iIndex)
 {
     if (nullptr == m_pModelCom)
@@ -31,6 +52,13 @@ void CAnimModel::Set_AnimationSpeed(_double dTime)
     if (nullptr == m_pModelCom)
         return;
     m_pModelCom->Get_Animation()->Set_TickPerSecond(dTime);
+}
+
+void CAnimModel::Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed)
+{
+    if (nullptr == m_pModelCom)
+        return;
+    m_pModelCom->Set_FrameSpeed(iFrameIndex, fSpeed);
 }
 
 HRESULT CAnimModel::Initialize_Prototype()

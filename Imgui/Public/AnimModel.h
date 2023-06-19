@@ -21,8 +21,12 @@ private:
 
 public:
 	_uint Get_NumAnimations();
+	_uint Get_MaxKeyFrameInAnimationChannels();
+	_uint Get_CurrentMaxChannelKeyFrameIndex();
+	void Set_AnimationPause(_bool bIsPaused);
 	void Set_AnimIndex(_uint iIndex);
 	void Set_AnimationSpeed(_double dTime);
+	void Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed);
 
 public:
 	virtual HRESULT Initialize_Prototype();

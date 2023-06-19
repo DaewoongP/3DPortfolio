@@ -17,7 +17,7 @@ HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES
 			++m_iBoneIndex;
 			return false;
 		}
-		});
+	});
 	
 	m_iNumKeyFrames = max(Channel.NumScalingKeys, Channel.NumRotationKeys);
 	m_iNumKeyFrames = max(m_iNumKeyFrames, Channel.NumPositionKeys);

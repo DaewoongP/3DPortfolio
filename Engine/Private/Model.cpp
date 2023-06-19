@@ -48,9 +48,29 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
+_uint CModel::Get_MaxKeyFrameInAnimationChannels()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_MaxKeyFrameInAnimationChannels();
+}
+
+_uint CModel::Get_CurrentMaxChannelKeyFrameIndex()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentMaxChannelKeyFrameIndex();
+}
+
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
+}
+
+void CModel::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_FrameSpeed(iFrameIndex, fSpeed);
+}
+
+void CModel::Set_AnimationPause(_bool bIsPaused)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_Pause(bIsPaused);
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
