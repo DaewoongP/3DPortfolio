@@ -398,4 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 *.exp
-*.exe 
+*.exe
+
+# My data
+*.dat
