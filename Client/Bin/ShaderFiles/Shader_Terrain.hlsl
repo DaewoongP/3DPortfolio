@@ -1,4 +1,5 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+texture2D g_DiffuseTexture;
 
 sampler LinearSampler = sampler_state
 {
@@ -51,8 +52,9 @@ struct PS_IN_PHONG
 float4 PS_MAIN_PHONG(PS_IN_PHONG In) : SV_TARGET0
 {
     float4 vColor = (float4) 0;
-
-    vColor = float4(1.f, 0.7f, 0.7f, 0.1f);
+    
+    vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV * 30.f);
+    
     return vColor;
 }
 

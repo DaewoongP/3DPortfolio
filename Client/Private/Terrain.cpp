@@ -43,8 +43,8 @@ HRESULT CTerrain::Render()
     FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
 
     m_pShaderCom->Begin(0);
-    FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
-
+    m_pBufferCom->Render();
+    
 #ifdef _DEBUG
     m_pNavigationCom->Render();
 #endif
@@ -59,9 +59,16 @@ HRESULT CTerrain::Add_Component()
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
         return E_FAIL;
 
+    m_pBufferCom->RemakeTerrain(TEXT("../../Resources/Terrain/Height.bmp"));
+
     /* For.Com_Renderer */
     if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+        return E_FAIL;
+
+    /* For.Com_Texture */
+    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+        TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
         return E_FAIL;
 
     /* For.Com_Transform */
@@ -96,6 +103,10 @@ HRESULT CTerrain::SetUp_ShaderResources()
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
         return E_FAIL;
 
+    if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+        return E_FAIL;
+
+
     Safe_Release(pGameInstance);
     return S_OK;
 }
@@ -127,6 +138,7 @@ CGameObject* CTerrain::Clone(void* pArg)
 void CTerrain::Free()
 {
     __super::Free();
+    Safe_Release(m_pTextureCom);
     Safe_Release(m_pNavigationCom);
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pShaderCom);

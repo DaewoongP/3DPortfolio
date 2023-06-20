@@ -211,7 +211,9 @@ HRESULT CTerrain::SetUp_ShaderResources()
     _float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
     if (FAILED(m_pCellShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
         return E_FAIL;
-    if (FAILED(m_pCellShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+    _float4x4 DebugMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+    DebugMatrix._42 += 0.001f;
+    if (FAILED(m_pCellShaderCom->Bind_Matrix("g_WorldMatrix", &DebugMatrix)))
         return E_FAIL;
     if (FAILED(m_pCellShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
         return E_FAIL;

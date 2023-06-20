@@ -340,7 +340,7 @@ CComponent* CVIBuffer_Terrain::Clone(void* pArg)
 void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
-	if (!m_bIsClone)
+	if (m_bIsClone)
 	{
 		Safe_Delete_Array(m_pPos);
 		Safe_Delete_Array(m_pIndex);

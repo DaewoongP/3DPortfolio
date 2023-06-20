@@ -55,6 +55,9 @@ HRESULT CWindow_Animation::AnimationIndex()
 		for (_uint i = 0; i < m_iAnimationMaxKeyFrames; ++i)
 			m_FrameSpeeds.push_back(1.f);
 
+		m_bPauseButton = false;
+		m_pCurrentAnimModel->Set_AnimationPause(false);
+
 		if (m_pCurrentAnimModel->Get_NumAnimations() - 1 < (_uint)iIndex ||
 			0 > iIndex)
 			return E_FAIL;

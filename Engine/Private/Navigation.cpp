@@ -51,6 +51,9 @@ HRESULT CNavigation::Initialize_Prototype(const _tchar* pNavigationFilePath)
 
 	CloseHandle(hFile);
 
+	if (FAILED(SetUp_Neighbors()))
+		return E_FAIL;
+
 #ifdef _DEBUG
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Navigation.hlsl"), VTXPOS_DECL::Elements, VTXPOS_DECL::iNumElements);
 	if (nullptr == m_pShader)
@@ -61,41 +64,123 @@ HRESULT CNavigation::Initialize_Prototype(const _tchar* pNavigationFilePath)
 
 HRESULT CNavigation::Initialize(void* pArg)
 {
+	if (nullptr != pArg)
+		memcpy(&m_NaviDesc, pArg, sizeof(NAVIGATIONDESC));
+
 	return S_OK;
+}
+
+_bool CNavigation::Is_Move(_fvector vPosition)
+{
+	_int		iNeighborIndex = -1;
+
+	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vPosition, &iNeighborIndex))
+	{
+		return true;
+	}
+	else
+	{
+		if (-1 != iNeighborIndex)
+		{
+			while (true)
+			{
+				if (-1 == iNeighborIndex)
+					return false;
+
+				if (true == m_Cells[iNeighborIndex]->Is_In(vPosition, &iNeighborIndex))
+					break;
+			}
+			m_NaviDesc.iCurrentIndex = iNeighborIndex;
+
+			return true;
+		}
+		else
+			return false;
+	}
+
+	return false;
 }
 
 #ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
-	if (FAILED(SetUp_ShaderResources()))
+	if (nullptr == m_pShader)
 		return E_FAIL;
 
-	m_pShader->Begin(0);
+	_float4x4		WorldMatrix;
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
 
-	for (auto& pCell : m_Cells)
+	CPipeLine* pPipeLine = CPipeLine::GetInstance();
+	Safe_AddRef(pPipeLine);
+
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	Safe_Release(pPipeLine);
+
+	_float4		vColor = -1 == m_NaviDesc.iCurrentIndex ? _float4(0.f, 1.f, 0.f, 1.f) : _float4(1.f, 0.f, 0.f, 1.f);
+
+	if (FAILED(m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	if (-1 == m_NaviDesc.iCurrentIndex)
 	{
-		pCell->Render();
+
+		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+			return E_FAIL;
+
+		m_pShader->Begin(0);
+
+		for (auto& pCell : m_Cells)
+			pCell->Render();
+	}
+	else
+	{
+		WorldMatrix._42 = 0.1f;
+		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+			return E_FAIL;
+
+
+		m_pShader->Begin(0);
+
+		m_Cells[m_NaviDesc.iCurrentIndex]->Render();
 	}
 
 	return S_OK;
 }
 
-HRESULT CNavigation::SetUp_ShaderResources()
+#endif // _DEBUG
+
+HRESULT CNavigation::SetUp_Neighbors()
 {
-	_float4x4 WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-	CPipeLine* pPipeLine = CPipeLine::GetInstance();
-	Safe_AddRef(pPipeLine);
-	m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix", pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW));
-	m_pShader->Bind_Matrix("g_ProjMatrix", pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
-	
-	Safe_Release(pPipeLine);
+	for (auto& pSourCell : m_Cells)
+	{
+		for (auto& pDestCell : m_Cells)
+		{
+			if (pSourCell == pDestCell)
+				continue;
+
+			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
+			{
+				pSourCell->SetUp_Neighbor(CCell::NEIGHBOR_AB, pDestCell);
+			}
+
+			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
+			{
+				pSourCell->SetUp_Neighbor(CCell::NEIGHBOR_BC, pDestCell);
+			}
+
+			if (true == pDestCell->Compare_Points(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
+			{
+				pSourCell->SetUp_Neighbor(CCell::NEIGHBOR_CA, pDestCell);
+			}
+		}
+	}
 
 	return S_OK;
 }
-
-#endif // _DEBUG
 
 CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pNavigationFilePath)
 {

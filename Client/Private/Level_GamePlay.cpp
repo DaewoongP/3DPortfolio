@@ -11,12 +11,12 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_Katana(TEXT("Layer_Katana")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("Layer_Props")), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_Layer_Katana(TEXT("Layer_Katana")), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("Layer_Props")), E_FAIL);
 	
 	
 #ifdef _DEBUG
-	FAILED_CHECK_RETURN(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Debug(TEXT("Layer_Debug")), E_FAIL);
 #endif // _DEBUG
 
@@ -144,9 +144,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Debug(const _tchar* pLayerTag)
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Terrain"), pLayerTag, TEXT("GameObject_Terrain"))))
-		return E_FAIL;
-
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_ForkLift"), pLayerTag, TEXT("GameObject_ForkLift"))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

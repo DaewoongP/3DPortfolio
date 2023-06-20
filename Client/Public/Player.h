@@ -8,6 +8,7 @@ class CCamera;
 class CShader;
 class CRenderer;
 class CTransform;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -34,17 +35,20 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
-
+	CNavigation*			m_pNavigation = { nullptr };
 
 private:
 	_uint					m_iHeadChannelIndex = { 0 };
+	_float					m_fMouseSensitivity = { 0.f };
 
 private:
 	HRESULT Add_Component();
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
 
-	void FirstPersonView();
+	void Key_Input(_double dTimeDelta);
+	void Fix_Mouse();
+	void CameraOffset();
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

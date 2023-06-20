@@ -47,6 +47,9 @@ private:
 	HRESULT NavigationLoadButton();
 	HRESULT NavigationRead_File(const _tchar* pFileName);
 
+private:
+	void CCWSort_Cell(_float3* pPoints);
+
 public:
 	static CWindow_Navigation* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;

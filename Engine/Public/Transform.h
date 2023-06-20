@@ -13,9 +13,7 @@ public:
 		tagTransformDesc() = default;
 		tagTransformDesc(_double _SpeedPerSec, _double _RoationPerSec)
 			: dSpeedPerSec{ _SpeedPerSec }
-			, dRotationPerSec{ _RoationPerSec }
-		{
-		}
+			, dRotationPerSec{ _RoationPerSec } { }
 		_double		dSpeedPerSec = { 0.0 };
 		_double		dRotationPerSec = { 0.0 };
 	}TRANSFORMDESC;
@@ -45,11 +43,11 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Move_Direction(_fvector vMoveDir, _double dTimeDelta);
-	void Go_Straight(_double dTimeDelta);
-	void Go_Backward(_double dTimeDelta);
-	void Go_Left(_double dTimeDelta);
-	void Go_Right(_double dTimeDelta);
+	void Move_Direction(_fvector vMoveDir, _double dTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Straight(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Backward(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Left(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Right(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
 	void Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
 	void LookAt(_fvector vTargetPosition);
 	void Rotation(_fvector vAxis, _float fRadian);

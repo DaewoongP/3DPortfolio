@@ -92,6 +92,9 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 
 			_float3* pPoints = New _float3[CCell::POINT_END];
 			memcpy(pPoints, m_vCell, sizeof(_float3) * CCell::POINT_END);
+
+			CCWSort_Cell(pPoints);
+
 			m_Cells.push_back(pPoints);
 
 			m_iCurrentPickIndex = 0;
@@ -106,21 +109,24 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 HRESULT CWindow_Navigation::CurrentNavigationPosition()
 {
 	SetNextItemWidth(150.f);
-	if (ImGui::InputFloat3("Cell 0", reinterpret_cast<_float*>(&m_vCell[0]), "%.2f") && m_bCellModifyMode)
+	if (ImGui::InputFloat3("Cell A", reinterpret_cast<_float*>(&m_vCell[0]), "%.2f") && m_bCellModifyMode)
 	{
 		m_Cells[m_iCurrentListBoxIndex][0] = m_vCell[0];
+		CCWSort_Cell(m_Cells[m_iCurrentListBoxIndex]);
 		Remake_Cells();
 	}
 	SetNextItemWidth(150.f);
-	if (ImGui::InputFloat3("Cell 1", reinterpret_cast<_float*>(&m_vCell[1]), "%.2f") && m_bCellModifyMode)
+	if (ImGui::InputFloat3("Cell B", reinterpret_cast<_float*>(&m_vCell[1]), "%.2f") && m_bCellModifyMode)
 	{
 		m_Cells[m_iCurrentListBoxIndex][1] = m_vCell[1];
+		CCWSort_Cell(m_Cells[m_iCurrentListBoxIndex]);
 		Remake_Cells();
 	}
 	SetNextItemWidth(150.f);
-	if (ImGui::InputFloat3("Cell 2", reinterpret_cast<_float*>(&m_vCell[2]), "%.2f") && m_bCellModifyMode)
+	if (ImGui::InputFloat3("Cell C", reinterpret_cast<_float*>(&m_vCell[2]), "%.2f") && m_bCellModifyMode)
 	{
 		m_Cells[m_iCurrentListBoxIndex][2] = m_vCell[2];
+		CCWSort_Cell(m_Cells[m_iCurrentListBoxIndex]);
 		Remake_Cells();
 	}
 
@@ -132,9 +138,29 @@ HRESULT CWindow_Navigation::Navigation_List()
 	SetNextItemWidth(150.f);
 	if (ImGui::ListBox("Cell Index", &m_iCurrentListBoxIndex, m_CellIndices.data(), (_int)m_CellIndices.size(), 4))
 	{
+		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
+
+		if (nullptr == pCam)
+			return E_FAIL;
+
 		m_bCellModifyMode = true;
 		ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
 		memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
+
+		_vector vTransform;
+		ZEROMEM(&vTransform);
+		for (_uint i = 0; i < CCell::POINT_END; ++i)
+		{
+			vTransform += XMLoadFloat3(&m_vCell[i]);
+		}
+		vTransform /= 3.f;
+		_float4 vCamPos, vPos;
+		XMStoreFloat4(&vPos, vTransform);
+		vPos.w = 1.f;
+		vCamPos = vPos;
+		vCamPos.y += 5.f;
+		vCamPos.z -= 5.f;
+		pCam->Set_CameraView(vCamPos, vPos, _float4(0.f, 1.f, 0.f, 0.f));
 	}
 	return S_OK;
 }
@@ -302,6 +328,25 @@ HRESULT CWindow_Navigation::NavigationRead_File(const _tchar* pFileName)
 
 	MSG_BOX("File Load Success");
 	return S_OK;
+}
+
+void CWindow_Navigation::CCWSort_Cell(_float3* pPoints)
+{
+	_vector vAB, vAC, vCross;
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	vAB = XMLoadFloat3(&pPoints[CCell::POINT_B]) - XMLoadFloat3(&pPoints[CCell::POINT_A]);
+	vAC = XMLoadFloat3(&pPoints[CCell::POINT_C]) - XMLoadFloat3(&pPoints[CCell::POINT_A]);
+
+	vCross = XMVector3Normalize(XMVector3Cross(vAB, vAC));
+	
+	// not CCW
+	if (0 > XMVectorGetX(XMVector3Dot(vUp, vCross)))
+	{
+		_float3 vSour = pPoints[CCell::POINT_B];
+		pPoints[CCell::POINT_B] = pPoints[CCell::POINT_C];
+		pPoints[CCell::POINT_C] = vSour;
+	}
 }
 
 CWindow_Navigation* CWindow_Navigation::Create(ID3D11DeviceContext* pContext, void* pArg)

@@ -1,4 +1,5 @@
 #include "..\Public\Transform.h"
+#include "Navigation.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -44,33 +45,49 @@ HRESULT CTransform::Initialize_Prototype()
 HRESULT CTransform::Initialize(void* pArg)
 {
 	if (nullptr != pArg)
-		memmove(&m_TransformDesc, pArg, sizeof m_TransformDesc);
+		memcpy(&m_TransformDesc, pArg, sizeof m_TransformDesc);
 
 	return S_OK;
 }
 
-void CTransform::Go_Straight(_double dTimeDelta)
+void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigation* pNavigation)
+{
+	_vector vDir = XMVector3Normalize(vMoveDir);
+	_vector vPosition = Get_State(STATE::STATE_POSITION);
+
+	vPosition += vDir * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
+	
+	_bool		bIsMove = true;
+
+	if (nullptr != pNavigation)
+		bIsMove = pNavigation->Is_Move(vPosition);
+
+	if (true == bIsMove)
+		Set_State(STATE_POSITION, vPosition);
+}
+
+void CTransform::Go_Straight(_double dTimeDelta, CNavigation* pNavigation)
 {
 	_vector vLook = Get_State(STATE::STATE_LOOK);
-	Move_Direction(vLook, dTimeDelta);
+	Move_Direction(vLook, dTimeDelta, pNavigation);
 }
 
-void CTransform::Go_Backward(_double dTimeDelta)
+void CTransform::Go_Backward(_double dTimeDelta, CNavigation* pNavigation)
 {
 	_vector vLook = Get_State(STATE::STATE_LOOK);
-	Move_Direction(-vLook, dTimeDelta);
+	Move_Direction(-vLook, dTimeDelta, pNavigation);
 }
 
-void CTransform::Go_Left(_double dTimeDelta)
+void CTransform::Go_Left(_double dTimeDelta, CNavigation* pNavigation)
 {
 	_vector vRight = Get_State(STATE::STATE_RIGHT);
-	Move_Direction(-vRight, dTimeDelta);
+	Move_Direction(-vRight, dTimeDelta, pNavigation);
 }
 
-void CTransform::Go_Right(_double dTimeDelta)
+void CTransform::Go_Right(_double dTimeDelta, CNavigation* pNavigation)
 {
 	_vector vRight = Get_State(STATE::STATE_RIGHT);
-	Move_Direction(vRight, dTimeDelta);
+	Move_Direction(vRight, dTimeDelta, pNavigation);
 }
 
 void CTransform::Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance)
@@ -139,21 +156,11 @@ void CTransform::Turn(_fvector vAxis, _double dTimeDelta)
 	_vector vUp = Get_State(STATE::STATE_UP);
 	_vector vLook = Get_State(STATE::STATE_LOOK);
 
-	_matrix RotationMatrix = XMMatrixRotationAxis(vAxis, static_cast<_float>(m_TransformDesc.dRotationPerSec * dTimeDelta));
+	_matrix RotationMatrix = XMMatrixRotationAxis(XMVector3Normalize(vAxis), static_cast<_float>(m_TransformDesc.dRotationPerSec * dTimeDelta));
 
 	Set_State(STATE::STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
 	Set_State(STATE::STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
 	Set_State(STATE::STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
-}
-
-void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)
-{
-	_vector vDir = XMVector3Normalize(vMoveDir);
-	_vector vPosition = Get_State(STATE::STATE_POSITION);
-
-	vPosition += vDir * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
-
-	Set_State(STATE::STATE_POSITION, vPosition);
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

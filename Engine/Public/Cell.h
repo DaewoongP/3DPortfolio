@@ -14,7 +14,20 @@ private:
 	virtual ~CCell() = default;
 
 public:
+	_vector Get_Point(POINT ePoint) {
+		return XMLoadFloat3(&m_vPoints[ePoint]);
+	}
+
+	void SetUp_Neighbor(NEIGHBOR eNeighbor, CCell* pNeighbor) {
+		m_iNeighborIndices[eNeighbor] = pNeighbor->m_iIndex;
+	}
+
+public:
 	HRESULT Initialize(const _float3* pPoints, _int iIndex);
+
+public:
+	_bool Is_In(_fvector vPosition, _int* pNeighborIndex);
+	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 
 #ifdef _DEBUG
 public:
@@ -22,17 +35,18 @@ public:
 #endif
 
 private:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
+	ID3D11Device*			m_pDevice = { nullptr };
+	ID3D11DeviceContext*	m_pContext = { nullptr };
 
 private:
-	_int				m_iIndex = { 0 };
-	_float3				m_vPoints[3];
-	_int				m_iNeighborIndices[3] = { -1, -1, -1 };
+	_int					m_iIndex = { 0 };
+	_float3					m_vPoints[POINT_END];
+	_float3					m_vNormals[NEIGHBOR_END];
+	_int					m_iNeighborIndices[NEIGHBOR_END] = { -1, -1, -1 };
 
 #ifdef _DEBUG
 private:
-	class CVIBuffer_Cell* m_pVIBuffer = { nullptr };
+	class CVIBuffer_Cell*	m_pVIBuffer = { nullptr };
 #endif
 
 public:
