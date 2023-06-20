@@ -20,9 +20,11 @@ private:
 	virtual ~CAnimModel() = default;
 
 public:
+	const _tchar* Get_AnimationName() const;
 	_uint Get_NumAnimations();
-	_uint Get_MaxKeyFrameInAnimationChannels();
+	_uint Get_MaxKeyFrame();
 	_uint Get_CurrentMaxChannelKeyFrameIndex();
+	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
 	void Set_AnimationPause(_bool bIsPaused);
 	void Set_AnimIndex(_uint iIndex);
 	void Set_AnimationSpeed(_double dTime);

@@ -55,7 +55,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 		if (FAILED(hr))
 		{
-			MSG_BOX("Failed Create Texture");
+			//MSG_BOX("Failed Create Texture");
 			return E_FAIL;
 		}
 
@@ -88,7 +88,7 @@ CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 
 	if (FAILED(pInstance->Initialize_Prototype(pTextureFilePath, iNumTextures)))
 	{
-		MSG_BOX("Failed to Created CTexture");
+		//MSG_BOX("Failed to Created CTexture");
 		Safe_Release(pInstance);
 	}
 	return pInstance;

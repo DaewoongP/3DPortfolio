@@ -15,10 +15,12 @@ private:
 public:
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
 	_uint Get_NumAnimations() { return m_iNumAnimations; }
-	_uint Get_MaxKeyFrameInAnimationChannels();
+	_uint Get_MaxKeyFrame();
 	_uint Get_CurrentMaxChannelKeyFrameIndex();
+	const _tchar* Get_AnimationName() const;
 	class CAnimation* Get_Animation() { return m_Animations[m_iCurrentAnimIndex]; }
 	_float4x4 Get_BoneCombinedTransformationMatrix(_uint iIndex);
+	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
 	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
 	void Set_AnimationPause(_bool bIsPaused);
 	void Set_AnimIndex(_uint iAnimIndex) 

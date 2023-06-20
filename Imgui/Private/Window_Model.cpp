@@ -115,8 +115,7 @@ HRESULT CWindow_Model::Select_ModelFiles()
 		m_iCur_Mesh = 0;
 		MakeTag(CDummy::DUMMY_ANIM);
 	}
-		
-
+	
 	if (CDummy::DUMMY_NONANIM == m_iCurRadio)
 	{
 		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 7))

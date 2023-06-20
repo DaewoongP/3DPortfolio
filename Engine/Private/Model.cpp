@@ -48,9 +48,9 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
-_uint CModel::Get_MaxKeyFrameInAnimationChannels()
+_uint CModel::Get_MaxKeyFrame()
 {
-	return m_Animations[m_iCurrentAnimIndex]->Get_MaxKeyFrameInAnimationChannels();
+	return m_Animations[m_iCurrentAnimIndex]->Get_MaxKeyFrame();
 }
 
 _uint CModel::Get_CurrentMaxChannelKeyFrameIndex()
@@ -58,9 +58,19 @@ _uint CModel::Get_CurrentMaxChannelKeyFrameIndex()
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentMaxChannelKeyFrameIndex();
 }
 
+const _tchar* CModel::Get_AnimationName() const
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_AnimationName();
+}
+
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
+}
+
+void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
+{
+	return m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
 void CModel::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
@@ -497,7 +507,14 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 		for (_uint j = 0; j < TextureType_MAX; ++j)
 		{
 			if (!lstrcmp(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("")))
-				continue;
+			{
+				if (j == TextureType_DIFFUSE)
+				{
+					lstrcpy(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("../../Resources/Terrain/NullDiffuse.png"));
+				}
+				else
+					continue;
+			}
 
 			MeshMaterial.pMtrlTexture[j] = CTexture::Create(m_pDevice, m_pContext, 
 				m_MaterialDatas[i]->MaterialTexture[j].TexPath, 1);
@@ -533,7 +550,7 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYP
 	CModel* pInstance = new CModel(pDevice, pContext);
 	if (FAILED(pInstance->Initialize_Prototype(eType, pModelFilePath, PivotMatrix)))
 	{
-		MSG_BOX("Failed to Created CModel");
+		//MSG_BOX("Failed to Created CModel");
 		Safe_Release(pInstance);
 	}
 	return pInstance;

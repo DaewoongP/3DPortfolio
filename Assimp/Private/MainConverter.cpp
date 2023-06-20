@@ -6,8 +6,8 @@ CMainConverter::CMainConverter()
 
 HRESULT CMainConverter::Convert()
 {
-	ReadFileInDirectory(CModel::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\Models\\Anim"));
-	ReadFileInDirectory(CModel::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\Models\\NonAnim"));
+	//ReadFileInDirectory(CModel::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations"));
+	ReadFileInDirectory(CModel::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Game"));
 	return S_OK;
 }
 

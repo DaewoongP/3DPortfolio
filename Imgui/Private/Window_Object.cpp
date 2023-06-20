@@ -75,8 +75,8 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		MODELWINDOW->Set_InputTransform(pDummy->Get_PreToolTransform());
 
 		_float4 vTransform = pDummy->Get_PreToolTransform();
-		vTransform.y += 10.f;
-		vTransform.z += 10.f;
+		vTransform.y += 6.f;
+		vTransform.z -= 5.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
 	}
 	return S_OK;
@@ -162,7 +162,8 @@ HRESULT CWindow_Object::DeleteObject()
 HRESULT CWindow_Object::AnimationIndex()
 {
 	CAnimModel* pAnimModel = { nullptr };
-	if (0 < m_Objects[m_eCurRadio].size() &&
+	if (CDummy::DUMMY_END > m_eCurRadio &&
+		0 < m_Objects[m_eCurRadio].size() &&
 		(pAnimModel = dynamic_cast<CAnimModel*>(m_Objects[m_eCurRadio][m_iCurrentListIndex])))
 	{
 		ANIMATIONWINDOW->Set_CurrentAnimModel(pAnimModel);

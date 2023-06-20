@@ -34,7 +34,7 @@ HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 	}
 	
 	cout << "Convert Materials..." << endl;
-	if (FAILED(Convert_Materials(pModelFilePath)))
+	if (FAILED(Convert_Materials(eType, pModelFilePath)))
 	{
 		MSG_BOX("Failed Convert_Materials");
 		return E_FAIL;
@@ -257,7 +257,7 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	return S_OK;
 }
 
-HRESULT CModel::Convert_Materials(const char* pModelFilePath)
+HRESULT CModel::Convert_Materials(TYPE eType, const char* pModelFilePath)
 {
 	m_Model.NumMaterials = m_pAIScene->mNumMaterials;
 
@@ -267,56 +267,68 @@ HRESULT CModel::Convert_Materials(const char* pModelFilePath)
 	m_Model.ORMTextures = new ORMTEXTURE[50];
 	ZeroMemory(m_Model.ORMTextures, sizeof(ORMTEXTURE) * 50);
 
-	for (_uint i = 0; i < m_pAIScene->mNumMaterials; i++)
+	for (_uint i = 0; i < m_pAIScene->mNumMaterials; ++i)
 	{
 		MATERIAL Material;
 		ZEROMEM(&Material);
 
-		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; j++)
+		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
-			aiString	strPath;
+			aiString	aistrPath;
 
-			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &strPath)))
+			if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(aiTextureType(j), 0, &aistrPath)))
 				continue;
-			_char		strExt[MAX_PATH] = "";
-			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, nullptr, 0, strExt, MAX_PATH);
+			
+			_char pPath[MAX_STR] = "";
+			strcpy_s(pPath, MAX_STR, aistrPath.data);
+			string TexturePath = pPath;
 
-			if (strcmp(strExt, ".dds") &&
-				strcmp(strExt, ".png"))
-				continue;
+			_char szDrivePath[MAX_PATH] = "";
+			_char szModelPath[MAX_PATH] = "";
+			_splitpath_s(pModelFilePath, szDrivePath, MAX_PATH, szModelPath, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			_tchar		wszFullPath[MAX_PATH] = TEXT("");
-			string str = strPath.data;
-			size_t nPos = str.find("GhostRunner");
+			string DrivePath = szDrivePath;
+			string ModelDirPath = szModelPath;
 
-			if (nPos != string::npos) 
+			size_t iOffset = string::npos;
+			while (string::npos != (iOffset = ModelDirPath.find("\\")))
 			{
-				string substr = str.substr(nPos, str.size());
-				string absPath = "C:\\Users\\msi\\Desktop\\";
-				string	szFullPath = "";
-				szFullPath = absPath + substr;
-
-				CharToWChar(szFullPath.data(), wszFullPath);
-
-				if (aiTextureType_DIFFUSE == aiTextureType(j))
-					Check_ORMTexture(wszFullPath);
-			}
-			else
-			{
-				_char		szDrive[MAX_PATH] = "";
-				_char		szDirectory[MAX_PATH] = "";
-				_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
-				_char		szFileName[MAX_PATH] = "";
-				_char		szExt[MAX_PATH] = "";
-				_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
-				_char		szFullPath[MAX_PATH] = "";
-				strcpy_s(szFullPath, szDrive);
-				strcat_s(szFullPath, szDirectory);
-				strcat_s(szFullPath, szFileName);
-				strcat_s(szFullPath, szExt);
-				CharToWChar(szFullPath, wszFullPath);
+				ModelDirPath.replace(iOffset, 1, "/");
 			}
 
+			while (string::npos != (iOffset = TexturePath.find("\\")))
+			{
+				TexturePath.replace(iOffset, 1, "/");
+			}
+			if (eType == TYPE_ANIM)
+			{
+				size_t DirSlashIndexTest = ModelDirPath.rfind("/");
+
+				ModelDirPath = ModelDirPath.substr(0, DirSlashIndexTest);
+
+				DirSlashIndexTest = ModelDirPath.rfind("/");
+
+				ModelDirPath = ModelDirPath.substr(0, DirSlashIndexTest + 1);
+			}
+
+			while (string::npos != TexturePath.find("../"))
+			{
+				size_t DirSlashIndex = ModelDirPath.rfind("/");
+
+				ModelDirPath = ModelDirPath.substr(0, DirSlashIndex);
+
+				DirSlashIndex = ModelDirPath.rfind("/");
+
+				ModelDirPath = ModelDirPath.substr(0, DirSlashIndex + 1);
+				//_splitpath_s(ModelDirPath.data(), nullptr, 0, ModelDirPath.data(), MAX_PATH, nullptr, 0, nullptr, 0);
+
+				TexturePath = TexturePath.substr(3);
+			}
+
+			string FullPath = DrivePath + ModelDirPath + TexturePath;
+			
+			_tchar wszFullPath[MAX_PATH] = TEXT("");
+			CharToWChar(FullPath.c_str(), wszFullPath);
 			
 			lstrcpy(Material.MaterialTexture[j].TexPath, wszFullPath);
 

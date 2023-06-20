@@ -11,7 +11,11 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
+	const _tchar* Get_AnimationName() const { return m_szName; }
+	_uint Get_MaxKeyFrame();
+	_uint Get_CurrentMaxChannelKeyFrameIndex();
 	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
+	void Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex);
 	void Set_Pause(_bool bIsPause) { m_bIsPaused = bIsPause; }
 	void Set_TickPerSecond(_double dMultiply) 
 	{
@@ -19,8 +23,6 @@ public:
 			return;
 		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
 	}
-	_uint Get_MaxKeyFrameInAnimationChannels();
-	_uint Get_CurrentMaxChannelKeyFrameIndex();
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

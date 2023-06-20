@@ -12,6 +12,13 @@ CAnimModel::CAnimModel(const CAnimModel& rhs)
 {
 }
 
+const _tchar* CAnimModel::Get_AnimationName() const
+{
+    if (nullptr == m_pModelCom)
+        return 0;
+    return m_pModelCom->Get_AnimationName();
+}
+
 _uint CAnimModel::Get_NumAnimations()
 {
     if (nullptr == m_pModelCom)
@@ -19,11 +26,11 @@ _uint CAnimModel::Get_NumAnimations()
     return m_pModelCom->Get_NumAnimations();
 }
 
-_uint CAnimModel::Get_MaxKeyFrameInAnimationChannels()
+_uint CAnimModel::Get_MaxKeyFrame()
 {
     if (nullptr == m_pModelCom)
         return 0;
-    return m_pModelCom->Get_MaxKeyFrameInAnimationChannels();
+    return m_pModelCom->Get_MaxKeyFrame();
 }
 
 _uint CAnimModel::Get_CurrentMaxChannelKeyFrameIndex()
@@ -31,6 +38,13 @@ _uint CAnimModel::Get_CurrentMaxChannelKeyFrameIndex()
     if (nullptr == m_pModelCom)
         return 0;
     return m_pModelCom->Get_CurrentMaxChannelKeyFrameIndex();
+}
+
+void CAnimModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
+{
+    if (nullptr == m_pModelCom)
+        return;
+    return m_pModelCom->Set_CurrentKeyFrameIndex(iKeyFrameIndex);
 }
 
 void CAnimModel::Set_AnimationPause(_bool bIsPaused)

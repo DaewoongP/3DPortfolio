@@ -12,6 +12,7 @@ void CWindow_Animation::Set_CurrentAnimModel(CAnimModel* pAnimModel)
 
 HRESULT CWindow_Animation::Initialize(void* pArg)
 {
+	m_FrameSpeedFunc = Funcs::FrameSpeedSaw;
 	return S_OK;
 }
 
@@ -23,6 +24,8 @@ void CWindow_Animation::Tick(_double dTimeDelta)
 	if (nullptr != m_pCurrentAnimModel)
 	{
 		AnimationIndex();
+
+		AnimationPause();
 
 		AnimationSpeed();
 	}
@@ -36,15 +39,22 @@ HRESULT CWindow_Animation::AnimationIndex()
 	_itoa_s(m_pCurrentAnimModel->Get_NumAnimations() - 1, szNum, MAX_STR, 10);
 
 	_int iIndex = m_pCurrentAnimModel->Get_PreToolAnimationIndex();
-	m_iAnimationKeyFrames = m_pCurrentAnimModel->Get_MaxKeyFrameInAnimationChannels();
+
+	WCharToChar(m_pCurrentAnimModel->Get_AnimationName(), m_szAnimationName);
+
+	m_iAnimationMaxKeyFrames = m_pCurrentAnimModel->Get_MaxKeyFrame();
 	m_iCurrentAnimationFrameIndex = m_pCurrentAnimModel->Get_CurrentMaxChannelKeyFrameIndex();
 
-	for (_uint i = 0; i < m_iCurrentAnimationFrameIndex; ++i)
+	for (_uint i = 0; i < m_iAnimationMaxKeyFrames; ++i)
 		m_FrameSpeeds.push_back(1.f);
 
 	SetNextItemWidth(100.f);
 	if (ImGui::InputInt("Animation Index", &iIndex))
 	{
+		m_FrameSpeeds.clear();
+		for (_uint i = 0; i < m_iAnimationMaxKeyFrames; ++i)
+			m_FrameSpeeds.push_back(1.f);
+
 		if (m_pCurrentAnimModel->Get_NumAnimations() - 1 < (_uint)iIndex ||
 			0 > iIndex)
 			return E_FAIL;
@@ -64,18 +74,8 @@ HRESULT CWindow_Animation::AnimationIndex()
 	return S_OK;
 }
 
-HRESULT CWindow_Animation::AnimationSpeed()
+HRESULT CWindow_Animation::AnimationPause()
 {
-	_float progress = (_float)m_iCurrentAnimationFrameIndex / m_iAnimationKeyFrames;
-	ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
-	ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
-	ImGui::Text("Animation Progress");
-
-
-	_char buf[MAX_STR] = "";
-	sprintf_s(buf, "%d/%d", m_iCurrentAnimationFrameIndex, m_iAnimationKeyFrames);
-	ImGui::ProgressBar(progress, ImVec2(0.f, 0.f), buf);
-	
 	if (!m_bPauseButton)
 	{
 		if (ImGui::Button("Pause"))
@@ -93,14 +93,44 @@ HRESULT CWindow_Animation::AnimationSpeed()
 		}
 	}
 
-	m_dAnimationSpeed = m_pCurrentAnimModel->Get_PreToolAnimationSpeed();
-	if (ImGui::InputDouble("Animation Speed", &m_dAnimationSpeed))
+	SameLine();
+	
+	ImGui::Text(m_szAnimationName);
+
+	return S_OK;
+}
+
+HRESULT CWindow_Animation::AnimationSpeed()
+{
+	_float progress = (_float)m_iCurrentAnimationFrameIndex / (m_iAnimationMaxKeyFrames - 1);
+	ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
+	ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
+	ImGui::Text("Animation Progress");
+
+	_char buf[MAX_STR] = "";
+	sprintf_s(buf, "%d/%d", m_iCurrentAnimationFrameIndex, (m_iAnimationMaxKeyFrames - 1));
+	ImGui::ProgressBar(progress, ImVec2(0.f, 0.f), buf);
+
+	if (m_bPauseButton)
 	{
-		m_pCurrentAnimModel->Set_AnimationSpeed(m_dAnimationSpeed);
-		m_pCurrentAnimModel->Set_PreToolAnimationSpeed(m_dAnimationSpeed);
+		if (ImGui::InputInt("Frame Index", (_int*)&m_iCurrentAnimationFrameIndex))
+		{
+			if (0 > m_iCurrentAnimationFrameIndex)
+				m_iCurrentAnimationFrameIndex = 0;
+			else if (m_iAnimationMaxKeyFrames - 1 <= m_iCurrentAnimationFrameIndex)
+				m_iCurrentAnimationFrameIndex = m_iAnimationMaxKeyFrames - 1;
+			m_pCurrentAnimModel->Set_CurrentKeyFrameIndex(m_iCurrentAnimationFrameIndex);
+		}
+		if (ImGui::InputFloat("Frame Speed", &m_FrameSpeeds[m_iCurrentAnimationFrameIndex], 1.f, 0.f, "%.2f"))
+		{
+			if (0 > m_FrameSpeeds[m_iCurrentAnimationFrameIndex])
+				m_FrameSpeeds[m_iCurrentAnimationFrameIndex] = 0.1f;
+			m_pCurrentAnimModel->Set_AnimationFrameSpeed(m_iCurrentAnimationFrameIndex, m_FrameSpeeds[m_iCurrentAnimationFrameIndex]);
+		}
 	}
-	float (*func)(void*, int) = Funcs::Saw;
-	ImGui::PlotHistogram("Animation Speeds", func, m_FrameSpeeds.data(), m_iAnimationKeyFrames + 1, 0, nullptr, 0.f, 30.f, ImVec2(0, 100));
+
+
+	ImGui::PlotHistogram("Animation Speeds", m_FrameSpeedFunc, &m_FrameSpeeds, m_iAnimationMaxKeyFrames, 0, nullptr, 0.f, 10.f, ImVec2(0, 100));
 
 	return S_OK;
 }

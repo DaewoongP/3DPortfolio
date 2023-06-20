@@ -14,6 +14,10 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_dTickPerSecond(rhs.m_dTickPerSecond)
 	, m_dTimeAcc(rhs.m_dTimeAcc)
 	, m_bIsLoop(rhs.m_bIsLoop)
+	, m_bIsPaused(rhs.m_bIsPaused)
+	, m_iMaxNumKeyFrameChannelIndex(rhs.m_iMaxNumKeyFrameChannelIndex)
+	, m_iMaxNumKeyFrames(rhs.m_iMaxNumKeyFrames)
+	, m_FrameSpeeds(rhs.m_FrameSpeeds)
 {
 	lstrcpy(m_szName, rhs.m_szName);
 
@@ -23,34 +27,36 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	}
 }
 
-void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
+_uint CAnimation::Get_MaxKeyFrame()
 {
-	m_FrameSpeeds[iFrameIndex] = fSpeed;
-}
-
-_uint CAnimation::Get_MaxKeyFrameInAnimationChannels()
-{
-	_uint iNumKeyFrame = { 0 };
-	_uint iChannelIndex = { 0 };
-	for (auto& pChannel : m_Channels)
-	{
-		if (pChannel->Get_NumKeyFrames() > iNumKeyFrame)
-		{
-			iNumKeyFrame = pChannel->Get_NumKeyFrames();
-			m_iMaxNumKeyFrameChannelIndex = iChannelIndex;
-		}
-		++iChannelIndex;
-	}
-	
-	for (_uint i = 0; i < m_Channels[m_iMaxNumKeyFrameChannelIndex]->Get_NumKeyFrames(); ++i)
-		m_FrameSpeeds.push_back(1.f);
-
-	return iNumKeyFrame;
+	return m_iMaxNumKeyFrames;
 }
 
 _uint CAnimation::Get_CurrentMaxChannelKeyFrameIndex()
 {
 	return m_ChannelCurrentKeyFrames[m_iMaxNumKeyFrameChannelIndex];
+}
+
+void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
+{
+	m_FrameSpeeds[iFrameIndex] = fSpeed;
+}
+
+void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex)
+{
+	_uint iChannelIndex = { 0 };
+	for (auto& pChannel : m_Channels)
+	{
+		if (nullptr == pChannel)
+			return;
+		m_ChannelCurrentKeyFrames[iChannelIndex] = iKeyFrameIndex;
+		
+		pChannel->Invalidate_TransformationMatrix(Bones, 
+			pChannel->Get_CurrentKeyFrameTime(iKeyFrameIndex),
+			&m_ChannelCurrentKeyFrames[iChannelIndex]);
+
+		++iChannelIndex;
+	}
 }
 
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
@@ -76,6 +82,23 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 	}
 
 	m_ChannelCurrentKeyFrames.resize(m_iNumChannels);
+
+
+	_uint iNumKeyFrame = { 0 };
+	_uint iChannelIndex = { 0 };
+	for (auto& pChannel : m_Channels)
+	{
+		if (pChannel->Get_NumKeyFrames() > iNumKeyFrame)
+		{
+			iNumKeyFrame = pChannel->Get_NumKeyFrames();
+			m_iMaxNumKeyFrameChannelIndex = iChannelIndex;
+		}
+		++iChannelIndex;
+	}
+	m_iMaxNumKeyFrames = iNumKeyFrame;
+
+	for (_uint i = 0; i < m_Channels[m_iMaxNumKeyFrameChannelIndex]->Get_NumKeyFrames(); ++i)
+		m_FrameSpeeds.push_back(1.f);
 
 	return S_OK;
 }

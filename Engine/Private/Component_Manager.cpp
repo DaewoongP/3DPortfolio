@@ -30,6 +30,8 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 		MSG_BOX("Already have Prototype In CComponent_Manager");
 		return E_FAIL;
 	}
+	if (nullptr == pPrototype)
+		return E_FAIL;
 
 	pPrototype->Set_Tag(pPrototypeTag);
 

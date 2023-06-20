@@ -10,6 +10,7 @@ private:
 	virtual ~CChannel() = default;
 
 public:
+	_double Get_CurrentKeyFrameTime(_uint iCurrentIndex) const { return m_KeyFrames[iCurrentIndex].dTime; }
 	_uint Get_NumKeyFrames() const { return m_iNumKeyFrames; }
 
 public:

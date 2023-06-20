@@ -113,7 +113,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		return E_FAIL;
 
 	Ready_Prototype_Component_Shader();
-	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
+	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
 
 	return S_OK;
@@ -174,10 +174,14 @@ HRESULT CMainTool::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const
 			wstring wstrFileName = entry.path().filename().c_str();
 
 			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
-
 			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrProto.c_str(),
 				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str()))))
+			{
+				//std::filesystem::remove(entry.path());
 				return E_FAIL;
+
+			}
+				
 		}
 
 		iter++;
