@@ -200,13 +200,7 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed(_double dTimeDelta)
 
 HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
 {
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.Colors[ImGuiCol_WindowBg].w = 0.5f;
-	
 	m_pAnimationNotify->Tick(dTimeDelta);
-
-	style = ImGui::GetStyle();
-	style.Colors[ImGuiCol_WindowBg].w = 1.f;
 
 	return S_OK;
 }
