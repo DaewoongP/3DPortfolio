@@ -82,6 +82,9 @@
     <ClCompile Include="..\Private\Window_ObjectOptions.cpp">
       <Filter>01. ImWindow\Object\OptionWindow</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\AnimationNotify.cpp">
+      <Filter>01. ImWindow\Object\OptionWindow\AnimationNotify</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imconfig.h">
@@ -174,6 +177,9 @@
     <ClInclude Include="..\Public\Window_ObjectOptions.h">
       <Filter>01. ImWindow\Object\OptionWindow</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\AnimationNotify.h">
+      <Filter>01. ImWindow\Object\OptionWindow\AnimationNotify</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="98. Imgui">
@@ -241,6 +247,9 @@
     </Filter>
     <Filter Include="01. ImWindow\Object\OptionWindow">
       <UniqueIdentifier>{a090a46a-59f3-4e5e-ac17-8a7a1befb87e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Object\OptionWindow\AnimationNotify">
+      <UniqueIdentifier>{bbd18bd8-b4cf-404b-a6d9-8edab1682054}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,8 @@
 #include "..\Public\Window_ObjectOptions.h"
 #include "AnimModel.h"
 #include "NonAnimModel.h"
+#include "ImWindow_Manager.h"
+#include "AnimationNotify.h"
 
 CWindow_ObjectOptions::CWindow_ObjectOptions()
 {
@@ -24,12 +26,15 @@ HRESULT CWindow_ObjectOptions::Initialize(void* pArg)
 {
 	m_FrameSpeedFunc = Funcs::FrameSpeedSaw;
 
+	m_pAnimationNotify = CAnimationNotify::Create();
+
 	return S_OK;
 }
 
 void CWindow_ObjectOptions::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
 	ImGui::Begin("Object Options", nullptr, m_WindowFlag);
 
 	if (ImGui::BeginTabBar("ObjectOptionsTab"))
@@ -43,7 +48,7 @@ void CWindow_ObjectOptions::Tick(_double dTimeDelta)
 
 				AnimationPause();
 
-				AnimationSpeed();
+				AnimationSpeed(dTimeDelta);
 			}
 
 			ImGui::EndTabItem();
@@ -140,7 +145,7 @@ HRESULT CWindow_ObjectOptions::AnimationPause()
 	return S_OK;
 }
 
-HRESULT CWindow_ObjectOptions::AnimationSpeed()
+HRESULT CWindow_ObjectOptions::AnimationSpeed(_double dTimeDelta)
 {
 	_float progress = (_float)m_iCurrentAnimationFrame / (m_iAnimationFrames - 1);
 	ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f));
@@ -153,6 +158,7 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 
 	if (m_bPauseButton)
 	{
+		ImGui::SetNextItemWidth(100.f);
 		// 현재 프레임 인덱스 처리
 		if (ImGui::InputInt("Frame Index", (_int*)&m_iCurrentAnimationFrame))
 		{
@@ -163,6 +169,8 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 			m_pCurrentModel->Set_CurrentKeyFrameIndex(m_iCurrentAnimationFrame);
 		}
 		// 현재 프레임의 스피드 처리
+		ImGui::SetNextItemWidth(100.f);
+		SameLine();
 		if (ImGui::InputFloat("Frame Speed", &m_FrameSpeeds[m_iCurrentAnimationFrame], 1.f, 0.f, "%.2f"))
 		{
 			if (0 > m_FrameSpeeds[m_iCurrentAnimationFrame])
@@ -170,8 +178,35 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 			m_pCurrentModel->Set_AnimationFrameSpeed(m_iCurrentAnimationFrame, m_FrameSpeeds[m_iCurrentAnimationFrame]);
 		}
 	}
+	// 해당 애니메이션의 특정 프레임에서 처리할 정보들
+	if (nullptr != m_pCurrentModel && 
+		nullptr != m_pCurrentDummy &&
+		CDummy::DUMMY_ANIM == m_eCurrentDummyType &&
+		0 < m_iNumAnimations &&
+		0 < m_iAnimationFrames &&
+		true == m_bPauseButton)
+	{
+		MODELWINDOW->Set_Picking(false);
+
+		AnimationNotify(dTimeDelta);
+	}
+	
+
 	// 애니메이션 전체적인 스피드값을 그래프로 보여줌.
 	ImGui::PlotHistogram("Animation Speeds", m_FrameSpeedFunc, &m_FrameSpeeds, m_iAnimationFrames, 0, nullptr, 0.f, 10.f, ImVec2(0, 100));
+
+	return S_OK;
+}
+
+HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_WindowBg].w = 0.5f;
+	
+	m_pAnimationNotify->Tick(dTimeDelta);
+
+	style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_WindowBg].w = 1.f;
 
 	return S_OK;
 }
@@ -191,10 +226,13 @@ CWindow_ObjectOptions* CWindow_ObjectOptions::Create(void* pArg)
 		MSG_BOX("Failed to Created CWindow_ObjectOptions");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
 void CWindow_ObjectOptions::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pAnimationNotify);
 }

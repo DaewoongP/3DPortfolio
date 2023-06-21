@@ -43,7 +43,9 @@ void CMainTool::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
+
 	ShowDemoWindow();
+
 	m_pImWindow_Manager->Tick(dTimeDelta);
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 	

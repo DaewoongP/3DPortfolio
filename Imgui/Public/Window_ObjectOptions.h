@@ -60,7 +60,13 @@ private: /* For.Animations */
 private: /* For. Animations */
 	HRESULT AnimationIndex();
 	HRESULT AnimationPause();
-	HRESULT AnimationSpeed();
+	HRESULT AnimationSpeed(_double dTimeDelta);
+
+	// 애니메이션의 특정 프레임에서 처리되는 값들
+	HRESULT AnimationNotify(_double dTimeDelta);
+
+private:
+	class CAnimationNotify* m_pAnimationNotify = { nullptr };
 
 private: /* For. Collider */
 	HRESULT AddCollider();

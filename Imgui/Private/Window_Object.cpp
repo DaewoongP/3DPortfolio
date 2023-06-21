@@ -19,8 +19,10 @@ void CWindow_Object::Set_Object(CDummy::DUMMYTYPE eType, CGameObject* pObject)
 
 	m_Objects[eType].push_back(pObject);
 	Safe_AddRef(pObject);
+
 	_char* szName = New _char[lstrlen(pObject->Get_Tag()) + 1];
 	WCharToChar(pObject->Get_Tag(), szName);
+
 	m_ObjectNames[eType].push_back(szName);
 }
 
@@ -33,11 +35,14 @@ HRESULT CWindow_Object::Initialize(void* pArg)
 void CWindow_Object::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
 	Begin("Object", nullptr, m_WindowFlag);
 
 	Select_Objects();
 
 	CurrentObjectListBox();
+
+	SearchObject();
 
 	DeleteObject();
 
@@ -82,6 +87,15 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		vTransform.z -= 5.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
 	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_Object::SearchObject()
+{
+	_char test[256] = "";
+	ImGui::InputText("Search Object", test, 0);
+	// 여기서 파일이름 서칭해서 처리
 	return S_OK;
 }
 
@@ -150,6 +164,7 @@ HRESULT CWindow_Object::DeleteObject()
 
 			m_bClearButton = false;
 		}
+
 		m_iCurrentListIndex = 0;
 
 		SameLine();

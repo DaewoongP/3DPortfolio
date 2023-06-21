@@ -42,6 +42,7 @@ private:
 private:
 	HRESULT Select_Objects();
 	HRESULT CurrentObjectListBox();
+	HRESULT SearchObject();
 	HRESULT DeleteObject();
 	HRESULT ObjectOption();
 
