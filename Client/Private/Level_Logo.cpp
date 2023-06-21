@@ -9,8 +9,11 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
+	if (FAILED(__super::Initialize()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -26,6 +29,7 @@ void CLevel_Logo::Tick(_double dTimeDelta)
 
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_GAMEPLAY))))
 		{
+			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_GAMEPLAY");
 			Safe_Release(pGameInstance);
 			return;
 		}
@@ -40,7 +44,8 @@ void CLevel_Logo::Tick(_double dTimeDelta)
 
 HRESULT CLevel_Logo::Render()
 {
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -49,10 +54,15 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-	FAILED_CHECK_RETURN(pGameInstance->Add_GameObject(LEVEL_LOGO,
-		TEXT("Prototype_GameObject_BackGround"), pLayerTag, TEXT("GameObject_BackGround")), E_FAIL);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOGO, TEXT("Prototype_GameObject_BackGround"), pLayerTag, TEXT("GameObject_BackGround"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_BackGround)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

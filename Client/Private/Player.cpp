@@ -13,20 +13,27 @@ CPlayer::CPlayer(const CPlayer& rhs)
 
 HRESULT CPlayer::Initialize_Prototype()
 {
-	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+	if (FAILED(Add_Component()))
+		return E_FAIL;
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	m_pPlayerFirstPersonViewCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
+	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
+	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
+	// 모델의 애니메이션 인덱스 설정
 	m_pModelCom->Set_AnimIndex(0);
+
 	m_fMouseSensitivity = 0.1f;
+
 	return S_OK;
 }
 
@@ -35,6 +42,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	Key_Input(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
+
 	m_pModelCom->Play_Animation(dTimeDelta);
 
 	Fix_Mouse();
@@ -50,8 +58,11 @@ void CPlayer::Late_Tick(_double dTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
-	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -73,27 +84,44 @@ HRESULT CPlayer::Render()
 HRESULT CPlayer::Add_Component()
 {
 	/* For.Com_Model */
-	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)), E_FAIL);
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
+		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Model)");
+		return E_FAIL;
+	}
 
 	// Get Model's Bone Index
-	FAILED_CHECK_RETURN(Find_BoneIndices(), E_FAIL);
+	if (FAILED(Find_BoneIndices()))
+		return E_FAIL;
 
 	/* For.Com_Shader */
-	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)), E_FAIL);
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Shader)");
+		return E_FAIL;
+	}
 
 	/* For.Com_Renderer */
-	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
-		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom)), E_FAIL);
-
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
+		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Renderer)");
+		return E_FAIL;
+	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
 	TransformDesc.dSpeedPerSec = 10.f;
 	TransformDesc.dRotationPerSec = 3.f;
+
 	/* For.Com_Transform */
-	FAILED_CHECK_RETURN(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc), E_FAIL);
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
+		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Transform)");
+		return E_FAIL;
+	}
 
 	CCamera::CAMERADESC CameraDesc;
 	CameraDesc.vEye = _float4(5.f, 5.f, 5.f, 1.f);
@@ -109,17 +137,22 @@ HRESULT CPlayer::Add_Component()
 
 	/* For.Com_Camera */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
-		TEXT("Com_Camera"), reinterpret_cast<CComponent**>(&m_pPlayerFirstPersonViewCameraCom), &CameraDesc)))
+		TEXT("Com_Camera"), reinterpret_cast<CComponent**>(&m_pPlayerCameraCom), &CameraDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Camera)");
 		return E_FAIL;
+	}
 
 	CNavigation::NAVIGATIONDESC NavigationDesc;
-
 	NavigationDesc.iCurrentIndex = 0;
 
 	/* For.Com_Navigation */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigation), &NavigationDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Navigation)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -179,15 +212,17 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
 		m_pTransformCom->Turn(vUp, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
-		m_pPlayerFirstPersonViewCameraCom->Turn(vUp, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
+		m_pPlayerCameraCom->Turn(vUp, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
 	}
 
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
 	{
-		_vector	vCamRight = m_pPlayerFirstPersonViewCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
+		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
+		_vector	vCamRight = m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
 
-		m_pPlayerFirstPersonViewCameraCom->Turn(vCamRight, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
+		m_pPlayerCameraCom->Turn(vCamRight, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
 	}
 
 	Safe_Release(pGameInstance);
@@ -205,12 +240,14 @@ void CPlayer::CameraOffset()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPosition += XMVectorSet(0.f, 0.5f, 0.f, 0.f);
-	m_pPlayerFirstPersonViewCameraCom->Set_Position(vPosition);
+
+	m_pPlayerCameraCom->Set_Position(vPosition);
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
+
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created CPlayer");
@@ -235,10 +272,11 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-	Safe_Release(m_pNavigation);
-	Safe_Release(m_pPlayerFirstPersonViewCameraCom);
+	
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pNavigation);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);
+	Safe_Release(m_pPlayerCameraCom);
 }

@@ -34,20 +34,29 @@ HRESULT CLoader::Initialize(LEVELID eNextLevel)
 {
 	m_eNextLevelID = eNextLevel;
 
+	// 크리티컬 섹션 변수 초기화
 	InitializeCriticalSection(&m_Critical_Section);
 
+	// 쓰레드 시작 함수 호출
+	// 3번째 인자로 시작할 함수포인터 대입.
+	// 4번째 인자로 시작할 함수의 매개변수로 넣어줄 값 대입.
 	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, Thread_Main, this, 0, nullptr);
 
 	if (0 == m_hThread)
+	{
+		MSG_BOX("Failed Begin Loading Thread");
 		return E_FAIL;
-
+	}
+	
 	return S_OK;
 }
 
 HRESULT CLoader::Loading()
 {
-	FAILED_CHECK_RETURN(CoInitializeEx(nullptr, 0), E_FAIL);
+	if (FAILED(CoInitializeEx(nullptr, 0)))
+		return E_FAIL;
 
+	// 크리티컬 섹션 시작해서 다른 쓰레드가 이 안에 있는 동안 값을 변경하지 못하게 처리.
 	EnterCriticalSection(&m_Critical_Section);
 
 	HRESULT		hr = { 0 };
@@ -64,19 +73,26 @@ HRESULT CLoader::Loading()
 
 	LeaveCriticalSection(&m_Critical_Section);
 
-	FAILED_CHECK_RETURN(hr, E_FAIL);
+	if (FAILED(hr))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CLoader::Loading_For_Logo()
 {
-	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
+
 	/* For.Prototype_Component_Texture_Logo */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Logo)");
+		return E_FAIL;
+	}
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	
@@ -85,9 +101,14 @@ HRESULT CLoader::Loading_For_Logo()
 
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
+
 	/* For.Prototype_GameObject_BackGround */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
-		CBackGround::Create(m_pDevice, m_pContext)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"),
+		CBackGround::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BackGround)");
+		return E_FAIL;
+	}
 	
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 
@@ -98,32 +119,46 @@ HRESULT CLoader::Loading_For_Logo()
 
 HRESULT CLoader::Loading_For_GamePlay()
 {
-	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
 #ifdef _DEBUG
 	/* For.Prototype_Component_Texture_Terrain */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Terrain)");
+		return E_FAIL;
+	}
 #endif // _DEBUG
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
-
+	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
 #ifdef _DEBUG
 	/*For.Prototype_Component_VIBuffer_Terrain*/
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Terrain)");
+		return E_FAIL;
+	}
 
 #endif // _DEBUG
 	
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Player */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Sword_Elite.dat"), PivotMatrix)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Sword_Elite.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Player)");
+		return E_FAIL;
+	}
 
+	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
@@ -133,61 +168,100 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Terrain.hlsl"),
 			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_Terrain)");
 		return E_FAIL;
+	}
 #endif // _DEBUG
 
 	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"),
 			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxNorTex)");
 		return E_FAIL;
+	}
 
 	/* Prototype_Component_Shader_VtxMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"),
 			VTXMESH_DECL::Elements, VTXMESH_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxMesh)");
 		return E_FAIL;
+	}
 
 	/* Prototype_Component_Shader_VtxAnimMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"),
 			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxAnimMesh)");
 		return E_FAIL;
+	}
 
 	lstrcpy(m_szLoading, TEXT("네비게이션정보 로딩 중."));
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Navigation2.Navi")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;
+	}
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
+
+	/* For.Prototype_GameObject_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
+		CPlayer::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Player)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Katana */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Katana"),
+		CKatana::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Katana)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Prop */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Prop"),
+		CProp::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Prop)");
+		return E_FAIL;
+	}
 		
 #ifdef _DEBUG
 	/* For.Prototype_GameObject_Camera_Free */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
-		CCamera_Free::Create(m_pDevice, m_pContext)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
+		CCamera_Free::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Camera_Free)");
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Terrain */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
-		CTerrain::Create(m_pDevice, m_pContext)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
+		CTerrain::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Terrain)");
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_ForkLift */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
-		CForkLift::Create(m_pDevice, m_pContext)), E_FAIL);
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
+		CForkLift::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ForkLift)");
+		return E_FAIL;
+	}
 #endif // _DEBUG
-	
-	/* For.Prototype_GameObject_Player */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player"),
-		CPlayer::Create(m_pDevice, m_pContext)), E_FAIL);
-
-	/* For.Prototype_GameObject_Katana */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Katana"),
-		CKatana::Create(m_pDevice, m_pContext)), E_FAIL);
-
-	/* For.Prototype_GameObject_Prop */
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Prop"),
-		CProp::Create(m_pDevice, m_pContext)), E_FAIL);
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 
@@ -213,7 +287,10 @@ HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _
 
 			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, wstrProto.c_str(),
 				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str()))))
+			{
+				MSG_BOX("Failed Add_Prototype : (Model Data File)");
 				return E_FAIL;
+			}
 		}
 
 		iter++;
@@ -236,6 +313,7 @@ CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, L
 
 void CLoader::Free()
 {
+	// 로딩이 끝날때까지 기다려야 하므로 infinite 옵션을 주어 로딩이 끝날때까지 쓰레드 대기.
 	WaitForSingleObject(m_hThread, INFINITE);
 
 	DeleteCriticalSection(&m_Critical_Section);

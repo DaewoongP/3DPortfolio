@@ -16,7 +16,7 @@ public:
 	virtual HRESULT Render();
 
 private:
-	// 다음 레벨을 구성하기위한 프로세스 생성 객체
+	// 다음 레벨을 구성하기위한 쓰레드 생성 객체
 	class CLoader*			m_pLoader = { nullptr };
 	LEVELID					m_eNextLevelID = { LEVEL_END };
 

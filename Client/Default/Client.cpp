@@ -86,7 +86,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             pGameInstance->Tick_Timer(TEXT("Timer_60"));
 
             pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
-            pMainApp->Render();
+
+            if (FAILED(pMainApp->Render()))
+            {
+                MSG_BOX("Failed Render");
+                break;
+            }
 
             dTimerAcc = { 0.0 };
         }

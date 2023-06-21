@@ -30,8 +30,8 @@ private:
 	void		Fix_Mouse(void);
 
 private:
+	// 마우스 고정 변수
 	_bool		m_bFix = { true };
-	_bool		m_bClick = { false };
 
 private:
 	CCamera*		m_pCameraCom = { nullptr };

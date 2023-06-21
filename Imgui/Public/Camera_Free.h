@@ -37,7 +37,6 @@ public:
 
 private:
 	_bool		m_bFix = { 0 };
-	_bool		m_bClick = { 0 };
 
 private:
 	CCamera*	m_pCamera = { nullptr };

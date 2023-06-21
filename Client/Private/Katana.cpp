@@ -16,7 +16,6 @@ HRESULT CKatana::Initialize_Prototype()
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
@@ -74,7 +73,10 @@ HRESULT CKatana::Add_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	{
+		MSG_BOX("Failed CKatana Add_Component : (Com_Renderer)");
 		return E_FAIL;
+	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
 	TransformDesc.dSpeedPerSec = 5.f;
@@ -82,17 +84,26 @@ HRESULT CKatana::Add_Components()
 	/* For.Com_Transform */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	{
+		MSG_BOX("Failed CKatana Add_Component : (Com_Transform)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	{
+		MSG_BOX("Failed CKatana Add_Component : (Com_Model)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	{
+		MSG_BOX("Failed CKatana Add_Component : (Com_Shader)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -146,8 +157,8 @@ void CKatana::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pTransformCom);
 }

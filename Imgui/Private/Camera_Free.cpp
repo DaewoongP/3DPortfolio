@@ -4,14 +4,12 @@
 CCamera_Free::CCamera_Free(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 	, m_bFix(true)
-	, m_bClick(false)
 {
 }
 
 CCamera_Free::CCamera_Free(const CCamera_Free& rhs)
 	: CGameObject(rhs)
 	, m_bFix(rhs.m_bFix)
-	, m_bClick(rhs.m_bClick)
 {
 }
 
@@ -113,18 +111,11 @@ void CCamera_Free::Key_Input(const _double& dTimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
 	{
-		if (m_bClick)
-			return;
-
-		m_bClick = true;
-
 		if (true == m_bFix)
 			m_bFix = false;
 		else
 			m_bFix = true;
 	}
-	else
-		m_bClick = false;
 
 	if (false == m_bFix)
 		return;

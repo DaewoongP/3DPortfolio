@@ -11,12 +11,14 @@ CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
+	if (FAILED(__super::Initialize()))
+		return E_FAIL;
 
 	m_eNextLevelID = eNextLevelID;
 
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevelID);
-	NULL_CHECK_RETURN(m_pLoader, E_FAIL);
+	if(nullptr == m_pLoader)
+		return E_FAIL;
 	
 	return S_OK;
 }
@@ -27,6 +29,7 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 
 	if (GetKeyState(VK_RETURN) & 0x8000)
 	{
+		// 로딩완료 체크
 		if (false == m_pLoader->Get_Finished())
 			return;
 
@@ -41,13 +44,19 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
 			break;
 		}
-		NULL_CHECK_MSG(pLevel, L"NULL Level");
+		if (nullptr == pLevel)
+			return;
 
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
-		pGameInstance->Open_Level(m_eNextLevelID, pLevel);
-
+		if (FAILED(pGameInstance->Open_Level(m_eNextLevelID, pLevel)))
+		{
+			MSG_BOX("Failed open Next Level");
+			Safe_Release(pGameInstance);
+			return;
+		}
+		
 		Safe_Release(pGameInstance);
 		return;
 	}
@@ -59,7 +68,8 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 
 HRESULT CLevel_Loading::Render()
 {
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 	
 	return S_OK;
 }

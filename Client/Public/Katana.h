@@ -3,10 +3,10 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CModel;
 class CShader;
 class CRenderer;
 class CTransform;
-class CModel;
 END
 
 BEGIN(Client)
@@ -26,10 +26,10 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CModel* m_pModelCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CRenderer* m_pRendererCom = { nullptr };
-	CTransform* m_pTransformCom = { nullptr };
+	CModel*					m_pModelCom = { nullptr };
+	CShader*				m_pShaderCom = { nullptr };
+	CRenderer*				m_pRendererCom = { nullptr };
+	CTransform*				m_pTransformCom = { nullptr };
 
 public:
 	HRESULT Add_Components();

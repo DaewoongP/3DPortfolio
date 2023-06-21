@@ -58,8 +58,7 @@ HRESULT CForkLift::Render()
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-		// m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
-		
+
 		m_pShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
@@ -73,7 +72,10 @@ HRESULT CForkLift::Add_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
+	{
+		MSG_BOX("Failed ForkLift Add_Component : (Com_Renderer)");
 		return E_FAIL;
+	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
 	TransformDesc.dSpeedPerSec = 5.f;
@@ -81,19 +83,27 @@ HRESULT CForkLift::Add_Components()
 	/* For.Com_Transform */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	{
+		MSG_BOX("Failed ForkLift Add_Component : (Com_Transform)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	{
+		MSG_BOX("Failed ForkLift Add_Component : (Com_Model)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	{
+		MSG_BOX("Failed ForkLift Add_Component : (Com_Shader)");
 		return E_FAIL;
+	}
 
-	
 	return S_OK;
 }
 
@@ -147,9 +157,8 @@ void CForkLift::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);	
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-
+	Safe_Release(m_pTransformCom);
 }

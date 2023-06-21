@@ -21,26 +21,39 @@ CBackGround::CBackGround(const CBackGround& rhs)
 
 HRESULT CBackGround::Initialize_Prototype()
 {
-	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 	
 	return S_OK;
 }
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Components(), E_FAIL);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+	if (FAILED(Add_Components()))
+		return E_FAIL;
 
+	// 윈도우 창에 꽉채우게 설정함.
 	m_fSizeX = g_iWinSizeX;
 	m_fSizeY = g_iWinSizeY;
+
+	// 윈도우창의 중간에 표시하게 설정.
 	m_fX = g_iWinSizeX * 0.5f;
 	m_fY = g_iWinSizeY * 0.5f;
 
+	// 트랜스폼에 값 세팅.
+	// offset값에 맞춰 세팅해줌.
 	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, 
-		XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+		XMVectorSet(
+			m_fX - g_iWinSizeX * 0.5f,
+			-m_fY + g_iWinSizeY * 0.5f,
+			0.f,
+			1.f));
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	// 직교 투영을 통해 처리.
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
 
 	return S_OK;
@@ -61,10 +74,13 @@ void CBackGround::Late_Tick(_double dTimeDelta)
 
 HRESULT CBackGround::Render()
 {	
-	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
 
 	m_pShaderCom->Begin(0);
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 	
 	return S_OK;
 }
@@ -74,28 +90,44 @@ HRESULT CBackGround::Add_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+	{
+		MSG_BOX("Failed BackGround Add_Component : (Com_Renderer)");
 		return E_FAIL;
+	}
+		
 
 	/* For.Com_Transform */
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
+	{
+		MSG_BOX("Failed BackGround Add_Component : (Com_Transform)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	{
+		MSG_BOX("Failed BackGround Add_Component : (Com_Shader)");
 		return E_FAIL;
+	}
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+	{
+		MSG_BOX("Failed BackGround Add_Component : (Com_VIBuffer)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+	{
+		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -103,15 +135,19 @@ HRESULT CBackGround::Add_Components()
 HRESULT CBackGround::SetUp_ShaderResources()
 {
 	_float4x4 mat = *m_pTransformCom->Get_WorldFloat4x4();
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &mat)))
 		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -142,9 +178,10 @@ CGameObject* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
 	__super::Free();
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pTextureCom);
+
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pTransformCom);	
 }

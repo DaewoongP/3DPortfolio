@@ -9,21 +9,23 @@ CCamera_Free::CCamera_Free(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CCamera_Free::CCamera_Free(const CCamera_Free& rhs)
 	: CGameObject(rhs)
 	, m_bFix(rhs.m_bFix)
-	, m_bClick(rhs.m_bClick)
 {
 }
 
 HRESULT CCamera_Free::Initialize_Prototype()
 {
-	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CCamera_Free::Initialize(void* pArg)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+	if (FAILED(Add_Component()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -31,14 +33,18 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 void CCamera_Free::Tick(_double dTimeDelta)
 {
 	_vector vPos = m_pCameraCom->Get_TransformState(CTransform::STATE_POSITION);
+
 	cout << "Current Cam Pos | ";
 	cout << "X ( " << vPos.m128_f32[0] << " ) Y ( " << vPos.m128_f32[1] << " ) Z (" << vPos.m128_f32[2] << " )" << endl;
+
 	__super::Tick(dTimeDelta);
+
 	Key_Input(dTimeDelta);
 
 	if (m_bFix)
 	{
 		Fix_Mouse();
+
 		Mouse_Move(dTimeDelta);
 	}
 }
@@ -65,7 +71,10 @@ HRESULT CCamera_Free::Add_Component()
 	/* For.Com_Camera */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
 		TEXT("Com_Camera"), reinterpret_cast<CComponent**>(&m_pCameraCom), &CameraDesc)))
+	{
+		MSG_BOX("Failed Camera_Free Add_Component : (Com_Camera)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -73,6 +82,7 @@ HRESULT CCamera_Free::Add_Component()
 void CCamera_Free::Key_Input(const _double& dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
 	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_PRESSING))
 	{
@@ -96,22 +106,13 @@ void CCamera_Free::Key_Input(const _double& dTimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
 	{
-		if (m_bClick)
-			return;
-
-		m_bClick = true;
-
 		if (true == m_bFix)
 			m_bFix = false;
 		else
 			m_bFix = true;
 	}
-	else
-		m_bClick = false;
 
-	if (false == m_bFix)
-		return;
-
+	Safe_Release(pGameInstance);
 }
 
 void CCamera_Free::Mouse_Move(_double dTimeDelta)
@@ -143,6 +144,7 @@ void CCamera_Free::Fix_Mouse(void)
 	POINT	ptMouse{ g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
 
 	ClientToScreen(g_hWnd, &ptMouse);
+
 	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 

@@ -37,12 +37,17 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iViewportSizeY = g_iWinSizeY;
 	GraphicDesc.eWinMode = GRAPHICDESC::WINMODE::WM_WIN;
 
-	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
-		L"Failed Initialize_Engine");
+	if (FAILED(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext)))
+		return E_FAIL;
 
-	FAILED_CHECK_RETURN(Ready_Prototype_Component_For_Static(), E_FAIL);
+	if (FAILED(Ready_Prototype_Component_For_Static()))
+		return E_FAIL;
 	
-	FAILED_CHECK_RETURN(Open_Level(LEVEL_LOGO), E_FAIL);
+	if (FAILED(Open_Level(LEVEL_LOGO)))
+	{
+		MSG_BOX("Failed Open LEVEL_LOGO");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -51,7 +56,7 @@ void CMainApp::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
-
+	
 	// 엔진의 Tick 호출
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
@@ -62,53 +67,75 @@ void CMainApp::Tick(_double dTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
 
-	FAILED_CHECK_RETURN(m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f)), E_FAIL);
-	FAILED_CHECK_RETURN(m_pGameInstance->Clear_DepthStencil_View(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pRenderer->Draw_RenderGroup(), E_FAIL);
-	FAILED_CHECK_RETURN(m_pGameInstance->Present(), E_FAIL);
+	if (FAILED(m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Clear_DepthStencil_View()))
+		return E_FAIL;
+	if (FAILED(m_pRenderer->Draw_RenderGroup()))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Present()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 {
-	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
 	
 	/* Prototype_Component_Renderer */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		m_pRenderer = CRenderer::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_Renderer)");
 		return E_FAIL;
+	}
 	Safe_AddRef(m_pRenderer);
 
 	/* Prototype_Component_Transform */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		CTransform::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_Transform)");
 		return E_FAIL;
+	}
 
 	/* Prototype_Component_Camera */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
 		CCamera::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_Camera)");
 		return E_FAIL;
+	}
 
 	/* Prototype_Component_Shader_VtxTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"),
 			VTXPOSTEX_DECL::Elements, VTXPOSTEX_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_Shader_VtxTex)");
 		return E_FAIL;
+	}
 
 	/* Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_VIBuffer_Rect)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 HRESULT CMainApp::Open_Level(LEVELID eLevelIndex)
 {
-	NULL_CHECK_RETURN(m_pGameInstance, E_FAIL);
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
 
 	return m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
 }

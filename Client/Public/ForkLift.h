@@ -3,10 +3,10 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CModel;
 class CShader;
 class CRenderer;
 class CTransform;
-class CModel;
 END
 
 BEGIN(Client)

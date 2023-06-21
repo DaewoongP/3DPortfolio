@@ -17,6 +17,7 @@ class CPlayer final : public CGameObject
 {
 public:
 	enum STATE { STATE_IDLE, STATE_END };
+
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CPlayer(const CPlayer& rhs);
@@ -31,14 +32,16 @@ public:
 
 private:
 	CModel*					m_pModelCom = { nullptr };
-	CCamera*				m_pPlayerFirstPersonViewCameraCom = { nullptr };
+	CCamera*				m_pPlayerCameraCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
 	CNavigation*			m_pNavigation = { nullptr };
 
 private:
+	// 채널의 인덱스 값을 가지고 있음.
 	_uint					m_iHeadChannelIndex = { 0 };
+	// 마우스 감도
 	_float					m_fMouseSensitivity = { 0.f };
 
 private:
@@ -48,6 +51,7 @@ private:
 
 	void Key_Input(_double dTimeDelta);
 	void Fix_Mouse();
+	// 1인칭 뷰의 카메라 오프셋값
 	void CameraOffset();
 
 public:

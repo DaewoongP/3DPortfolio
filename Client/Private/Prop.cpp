@@ -32,12 +32,14 @@ HRESULT CProp::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
 	if (FAILED(Add_Components(PropDesc)))
 		return E_FAIL;
 
-
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&PropDesc.vPosition));
+
 	return S_OK;
 }
 
@@ -87,21 +89,30 @@ HRESULT CProp::Add_Components(PROPDESC PropDesc)
 	CTransform::TRANSFORMDESC TransformDesc;
 	TransformDesc.dSpeedPerSec = 5.f;
 	TransformDesc.dRotationPerSec = 3.f;
+
 	/* For.Com_Transform */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
+	{
+		MSG_BOX("Failed CProp Add_Component : (Com_Transform)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, PropDesc.pModelPrototypeTag,
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	{
+		MSG_BOX("Failed CProp Add_Component : (Com_Model)");
 		return E_FAIL;
+	}
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	{
+		MSG_BOX("Failed CProp Add_Component : (Com_Shader)");
 		return E_FAIL;
-
+	}
 
 	return S_OK;
 }
@@ -156,9 +167,8 @@ void CProp::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTransformCom);
-	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-
+	Safe_Release(m_pTransformCom);
 }

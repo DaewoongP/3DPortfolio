@@ -3,12 +3,12 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
-class CRenderer;
-class CTexture;
 class CShader;
-class CVIBuffer_Terrain;
+class CTexture;
+class CRenderer;
 class CTransform;
 class CNavigation;
+class CVIBuffer_Terrain;
 END
 
 BEGIN(Client)
@@ -32,18 +32,17 @@ private:
 	HRESULT SetUp_ShaderResources();
 
 private:
-	CRenderer*			m_pRendererCom = { nullptr };
 	CShader*			m_pShaderCom = { nullptr };
-	CVIBuffer_Terrain*	m_pBufferCom = { nullptr };
-	CTransform*			m_pTransformCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
+	CRenderer*			m_pRendererCom = { nullptr };
+	CTransform*			m_pTransformCom = { nullptr };
 	CNavigation*		m_pNavigationCom = { nullptr };
+	CVIBuffer_Terrain*	m_pBufferCom = { nullptr };
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
-
 };
 
 END
