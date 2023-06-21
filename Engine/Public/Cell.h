@@ -17,7 +17,7 @@ public:
 	_vector Get_Point(POINT ePoint) {
 		return XMLoadFloat3(&m_vPoints[ePoint]);
 	}
-
+	
 	void SetUp_Neighbor(NEIGHBOR eNeighbor, CCell* pNeighbor) {
 		m_iNeighborIndices[eNeighbor] = pNeighbor->m_iIndex;
 	}
@@ -26,7 +26,9 @@ public:
 	HRESULT Initialize(const _float3* pPoints, _int iIndex);
 
 public:
+	// 포지션을 기반으로 이 셀안에 포지션이 있는지 체크.
 	_bool Is_In(_fvector vPosition, _int* pNeighborIndex);
+	// 다른셀의 두점을받아 이셀과 공유하는지 검사.
 	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 
 #ifdef _DEBUG

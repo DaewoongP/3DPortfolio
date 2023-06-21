@@ -26,23 +26,34 @@ protected:
 	virtual ~CDummy() = default;
 
 public:
+	// 현재 오브젝트의 원본 프로토타입 태그와 초기포지션값을 가진 구조체 반환
 	OBJECTDESC Get_ObjectDesc() { return m_ObjectDesc; }
+	// 툴에서 이전에 지정한 값 반환
 	_float3 Get_PreToolScale() { return m_vPreScale; }
+	// 툴에서 이전에 지정한 값 반환
 	_float3 Get_PreToolRotation() { return m_vPreRotation; }
+	// 툴에서 이전에 지정한 값 반환
 	_float4 Get_PreToolTransform() { return m_vPreTransform; }
+	// 툴에서 이전에 지정한 값 반환
 	_uint Get_PreToolAnimationIndex() { return m_iPreAnimationIndex; }
+	// 툴에서 이전에 지정한 값 반환
 	_double Get_PreToolAnimationSpeed() { return m_dPreAnimationSpeed; }
+	// 툴에서 다시 확인하기 위한 변수 저장
 	void Set_PreToolScale(_float3 vScale) { m_vPreScale = vScale; }
+	// 툴에서 다시 확인하기 위한 변수 저장
 	void Set_PreToolRotation(_float3 vRotation) { m_vPreRotation = vRotation; }
+	// 툴에서 다시 확인하기 위한 변수 저장
 	void Set_PreToolTransform(_float4 vTransform) { m_vPreTransform = vTransform; }
+	// 툴에서 다시 확인하기 위한 변수 저장
 	void Set_PreToolAnimationIndex(_uint iIndex) { m_iPreAnimationIndex = iIndex; }
+	// 툴에서 다시 확인하기 위한 변수 저장
 	void Set_PreToolAnimationSpeed(_double dSpeed) { m_dPreAnimationSpeed = dSpeed; }
 
 public:
 	CTransform* Get_TransformCom() const { return m_pTransformCom; }
 
 protected:
-	CTransform*			m_pTransformCom = { nullptr };
+	CTransform*				m_pTransformCom = { nullptr };
 
 protected:
 	OBJECTDESC				m_ObjectDesc;

@@ -32,10 +32,10 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		strtok_s(nullptr, "_", &szSubName);
 		strcpy_s(pItemName, MAX_STR, szSubName);
 		
-		m_NonAnimModelItems.push_back(pItemName);
+		m_NonAnimModelNames.push_back(pItemName);
 	}
 
-	sort(m_NonAnimModelItems.begin(), m_NonAnimModelItems.end(), [](auto& Sour, auto& Dest) {
+	sort(m_NonAnimModelNames.begin(), m_NonAnimModelNames.end(), [](auto& Sour, auto& Dest) {
 		string strSour = Sour;
 		string strDest = Dest;
 		if (strSour < strDest)
@@ -55,10 +55,10 @@ HRESULT CWindow_Model::Initialize(void* pArg)
 		strtok_s(nullptr, "_", &szSubName);
 		strcpy_s(pItemName, MAX_STR, szSubName);
 
-		m_AnimModelItems.push_back(pItemName);
+		m_AnimModelNames.push_back(pItemName);
 	}
 
-	sort(m_AnimModelItems.begin(), m_AnimModelItems.end(), [](auto& Sour, auto& Dest) {
+	sort(m_AnimModelNames.begin(), m_AnimModelNames.end(), [](auto& Sour, auto& Dest) {
 		string strSour = Sour;
 		string strDest = Dest;
 		if (strSour < strDest)
@@ -94,7 +94,7 @@ void CWindow_Model::Tick(_double dTimeDelta)
 
 HRESULT CWindow_Model::Select_ModelFiles()
 {
-	if (Checkbox("Pick Meshes", &m_bPickMeshes))
+	if (Checkbox("Pick Models", &m_bPickMeshes))
 	{
 		if (true == m_bPickMeshes)
 			NAVIGATIONWINDOW->Set_Picking(false);
@@ -118,14 +118,14 @@ HRESULT CWindow_Model::Select_ModelFiles()
 	
 	if (CDummy::DUMMY_NONANIM == m_iCurRadio)
 	{
-		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelItems.data(), (_int)m_NonAnimModelItems.size(), 7))
+		if (ListBox("Models", &m_iCur_Mesh, m_NonAnimModelNames.data(), (_int)m_NonAnimModelNames.size(), 7))
 		{
 			MakeTag(CDummy::DUMMY_NONANIM);
 		}
 	}
 	else if (CDummy::DUMMY_ANIM == m_iCurRadio)
 	{
-		if (ListBox("Models", &m_iCur_Mesh, m_AnimModelItems.data(), (_int)m_AnimModelItems.size(), 7))
+		if (ListBox("Models", &m_iCur_Mesh, m_AnimModelNames.data(), (_int)m_AnimModelNames.size(), 7))
 		{
 			MakeTag(CDummy::DUMMY_ANIM);
 		}
@@ -229,7 +229,7 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 {
 	CAnimModel::OBJECTDESC ObjectDesc;
 	_char szProtoName[MAX_STR] = "Prototype_Component_NonAnimModel_";
-	strcat_s(szProtoName, MAX_STR, m_NonAnimModelItems[m_iCur_Mesh]);
+	strcat_s(szProtoName, MAX_STR, m_NonAnimModelNames[m_iCur_Mesh]);
 	CharToWChar(szProtoName, ObjectDesc.pModelPrototypeTag);
 
 	ObjectDesc.vPosition = vPickPos;
@@ -244,7 +244,7 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	OBJECTWINDOW->Set_Object(CDummy::DUMMY_NONANIM, m_pGameInstance->Get_LastGameObject());
 
-	m_iCur_Mesh_Index++;
+	m_iCurrentModelIndex++;
 	MakeTag(CDummy::DUMMY_NONANIM);
 	return S_OK;
 }
@@ -253,7 +253,7 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 {
 	CAnimModel::OBJECTDESC ObjectDesc;
 	_char szProtoName[MAX_STR] = "Prototype_Component_AnimModel_";
-	strcat_s(szProtoName, MAX_STR, m_AnimModelItems[m_iCur_Mesh]);
+	strcat_s(szProtoName, MAX_STR, m_AnimModelNames[m_iCur_Mesh]);
 	CharToWChar(szProtoName, ObjectDesc.pModelPrototypeTag);
 
 	ObjectDesc.vPosition = vPickPos;
@@ -268,7 +268,7 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	OBJECTWINDOW->Set_Object(CDummy::DUMMY_ANIM, m_pGameInstance->Get_LastGameObject());
 
-	m_iCur_Mesh_Index++;
+	m_iCurrentModelIndex++;
 	MakeTag(CDummy::DUMMY_ANIM);
 	return S_OK;
 }
@@ -278,20 +278,20 @@ HRESULT CWindow_Model::MakeTag(CDummy::DUMMYTYPE eType)
 	if (CDummy::DUMMY_NONANIM == eType)
 	{
 		strcpy_s(m_szObjectName, MAX_STR, "GameObject_NonAnimModel_");
-		if (m_NonAnimModelItems.size() <= m_iCur_Mesh)
+		if (m_NonAnimModelNames.size() <= m_iCur_Mesh)
 			return E_FAIL;
-		strcat_s(m_szObjectName, MAX_STR, m_NonAnimModelItems[m_iCur_Mesh]);
+		strcat_s(m_szObjectName, MAX_STR, m_NonAnimModelNames[m_iCur_Mesh]);
 	}
 	else if (CDummy::DUMMY_ANIM == eType)
 	{
 		strcpy_s(m_szObjectName, MAX_STR, "GameObject_AnimModel_");
-		if (m_AnimModelItems.size() <= m_iCur_Mesh)
+		if (m_AnimModelNames.size() <= m_iCur_Mesh)
 			return E_FAIL;
-		strcat_s(m_szObjectName, MAX_STR, m_AnimModelItems[m_iCur_Mesh]);
+		strcat_s(m_szObjectName, MAX_STR, m_AnimModelNames[m_iCur_Mesh]);
 	}
 	
 	_char szIndex[MAX_STR] = "";
-	_itoa_s(m_iCur_Mesh_Index, szIndex, MAX_STR, 10);
+	_itoa_s(m_iCurrentModelIndex, szIndex, MAX_STR, 10);
 	strcat_s(m_szObjectName, MAX_STR, szIndex);
 
 	return S_OK;
@@ -506,13 +506,13 @@ void CWindow_Model::Free()
 	__super::Free();
 	Safe_Release(m_pTerrain);
 
-	for (auto& iter : m_NonAnimModelItems)
+	for (auto& iter : m_NonAnimModelNames)
 		Safe_Delete(iter);
-	m_NonAnimModelItems.clear();
+	m_NonAnimModelNames.clear();
 
-	for (auto& iter : m_AnimModelItems)
+	for (auto& iter : m_AnimModelNames)
 		Safe_Delete(iter);
-	m_AnimModelItems.clear();
+	m_AnimModelNames.clear();
 
 	Safe_Release(m_pContext);
 }

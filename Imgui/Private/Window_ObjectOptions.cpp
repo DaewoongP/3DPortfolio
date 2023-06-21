@@ -10,14 +10,20 @@ void CWindow_ObjectOptions::Set_CurrentDummy(CDummy::DUMMYTYPE eDummyType, CDumm
 {
 	if (nullptr == pDummy)
 		return;
+
 	m_eCurrentDummyType = eDummyType;
+
 	m_pCurrentDummy = pDummy;
+
 	m_pCurrentModel = dynamic_cast<CModel*>(pDummy->Find_Component(TEXT("Com_Model")));
+
+	m_iNumAnimations = m_pCurrentModel->Get_NumAnimations();
 }
 
 HRESULT CWindow_ObjectOptions::Initialize(void* pArg)
 {
 	m_FrameSpeedFunc = Funcs::FrameSpeedSaw;
+
 	return S_OK;
 }
 
@@ -63,10 +69,14 @@ void CWindow_ObjectOptions::Tick(_double dTimeDelta)
 HRESULT CWindow_ObjectOptions::AnimationIndex()
 {
 	_char szNum[MAX_STR] = "";
-	_itoa_s(m_pCurrentModel->Get_NumAnimations() - 1, szNum, MAX_STR, 10);
-	_int iIndex = static_cast<CAnimModel*>(m_pCurrentDummy)->Get_PreToolAnimationIndex();
+	// 인덱스이므로 전체 개수 - 1
+	_itoa_s(m_iNumAnimations - 1, szNum, MAX_STR, 10);
+
+	_int iIndex = m_pCurrentDummy->Get_PreToolAnimationIndex();
 	WCharToChar(m_pCurrentModel->Get_AnimationName(), m_szAnimationName);
+
 	m_iAnimationFrames = m_pCurrentModel->Get_AnimationFrames();
+
 	m_iCurrentAnimationFrame = m_pCurrentModel->Get_CurrentAnimationFrame();
 
 	for (_uint i = 0; i < m_iAnimationFrames; ++i)
@@ -75,21 +85,24 @@ HRESULT CWindow_ObjectOptions::AnimationIndex()
 	SetNextItemWidth(100.f);
 	if (ImGui::InputInt("Animation Index", &iIndex))
 	{
+		// 애니메이션 인덱스가 변경되면
+		// 애니메이션 스피드 벡터 클리어
 		m_FrameSpeeds.clear();
+		// 애니메이션 프레임 개수만큼 1로 초기화
 		for (_uint i = 0; i < m_iAnimationFrames; ++i)
 			m_FrameSpeeds.push_back(1.f);
-
+		// 정지버튼 비활성화
 		m_bPauseButton = false;
 		m_pCurrentModel->Set_AnimationPause(false);
-
-		if (m_pCurrentModel->Get_NumAnimations() - 1 < (_uint)iIndex ||
+		// 
+		if (m_iNumAnimations - 1 < (_uint)iIndex ||
 			0 > iIndex)
 			return E_FAIL;
 		else
 		{
 			m_iAnimationIndex = iIndex;
 			m_pCurrentModel->Set_AnimIndex(m_iAnimationIndex);
-			static_cast<CAnimModel*>(m_pCurrentDummy)->Set_PreToolAnimationIndex(m_iAnimationIndex);
+			m_pCurrentDummy->Set_PreToolAnimationIndex(m_iAnimationIndex);
 		}
 	}
 
@@ -140,6 +153,7 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 
 	if (m_bPauseButton)
 	{
+		// 현재 프레임 인덱스 처리
 		if (ImGui::InputInt("Frame Index", (_int*)&m_iCurrentAnimationFrame))
 		{
 			if (0 > m_iCurrentAnimationFrame)
@@ -148,6 +162,7 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 				m_iCurrentAnimationFrame = m_iAnimationFrames - 1;
 			m_pCurrentModel->Set_CurrentKeyFrameIndex(m_iCurrentAnimationFrame);
 		}
+		// 현재 프레임의 스피드 처리
 		if (ImGui::InputFloat("Frame Speed", &m_FrameSpeeds[m_iCurrentAnimationFrame], 1.f, 0.f, "%.2f"))
 		{
 			if (0 > m_FrameSpeeds[m_iCurrentAnimationFrame])
@@ -155,7 +170,7 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 			m_pCurrentModel->Set_AnimationFrameSpeed(m_iCurrentAnimationFrame, m_FrameSpeeds[m_iCurrentAnimationFrame]);
 		}
 	}
-
+	// 애니메이션 전체적인 스피드값을 그래프로 보여줌.
 	ImGui::PlotHistogram("Animation Speeds", m_FrameSpeedFunc, &m_FrameSpeeds, m_iAnimationFrames, 0, nullptr, 0.f, 10.f, ImVec2(0, 100));
 
 	return S_OK;
@@ -163,6 +178,7 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed()
 
 HRESULT CWindow_ObjectOptions::AddCollider()
 {
+	// 콜라이더 추가 예정
 	return S_OK;
 }
 

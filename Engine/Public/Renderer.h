@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Component.h"
 
 BEGIN(Engine)
@@ -19,7 +18,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
+	void	Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Draw_RenderGroup();
 
 private:

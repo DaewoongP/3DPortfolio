@@ -16,6 +16,7 @@ public:
 private:
 	vector<class CGameObject*>			m_Undo;
 	_uint								m_iMaxSelection = { 10 };
+
 public:
 	static CWindow_UI* Create(void* pArg = nullptr);
 	virtual void Free() override;

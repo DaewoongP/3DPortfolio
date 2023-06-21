@@ -54,6 +54,7 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 {
 	if (ImGui::Checkbox("Pick Cell", &m_bPickNavigation))
 	{
+		// 셀 피킹 모드가 되면 다른곳에있는 피킹을 종료 해줌.
 		if (true == m_bPickNavigation)
 			MODELWINDOW->Set_Picking(false);
 	}
@@ -66,23 +67,24 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 		if (FAILED(m_pTerrain->PickingOnTerrain(&vPickPos)))
 			return E_FAIL;
 
+		// 컨트롤을 누르고 피킹하면 반올림하여 처리
 		if (m_pGameInstance->Get_DIKeyState(DIK_LCONTROL))
 		{
 			vPickPos.x = roundf(vPickPos.x);
 			vPickPos.y = roundf(vPickPos.y);
 			vPickPos.z = roundf(vPickPos.z);
 		}
-
-		if (0 == m_iCurrentPickIndex)
+		// 처음 피킹하면 현재 Input에있는 모든값을 0으로 초기화 해줌.
+		if (CCell::POINT_A == m_iCurrentPickIndex)
 		{
 			ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
 		}
-
+		// 피킹처리
 		if (CCell::POINT_END > m_iCurrentPickIndex)
 		{
 			memcpy(&m_vCell[m_iCurrentPickIndex++], &vPickPos, sizeof _float3);
 		}
-		
+		// 3번의 피킹이 끝나면 벡터컨테이너에 값을 넣고 피킹 인덱스 초기화
 		if (CCell::POINT_END == m_iCurrentPickIndex)
 		{
 			_char* pIndex = New _char[6];
@@ -97,7 +99,7 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 
 			m_Cells.push_back(pPoints);
 
-			m_iCurrentPickIndex = 0;
+			m_iCurrentPickIndex = CCell::POINT_A;
 
 			Remake_Cells();
 		}
@@ -147,6 +149,7 @@ HRESULT CWindow_Navigation::Navigation_List()
 		ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
 		memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
 
+		// 셀의 중심값을 바라보게 카메라 처리
 		_vector vTransform;
 		ZEROMEM(&vTransform);
 		for (_uint i = 0; i < CCell::POINT_END; ++i)
@@ -162,6 +165,7 @@ HRESULT CWindow_Navigation::Navigation_List()
 		vCamPos.z -= 5.f;
 		pCam->Set_CameraView(vCamPos, vPos, _float4(0.f, 1.f, 0.f, 0.f));
 	}
+
 	return S_OK;
 }
 
@@ -192,6 +196,7 @@ HRESULT CWindow_Navigation::Delete_Cell()
 
 		m_pTerrain->RemakeCells(m_Cells);
 	}
+
 	return S_OK;
 }
 

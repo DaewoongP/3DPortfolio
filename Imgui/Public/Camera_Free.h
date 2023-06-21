@@ -32,9 +32,6 @@ private:
 	void		Mouse_Move(_double dTimeDelta);
 	void		Fix_Mouse(void);
 
-public:
-	_vector		Picking();
-
 private:
 	_bool		m_bFix = { 0 };
 

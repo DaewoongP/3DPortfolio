@@ -23,9 +23,13 @@ public:
 	HRESULT Render();
 
 public:
+	// 기본적인 컴포넌트 프로토타입 생성
 	HRESULT Ready_Prototype_Component();
+	// 쉐이더 컴포넌트 프로토타입 생성
 	HRESULT Ready_Prototype_Component_Shader();
+	// 파일경로를 순회하면 모델데이터를 읽어서 모델 프로토타입을 생성함
 	HRESULT Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag);
+	// 오브젝트 프로토타입 생성
 	HRESULT Ready_Prototype_Object();
 	HRESULT Open_Level();
 	HRESULT Add_Windows();

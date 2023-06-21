@@ -26,14 +26,18 @@ CAxis::CAxis(const CAxis& rhs)
 
 HRESULT CAxis::Initialize_Prototype()
 {
-	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 	return S_OK;
 }
 
 HRESULT CAxis::Initialize(void* pArg)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Add_Component()))
+		return E_FAIL;
 
 	m_eState = *static_cast<AXISSTATE*>(pArg);
 
@@ -43,6 +47,7 @@ HRESULT CAxis::Initialize(void* pArg)
 
 	m_fDistance = 3.f;
 	m_vOriginAxisScale = _float3(1.f, 1.f, 1.f);
+
 	return S_OK;
 }
 
@@ -66,11 +71,14 @@ HRESULT CAxis::Render()
 
 	Set_Position();
 
-	FAILED_CHECK_RETURN(SetUp_ShaderResources(), E_FAIL);
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
 	
 	m_pShaderCom->Begin(0);
 
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -79,17 +87,26 @@ HRESULT CAxis::Add_Component()
 	if (FAILED(__super::Add_Component(LEVEL_TOOL,
 		TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+	{
+		MSG_BOX("Failed CAxis Add_Component : (Com_Renderer)");
 		return E_FAIL;
+	}
 
 	if (FAILED(__super::Add_Component(LEVEL_TOOL,
 		TEXT("Prototype_Component_Transform"),
 		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
+	{
+		MSG_BOX("Failed CAxis Add_Component : (Com_Transform)");
 		return E_FAIL;
+	}
 
 	if (FAILED(__super::Add_Component(LEVEL_TOOL,
 		TEXT("Prototype_Component_Shader_Nontex"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+	{
+		MSG_BOX("Failed CAxis Add_Component : (Com_Shader)");
 		return E_FAIL;
+	}
 
 	_float3 LinePoints[6] = {
 		// X_Axis
@@ -105,7 +122,10 @@ HRESULT CAxis::Add_Component()
 	if (FAILED(__super::Add_Component(LEVEL_TOOL,
 		TEXT("Prototype_Component_VIBuffer_Line"),
 		TEXT("Com_Line"), reinterpret_cast<CComponent**>(&m_pLineCom), &LineDesc)))
+	{
+		MSG_BOX("Failed CAxis Add_Component : (Com_Line)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -114,8 +134,10 @@ HRESULT CAxis::SetUp_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
@@ -126,6 +148,7 @@ void CAxis::Set_Position()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
 	switch (m_eState)
 	{
 	case AXIS_ORIGIN:
@@ -149,7 +172,9 @@ void CAxis::Set_Origin(CGameInstance* pGameInstance)
 	m_pTransformCom->Set_Scale(m_vOriginAxisScale);
 
 	m_WorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+
 	m_ViewMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
 	m_ProjMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ);
 }
 
@@ -165,13 +190,16 @@ void CAxis::Set_UI(CGameInstance* pGameInstance)
 	XMStoreFloat4x4(&ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, -m_fUIAxisSize, m_fUIAxisSize));
 	
 	m_WorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+
 	m_ViewMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
 	m_ProjMatrix = ProjMatrix;
 }
 
 void CAxis::Set_Center(CGameInstance* pGameInstance)
 {
 	m_pTransformCom->Set_Scale(_float3(0.5f, 0.5f, 0.5f));
+
 	_float4 CamPos = *pGameInstance->Get_CamPosition();
 	_vector vCamPos = XMLoadFloat4(&CamPos);
 	_vector vCamLook = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW).r[2];
@@ -180,7 +208,9 @@ void CAxis::Set_Center(CGameInstance* pGameInstance)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vAxisPos);
 
 	m_WorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+
 	m_ViewMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
+
 	m_ProjMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ);
 }
 

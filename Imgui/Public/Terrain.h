@@ -7,8 +7,8 @@ class CShader;
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBuffer_Terrain;
 class CVIBuffer_Cell;
+class CVIBuffer_Terrain;
 END
 
 BEGIN(Tool)
@@ -21,8 +21,10 @@ private:
 	virtual ~CTerrain() = default;
 
 public:
+	// 터레인에 저장된 텍스처 개수
 	_uint Get_NumTextures();
-	void Set_NumTexture(_int iIndex);
+	// 텍스처 인덱스 저장
+	void Set_TextureIndex(_int iIndex);
 	void Set_WireFrame(_bool isWireFrame) { m_bIsWireFrame = isWireFrame; }
 
 public:
@@ -42,11 +44,12 @@ public:
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
-	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
-	vector<CVIBuffer_Cell*> m_Cells = { nullptr };
+	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
+
 	CShader*				m_pCellShaderCom = { nullptr };
+	vector<CVIBuffer_Cell*> m_Cells = { nullptr };
 
 private:
 	_uint					m_iTextureIndex = { 0 };

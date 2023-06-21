@@ -50,7 +50,11 @@ public:
 	void Go_Right(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
 	void Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
 	void LookAt(_fvector vTargetPosition);
+	// 각도값 고정
+	// 축을 기반으로 한 로테이션
 	void Rotation(_fvector vAxis, _float fRadian);
+	// 각도값 고정
+	// 각각의 X,Y,Z 의 각도 값을 받아 처리.
 	void Rotation(_float3 vDegrees);
 	void Turn(_fvector vAxis, _double dTimeDelta);
 	

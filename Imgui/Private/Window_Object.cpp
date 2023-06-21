@@ -41,13 +41,14 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 	DeleteObject();
 
-	AnimationIndex();
+	ObjectOption();
 
 	End();
 }
 
 HRESULT CWindow_Object::Select_Objects()
 {
+	// 오브젝트 리스트 활성화 버튼
 	RadioButton("Non Anim", (_int*)(&m_eCurRadio), CDummy::DUMMY_NONANIM);
 
 	SameLine();
@@ -62,6 +63,8 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 	ImGui::SetNextItemWidth(300.f);
 	if (ImGui::ListBox("Objects", &m_iCurrentListIndex, m_ObjectNames[m_eCurRadio].data(), (_int)m_ObjectNames[m_eCurRadio].size(), 10))
 	{
+		// 리스트박스에서 오브젝트를 클릭하면 해당 오브젝트가 있는 곳으로 카메라가 이동
+		// 해당 오브젝트의 상태값 (SRT) 도 보여줌.
 		CDummy* pDummy = dynamic_cast<CDummy*>(m_Objects[m_eCurRadio][m_iCurrentListIndex]);
 		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
 		
@@ -159,14 +162,15 @@ HRESULT CWindow_Object::DeleteObject()
 	return S_OK;
 }
 
-HRESULT CWindow_Object::AnimationIndex()
+HRESULT CWindow_Object::ObjectOption()
 {
-	CAnimModel* pAnimModel = { nullptr };
+	// 현재 선택된 오브젝트가 있으면 오브젝트 옵션윈도우를 활성화
 	if (CDummy::DUMMY_END > m_eCurRadio &&
-		0 < m_Objects[m_eCurRadio].size() &&
-		(pAnimModel = dynamic_cast<CAnimModel*>(m_Objects[m_eCurRadio][m_iCurrentListIndex])))
+		0 <= m_eCurRadio &&
+		0 < m_Objects[m_eCurRadio].size())
 	{
-		OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_ANIM, pAnimModel);
+		OBJECT_OPTIONSWINDOW->Set_CurrentDummy(m_eCurRadio, 
+			dynamic_cast<CDummy*>(m_Objects[m_eCurRadio][m_iCurrentListIndex]));
 	}
 	else
 	{
@@ -191,6 +195,7 @@ CWindow_Object* CWindow_Object::Create(void* pArg)
 void CWindow_Object::Free()
 {
 	__super::Free();
+
 	for (_uint i = 0; i < CDummy::DUMMY_END; ++i)
 	{
 		for (auto& iter : m_Objects[i])

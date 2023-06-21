@@ -18,10 +18,16 @@ public:
 	HRESULT Begin(_uint iPassIndex);
 
 public:
+	// 텍스처에서 만든 SRV를 던져 처리
 	HRESULT Bind_ShaderResource(const _char * pConstantName, ID3D11ShaderResourceView * pSRV);
+	// 텍스처에서 만든 SRV를 던져 처리
 	HRESULT Bind_ShaderResources(const _char * pConstantName, ID3D11ShaderResourceView * *ppSRVArray, _uint iNumTexture);
+
+	// 쉐이더파일에 바인딩 할 행렬
 	HRESULT Bind_Matrix(const _char * pConstantName, const _float4x4 * pMatrix);
+	// 쉐이더파일에 바인딩 할 행렬
 	HRESULT Bind_Matrices(const _char * pConstantName, const _float4x4 * pMatrix, _uint iNumMatrices);
+	// 쉐이더파일에 바인딩 할 일반 변수
 	HRESULT Bind_RawValue(const _char * pConstantName, const void* pData, _uint iSize);
 	HRESULT	Bind_Rasterizer(const _char * pConstantName, const D3D11_RASTERIZER_DESC * pRasterizer);
 

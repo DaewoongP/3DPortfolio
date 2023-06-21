@@ -15,6 +15,7 @@ public:
 		_int	iCurrentIndex = { -1 };
 
 	}NAVIGATIONDESC;
+
 private:
 	explicit CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CNavigation(const CNavigation& rhs);
@@ -25,6 +26,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
+	// 네비게이션 메쉬 상에서 움직일 수 있는지 체크.
 	_bool Is_Move(_fvector vPosition);
 
 #ifdef _DEBUG

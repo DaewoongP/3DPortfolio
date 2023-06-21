@@ -51,6 +51,7 @@ HRESULT CNavigation::Initialize_Prototype(const _tchar* pNavigationFilePath)
 
 	CloseHandle(hFile);
 
+	// 셀들을 비교해서 이웃셀 값 채워넣기.
 	if (FAILED(SetUp_Neighbors()))
 		return E_FAIL;
 

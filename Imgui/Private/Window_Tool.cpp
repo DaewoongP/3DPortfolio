@@ -140,7 +140,7 @@ void CWindow_Tool::TerrainTexture()
 		else
 		{
 			m_iTextureIndex = iIndex;
-			m_pTerrain->Set_NumTexture(m_iTextureIndex);
+			m_pTerrain->Set_TextureIndex(m_iTextureIndex);
 		}
 	}
 	SameLine();
@@ -198,6 +198,7 @@ CWindow_Tool* CWindow_Tool::Create(void* pArg)
 void CWindow_Tool::Free()
 {
 	__super::Free();
+
 	Safe_Release(m_pTerrain);
 	Safe_Release(m_pCamera_Free);
 	Safe_Release(m_pAxisUI);

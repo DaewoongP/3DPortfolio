@@ -38,11 +38,18 @@ void CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pGameObje
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-	FAILED_CHECK_RETURN(Render_Priority(), E_FAIL);
-	FAILED_CHECK_RETURN(Render_NonBlend(), E_FAIL);
-	FAILED_CHECK_RETURN(Render_NonLight(), E_FAIL);
-	FAILED_CHECK_RETURN(Render_Blend(), E_FAIL);
-	FAILED_CHECK_RETURN(Render_UI(), E_FAIL);
+	// 렌더링 그룹별로 관리하여 처리.
+	if (FAILED(Render_Priority()))
+		return E_FAIL;
+	if (FAILED(Render_NonBlend()))
+		return E_FAIL;
+	if (FAILED(Render_NonLight()))
+		return E_FAIL;
+	if (FAILED(Render_Blend()))
+		return E_FAIL;
+	if (FAILED(Render_UI()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

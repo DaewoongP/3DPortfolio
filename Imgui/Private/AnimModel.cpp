@@ -13,7 +13,9 @@ CAnimModel::CAnimModel(const CAnimModel& rhs)
 
 HRESULT CAnimModel::Initialize_Prototype()
 {
-	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
+	if (FAILED(__super::Initialize_Prototype()))
+        return E_FAIL;
+
 	return S_OK;
 }
 
@@ -24,9 +26,11 @@ HRESULT CAnimModel::Initialize(void* pArg)
     else
         return E_FAIL;
 
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Component(m_ObjectDesc), E_FAIL);
-    
+	if (FAILED(__super::Initialize(pArg)))
+        return E_FAIL;
+
+	if (FAILED(Add_Component(m_ObjectDesc)))
+        return E_FAIL;
     
     m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_ObjectDesc.vPosition));
 	return S_OK;
@@ -35,12 +39,14 @@ HRESULT CAnimModel::Initialize(void* pArg)
 void CAnimModel::Tick(_double dTimeDelta)
 {
     __super::Tick(dTimeDelta);
+
     m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CAnimModel::Late_Tick(_double dTimeDelta)
 {
     __super::Late_Tick(dTimeDelta);
+
     if (nullptr != m_pRendererCom)
         m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 }
@@ -60,7 +66,6 @@ HRESULT CAnimModel::Render()
         m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
 
         m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-        // m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS);
 
         m_pShaderCom->Begin(0);
 
@@ -83,17 +88,26 @@ HRESULT CAnimModel::Add_Component(OBJECTDESC ObjectDesc)
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Transform"),
         TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
+    {
+        MSG_BOX("Failed CAnimModel Add_Component : (Com_Transform)");
         return E_FAIL;
+    }
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Shader_AnimModel"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+    {
+        MSG_BOX("Failed CAnimModel Add_Component : (Com_Shader)");
         return E_FAIL;
+    }
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         ObjectDesc.pModelPrototypeTag,
         TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+    {
+        MSG_BOX("Failed CAnimModel Add_Component : (Com_Model)");
         return E_FAIL;
+    }
 
 	return S_OK;
 }
@@ -105,8 +119,10 @@ HRESULT CAnimModel::SetUp_ShaderResources()
 
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
         return E_FAIL;
+
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
         return E_FAIL;
+
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
         return E_FAIL;
 
@@ -127,6 +143,7 @@ CAnimModel* CAnimModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
         MSG_BOX("Failed to Created CAnimModel");
         Safe_Release(pInstance);
     }
+
     return pInstance;
 }
 
@@ -139,12 +156,14 @@ CGameObject* CAnimModel::Clone(void* pArg)
         MSG_BOX("Failed to Cloned CAnimModel");
         Safe_Release(pInstance);
     }
+
     return pInstance;
 }
 
 void CAnimModel::Free()
 {
     __super::Free();
+
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);

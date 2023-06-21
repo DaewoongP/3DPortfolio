@@ -4,10 +4,10 @@
 #include "GameInstance.h"
 
 BEGIN(Engine)
-class CRenderer;
-class CVIBuffer_Line;
 class CShader;
+class CRenderer;
 class CTransform;
+class CVIBuffer_Line;
 END
 
 BEGIN(Tool)
@@ -43,6 +43,7 @@ private:
 private:
 	_float		m_fDistance = { 0 };
 	_float3		m_vOriginAxisScale;
+	// 현재 Axis가 UI인지, 원점인지, 중앙인지 판단
 	AXISSTATE	m_eState;
 
 	_float			m_fX = { 0.f };

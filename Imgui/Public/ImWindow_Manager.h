@@ -16,6 +16,7 @@ BEGIN(Tool)
 class CImWindow_Manager final : public CBase
 {
     DECLARE_SINGLETON(CImWindow_Manager);
+
 public:
     enum TOOLWINDOW 
     {
@@ -31,7 +32,7 @@ public:
 
 private:
     explicit CImWindow_Manager();
-    ~CImWindow_Manager() = default;
+    virtual ~CImWindow_Manager() = default;
 
 public:
     HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ImGuiIO** pIO);

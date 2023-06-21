@@ -28,6 +28,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 	
 	m_Textures.reserve(m_iNumTextures);
 
+	// 텍스처들을 순회하면서 SRV를 생성하여 처리
 	for (_uint i = 0; i < iNumTextures; ++i)
 	{
 		ID3D11ShaderResourceView* pSRV = { nullptr };

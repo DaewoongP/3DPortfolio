@@ -37,15 +37,19 @@ void CCamera_Free::Set_CameraView(_float4 vEye, _float4 vAt, _float4 vUp)
 
 HRESULT CCamera_Free::Initialize_Prototype()
 {
-	FAILED_CHECK_RETURN(__super::Initialize_Prototype(), E_FAIL);
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CCamera_Free::Initialize(void* pArg)
 {
-	FAILED_CHECK_RETURN(__super::Initialize(pArg), E_FAIL);
-	FAILED_CHECK_RETURN(Add_Components(), E_FAIL);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Add_Components()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -80,7 +84,10 @@ HRESULT CCamera_Free::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_TOOL,
 		TEXT("Prototype_Component_Camera"),
 		TEXT("Com_Camera"), reinterpret_cast<CComponent**>(&m_pCamera), &CameraDesc)))
+	{
+		MSG_BOX("Failed CCamera_Free Add_Component : (Com_Camera)");
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -128,7 +135,9 @@ void CCamera_Free::Mouse_Move(_double dTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
 	dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X);
+
 	if (dwMouseMove)
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
@@ -139,6 +148,7 @@ void CCamera_Free::Mouse_Move(_double dTimeDelta)
 	}
 
 	dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
+
 	if (dwMouseMove)
 	{
 		_vector	vRight = m_pCamera->Get_TransformState(CTransform::STATE_RIGHT);
@@ -147,6 +157,7 @@ void CCamera_Free::Mouse_Move(_double dTimeDelta)
 
 		dwMouseMove = 0;
 	}
+
 	Safe_Release(pGameInstance);
 }
 
@@ -156,42 +167,6 @@ void CCamera_Free::Fix_Mouse(void)
 
 	ClientToScreen(g_hWnd, &ptMouse);
 	SetCursorPos(ptMouse.x, ptMouse.y);
-}
-
-_vector CCamera_Free::Picking()
-{
-	POINT	pt{};
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-
-	_vector		vMouse;
-	vMouse.m128_f32[0] = pt.x / (g_iWinSizeX * 0.5f) - 1.f;
-	vMouse.m128_f32[1] = pt.y / -(g_iWinSizeY * 0.5f) + 1.f;
-	vMouse.m128_f32[2] = 0.f;
-	vMouse.m128_f32[3] = 1.f;
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	_matrix		ProjMatrix_Inverse;
-	ProjMatrix_Inverse = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_PROJ);
-	vMouse = XMVector3TransformCoord(vMouse, ProjMatrix_Inverse);
-
-	_matrix		ViewMatrix_Inverse;
-	ViewMatrix_Inverse = pGameInstance->Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE::D3DTS_VIEW);
-
-	_vector vRayPos, vRayDir;
-	vRayPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-	vRayDir = vMouse - vRayPos;
-	vRayPos = XMVector3TransformCoord(vRayPos, ViewMatrix_Inverse);
-	vRayDir = XMVector3TransformNormal(vRayDir, ViewMatrix_Inverse);
-
-	/*vRayDir.m128_f32[0] /= vRayDir.m128_f32[2];
-	vRayDir.m128_f32[1] /= vRayDir.m128_f32[2];
-	vRayDir.m128_f32[2] /= vRayDir.m128_f32[2];
-	vRayDir.m128_f32[3] = 0.f;*/
-	_float fCamToPickingDistance = { 30.f };
-	_vector vPos = vRayPos + vRayDir * fCamToPickingDistance;
-
-	return vPos;
 }
 
 CCamera_Free* CCamera_Free::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

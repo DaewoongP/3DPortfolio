@@ -14,9 +14,6 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 
-private:
-	void MakeObject();
-
 public:
 	static CWindow_Light* Create(void* pArg = nullptr);
 	virtual void Free() override;

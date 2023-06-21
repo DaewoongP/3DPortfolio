@@ -30,23 +30,32 @@ private:
 	CTerrain*				m_pTerrain = { nullptr };
 
 private:
-	_uint					m_iDummyNum = { 0 };
-	_uint					m_iMaxSelection = { 20 };
+	// 현재 선택한 메쉬의 인덱스
 	_int					m_iCur_Mesh = { 0 };
+	// 마우스 피킹 bool 변수
 	_bool					m_bPickMeshes = { false };
+	// 현재 애니메이션 모델인지 아닌지 판단하는 radio 변수
 	_int					m_iCurRadio = { 0 };
+
 	_float3					m_vScale;
 	_float3					m_vRotation;
 	_float4					m_vTransform;
+	// 현재 선택한 오브젝트의 기본 태그값
+	// GameObject_NonAnimModel_
+	// GameObject_AnimModel_
 	_char					m_szObjectName[MAX_STR] = "";
-	_uint					m_iCur_Mesh_Index = { 0 };
+	// 모델마다 태그에 이름을 다르게 주기위한 인덱스 값
+	_uint					m_iCurrentModelIndex = { 0 };
 
 private:
-	map<string, string>					m_SelectionMap;
+	// 툴에 있는 모든 애니메이션 모델 프로토타입을 저장한 맵컨테이너
 	unordered_map<const _tchar*, CComponent*> m_AnimModelPrototypes;
+	// 툴에 있는 모든 스태틱 모델 프로토타입을 저장한 맵컨테이너
 	unordered_map<const _tchar*, CComponent*> m_NonAnimModelPrototypes;
-	vector<const _char*>				m_NonAnimModelItems;
-	vector<const _char*>				m_AnimModelItems;
+	// 현재 프로토타입이 저장되어있는 맵과 같은 인덱스를 가진 이름을 보관한 벡터 컨테이너
+	vector<const _char*>				m_NonAnimModelNames;
+	// 현재 프로토타입이 저장되어있는 맵과 같은 인덱스를 가진 이름을 보관한 벡터 컨테이너
+	vector<const _char*>				m_AnimModelNames;
 
 private:
 	HRESULT	Select_ModelFiles();
