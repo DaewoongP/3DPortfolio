@@ -8,6 +8,7 @@ class CShader;
 class CTexture;
 class CRenderer;
 class CCollider;
+class CAnimation;
 END
 
 BEGIN(Tool)
@@ -18,17 +19,6 @@ private:
 	explicit CAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CAnimModel(const CAnimModel& rhs);
 	virtual ~CAnimModel() = default;
-
-public:
-	const _tchar* Get_AnimationName() const;
-	_uint Get_NumAnimations();
-	_uint Get_MaxKeyFrame();
-	_uint Get_CurrentMaxChannelKeyFrameIndex();
-	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
-	void Set_AnimationPause(_bool bIsPaused);
-	void Set_AnimIndex(_uint iIndex);
-	void Set_AnimationSpeed(_double dTime);
-	void Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed);
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -43,7 +33,7 @@ private:
 	CTexture*				m_pTextureCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
-
+	
 private:
 	HRESULT	Add_Component(OBJECTDESC ObjectDesc);
 	HRESULT	SetUp_ShaderResources();

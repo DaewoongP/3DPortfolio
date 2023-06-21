@@ -30,9 +30,9 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 		MSG_BOX("Already have Prototype In CComponent_Manager");
 		return E_FAIL;
 	}
-	if (nullptr == pPrototype)
-		return E_FAIL;
 
+	NULL_CHECK_RETURN_MSG(pPrototype, E_FAIL, TEXT("Prototype Component NULL"));
+	
 	pPrototype->Set_Tag(pPrototypeTag);
 
 	m_pPrototypes[iLevelIndex].emplace(pPrototype->Get_Tag(), pPrototype);
@@ -50,8 +50,8 @@ CComponent* CComponent_Manager::Clone_Component(_uint iLevelIndex, const _tchar*
 		return nullptr;
 	}
 		
-
 	CComponent* pComponent = pPrototype->Clone(pArg);
+
 	if (nullptr == pComponent)
 	{
 		MSG_BOX("Failed Clone Prototype");
@@ -111,6 +111,7 @@ unordered_map<const _tchar*, class CComponent*> CComponent_Manager::Find_Prototy
 		if (nullptr != wcswcs(pair.first, pSubTag))
 			Components.insert(pair);
 		});
+
 	return Components;
 }
 

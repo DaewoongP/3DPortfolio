@@ -7,22 +7,30 @@ class ENGINE_DLL CModel : public CComponent
 {
 public:
 	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
+
 private:
 	explicit CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CModel(const CModel& rhs);
 	virtual ~CModel() = default;
 
 public:
+	// 모델의 메쉬 개수 반환
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
-	_uint Get_NumAnimations() { return m_iNumAnimations; }
-	_uint Get_MaxKeyFrame();
-	_uint Get_CurrentMaxChannelKeyFrameIndex();
-	const _tchar* Get_AnimationName() const;
+	// 모델의 애니메이션 개수 반환
+	_uint Get_NumAnimations() const { return m_iNumAnimations; }
+	// 현재 실행중인 애니메이션
 	class CAnimation* Get_Animation() { return m_Animations[m_iCurrentAnimIndex]; }
+	// 현재 실행중인 애니메이션 이름 반환.
+	const _tchar* Get_AnimationName() const;
+	// 현재 애니메이션의 프레임 개수 반환
+	_uint Get_AnimationFrames() const;
+	// 현재 실행중인 애니메이션의 현재 프레임 인덱스를 반환
+	_uint Get_CurrentAnimationFrame() const;
 	_float4x4 Get_BoneCombinedTransformationMatrix(_uint iIndex);
+	// 프레임 인덱스에 해당하는 스피드값 설정.
+	void Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed);
+	void Set_AnimationPause(_bool isPause);
 	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
-	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
-	void Set_AnimationPause(_bool bIsPaused);
 	void Set_AnimIndex(_uint iAnimIndex) 
 	{
 		if (iAnimIndex >= m_iNumAnimations)
@@ -36,7 +44,7 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	void Play_Animation(_double dTimeDelta);
+	void	Play_Animation(_double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 
 public:

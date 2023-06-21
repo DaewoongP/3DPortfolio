@@ -11,9 +11,14 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
+	// 현재 애니메이션 이름 반환
 	const _tchar* Get_AnimationName() const { return m_szName; }
-	_uint Get_MaxKeyFrame();
-	_uint Get_CurrentMaxChannelKeyFrameIndex();
+	// 애니메이션의 프레임 개수 반환
+	_uint Get_AnimationFrames();
+	// 현재 애니메이션의 프레임 반환
+	// 채널 중 키프레임 최대치 기준.
+	_uint Get_CurrentAnimationFrame();
+	// 프레임 인덱스에 해당하는 스피드값 설정.
 	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
 	void Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex);
 	void Set_Pause(_bool bIsPause) { m_bIsPaused = bIsPause; }
@@ -21,6 +26,7 @@ public:
 	{
 		if (0 >= dMultiply)
 			return;
+
 		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
 	}
 
@@ -30,9 +36,13 @@ public:
 
 public:
 	_tchar						m_szName[MAX_STR] = TEXT("");
+	// 애니메이션이 사용하는 채널(뼈)의 개수
 	_uint						m_iNumChannels = { 0 };
+	// 채널을 담고있는 벡터 컨테이너
 	vector<class CChannel*>		m_Channels;
+	// 각 채널의 현재 키프레임 인덱스
 	vector<_uint>				m_ChannelCurrentKeyFrames;
+
 	_double						m_dDuration = { 0.0 };
 	_double						m_dOriginTickPerSecond = { 0.0 };
 	_double						m_dTickPerSecond = { 0.0 };
@@ -40,9 +50,14 @@ public:
 
 	_bool						m_bIsLoop = { false };
 	_bool						m_bIsPaused = { false };
-	_uint						m_iMaxNumKeyFrameChannelIndex = { 0 };
-	_uint						m_iMaxNumKeyFrames = { 0 };
-	vector<_float>				m_FrameSpeeds;
+
+	// 현재 애니메이션에 해당하는 채널의 프레임 중 가장 프레임이 많은 채널의 인덱스
+	_uint						m_iMaxFrameChannelIndex = { 0 };
+	// 애니메이션의 최대 프레임 개수
+	_uint						m_iAnimationFrames = { 0 };
+	// 현재 애니메이션에 해당하는 채널의 프레임 중 가장 큰 프레임을 기준으로 사이즈를 처리.
+	// 각 프레임 별로 스피드를 관리하는 변수.
+	vector<_float>				m_AnimationFrameSpeeds;
 
 public:
 	static CAnimation* Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

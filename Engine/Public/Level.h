@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+
 BEGIN(Engine)
 
 class ENGINE_DLL CLevel abstract : public CBase

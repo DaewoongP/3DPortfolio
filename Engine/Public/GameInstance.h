@@ -14,13 +14,16 @@ private:
 	virtual ~CGameInstance() = default;
 
 public:
+	// 엔진 프로젝트 초기화 함수
 	HRESULT Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	// 엔진 프로젝트 미리 공간 할당 함수
 	HRESULT	Reserve_Engine(_uint iNumLevels);
+	// 엔진 Tick 호출 함수
 	void Tick_Engine(_double dTimeDelta);
+	// 레벨 리소스 초기화 함수
 	void Clear_LevelResources(_uint iLevelIndex);
 
-public:
-	// Graphic_Device
+public: /* For. Graphic_Device */
 	HRESULT Clear_BackBuffer_View(_float4 vClearColor);
 	HRESULT Clear_DepthStencil_View();
 	HRESULT Present();
@@ -31,6 +34,7 @@ public:
 public: /* For.Timer_Manager */
 	HRESULT		Add_Timer(const _tchar * pTimerTag);
 	void		Tick_Timer(const _tchar * pTimerTag);
+
 	_double		Get_TimeDelta(const _tchar * pTimerTag);
 
 public: /* For.Level_Manager */
@@ -43,6 +47,7 @@ public: /* For.Object_Manager */
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
 	HRESULT Delete_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pGameObjectTag);
 	HRESULT Clear_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
+
 	class CGameObject* Get_LastGameObject();
 	HRESULT Set_LastGameObject(class CGameObject* pGameObject);
 

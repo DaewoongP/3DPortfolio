@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CInput_Device : public CBase
 {
 	DECLARE_SINGLETON(CInput_Device)
+
 public:
 	enum MOUSEKEYSTATE { DIMK_LBUTTON, DIMK_RBUTTON, DIMK_WHEEL, DIMK_END };
 	enum MOUSEMOVESTATE { DIMM_X, DIMM_Y, DIMM_WHEEL, DIMM_END };
@@ -35,20 +36,24 @@ private:
 	_bool    Mouse_Up(MOUSEKEYSTATE eMouseID);
 
 private:
+	// 인풋 객체 생성용 컴객체
 	LPDIRECTINPUT8				m_pInputSDK;
 
 	LPDIRECTINPUTDEVICE8		m_pKeyBoard;
 	LPDIRECTINPUTDEVICE8		m_pMouse;
 
 private:
+	// 현재 키보드 상태값
 	_byte                   m_byKeyState[MAX_DIK];
+	// 이전 키보드 상태값
 	_byte                   m_byPreKeyState[MAX_DIK];
+	// 현재 마우스 상태값
 	DIMOUSESTATE            m_MouseState;
+	// 이전 마우스 상태값
 	DIMOUSESTATE            m_PreMouseState;
 
 public:
-	virtual void		Free(void);
-
+	virtual void Free();
 };
 
 END

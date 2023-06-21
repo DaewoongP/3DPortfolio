@@ -17,16 +17,18 @@ BEGIN(Engine)
 class CComponent_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CComponent_Manager)
+
 private:
 	explicit CComponent_Manager();
 	virtual ~CComponent_Manager() = default;
 
 public:
-	HRESULT Reserve_Containers(_uint iNumLevels);
-	HRESULT Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);
-	void Clear_LevelResources(_uint iLevelIndex);
-	HRESULT	Delete_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
+	HRESULT				Reserve_Containers(_uint iNumLevels);
+	HRESULT				Add_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag, class CComponent* pPrototype);
+	class CComponent*	Clone_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, void* pArg);
+	void				Clear_LevelResources(_uint iLevelIndex);
+	HRESULT				Delete_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
+	// SubTag가 태그중간에 존재하는 태그를 가진 프로토타입을 맵컨테이너에 담아서 반환
 	unordered_map<const _tchar*, class CComponent*> Find_PrototypesBySubTag(_uint iLevelIndex, const _tchar* pSubTag);
 
 private:

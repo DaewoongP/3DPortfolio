@@ -5,6 +5,7 @@
 #pragma warning (disable : 26812) // enum class
 #pragma warning (disable : 4100) // unused variable
 #pragma warning (disable : 6031) // except return
+#pragma warning (disable : 4828) // korean comment
 
 #define DIRECTINPUT_VERSION		0x0800
 #include <dinput.h>

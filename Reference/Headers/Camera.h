@@ -20,13 +20,15 @@ private:
 	virtual ~CCamera() = default;
 
 public:
-	void Set_CameraDesc(CAMERADESC CameraDesc);
-	void Set_CameraWorldMatrix(_fmatrix CamWorldMatrix) { m_pTransform->Set_WorldMatrix(CamWorldMatrix); }
+	_vector Get_TransformState(CTransform::STATE eState) { return m_pTransform->Get_State(eState); }
+	void	Set_TransformDesc(CTransform::TRANSFORMDESC TransformDesc) { m_pTransform->Set_Desc(TransformDesc); }
+	void	Set_CameraDesc(CAMERADESC CameraDesc);
+	void	Set_CameraWorldMatrix(_fmatrix CamWorldMatrix) { m_pTransform->Set_WorldMatrix(CamWorldMatrix); }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Tick(_double dTimeDelta) override;
+	virtual void	Tick(_double dTimeDelta) override;
 
 public:
 	void Go_Straight(_double dTimeDelta) { m_pTransform->Go_Straight(dTimeDelta); }
@@ -34,8 +36,6 @@ public:
 	void Go_Left(_double dTimeDelta) { m_pTransform->Go_Left(dTimeDelta); }
 	void Go_Right(_double dTimeDelta) { m_pTransform->Go_Right(dTimeDelta); }
 
-	_vector Get_TransformState(CTransform::STATE eState) { return m_pTransform->Get_State(eState); }
-	void Set_TransformDesc(CTransform::TRANSFORMDESC TransformDesc) { m_pTransform->Set_Desc(TransformDesc); }
 	void Turn(_fvector vAxis, _double dTimeDelta) { m_pTransform->Turn(vAxis, dTimeDelta); }
 	void Set_Position(_fvector vPosition) { m_pTransform->Set_State(CTransform::STATE_POSITION, vPosition); }
 

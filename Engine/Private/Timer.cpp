@@ -1,7 +1,7 @@
 #include "..\Public\Timer.h"
 
 CTimer::CTimer()
-	: m_TimeDelta(0.f)
+	: m_TimeDelta(0.0)
 {
 	ZeroMemory(&m_tFrameTime, sizeof(LARGE_INTEGER));
 	ZeroMemory(&m_tFixTime, sizeof(LARGE_INTEGER));

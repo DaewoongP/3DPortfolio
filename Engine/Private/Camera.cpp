@@ -48,6 +48,7 @@ void CCamera::Set_CameraDesc(CAMERADESC CameraDesc)
 HRESULT CCamera::Initialize_Prototype()
 {
 	m_pTransform = CTransform::Create(m_pDevice, m_pContext);
+
 	if (nullptr == m_pTransform)
 		return E_FAIL;
 
@@ -73,6 +74,8 @@ HRESULT CCamera::Initialize(void* pArg)
 
 void CCamera::Tick(_double dTimeDelta)
 {
+	NULL_CHECK_RETURN_MSG(m_pPipeLine, , TEXT("PipeLine NULL"));
+
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->Get_WorldMatrix_Inverse());
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 }
@@ -104,6 +107,7 @@ CComponent* CCamera::Clone(void* pArg)
 void CCamera::Free()
 {
 	__super::Free();
+
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pTransform);
 }

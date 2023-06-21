@@ -33,7 +33,9 @@ void CGameObject::Late_Tick(_double dTimeDelta)
 
 HRESULT CGameObject::Render()
 {
-	FAILED_CHECK_RETURN(__super::Render(), E_FAIL);
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

@@ -12,20 +12,18 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
-	void Set_Tag(const _tchar * pTag) {
-		lstrcpy(m_pTag, pTag);
-	}
-	const _tchar* Get_Tag() const { return m_pTag; }
+	const _tchar*	Get_Tag() const { return m_pTag; }
+	void			Set_Tag(const _tchar * pTag) { lstrcpy(m_pTag, pTag); }
 
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual void Tick(_double dTimeDelta);
-	virtual void Late_Tick(_double dTimeDelta);
+	virtual void	Tick(_double dTimeDelta);
+	virtual void	Late_Tick(_double dTimeDelta);
 	virtual HRESULT Render();
 
 protected:
-	_tchar m_pTag[MAX_STR];
+	_tchar		m_pTag[MAX_STR] = TEXT("");
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

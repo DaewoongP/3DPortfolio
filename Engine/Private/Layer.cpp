@@ -8,6 +8,7 @@ CLayer::CLayer()
 HRESULT CLayer::Add_GameObjects(const _tchar* pGameObjectTag, CGameObject* pGameObject)
 {
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
 	if (nullptr != Find_GameObject(pGameObjectTag))
 	{
 		MSG_BOX("GameObject Tag is Already Used");
@@ -19,18 +20,6 @@ HRESULT CLayer::Add_GameObjects(const _tchar* pGameObjectTag, CGameObject* pGame
 	m_GameObjects.insert({ pGameObject->Get_Tag(), pGameObject });
 
 	return S_OK;
-}
-
-void CLayer::Tick(_double dTimeDelta)
-{
-	for (auto& pGameObject : m_GameObjects)
-		pGameObject.second->Tick(dTimeDelta);
-}
-
-void CLayer::Late_Tick(_double dTimeDelta)
-{
-	for (auto& pGameObject : m_GameObjects)
-		pGameObject.second->Late_Tick(dTimeDelta);
 }
 
 CGameObject* CLayer::Find_GameObject(const _tchar* pGameObjectTag)
@@ -66,6 +55,18 @@ HRESULT CLayer::Clear_Layer()
 	m_GameObjects.clear();
 
 	return S_OK;
+}
+
+void CLayer::Tick(_double dTimeDelta)
+{
+	for (auto& pGameObject : m_GameObjects)
+		pGameObject.second->Tick(dTimeDelta);
+}
+
+void CLayer::Late_Tick(_double dTimeDelta)
+{
+	for (auto& pGameObject : m_GameObjects)
+		pGameObject.second->Late_Tick(dTimeDelta);
 }
 
 CLayer* CLayer::Create()

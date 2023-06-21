@@ -15,19 +15,29 @@ HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHICDESC::WINMODE eW
 #ifdef _DEBUG
 	iFlag = D3D11_CREATE_DEVICE_DEBUG;
 #endif //_DEBUG
+
 	D3D_FEATURE_LEVEL			FeatureLV;
+
 	FAILED_CHECK_RETURN_MSG(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr, 0, D3D11_SDK_VERSION, 
 			&m_pDevice, &FeatureLV, &m_pDeviceContext), E_FAIL, L"Failed Create Device");
-	FAILED_CHECK_RETURN_MSG(Ready_SwapChain(hWnd, eWinMode, iWinCX, iWinCY), E_FAIL, L"Failed Make SwapChain");
-	FAILED_CHECK_RETURN_MSG(Ready_BackBufferRenderTargetView(), E_FAIL, L"Failed Make BackBuffer");
-	FAILED_CHECK_RETURN_MSG(Ready_DepthStencilRenderTargetView(iWinCX, iWinCY), E_FAIL, L"Failed Make DepthStencil");
 
+	if (FAILED(Ready_SwapChain(hWnd, eWinMode, iWinCX, iWinCY)))
+		return E_FAIL;
+
+	if (FAILED(Ready_BackBufferRenderTargetView()))
+		return E_FAIL;
+
+	if (FAILED(Ready_DepthStencilRenderTargetView(iWinCX, iWinCY)))
+		return E_FAIL;
+
+	// 렌더타겟 설정
 	ID3D11RenderTargetView* pRTVs[1] = {
 		m_pBackBufferRTV,
 	};
 
 	m_pDeviceContext->OMSetRenderTargets(1, pRTVs, m_pDepthStencilView);
 
+	// 뷰포트 구조체 값 저장
 	D3D11_VIEWPORT			ViewPortDesc;
 	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
 
@@ -51,7 +61,8 @@ HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHICDESC::WINMODE eW
 
 HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
 {
-	NULL_CHECK_RETURN_MSG(m_pDeviceContext, E_FAIL, L"Failed Load DeviceContext");
+	NULL_CHECK_RETURN_MSG(m_pDeviceContext, E_FAIL, TEXT("Device Context NULL"));
+	
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, (_float*)&vClearColor);
 
 	return S_OK;
@@ -59,7 +70,8 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
 
 HRESULT CGraphic_Device::Clear_DepthStencil_View()
 {
-	NULL_CHECK_RETURN_MSG(m_pDeviceContext, E_FAIL, L"Failed Load DeviceContext");
+	NULL_CHECK_RETURN_MSG(m_pDeviceContext, E_FAIL, TEXT("Device Context NULL"));
+
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 	return S_OK;
@@ -67,35 +79,41 @@ HRESULT CGraphic_Device::Clear_DepthStencil_View()
 
 HRESULT CGraphic_Device::Present()
 {
-	NULL_CHECK_RETURN_MSG(m_pSwapChain, E_FAIL, L"Failed Load SwapChain");
+	NULL_CHECK_RETURN_MSG(m_pSwapChain, E_FAIL, L"SwapChain NULL");
 
 	return m_pSwapChain->Present(0, 0);
 }
 
 HRESULT CGraphic_Device::ResetRenderTargets()
 {
-	if (nullptr == m_pDeviceContext ||
-		nullptr == m_pBackBufferRTV ||
-		nullptr == m_pDepthStencilView)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(m_pDeviceContext, E_FAIL, TEXT("Device Context NULL"));
+	NULL_CHECK_RETURN_MSG(m_pBackBufferRTV, E_FAIL, TEXT("BackBufferRTV NULL"));
+	NULL_CHECK_RETURN_MSG(m_pDepthStencilView, E_FAIL, TEXT("DepthStencilView NULL"));
 
 	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CGraphic_Device::Resize_Buffer(_uint& ResizeWidth, _uint& ResizeHeight)
 {
+	NULL_CHECK_RETURN_MSG(m_pDeviceContext, E_FAIL, TEXT("Device Context NULL"));
+
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pDepthStencilView);
 
 	m_pSwapChain->ResizeBuffers(0, ResizeWidth, ResizeHeight, DXGI_FORMAT_UNKNOWN, 0);
 
-	Ready_BackBufferRenderTargetView();
-	Ready_DepthStencilRenderTargetView(ResizeWidth, ResizeHeight);
+	if (FAILED(Ready_BackBufferRenderTargetView()))
+		return E_FAIL;
+
+	if (FAILED(Ready_DepthStencilRenderTargetView(ResizeWidth, ResizeHeight)))
+		return E_FAIL;
+
 	ResizeWidth = ResizeHeight = 0;
 
 	m_pDeviceContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDepthStencilView);
+
 	return S_OK;
 }
 
@@ -111,7 +129,7 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHICDESC::WINMODE eWinMod
 	IDXGIFactory* pFactory = nullptr;
 	pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&pFactory);
 
-	DXGI_SWAP_CHAIN_DESC		SwapChain;
+	DXGI_SWAP_CHAIN_DESC	SwapChain;
 	ZeroMemory(&SwapChain, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 	SwapChain.BufferDesc.Width = iWinCX;
@@ -143,12 +161,16 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHICDESC::WINMODE eWinMod
 
 HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 {
-	NULL_CHECK_RETURN(m_pDevice, E_FAIL);
+	NULL_CHECK_RETURN_MSG(m_pDevice, E_FAIL, TEXT("Device NULL"));
+
 	ID3D11Texture2D* pBackBufferTexture = nullptr;
+
 	FAILED_CHECK_RETURN_MSG(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTexture), E_FAIL,
 		L"Failed GetBuffer");
+
 	FAILED_CHECK_RETURN_MSG(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV), E_FAIL,
 		L"Failed Create RenderTarget");
+
 	Safe_Release(pBackBufferTexture);
 
 	return S_OK;
@@ -156,7 +178,8 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 
 HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint iWinCY)
 {
-	NULL_CHECK_RETURN(m_pDevice, E_FAIL);
+	NULL_CHECK_RETURN_MSG(m_pDevice, E_FAIL, TEXT("Device NULL"));
+
 	ID3D11Texture2D* pDepthStencilTexture = nullptr;
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -186,10 +209,11 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 void CGraphic_Device::Free()
 {
 	Safe_Release(m_pSwapChain);
-	Safe_Release(m_pDepthStencilView);
 	Safe_Release(m_pBackBufferRTV);
 	Safe_Release(m_pDeviceContext);
+	Safe_Release(m_pDepthStencilView);
 
+	// 컴객체 누수시 디버그 용도.
 	/*#if defined(DEBUG) || defined(_DEBUG)
 		ID3D11Debug* d3dDebug;
 		HRESULT hr = m_pDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&d3dDebug));
@@ -208,6 +232,6 @@ void CGraphic_Device::Free()
 		if (d3dDebug != nullptr)            d3dDebug->Release();
 	#endif*/
 
-
+	// 디버그할때 디바이스가 필요하여 아래쪽에서 삭제처리.
 	Safe_Release(m_pDevice);
 }

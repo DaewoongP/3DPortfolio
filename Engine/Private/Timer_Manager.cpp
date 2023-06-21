@@ -10,6 +10,7 @@ CTimer_Manager::CTimer_Manager()
 _double Engine::CTimer_Manager::Get_TimeDelta(const _tchar* pTimerTag)
 {
 	CTimer*		pTimer = Find_Timer(pTimerTag);
+
 	if (nullptr == pTimer)
 		return 0.0;
 
@@ -25,8 +26,7 @@ HRESULT Engine::CTimer_Manager::Add_Timer(const _tchar* pTimerTag)
 	
 	pTimer = CTimer::Create();
 
-	if (nullptr == pTimer)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(pTimer, E_FAIL, TEXT("Failed Create Timer"))
 
 	m_umapTimers.insert({ pTimerTag, pTimer });
 
@@ -36,6 +36,7 @@ HRESULT Engine::CTimer_Manager::Add_Timer(const _tchar* pTimerTag)
 void CTimer_Manager::Tick_Timer(const _tchar * pTimerTag)
 {
 	CTimer*		pTimer = Find_Timer(pTimerTag);
+
 	if (nullptr == pTimer)
 		return;
 

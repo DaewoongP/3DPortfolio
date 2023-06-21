@@ -15,9 +15,9 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_dTimeAcc(rhs.m_dTimeAcc)
 	, m_bIsLoop(rhs.m_bIsLoop)
 	, m_bIsPaused(rhs.m_bIsPaused)
-	, m_iMaxNumKeyFrameChannelIndex(rhs.m_iMaxNumKeyFrameChannelIndex)
-	, m_iMaxNumKeyFrames(rhs.m_iMaxNumKeyFrames)
-	, m_FrameSpeeds(rhs.m_FrameSpeeds)
+	, m_iMaxFrameChannelIndex(rhs.m_iMaxFrameChannelIndex)
+	, m_iAnimationFrames(rhs.m_iAnimationFrames)
+	, m_AnimationFrameSpeeds(rhs.m_AnimationFrameSpeeds)
 {
 	lstrcpy(m_szName, rhs.m_szName);
 
@@ -27,19 +27,19 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	}
 }
 
-_uint CAnimation::Get_MaxKeyFrame()
+_uint CAnimation::Get_AnimationFrames()
 {
-	return m_iMaxNumKeyFrames;
+	return m_iAnimationFrames;
 }
 
-_uint CAnimation::Get_CurrentMaxChannelKeyFrameIndex()
+_uint CAnimation::Get_CurrentAnimationFrame()
 {
-	return m_ChannelCurrentKeyFrames[m_iMaxNumKeyFrameChannelIndex];
+	return m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex];
 }
 
 void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
 {
-	m_FrameSpeeds[iFrameIndex] = fSpeed;
+	m_AnimationFrameSpeeds[iFrameIndex] = fSpeed;
 }
 
 void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex)
@@ -63,6 +63,7 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 {
 	m_bIsLoop = true;
 
+	// 애니메이션 정보 저장
 	lstrcpy(m_szName, pAnimation->Name);
 	m_dDuration = pAnimation->Duration;
 
@@ -86,19 +87,20 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 
 	_uint iNumKeyFrame = { 0 };
 	_uint iChannelIndex = { 0 };
+	// 채널을 순회하면서 모든 채널중 가장 큰 키프레임을 찾아 해당 채널의 인덱스와 해당 프레임을 저장.
 	for (auto& pChannel : m_Channels)
 	{
 		if (pChannel->Get_NumKeyFrames() > iNumKeyFrame)
 		{
 			iNumKeyFrame = pChannel->Get_NumKeyFrames();
-			m_iMaxNumKeyFrameChannelIndex = iChannelIndex;
+			m_iMaxFrameChannelIndex = iChannelIndex;
 		}
 		++iChannelIndex;
 	}
-	m_iMaxNumKeyFrames = iNumKeyFrame;
+	m_iAnimationFrames = iNumKeyFrame;
 
-	for (_uint i = 0; i < m_Channels[m_iMaxNumKeyFrameChannelIndex]->Get_NumKeyFrames(); ++i)
-		m_FrameSpeeds.push_back(1.f);
+	for (_uint i = 0; i < m_iAnimationFrames; ++i)
+		m_AnimationFrameSpeeds.push_back(1.f);
 
 	return S_OK;
 }
@@ -108,8 +110,9 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 	if (m_bIsPaused)
 		return;
 
-	if (m_FrameSpeeds.size() > 0)
-		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_FrameSpeeds[m_ChannelCurrentKeyFrames[m_iMaxNumKeyFrameChannelIndex]];
+	// 프레임 별로 애니메이션 스피드 제어.
+	if (m_AnimationFrameSpeeds.size() > 0)
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationFrameSpeeds[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
 	else
 		m_dTimeAcc += m_dTickPerSecond * TimeDelta;
 

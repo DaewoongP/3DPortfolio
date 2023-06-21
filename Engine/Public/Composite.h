@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Component.h"
 
 BEGIN(Engine)
@@ -17,8 +16,9 @@ public:
 	virtual HRESULT Render();
 
 public:
-	HRESULT Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
-	HRESULT	Delete_Component(const _tchar* pComponentTag);
+	HRESULT		Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
+	HRESULT		Delete_Component(const _tchar* pComponentTag);
+	CComponent* Find_Component(const _tchar* pComponentTag);
 
 protected:
 	unordered_map<const _tchar*, class CComponent*>		m_Components;

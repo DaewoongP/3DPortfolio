@@ -32,10 +32,12 @@ void CBone::Invalidate_CombinedTransformationMatrix(const CModel::BONES& Bones)
 {
 	if (-1 == m_iParentIndex)
 	{
+		// Root일경우 최종행렬과 뼈 자체행렬이 동일.
 		m_CombinedTransformationMatrix = m_TransformationMatrix;
 	}
 	else
 	{
+		// 부모행렬과 자신뼈의 행렬을 연산하여 로컬상태행렬로 처리.
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix,
 			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentIndex]->m_CombinedTransformationMatrix));
 	}

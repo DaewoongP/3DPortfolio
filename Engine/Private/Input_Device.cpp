@@ -8,7 +8,7 @@ CInput_Device::CInput_Device()
 	, m_pMouse(nullptr)
 {
 	ZeroMemory(m_byKeyState, sizeof(m_byKeyState));
-	ZeroMemory(&m_MouseState, sizeof(DIMOUSESTATE));
+	ZeroMemory(&m_byPreKeyState, sizeof(m_byPreKeyState));
 	ZeroMemory(&m_MouseState, sizeof(DIMOUSESTATE));
 	ZeroMemory(&m_PreMouseState, sizeof(DIMOUSESTATE));
 }
@@ -71,25 +71,25 @@ HRESULT CInput_Device::Ready_Input_Device(HINSTANCE hInst, HWND hWnd)
 	FAILED_CHECK_RETURN(m_pInputSDK->CreateDevice(GUID_SysKeyboard, &m_pKeyBoard, nullptr), E_FAIL);
 
 	// 생성된 키보드 객체애 대한 정보를 컴객체에게 전달
-	m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard);
+	FAILED_CHECK_RETURN(m_pKeyBoard->SetDataFormat(&c_dfDIKeyboard), E_FAIL);
 
 	// 생성된 키보드 객체의 동작 범위를 설정
-	m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+	FAILED_CHECK_RETURN(m_pKeyBoard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE), E_FAIL);
 
 	// 생성된 키보드 컴객체를 활성화
-	m_pKeyBoard->Acquire();
+	FAILED_CHECK_RETURN(m_pKeyBoard->Acquire(), E_FAIL);
 
 	// 내 컴퓨터에 연결되어 있는 마우스 객체 생성
 	FAILED_CHECK_RETURN(m_pInputSDK->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr), E_FAIL);
 
 	// 생성된 마우스 객체애 대한 정보를 컴객체에게 전달
-	m_pMouse->SetDataFormat(&c_dfDIMouse);
+	FAILED_CHECK_RETURN(m_pMouse->SetDataFormat(&c_dfDIMouse), E_FAIL);
 
 	// 생성된 마우스 객체의 동작 범위를 설정
-	m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+	FAILED_CHECK_RETURN(m_pMouse->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE), E_FAIL);
 
 	// 생성된 마우스 컴객체를 활성화
-	m_pMouse->Acquire();
+	FAILED_CHECK_RETURN(m_pMouse->Acquire(), E_FAIL);
 
 	return S_OK;
 }

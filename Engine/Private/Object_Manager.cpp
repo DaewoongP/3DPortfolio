@@ -86,8 +86,6 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 			return E_FAIL;
 		}
 	}
-		
-
 
 	if (nullptr == m_pLastGameObject)
 	{
@@ -100,7 +98,6 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 		m_pLastGameObject = pGameObject;
 		Safe_AddRef(m_pLastGameObject);
 	}
-		
 
 	return S_OK;
 }
@@ -111,15 +108,6 @@ void CObject_Manager::Clear_LevelResources(_uint iLevelIndex)
 		Safe_Release(Pair.second);
 
 	m_pLayers[iLevelIndex].clear();
-}
-
-CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
-{
-	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
-	if (nullptr == pLayer)
-		return nullptr;
-
-	return pLayer->Find_GameObject(pGameObjectTag);
 }
 
 void CObject_Manager::Tick(_double dTimeDelta)
@@ -144,14 +132,13 @@ void CObject_Manager::Late_Tick(_double dTimeDelta)
 	}
 }
 
-CGameObject* CObject_Manager::Find_Prototype(const _tchar* pPrototypeTag)
+CGameObject* CObject_Manager::Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
 {
-	auto	iter = find_if(m_Prototypes.begin(), m_Prototypes.end(), CTag_Finder(pPrototypeTag));
-
-	if (iter == m_Prototypes.end())
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
 		return nullptr;
 
-	return iter->second;
+	return pLayer->Find_GameObject(pGameObjectTag);
 }
 
 CLayer* CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
@@ -184,6 +171,16 @@ HRESULT CObject_Manager::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	pLayer->Clear_Layer();
 
 	return S_OK;
+}
+
+CGameObject* CObject_Manager::Find_Prototype(const _tchar* pPrototypeTag)
+{
+	auto	iter = find_if(m_Prototypes.begin(), m_Prototypes.end(), CTag_Finder(pPrototypeTag));
+
+	if (iter == m_Prototypes.end())
+		return nullptr;
+
+	return iter->second;
 }
 
 void CObject_Manager::Free()

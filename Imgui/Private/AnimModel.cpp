@@ -1,5 +1,4 @@
 #include "..\Public\AnimModel.h"
-#include "Animation.h"
 #include "GameInstance.h"
 
 CAnimModel::CAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -10,69 +9,6 @@ CAnimModel::CAnimModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CAnimModel::CAnimModel(const CAnimModel& rhs)
 	: CDummy(rhs)
 {
-}
-
-const _tchar* CAnimModel::Get_AnimationName() const
-{
-    if (nullptr == m_pModelCom)
-        return 0;
-    return m_pModelCom->Get_AnimationName();
-}
-
-_uint CAnimModel::Get_NumAnimations()
-{
-    if (nullptr == m_pModelCom)
-        return 0;
-    return m_pModelCom->Get_NumAnimations();
-}
-
-_uint CAnimModel::Get_MaxKeyFrame()
-{
-    if (nullptr == m_pModelCom)
-        return 0;
-    return m_pModelCom->Get_MaxKeyFrame();
-}
-
-_uint CAnimModel::Get_CurrentMaxChannelKeyFrameIndex()
-{
-    if (nullptr == m_pModelCom)
-        return 0;
-    return m_pModelCom->Get_CurrentMaxChannelKeyFrameIndex();
-}
-
-void CAnimModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
-{
-    if (nullptr == m_pModelCom)
-        return;
-    return m_pModelCom->Set_CurrentKeyFrameIndex(iKeyFrameIndex);
-}
-
-void CAnimModel::Set_AnimationPause(_bool bIsPaused)
-{
-    if (nullptr == m_pModelCom)
-        return;
-    return m_pModelCom->Set_AnimationPause(bIsPaused);
-}
-
-void CAnimModel::Set_AnimIndex(_uint iIndex)
-{
-    if (nullptr == m_pModelCom)
-        return;
-    m_pModelCom->Set_AnimIndex(iIndex);
-}
-
-void CAnimModel::Set_AnimationSpeed(_double dTime)
-{
-    if (nullptr == m_pModelCom)
-        return;
-    m_pModelCom->Get_Animation()->Set_TickPerSecond(dTime);
-}
-
-void CAnimModel::Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed)
-{
-    if (nullptr == m_pModelCom)
-        return;
-    m_pModelCom->Set_FrameSpeed(iFrameIndex, fSpeed);
 }
 
 HRESULT CAnimModel::Initialize_Prototype()
@@ -213,5 +149,4 @@ void CAnimModel::Free()
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     //Safe_Release(m_pColliderCom);
-    //Safe_Release(m_pTextureCom);
 }

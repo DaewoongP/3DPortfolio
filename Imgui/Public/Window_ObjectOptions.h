@@ -35,13 +35,14 @@ public:
 
 private:
 	class CDummy*				m_pCurrentDummy = { nullptr };
+	class CModel*				m_pCurrentModel = { nullptr };
 	CDummy::DUMMYTYPE			m_eCurrentDummyType = { CDummy::DUMMY_END };
 
 private: /* For.Animations */
 	_char						m_szAnimationName[MAX_STR] = "";
 	_int						m_iAnimationIndex = { 0 };
-	_uint						m_iAnimationMaxKeyFrames = { 0 };
-	_uint						m_iCurrentAnimationFrameIndex = { 0 };
+	_uint						m_iAnimationFrames = { 0 };
+	_uint						m_iCurrentAnimationFrame = { 0 };
 	_double						m_dAnimationSpeed = { 1.0 };
 	_bool						m_bPauseButton = { false };
 

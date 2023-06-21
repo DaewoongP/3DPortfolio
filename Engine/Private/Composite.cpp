@@ -1,5 +1,5 @@
 #include "..\Public\Composite.h"
-#include "GameInstance.h"
+#include "Component_Manager.h"
 
 CComposite::CComposite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -30,15 +30,17 @@ HRESULT CComposite::Render()
 {
 	for (auto& Pair : m_Components)
 		Pair.second->Render();
+
 	return S_OK;
 }
 
 HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	CComponent_Manager* pComponentManager = CComponent_Manager::GetInstance();
+	Safe_AddRef(pComponentManager);
 
-	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+	CComponent* pComponent = pComponentManager->Clone_Component(iLevelIndex, pPrototypeTag, pArg);
+
 	if (nullptr == pComponent)
 		return E_FAIL;
 
@@ -48,7 +50,7 @@ HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag
 
 	Safe_AddRef(pComponent);
 
-	Safe_Release(pGameInstance);
+	Safe_Release(pComponentManager);
 
 	return S_OK;
 }
@@ -67,8 +69,18 @@ HRESULT CComposite::Delete_Component(const _tchar* pComponentTag)
 		else
 			++Pair;
 	}
-
+	// 컴포넌트를 찾지 못했으면 삭제.
 	return E_FAIL;
+}
+
+CComponent* CComposite::Find_Component(const _tchar* pComponentTag)
+{
+	auto iter = find_if(m_Components.begin(), m_Components.end(), CTag_Finder(pComponentTag));
+
+	if (m_Components.end() == iter)
+		return nullptr;
+
+	return iter->second;
 }
 
 void CComposite::Free()
