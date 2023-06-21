@@ -10,7 +10,7 @@
     <Filter Include="99. Headers">
       <UniqueIdentifier>{74d7160d-e667-4ebc-825e-0625fec2fe4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Model">
+    <Filter Include="01. ModelConverter">
       <UniqueIdentifier>{f1202bd3-c8e9-435a-b8d7-3799b2b77dd2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -21,8 +21,8 @@
     <ClCompile Include="..\private\MainConverter.cpp">
       <Filter>00. MainConverter</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Model.cpp">
-      <Filter>01. Model</Filter>
+    <ClCompile Include="..\Private\ModelConverter.cpp">
+      <Filter>01. ModelConverter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,8 +32,8 @@
     <ClInclude Include="..\Public\Assimp_Defines.h">
       <Filter>99. Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Model.h">
-      <Filter>01. Model</Filter>
+    <ClInclude Include="..\Public\ModelConverter.h">
+      <Filter>01. ModelConverter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
-#include "..\Public\Model.h"
+#include "..\Public\ModelConverter.h"
 
-CModel::CModel()
+CModelConverter::CModelConverter()
 {
 	ZEROMEM(&m_Model);
 }
 
-HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
+HRESULT CModelConverter::Convert_Model(TYPE eType, const _char* pModelFilePath)
 {
 	_uint		iFlag = 0;
 	
@@ -67,7 +67,7 @@ HRESULT CModel::Convert_Model(TYPE eType, const _char* pModelFilePath)
 	return S_OK;
 }
 
-HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot)
+HRESULT CModelConverter::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot)
 {
 	NODE Node;
 	ZEROMEM(&Node);
@@ -120,7 +120,7 @@ HRESULT CModel::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* 
 	return S_OK;
 }
 
-HRESULT CModel::Sort_Bones()
+HRESULT CModelConverter::Sort_Bones()
 {
 	sort(m_Nodes.begin(), m_Nodes.end(), [](NODE& Sour, NODE& Dest) {
 
@@ -132,7 +132,7 @@ HRESULT CModel::Sort_Bones()
 	return S_OK;
 }
 
-HRESULT CModel::Convert_Meshes()
+HRESULT CModelConverter::Convert_Meshes()
 {
 	ZEROMEM(&m_Model);
 
@@ -161,7 +161,7 @@ HRESULT CModel::Convert_Meshes()
 	return S_OK;
 }
 
-HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
+HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 {
 	outMesh->MaterialIndex = pAIMesh->mMaterialIndex;
 
@@ -257,7 +257,7 @@ HRESULT CModel::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 	return S_OK;
 }
 
-HRESULT CModel::Convert_Materials(TYPE eType, const char* pModelFilePath)
+HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePath)
 {
 	m_Model.NumMaterials = m_pAIScene->mNumMaterials;
 
@@ -342,7 +342,7 @@ HRESULT CModel::Convert_Materials(TYPE eType, const char* pModelFilePath)
 	return S_OK;
 }
 
-HRESULT CModel::Convert_Animations()
+HRESULT CModelConverter::Convert_Animations()
 {
 	m_Model.NumAnimations = m_pAIScene->mNumAnimations;
 
@@ -424,7 +424,7 @@ HRESULT CModel::Convert_Animations()
 	return S_OK;
 }
 
-HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
+HRESULT CModelConverter::Write_File(TYPE eType, const _tchar* pFileName)
 {
 	_tchar szPath[MAX_PATH] = TEXT("../../Resources/ParsingData/");
 	// Write Anim
@@ -639,7 +639,7 @@ HRESULT CModel::Write_File(TYPE eType, const _tchar* pFileName)
 	return S_OK;
 }
 
-HRESULT CModel::Check_ORMTexture(const _tchar* pFileName)
+HRESULT CModelConverter::Check_ORMTexture(const _tchar* pFileName)
 {
 	_tchar		szDrive[MAX_PATH] = TEXT("");
 	_tchar		szDirectory[MAX_PATH] = TEXT("");
@@ -679,13 +679,13 @@ HRESULT CModel::Check_ORMTexture(const _tchar* pFileName)
 	return S_OK;
 }
 
-HRESULT CModel::Convert(TYPE eType, const _char* pModelFilePath)
+HRESULT CModelConverter::Convert(TYPE eType, const _char* pModelFilePath)
 {
-	CModel* pInstance = new CModel();
+	CModelConverter* pInstance = new CModelConverter();
 
 	if (FAILED(pInstance->Convert_Model(eType, pModelFilePath)))
 	{
-		MSG_BOX("Failed to Created CModel");
+		MSG_BOX("Failed to Created CModelConverter");
 		Safe_Release(pInstance);
 		return E_FAIL;
 	}
@@ -696,7 +696,7 @@ HRESULT CModel::Convert(TYPE eType, const _char* pModelFilePath)
 	}
 }
 
-void CModel::Free()
+void CModelConverter::Free()
 {
 	// delete Nodes
 	for (auto& iter : m_Nodes)

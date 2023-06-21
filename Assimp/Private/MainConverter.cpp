@@ -6,38 +6,36 @@ CMainConverter::CMainConverter()
 
 HRESULT CMainConverter::Convert()
 {
-	//ReadFileInDirectory(CModel::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations"));
-	ReadFileInDirectory(CModel::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Game"));
+	//ReadFileInDirectory(CModelConverter::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations"));
+	ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Game"));
 	return S_OK;
 }
 
-HRESULT CMainConverter::ReadFileInDirectory(CModel::TYPE eType, const _tchar* pDirectoryPath)
+HRESULT CMainConverter::ReadFileInDirectory(CModelConverter::TYPE eType, const _tchar* pDirectoryPath)
 {
-	// current_path == project path
-	// () operator  setting path
-	
+	// 디렉토리 경로를 순회할 iterator
 	fs::directory_iterator iter(fs::absolute(pDirectoryPath));
 	
 	while (iter != fs::end(iter))
 	{
-		// directory path variable
-		// ex) c/~/~/MyDirectory
+		// 실제 디렉토리 경로를 담고있는 변수 (iterator의 원본)
 		const fs::directory_entry& entry = *iter;
 		
-		// Check Directory
+		// 현재 entry 변수가 디렉토리인지 확인 후 디렉토리이면 재귀
 		if (fs::is_directory(entry.path()))
 		{
 			ReadFileInDirectory(eType, entry.path().c_str());
 		}
 		else
 		{
-			// extension find
+			// fbx파일 체크
 			if (!lstrcmp(entry.path().extension().c_str(), TEXT(".fbx")) ||
 				!lstrcmp(entry.path().extension().c_str(), TEXT(".FBX")))
 			{
 				std::cout << entry.path() << std::endl;
-				// extension file store
-				Converter::CModel::Convert(eType, entry.path().string().c_str());
+				
+				// 해당하는 파일의 경로를 실제 모델 컨버터에 할당
+				Converter::CModelConverter::Convert(eType, entry.path().string().c_str());
 			}
 		}
 
