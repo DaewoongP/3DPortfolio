@@ -1,10 +1,10 @@
 #pragma once
 #include "ImWindow.h"
-
+#include "Dummy.h"
 
 BEGIN(Tool)
 
-class CWindow_Animation : public CImWindow
+class CWindow_ObjectOptions : public CImWindow
 {
 public:
 	struct Funcs // graph style
@@ -22,19 +22,22 @@ public:
 	};
 
 private:
-	explicit CWindow_Animation();
-	virtual ~CWindow_Animation() = default;
+	explicit CWindow_ObjectOptions();
+	virtual ~CWindow_ObjectOptions() = default;
 
 public:
 	vector<_float> Get_FrameSpeeds() const { return m_FrameSpeeds; }
-	void Set_CurrentAnimModel(class CAnimModel* pAnimModel);
+	void Set_CurrentDummy(CDummy::DUMMYTYPE eDummyType, class CDummy* pDummy);
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 
 private:
-	class CAnimModel*			m_pCurrentAnimModel = { nullptr };
+	class CDummy*				m_pCurrentDummy = { nullptr };
+	CDummy::DUMMYTYPE			m_eCurrentDummyType = { CDummy::DUMMY_END };
+
+private: /* For.Animations */
 	_char						m_szAnimationName[MAX_STR] = "";
 	_int						m_iAnimationIndex = { 0 };
 	_uint						m_iAnimationMaxKeyFrames = { 0 };
@@ -45,13 +48,16 @@ private:
 	vector<_float>				m_FrameSpeeds;
 	_float						(*m_FrameSpeedFunc)(void*, _int);
 
-private:
+private: /* For.Animations */
 	HRESULT AnimationIndex();
 	HRESULT AnimationPause();
 	HRESULT AnimationSpeed();
 
+private:
+	HRESULT AddCollider();
+
 public:
-	static CWindow_Animation* Create(void* pArg = nullptr);
+	static CWindow_ObjectOptions* Create(void* pArg = nullptr);
 	virtual void Free() override;
 };
 

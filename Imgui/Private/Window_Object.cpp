@@ -60,7 +60,7 @@ HRESULT CWindow_Object::Select_Objects()
 HRESULT CWindow_Object::CurrentObjectListBox()
 {
 	ImGui::SetNextItemWidth(300.f);
-	if (ImGui::ListBox("Objects", &m_iCurrentListIndex, m_ObjectNames[m_eCurRadio].data(), (_int)m_ObjectNames[m_eCurRadio].size(), 5))
+	if (ImGui::ListBox("Objects", &m_iCurrentListIndex, m_ObjectNames[m_eCurRadio].data(), (_int)m_ObjectNames[m_eCurRadio].size(), 10))
 	{
 		CDummy* pDummy = dynamic_cast<CDummy*>(m_Objects[m_eCurRadio][m_iCurrentListIndex]);
 		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
@@ -166,11 +166,11 @@ HRESULT CWindow_Object::AnimationIndex()
 		0 < m_Objects[m_eCurRadio].size() &&
 		(pAnimModel = dynamic_cast<CAnimModel*>(m_Objects[m_eCurRadio][m_iCurrentListIndex])))
 	{
-		ANIMATIONWINDOW->Set_CurrentAnimModel(pAnimModel);
+		OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_ANIM, pAnimModel);
 	}
 	else
 	{
-		ANIMATIONWINDOW->Set_CurrentAnimModel(nullptr);
+		OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_END, nullptr);
 	}
 
 	return S_OK;

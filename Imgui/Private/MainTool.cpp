@@ -244,7 +244,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Object::Create());
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-840, g_iWinSizeY), ImVec2(420, 300));
 
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Animation::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_ObjectOptions::Create());
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-420, g_iWinSizeY), ImVec2(410, 300));
 
 	return S_OK;

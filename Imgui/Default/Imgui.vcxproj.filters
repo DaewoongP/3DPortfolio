@@ -79,8 +79,8 @@
     <ClCompile Include="..\Private\Dummy.cpp">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Window_Animation.cpp">
-      <Filter>01. ImWindow\Animation</Filter>
+    <ClCompile Include="..\Private\Window_ObjectOptions.cpp">
+      <Filter>01. ImWindow\Object\OptionWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -171,8 +171,8 @@
     <ClInclude Include="..\Public\Dummy.h">
       <Filter>02. ToolObject\DummyObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Window_Animation.h">
-      <Filter>01. ImWindow\Animation</Filter>
+    <ClInclude Include="..\Public\Window_ObjectOptions.h">
+      <Filter>01. ImWindow\Object\OptionWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,11 +236,11 @@
     <Filter Include="01. ImWindow\Object">
       <UniqueIdentifier>{705ffff4-2ba7-41ce-9bf8-b88dc8b699b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Animation">
-      <UniqueIdentifier>{a090a46a-59f3-4e5e-ac17-8a7a1befb87e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. ImWindow\Navigation">
       <UniqueIdentifier>{860ed18a-9be6-4a39-89da-c43ce5733179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\Object\OptionWindow">
+      <UniqueIdentifier>{a090a46a-59f3-4e5e-ac17-8a7a1befb87e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
