@@ -8,11 +8,15 @@ CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
 {
 	Safe_AddRef(m_pGameInstance);
+
+#ifdef _DEBUG
 	ZeroMemory(m_szFPS, sizeof(TCHAR) * MAX_STR);
+#endif // _DEBUG
 }
 
 HRESULT CMainApp::Initialize()
 {
+	// 콘솔창 실행 함수
 #ifdef _DEBUG
 	if (::AllocConsole() == TRUE)
 	{
@@ -24,6 +28,7 @@ HRESULT CMainApp::Initialize()
 	}
 #endif // _DEBUG
 
+	// 그래픽 디바이스를 만들기 위한 구조체 할당
 	GRAPHICDESC		GraphicDesc;
 	ZEROMEM(&GraphicDesc);
 
@@ -38,6 +43,7 @@ HRESULT CMainApp::Initialize()
 	FAILED_CHECK_RETURN(Ready_Prototype_Component_For_Static(), E_FAIL);
 	
 	FAILED_CHECK_RETURN(Open_Level(LEVEL_LOGO), E_FAIL);
+
 	return S_OK;
 }
 
@@ -46,6 +52,7 @@ void CMainApp::Tick(_double dTimeDelta)
 	if (nullptr == m_pGameInstance)
 		return;
 
+	// 엔진의 Tick 호출
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
 #ifdef _DEBUG
@@ -106,6 +113,7 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelIndex)
 	return m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, eLevelIndex));
 }
 
+#ifdef _DEBUG
 void CMainApp::Render_FPS(_double dTimeDelta)
 {
 	m_dFpsTime += dTimeDelta;
@@ -118,6 +126,7 @@ void CMainApp::Render_FPS(_double dTimeDelta)
 		m_dFpsTime = 0.0;
 	}
 }
+#endif // _DEBUG
 
 CMainApp* CMainApp::Create()
 {

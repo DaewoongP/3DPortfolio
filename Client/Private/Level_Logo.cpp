@@ -32,6 +32,7 @@ void CLevel_Logo::Tick(_double dTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 #endif //_DEBUG

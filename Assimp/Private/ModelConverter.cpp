@@ -17,35 +17,41 @@ HRESULT CModelConverter::Convert_Model(TYPE eType, const _char* pModelFilePath)
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 	
 	if (nullptr == m_pAIScene)
+	{
+		MSG_BOX("Failed (Importer Read File)");
 		return E_FAIL;
+	}
+		
 	cout << "Convert Bones..." << endl;
 	if (FAILED(Convert_Bones(m_pAIScene->mRootNode, 0, nullptr, true)))
 	{
-		MSG_BOX("Failed Convert_Bones");
+		MSG_BOX("Failed (Convert_Bones)");
 		return E_FAIL;
 	}
+
 	Sort_Bones();
 
 	cout << "Convert Meshes..." << endl;
 	if (FAILED(Convert_Meshes()))
 	{
-		MSG_BOX("Failed Convert_Meshes");
+		MSG_BOX("Failed (Convert_Meshes)");
 		return E_FAIL;
 	}
 	
 	cout << "Convert Materials..." << endl;
 	if (FAILED(Convert_Materials(eType, pModelFilePath)))
 	{
-		MSG_BOX("Failed Convert_Materials");
+		MSG_BOX("Failed (Convert_Materials)");
 		return E_FAIL;
 	}
 
 	if (TYPE_ANIM == eType)
 	{
+		// 애니메이션 파일일경우에만 실행.
 		cout << "Convert Animations..." << endl;
 		if (FAILED(Convert_Animations()))
 		{
-			MSG_BOX("Failed Convert_Animations");
+			MSG_BOX("Failed (Convert_Animations)");
 			return E_FAIL;
 		}
 	}
@@ -58,56 +64,60 @@ HRESULT CModelConverter::Convert_Model(TYPE eType, const _char* pModelFilePath)
 	cout << "Writing Files..." << endl;
 	if (FAILED(Write_File(eType, szFileName)))
 	{
-		MSG_BOX("Failed Write_File");
+		MSG_BOX("Failed (Write_File)");
 		return E_FAIL;
 	}
 		
 	cout << "Convert Success!" << endl;
 	cout << "=====================================" << endl;
+
 	return S_OK;
 }
 
 HRESULT CModelConverter::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot)
 {
+	// 파일에 저장할 노드 구조체
 	NODE Node;
 	ZEROMEM(&Node);
 
-	/// For.Bone
-	// name
+	// 뼈 이름
 	_tchar BoneName[256] = TEXT("");
 	CharToWChar(pNode->mName.data, BoneName);
 	lstrcpy(Node.Name, BoneName);
-	// matrix
+
+	// 노드의 상태행렬을 받아와서 전치 시킴 (Col Major -> Row Major)
+	// 기본적으로 assimp 라이브러리는 Col Major 행렬로 사용하기 때문.
 	_float4x4 TransposeMatrix;
 	memcpy(&TransposeMatrix, &pNode->mTransformation, sizeof(_float4x4));
 	XMStoreFloat4x4(&TransposeMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransposeMatrix)));
 	memcpy(&Node.Transformation, &TransposeMatrix, sizeof _float4x4);
 	
-	/// For.Node
-	// root
+	// Root Check
 	if (true == isRoot)
 	{
 		// Parent except
 		Node.Parent = -1;
 	}
-	// child
 	else
 	{
+		// 자식 인덱스 할당
 		*iChildIndex = ++m_iCurrentNodeIndex;
 
 		Node.Parent = iParentIndex;
 	}
 
+	// 구조체에 인덱스, 자식 개수 값 저장.
 	Node.NodeIndex = m_iCurrentNodeIndex;
 	Node.NumChildren = pNode->mNumChildren;
 
+	// 자식이 있을 경우 자식변수에 동적할당.
 	if (0 != pNode->mNumChildren)
 	{
 		Node.Children = new _uint[pNode->mNumChildren];
 		ZeroMemory(Node.Children, sizeof(_uint) * pNode->mNumChildren);
 	}
 		
-
+	// 자식 개수만큼 순회하며 재귀함수 호출하여 뼈의 상속관계 처리.
 	for (_uint i = 0; i < pNode->mNumChildren; i++)
 	{
 		_uint iRetIndex = { 0 };
@@ -115,6 +125,7 @@ HRESULT CModelConverter::Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout
 		Node.Children[i] = iRetIndex;
 	}
 
+	// 뼈들을 벡터컨테이너에 저장.
 	m_Nodes.push_back(Node);
 
 	return S_OK;
@@ -129,32 +140,37 @@ HRESULT CModelConverter::Sort_Bones()
 		else
 			return false;
 	});
+
+	// 모델에 노드 개수 저장.
+	m_Model.NumNodes = (_uint)m_Nodes.size();
+
 	return S_OK;
 }
 
 HRESULT CModelConverter::Convert_Meshes()
 {
-	ZEROMEM(&m_Model);
-
-	m_Model.NumNodes = (_uint)m_Nodes.size();
-
+	// 메쉬변수 구조체 전달
 	m_Model.NumMeshes = m_pAIScene->mNumMeshes;
 
+	// 메쉬 자체를 동적할당하여 메쉬 개수만큼 저장받음.
 	m_pMesh = new MESH[m_pAIScene->mNumMeshes];
 	ZeroMemory(m_pMesh, sizeof(MESH) * m_pAIScene->mNumMeshes);
 
-	for (_uint i = 0; i < m_pAIScene->mNumMeshes; i++)
+	// 메쉬 개수만큼 순회하며 메쉬에 해당하는 값들을 저장받음
+	for (_uint i = 0; i < m_pAIScene->mNumMeshes; ++i)
 	{
 		// Mesh
 		MESH Mesh;
 		ZEROMEM(&Mesh);
 
+		// 메쉬를 포인터 형태로 넘겨주어 값들을 모두 할당 하여 채워 넣음.
 		if (FAILED(Store_Mesh(m_pAIScene->mMeshes[i], &Mesh)))
 		{
 			MSG_BOX("Failed Store Mesh");
 			return E_FAIL;
 		}
 
+		// 메쉬 배열로 저장.
 		m_pMesh[i] = Mesh;
 	}
 
@@ -163,17 +179,23 @@ HRESULT CModelConverter::Convert_Meshes()
 
 HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh)
 {
+	// 머테리얼 인덱스 변수 저장
 	outMesh->MaterialIndex = pAIMesh->mMaterialIndex;
 
+	// 메쉬 이름
 	_tchar MeshName[256] = TEXT("");
 	CharToWChar(pAIMesh->mName.data, MeshName);
 	lstrcpy(outMesh->Name, MeshName);
 
+	// 개수 변수들 저장
 	outMesh->NumVertices = pAIMesh->mNumVertices;
 	outMesh->NumFaces = pAIMesh->mNumFaces;
+
+	// 메쉬 표면 동적할당하여 처리
 	outMesh->Faces = new FACE[outMesh->NumFaces];
 	ZeroMemory(outMesh->Faces, sizeof(FACE) * outMesh->NumFaces);
 
+	// 메쉬 표면을 순회하며 메쉬의 인덱스들 저장
 	for (_uint i = 0; i < pAIMesh->mNumFaces; ++i)
 	{
 		outMesh->Faces[i].NumIndices = pAIMesh->mFaces[i].mNumIndices;
@@ -187,6 +209,7 @@ HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh
 		}
 	}
 
+	// 버텍스를 만들기 위한 포지션, 노말, UV좌표, 탄젠트값 저장용 변수 동적할당.
 	outMesh->Positions = new _float3[pAIMesh->mNumVertices];
 	ZeroMemory(outMesh->Positions, sizeof(_float3) * pAIMesh->mNumVertices);
 
@@ -199,6 +222,7 @@ HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh
 	outMesh->Tangents = new _float3[pAIMesh->mNumVertices];
 	ZeroMemory(outMesh->Tangents, sizeof(_float3) * pAIMesh->mNumVertices);
 
+	// 각각 버텍스 순회하며 모든 변수 저장.
 	for (_uint i = 0; i < pAIMesh->mNumVertices; i++)
 	{
 		memcpy(&outMesh->Positions[i], &pAIMesh->mVertices[i], sizeof _float3);
@@ -207,35 +231,38 @@ HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh
 		memcpy(&outMesh->Tangents[i], &pAIMesh->mTangents[i], sizeof _float3);
 	}
 
-
-	// Mesh Bone
+	// 메쉬가 가진 뼈의 개수
 	outMesh->NumBones = pAIMesh->mNumBones;
 
+	// 뼈 자체 동적할당
 	outMesh->Bones = new BONE[pAIMesh->mNumBones];
 	ZeroMemory(outMesh->Bones, sizeof(BONE) * pAIMesh->mNumBones);
 
+	// 메쉬의 뼈들을 순회하며 뼈의 값들을 저장함
 	for (_uint i = 0; i < pAIMesh->mNumBones; i++)
 	{
 		aiBone* pAIBone = pAIMesh->mBones[i];
 
 		BONE	Bone;
 		ZEROMEM(&Bone);
-		// name
+		// 해당하는 뼈의 이름
 		_tchar BoneName[256] = TEXT("");
 		CharToWChar(pAIBone->mName.data, BoneName);
 		lstrcpy(Bone.Name, BoneName);
-		// matrix
+
+		// assimp 라이브러리는 기본적으로 ColMajor 이므로 Row Major 형태로 전치하여 저장.
 		_float4x4 TransposeMatrix;
 		memcpy(&TransposeMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
 		XMStoreFloat4x4(&TransposeMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransposeMatrix)));
 		memcpy(&Bone.OffsetMatrix, &TransposeMatrix, sizeof _float4x4);
 		
-		// Mesh Bone Weight
+		// 메쉬 뼈의 weight값
 		Bone.NumWeights = pAIBone->mNumWeights;
 		
 		Bone.Weights = new WEIGHT[pAIBone->mNumWeights];
 		ZeroMemory(Bone.Weights, sizeof(WEIGHT) * pAIBone->mNumWeights);
 
+		// 동적할당한 weight를 순회하며 버텍스 아이디와 weight 변수 저장.
 		for (_uint j = 0; j < pAIBone->mNumWeights; j++)
 		{
 			aiVertexWeight	AIVertexWeight = pAIBone->mWeights[j];
@@ -246,11 +273,11 @@ HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh
 			Weight.VertexId = AIVertexWeight.mVertexId;
 			Weight.Weight = AIVertexWeight.mWeight;
 
-			// store Mesh Bone Weight
+			// Mesh Bone Weight 저장
 			Bone.Weights[j] = Weight;
 		}
 
-		// store Mesh Bone
+		// Mesh Bone 저장
 		outMesh->Bones[i] = Bone;
 	}
 
@@ -259,19 +286,25 @@ HRESULT CModelConverter::Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh
 
 HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePath)
 {
+	// 머테리얼 개수
 	m_Model.NumMaterials = m_pAIScene->mNumMaterials;
 
+	// 머테리얼 동적할당하여 저장
 	m_pMaterial = new MATERIAL[m_pAIScene->mNumMaterials];
 	ZeroMemory(m_pMaterial, sizeof(MATERIAL) * m_pAIScene->mNumMaterials);
 
+	// ORM 텍스처의 경로가 빠져서 저장되기 때문에 따로 체크하여 저장하기 위한 변수 동적할당.
+	// 50개는 임의로 채운것이며 ORM의 개수가 50개가 넘어갈경우 문제가 생길 수 있음.
 	m_Model.ORMTextures = new ORMTEXTURE[50];
 	ZeroMemory(m_Model.ORMTextures, sizeof(ORMTEXTURE) * 50);
 
+	// 모델의 머테리얼 순회
 	for (_uint i = 0; i < m_pAIScene->mNumMaterials; ++i)
 	{
 		MATERIAL Material;
 		ZEROMEM(&Material);
 
+		// 해당하는 머테리얼의 텍스처 경로 순회하며 저장
 		for (_uint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j)
 		{
 			aiString	aistrPath;
@@ -290,6 +323,7 @@ HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePat
 			string DrivePath = szDrivePath;
 			string ModelDirPath = szModelPath;
 
+			// 역슬래시를 사용할 경우 뒤에 따라 붙는 문자열에 문제가 생길 수 있어 슬래시 형태로 변경
 			size_t iOffset = string::npos;
 			while (string::npos != (iOffset = ModelDirPath.find("\\")))
 			{
@@ -300,6 +334,9 @@ HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePat
 			{
 				TexturePath.replace(iOffset, 1, "/");
 			}
+
+			// 애니메이션과 스태틱 모델의 저장 경로가 살짝다름.
+			// 애니메이션의 경우 FBX 폴더 밑에 폴더가 하나 더 생겨서 저장되므로 폴더 한층을 미리 제거.
 			if (eType == TYPE_ANIM)
 			{
 				size_t DirSlashIndexTest = ModelDirPath.rfind("/");
@@ -311,6 +348,7 @@ HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePat
 				ModelDirPath = ModelDirPath.substr(0, DirSlashIndexTest + 1);
 			}
 
+			// 텍스처 경로 가공
 			while (string::npos != TexturePath.find("../"))
 			{
 				size_t DirSlashIndex = ModelDirPath.rfind("/");
@@ -320,25 +358,34 @@ HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePat
 				DirSlashIndex = ModelDirPath.rfind("/");
 
 				ModelDirPath = ModelDirPath.substr(0, DirSlashIndex + 1);
-				//_splitpath_s(ModelDirPath.data(), nullptr, 0, ModelDirPath.data(), MAX_PATH, nullptr, 0, nullptr, 0);
 
 				TexturePath = TexturePath.substr(3);
 			}
 
+			// 가공된 경로들 strcat
 			string FullPath = DrivePath + ModelDirPath + TexturePath;
 			
 			_tchar wszFullPath[MAX_PATH] = TEXT("");
 			CharToWChar(FullPath.c_str(), wszFullPath);
 			
+			// 텍스처의 경로 저장
 			lstrcpy(Material.MaterialTexture[j].TexPath, wszFullPath);
 
+			// Diffuse가 있을 경우 ORM 텍스처 검사 후 저장. (단 한번만 실행하면 됨.)
+			// 결코 효율적인 코드는 아니지만, 안에서 전부 순회하면서 한장씩만 텍스처를 대입하기때문에 문제는 없음
+			Check_ORMTexture(wszFullPath);
+
+			// 텍스처 타입 저장
 			Material.MaterialTexture[j].TexType = TEXTYPE(j);
 		}
 
+		// 머테리얼 저장
 		m_pMaterial[i] = Material;
 	}
 
+	// ORM 텍스처 개수 저장
 	m_Model.NumORMTextures = m_iORMIndex;
+
 	return S_OK;
 }
 
@@ -349,17 +396,19 @@ HRESULT CModelConverter::Convert_Animations()
 	m_pAnimation = new ANIMATION[m_pAIScene->mNumAnimations];
 	ZeroMemory(m_pAnimation, sizeof(ANIMATION) * m_pAIScene->mNumAnimations);
 
+	// 애니메이션 순회
 	for (_uint i = 0; i < m_pAIScene->mNumAnimations; ++i)
 	{
 		aiAnimation* pAIAnimation = m_pAIScene->mAnimations[i];
 
 		ANIMATION Animation;
 		ZEROMEM(&Animation);
-		// name
+		// 애니메이션 이름
 		_tchar AnimName[256] = TEXT("");
 		CharToWChar(pAIAnimation->mName.data, AnimName);
 		lstrcpy(Animation.Name, AnimName);
 		
+		// 애니메이션 변수 저장
 		Animation.Duration = pAIAnimation->mDuration;
 		Animation.TickPerSecond = pAIAnimation->mTicksPerSecond;
 		Animation.NumChannels = pAIAnimation->mNumChannels;
@@ -367,18 +416,19 @@ HRESULT CModelConverter::Convert_Animations()
 		Animation.Channels = new CHANNEL[pAIAnimation->mNumChannels];
 		ZeroMemory(Animation.Channels, sizeof(CHANNEL) * pAIAnimation->mNumChannels);
 
+		// 애니메이션 채널 순회
 		for (_uint j = 0; j < pAIAnimation->mNumChannels; ++j)
 		{
 			aiNodeAnim* pAIChannel = pAIAnimation->mChannels[j];
 			
 			CHANNEL Channel;
 			ZEROMEM(&Channel);
-			// name
+			// 채널 이름
 			_tchar ChannelName[256] = TEXT("");
 			CharToWChar(pAIChannel->mNodeName.data, ChannelName);
 			lstrcpy(Channel.Name, ChannelName);
 			
-			// Scale
+			// 채널의 스케일 키 저장
 			Channel.NumScalingKeys = pAIChannel->mNumScalingKeys;
 			Channel.ScalingKeys = new VECTORKEY[pAIChannel->mNumScalingKeys];
 			ZeroMemory(Channel.ScalingKeys, sizeof(VECTORKEY) * pAIChannel->mNumScalingKeys);
@@ -389,7 +439,7 @@ HRESULT CModelConverter::Convert_Animations()
 				memcpy(&Channel.ScalingKeys[k].Value, &pAIChannel->mScalingKeys[k].mValue, sizeof _float3);
 			}
 
-			// Rotation
+			// 채널의 로테이션 키 저장 (쿼터니언 형식)
 			Channel.NumRotationKeys = pAIChannel->mNumRotationKeys;
 			Channel.RotationKeys = new QUATERNIONKEY[pAIChannel->mNumRotationKeys];
 			ZeroMemory(Channel.RotationKeys, sizeof(QUATERNIONKEY) * pAIChannel->mNumRotationKeys);
@@ -404,7 +454,7 @@ HRESULT CModelConverter::Convert_Animations()
 				Channel.RotationKeys[k].Value.w = pAIChannel->mRotationKeys[k].mValue.w;
 			}
 
-			// Position
+			// 채널의 포지션 키 저장
 			Channel.NumPositionKeys = pAIChannel->mNumPositionKeys;
 			Channel.PositionKeys = new VECTORKEY[pAIChannel->mNumPositionKeys];
 			ZeroMemory(Channel.PositionKeys, sizeof(VECTORKEY) * pAIChannel->mNumPositionKeys);
@@ -415,9 +465,11 @@ HRESULT CModelConverter::Convert_Animations()
 				memcpy(&Channel.PositionKeys[k].Value, &pAIChannel->mPositionKeys[k].mValue, sizeof _float3);
 			}
 
+			// 채널 저장
 			Animation.Channels[j] = Channel;
 		}
 
+		// 애니메이션 저장
 		m_pAnimation[i] = Animation;
 	}
 
@@ -653,21 +705,21 @@ HRESULT CModelConverter::Check_ORMTexture(const _tchar* pFileName)
 	{
 		const fs::directory_entry& entry = *iter;
 
-		// extension find
+		// ORM Texture 체크
 		if (nullptr != wcsstr(entry.path().filename().c_str(), TEXT("ORM")) || 
 			nullptr != wcsstr(entry.path().filename().c_str(), TEXT("OcclusionRoughnessMetallic")))
 		{
 			_uint iFlag = 0;
 			for (_uint i = 0; i < m_iORMIndex; ++i)
 			{
-				// same file check
+				// 이미 있는 텍스처 파일일 경우 패스.
 				if (!lstrcmp(m_Model.ORMTextures[i].Path, entry.path().c_str()))
 					++iFlag;
 			}
 
 			if (0 == iFlag)
 			{
-				// input texture
+				// ORM 텍스처가 추가 되었을 경우 체크하여 경로 대입.
 				lstrcpy(m_Model.ORMTextures[m_iORMIndex++].Path, entry.path().c_str());
 
 				cout << entry.path().filename() << endl;

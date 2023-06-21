@@ -6,8 +6,9 @@ CMainConverter::CMainConverter()
 
 HRESULT CMainConverter::Convert()
 {
-	//ReadFileInDirectory(CModelConverter::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations"));
-	ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Game"));
+	ReadFileInDirectory(CModelConverter::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations"));
+	//ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Game"));
+
 	return S_OK;
 }
 
@@ -41,6 +42,7 @@ HRESULT CMainConverter::ReadFileInDirectory(CModelConverter::TYPE eType, const _
 
 		iter++;
 	}
+
 	return S_OK;
 }
 

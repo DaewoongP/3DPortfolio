@@ -21,11 +21,14 @@ public:
 	HRESULT Render();
 
 public:
+	// 게임 전체에서 사용하기 위한 스태틱 컴포넌트 생성 함수
 	HRESULT Ready_Prototype_Component_For_Static();
 	HRESULT Open_Level(LEVELID eLevelIndex);
 
+#ifdef _DEBUG
 private:
 	void Render_FPS(_double dTimeDelta);
+#endif // _DEBUG
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
@@ -35,10 +38,12 @@ private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	CRenderer*				m_pRenderer = { nullptr };
 
-private:
+#ifdef _DEBUG
+private: /* For. Frame Per Second*/
 	TCHAR						m_szFPS[MAX_STR];
 	_int						m_iFps = { 0 };
 	_double						m_dFpsTime = { 0.0 };
+#endif // _DEBUG
 
 public:
 	static CMainApp* Create();

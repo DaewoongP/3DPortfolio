@@ -47,6 +47,7 @@ private:
 
 private:
 	HRESULT Convert_Bones(aiNode* pNode, _uint iParentIndex, _Inout_ _uint* iChildIndex, _bool isRoot = false);
+	// 뼈를 인덱스 순서대로 처리하기 위한 정렬 함수
 	HRESULT Sort_Bones();
 	HRESULT Convert_Meshes();
 	HRESULT Store_Mesh(const aiMesh* pAIMesh, _Inout_ MESH* outMesh);
