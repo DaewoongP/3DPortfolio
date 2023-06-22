@@ -632,7 +632,7 @@ void CModel::Free()
 {
 	__super::Free();
 	
-	if (!m_bIsClone)
+	if (!m_isCloned)
 	{
 		Release_FileDatas();
 	}

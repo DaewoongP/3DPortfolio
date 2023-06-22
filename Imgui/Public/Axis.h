@@ -25,7 +25,7 @@ private:
 public:
 	void Set_AxisDistance(_float fDistance) { m_fDistance = fDistance; }
 	void Set_AxisOriginScale(_float fScale) { XMStoreFloat3(&m_vOriginAxisScale, XMLoadFloat3(&m_vOriginAxisScale) * fScale); }
-	void Set_Rendering(_bool bRender) { m_isRendering = bRender; }
+	void Set_Rendering(_bool isRender) { m_isRendering = isRender; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

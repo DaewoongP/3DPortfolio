@@ -21,7 +21,7 @@ public:
 	// 프레임 인덱스에 해당하는 스피드값 설정.
 	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
 	void Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex);
-	void Set_Pause(_bool bIsPause) { m_bIsPaused = bIsPause; }
+	void Set_Pause(_bool isPause) { m_isPaused = isPause; }
 	void Set_TickPerSecond(_double dMultiply) 
 	{
 		if (0 >= dMultiply)
@@ -48,8 +48,8 @@ public:
 	_double						m_dTickPerSecond = { 0.0 };
 	_double						m_dTimeAcc = { 0.0 };
 
-	_bool						m_bIsLoop = { false };
-	_bool						m_bIsPaused = { false };
+	_bool						m_isLoop = { false };
+	_bool						m_isPaused = { false };
 
 	// 현재 애니메이션에 해당하는 채널의 프레임 중 가장 프레임이 많은 채널의 인덱스
 	_uint						m_iMaxFrameChannelIndex = { 0 };

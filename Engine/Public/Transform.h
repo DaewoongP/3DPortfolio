@@ -7,6 +7,7 @@ class ENGINE_DLL CTransform final : public CComponent
 {
 public:
 	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
+
 public:
 	typedef struct tagTransformDesc
 	{
@@ -17,6 +18,7 @@ public:
 		_double		dSpeedPerSec = { 0.0 };
 		_double		dRotationPerSec = { 0.0 };
 	}TRANSFORMDESC;
+
 private:
 	explicit CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CTransform(const CTransform& rhs);
@@ -28,7 +30,8 @@ public:
 		return XMLoadFloat4x4(&m_WorldMatrix).r[static_cast<_uint>(_eState)];
 	}
 	_float3 Get_Scale();
-	const _float4x4* Get_WorldFloat4x4() const { return &m_WorldMatrix;  }
+	const _float4x4* Get_WorldFloat4x4() const { return &m_WorldMatrix; }
+	_matrix Get_WorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
 	const _matrix Get_WorldMatrix_Inverse() const
 	{
 		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));

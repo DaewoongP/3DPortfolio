@@ -46,6 +46,8 @@ void CPlayer::Tick(_double dTimeDelta)
 	m_pModelCom->Play_Animation(dTimeDelta);
 
 	Fix_Mouse();
+
+	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CPlayer::Late_Tick(_double dTimeDelta)
@@ -151,6 +153,19 @@ HRESULT CPlayer::Add_Component()
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigation), &NavigationDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Navigation)");
+		return E_FAIL;
+	}
+
+	CBounding_Sphere::BOUNDINGSPHEREDESC	BoundingSphere;
+
+	XMStoreFloat3(&BoundingSphere.vPosition, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	BoundingSphere.fRadius = 5.f;
+
+	/* For.Com_Collider */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingSphere)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
 

@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Collider.h"
 #include "Renderer.h"
 #include "Transform.h"
 #include "Navigation.h"

@@ -118,6 +118,24 @@
     <Filter Include="01. Utility\03. Components\Navigation\Shader">
       <UniqueIdentifier>{932e3bdf-336e-4d71-94e1-89be6256febf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\Collider">
+      <UniqueIdentifier>{0e702ed8-002a-44fd-a329-ad4c8f51b6ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Collider\Bounding">
+      <UniqueIdentifier>{58e552e7-a73d-4e2e-ba9d-4596279e7c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Collider\Bounding\AABB">
+      <UniqueIdentifier>{60d15ea4-4262-47dc-bcc0-e01f89e5afa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Collider\Bounding\Sphere">
+      <UniqueIdentifier>{9ef1f8a7-57da-450b-8888-f477bbda2889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Collider\Bounding\OBB">
+      <UniqueIdentifier>{2f3f1b59-0574-44a6-b67d-a8a43c3321fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\Collider\Bounding\DebugDraw">
+      <UniqueIdentifier>{d0ceba60-95f9-485d-bba5-acb698604b6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -243,6 +261,18 @@
     <ClInclude Include="..\public\VIBuffer_Cell.h">
       <Filter>01. Utility\03. Components\VIBuffer\Cell</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Collider.h">
+      <Filter>01. Utility\03. Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bounding.h">
+      <Filter>01. Utility\03. Components\Collider\Bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bounding_Sphere.h">
+      <Filter>01. Utility\03. Components\Collider\Bounding\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01. Utility\03. Components\Collider\Bounding\DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -349,6 +379,18 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Cell.cpp">
       <Filter>01. Utility\03. Components\VIBuffer\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Collider.cpp">
+      <Filter>01. Utility\03. Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bounding.cpp">
+      <Filter>01. Utility\03. Components\Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bounding_Sphere.cpp">
+      <Filter>01. Utility\03. Components\Collider\Bounding\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01. Utility\03. Components\Collider\Bounding\DebugDraw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ BEGIN(Engine)
 class CModel;
 class CCamera;
 class CShader;
+class CCollider;
 class CRenderer;
 class CTransform;
 class CNavigation;
@@ -34,6 +35,7 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CCamera*				m_pPlayerCameraCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
+	CCollider*				m_pColliderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
 	CNavigation*			m_pNavigation = { nullptr };

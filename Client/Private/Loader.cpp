@@ -211,6 +211,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	lstrcpy(m_szLoading, TEXT("충돌체 로딩 중."));
+
+	/* For.Prototype_Component_Collider_Sphere */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_Sphere)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
 
 	/* For.Prototype_GameObject_Player */

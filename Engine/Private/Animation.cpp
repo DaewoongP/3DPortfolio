@@ -13,8 +13,8 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_dOriginTickPerSecond(rhs.m_dOriginTickPerSecond)
 	, m_dTickPerSecond(rhs.m_dTickPerSecond)
 	, m_dTimeAcc(rhs.m_dTimeAcc)
-	, m_bIsLoop(rhs.m_bIsLoop)
-	, m_bIsPaused(rhs.m_bIsPaused)
+	, m_isLoop(rhs.m_isLoop)
+	, m_isPaused(rhs.m_isPaused)
 	, m_iMaxFrameChannelIndex(rhs.m_iMaxFrameChannelIndex)
 	, m_iAnimationFrames(rhs.m_iAnimationFrames)
 	, m_AnimationFrameSpeeds(rhs.m_AnimationFrameSpeeds)
@@ -61,7 +61,7 @@ void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameI
 
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
-	m_bIsLoop = true;
+	m_isLoop = true;
 
 	// 애니메이션 정보 저장
 	lstrcpy(m_szName, pAnimation->Name);
@@ -107,7 +107,7 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 
 void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta)
 {
-	if (m_bIsPaused)
+	if (m_isPaused)
 		return;
 
 	// 프레임 별로 애니메이션 스피드 제어.
@@ -118,7 +118,7 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 
 	if (m_dTimeAcc >= m_dDuration)
 	{
-		if (true == m_bIsLoop)
+		if (true == m_isLoop)
 		{
 			m_dTimeAcc = 0.f;
 		}

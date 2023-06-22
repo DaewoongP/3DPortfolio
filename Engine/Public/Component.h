@@ -29,7 +29,7 @@ protected:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 
 protected:
-	_bool			m_bIsClone = { false };
+	_bool			m_isCloned = { false };
 
 protected:
 	_tchar			m_pPrototypeTag[MAX_STR];

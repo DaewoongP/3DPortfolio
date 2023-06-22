@@ -30,6 +30,8 @@ void CAnimationNotify::Tick(_double dTimeDelta)
 
 HRESULT CAnimationNotify::NotifyCamera()
 {
+
+
 	return S_OK;
 }
 

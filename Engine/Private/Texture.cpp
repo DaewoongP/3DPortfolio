@@ -46,7 +46,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 		}
 		else if (!lstrcmp(szExt, TEXT(".tga")))
 		{
-			MSG_BOX("Ext .tag not supported");
+			MSG_BOX("Ext .tga not supported");
 			return E_FAIL;
 		}
 		else
