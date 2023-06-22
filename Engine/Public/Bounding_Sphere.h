@@ -27,6 +27,7 @@ public:
 
 public:
 	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) override;
+	_bool SphereIntersects(const CBounding_Sphere* pSphere);
 
 #ifdef _DEBUG
 public:

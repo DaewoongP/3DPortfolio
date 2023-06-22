@@ -23,7 +23,7 @@ public:
 	}
 
 public:
-	HRESULT Initialize(const _float3* pPoints, _int iIndex);
+	HRESULT Initialize(_float3* pPoints, _int iIndex);
 
 public:
 	// 포지션을 기반으로 이 셀안에 포지션이 있는지 체크.
@@ -52,7 +52,7 @@ private:
 #endif
 
 public:
-	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex);
+	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float3* pPoints, _int iIndex);
 	virtual void Free() override;
 };
 

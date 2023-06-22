@@ -45,7 +45,7 @@ public:
 	// 피킹 되었을경우 true와 해당 포지션을 반환한다.
 	// 2번째 인자 :  클릭한 버텍스가 존재하는 셀의 인덱스들
 	// 3번째 인자 : 클릭한 버텍스가 존재하는 셀의 버퍼, 버퍼의 버텍스 ABC 중 해당하는 인덱스를 맵으로 반환
-	_bool IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ vector<_uint>& CellIndex, _Inout_ map<_uint, CVIBuffer_Cell*>& PickCells);
+	_bool IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ vector<_uint>& CellIndex, _Inout_ vector<pair<_uint, CVIBuffer_Cell*>>& PickCells);
 
 private:
 	CShader*				m_pShaderCom = { nullptr };
@@ -56,7 +56,6 @@ private:
 
 	CShader*				m_pCellShaderCom = { nullptr };
 	vector<CVIBuffer_Cell*> m_Cells;
-	vector<CCollider*>		m_CellColliders;
 
 private:
 	_uint					m_iTextureIndex = { 0 };

@@ -44,6 +44,11 @@ _bool CBounding_Sphere::RayIntersects(_fvector vOrigin, _fvector vDirection, _In
 	return m_pSphere->Intersects(vOrigin, vDirection, fDist);
 }
 
+_bool CBounding_Sphere::SphereIntersects(const CBounding_Sphere* pSphere)
+{
+	return m_pSphere->Intersects(*pSphere->m_pSphere);
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_Sphere::Render(_fvector vColor)
 {

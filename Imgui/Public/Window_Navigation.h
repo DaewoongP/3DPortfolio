@@ -42,9 +42,12 @@ private:
 
 	// 현재 피킹한 버텍스 콜라이더를 공유하는 셀들
 	// 버퍼의 셀 인덱스를 저장하기위해 map으로 설정
-	map<_uint, CVIBuffer_Cell*>		m_PickCellBuffers;
+	vector<pair<_uint, CVIBuffer_Cell*>>	m_PickCellBuffers;
 	// 현재 피킹한 버텍스 콜라이더를 사용하는 셀의 벡터
 	vector<_uint>					m_PickCellIndex;
+
+	_bool							m_isCellPicked = { false };
+	_float4							m_vPickPos;
 
 private:
 	HRESULT Pick_Navigation(_double dTimeDelta);

@@ -42,7 +42,6 @@ HRESULT CTerrain::Initialize(void* pArg)
         return E_FAIL;
 
     m_Cells.clear();
-    m_CellColliders.clear();
 
     return S_OK;
 }
@@ -53,23 +52,9 @@ void CTerrain::Tick(_double dTimeDelta)
 
     if (0 < m_Cells.size())
     {
-        vector<_float3> VertexPositions;
-
-        _uint iCellIndex = { 0 };
-
         for (auto& pCell : m_Cells)
         {
             pCell->Tick(dTimeDelta);
-
-            VertexPositions = pCell->Get_VertexPositions();
-
-            for (size_t i = 0; i < VertexPositions.size(); ++i)
-            {
-                // 셀의 인덱스 번호에서 3개를 콜라이더를 만든다.
-                m_CellColliders[iCellIndex * 3 + i]->Tick(XMMatrixTranslation(VertexPositions[i].x, VertexPositions[i].y, VertexPositions[i].z));
-            }
-
-            ++iCellIndex;
         }
     }
 
@@ -94,17 +79,17 @@ HRESULT CTerrain::Render()
 
     m_pCellShaderCom->Begin(0);
    
-    if (0 < m_Cells.size() &&
-        0 < m_CellColliders.size())
+    if (0 < m_Cells.size())
     {
         for (auto& pCell : m_Cells)
         {
             pCell->Render();
         }
-
-        for (auto& pCellCollider : m_CellColliders)
+        // 바운딩스피어는 렌더함수 도중에 쉐이더를 던지므로, 색깔이 곱창날 수 있음.
+        // 따라서 따로 루프 돌아주는게 안정적임.
+        for (auto& pCell : m_Cells)
         {
-            pCellCollider->Render();
+            pCell->Render_Sphere();
         }
     }
 
@@ -143,10 +128,6 @@ HRESULT CTerrain::RemakeCells(vector<_float3*>& Cells)
     for (auto& pCell : m_Cells)
         Safe_Release(pCell);
     m_Cells.clear();
-    // 재생성이므로 콜라이더도 재생성처리.
-    for (auto& pCellCollider : m_CellColliders)
-        Safe_Release(pCellCollider);
-    m_CellColliders.clear();
 
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     Safe_AddRef(pGameInstance);
@@ -160,25 +141,6 @@ HRESULT CTerrain::RemakeCells(vector<_float3*>& Cells)
             return E_FAIL;
         //  버텍스 위치가져와야함.
         m_Cells.push_back(pCell);
-        
-        // Cell Colliders Clone
-        CBounding_Sphere::BOUNDINGSPHEREDESC	BoundingSphere;
-
-        vector<_float3> VertexPositions = pCell->Get_VertexPositions();
-
-        for (size_t i = 0; i < VertexPositions.size(); ++i)
-        {
-            BoundingSphere.vPosition = _float3(0.f, 0.f, 0.f);
-            BoundingSphere.fRadius = 1.f;
-
-            CComponent* pComponent = pGameInstance->Clone_Component(LEVEL_TOOL,
-                TEXT("Prototype_Component_Collider_Sphere"), &BoundingSphere);
-
-            if (nullptr == pComponent)
-                return E_FAIL;
-
-            m_CellColliders.push_back(static_cast<CCollider*>(pComponent));
-        }
     }
 
     Safe_Release(pGameInstance);
@@ -236,7 +198,7 @@ HRESULT CTerrain::PickingOnTerrain(_Inout_ _float4* vPickPos)
     return S_OK;
 }
 
-_bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ vector<_uint>& CellIndex, _Inout_ map<_uint, CVIBuffer_Cell*>& PickCells)
+_bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ vector<_uint>& CellIndex, _Inout_ vector<pair<_uint, CVIBuffer_Cell*>>& PickCells)
 {
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     Safe_AddRef(pGameInstance);
@@ -250,57 +212,40 @@ _bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ vector<_uint>
         return false;
     }
 
+    Safe_Release(pGameInstance);
+
     _float fIntersectsDistance = 999.f;
 
-    CCollider* pPickCollider = { nullptr };
-
-    for (auto& pCollider : m_CellColliders)
+    _uint iCellIndex = { 0 };
+    for (auto& pCell : m_Cells)
     {
         _float fDist = 999.f;
 
-        if (pCollider->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
+        _uint iPointIndex = { CCell::POINT_A };
+
+        for (auto& pBoundingSphere : pCell->Get_BoundingSpheres())
         {
+            if (pBoundingSphere->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
+            {
+                CellIndex.push_back(iCellIndex);
+                PickCells.push_back({ iPointIndex, pCell });
+            }
+
             if (0.f < fDist && fIntersectsDistance > fDist)
             {
                 fIntersectsDistance = fDist;
-
-                pPickCollider = pCollider;
-                Safe_AddRef(pPickCollider);
-            }
-        }
-    }
-
-    Safe_Release(pGameInstance);
-
-    if (fIntersectsDistance >= 998.f ||
-        nullptr == pPickCollider)
-        return false;
-
-    vPickPos->x = pPickCollider->Get_BoundingCenterPosition().x;
-    vPickPos->y = pPickCollider->Get_BoundingCenterPosition().y;
-    vPickPos->z = pPickCollider->Get_BoundingCenterPosition().z;
-
-    // 셀전체를 순회하며 피킹콜라이더의 센터와 같은 포지션의 버텍스가 있을경우 push back으로 반환처리.
-
-    _uint iCellIndex = { 0 };
-
-    for (auto& pCell : m_Cells)
-    {
-        _uint iVertexIndex = { 0 };
-        for (auto& Vertex : pCell->Get_VertexPositions())
-        {
-            if (true == XMVector3Equal(XMLoadFloat3(&Vertex), XMLoadFloat4(vPickPos)))
-            {
-                PickCells.insert({ iVertexIndex, pCell });
-                CellIndex.push_back(iCellIndex);
+                *vPickPos = _float4(pBoundingSphere->Get_CenterPosition().x, pBoundingSphere->Get_CenterPosition().y, pBoundingSphere->Get_CenterPosition().z, 1.f);
             }
 
-            ++iVertexIndex;
+            ++iPointIndex;
         }
+
         ++iCellIndex;
     }
 
-    Safe_Release(pPickCollider);
+    if (fIntersectsDistance >= 998.f ||
+        0 == PickCells.size())
+        return false;
 
     return true;
 }
@@ -429,10 +374,6 @@ void CTerrain::Free()
     for (auto& pCell : m_Cells)
         Safe_Release(pCell);
     m_Cells.clear();
-
-    for (auto& pCellCollider : m_CellColliders)
-        Safe_Release(pCellCollider);
-    m_CellColliders.clear();
 
     Safe_Release(m_pTextureCom);;
     Safe_Release(m_pShaderCom);

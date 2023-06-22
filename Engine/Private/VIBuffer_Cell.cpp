@@ -1,5 +1,6 @@
 #include "..\Public\VIBuffer_Cell.h"
 #include "Cell.h"
+#include "Bounding_Sphere.h"
 
 CVIBuffer_Cell::CVIBuffer_Cell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -9,10 +10,15 @@ CVIBuffer_Cell::CVIBuffer_Cell(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 CVIBuffer_Cell::CVIBuffer_Cell(const CVIBuffer_Cell& rhs)
 	: CVIBuffer(rhs)
 	, m_VertexPositions(rhs.m_VertexPositions)
+	, m_BoundingSpheres(rhs.m_BoundingSpheres)
 {
+	for (auto& BoundingSphere : m_BoundingSpheres)
+	{
+		Safe_AddRef(BoundingSphere);
+	}
 }
 
-HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
+HRESULT CVIBuffer_Cell::Initialize_Prototype(_float3* pPoints)
 {
 	if (nullptr == pPoints)
 		return E_FAIL;
@@ -39,11 +45,16 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 	VTXPOS* pVertices = new VTXPOS[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXPOS) * m_iNumVertices);
 
+	m_pOriginSphere = CBounding_Sphere::Create(m_pDevice, m_pContext);
+	CBounding_Sphere::BOUNDINGSPHEREDESC	BoundingSphereDesc;
+	BoundingSphereDesc.fRadius = 0.5f;
+	BoundingSphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
 	for (_uint i = 0; i < CCell::POINT_END; ++i)
 	{
 		pVertices[i].vPosition = pPoints[i];
-
 		m_VertexPositions.push_back(pVertices[i].vPosition);
+		m_BoundingSpheres.push_back(static_cast<CBounding_Sphere*>(m_pOriginSphere->Clone(&BoundingSphereDesc)));
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
@@ -93,7 +104,27 @@ HRESULT CVIBuffer_Cell::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Cell::Begin(const _float3* pPoints)
+void CVIBuffer_Cell::Tick(_double dTimeDelta)
+{
+	__super::Tick(dTimeDelta);
+
+	for (_uint i = 0; i < CCell::POINT_END; ++i)
+	{
+		m_BoundingSpheres[i]->Tick(XMMatrixTranslation(m_VertexPositions[i].x, m_VertexPositions[i].y, m_VertexPositions[i].z));
+	}
+}
+
+HRESULT CVIBuffer_Cell::Render_Sphere()
+{
+	for (auto& pSphere : m_BoundingSpheres)
+	{
+		pSphere->Render();
+	}
+	return S_OK;
+}
+
+
+HRESULT CVIBuffer_Cell::Begin(_float3* pPoints)
 {
 	D3D11_MAPPED_SUBRESOURCE MappedSubResource;
 	
@@ -106,7 +137,6 @@ HRESULT CVIBuffer_Cell::Begin(const _float3* pPoints)
 	for (_uint i = 0; i < CCell::POINT_END; ++i)
 	{
 		pVertices[i].vPosition = pPoints[i];
-
 		m_VertexPositions.push_back(pVertices[i].vPosition);
 	}
 
@@ -122,7 +152,7 @@ HRESULT CVIBuffer_Cell::End()
 	return S_OK;
 }
 
-CVIBuffer_Cell* CVIBuffer_Cell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints)
+CVIBuffer_Cell* CVIBuffer_Cell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float3* pPoints)
 {
 	CVIBuffer_Cell* pInstance = new CVIBuffer_Cell(pDevice, pContext);
 
@@ -152,4 +182,12 @@ void CVIBuffer_Cell::Free()
 {
 	__super::Free();
 
+	for (auto& BoundingSphere : m_BoundingSpheres)
+	{
+		Safe_Release(BoundingSphere);
+	}
+	m_BoundingSpheres.clear();
+
+	if (false == m_isCloned)
+		Safe_Release(m_pOriginSphere);
 }
