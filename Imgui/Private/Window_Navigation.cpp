@@ -56,7 +56,7 @@ void CWindow_Navigation::Tick(_double dTimeDelta)
 
 HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 {
-	if (ImGui::Checkbox("Pick Cell", &m_bPickNavigation))
+	if (false == m_bCellModifyMode && ImGui::Checkbox("Pick Cell", &m_bPickNavigation))
 	{
 		// 셀 피킹 모드가 되면 다른곳에있는 피킹을 종료 해줌.
 		if (true == m_bPickNavigation)
@@ -69,9 +69,10 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 	{
 		_float4 vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
 
-		if (true == m_pTerrain->IsPickingOnCell(&vPickPos, m_PickCellBuffers))
+		if (true == m_pTerrain->IsPickingOnCell(&vPickPos, m_PickCellIndex, m_PickCellBuffers))
 		{
 			m_bCellModifyMode = true;
+			
 		}
 		else
 		{
@@ -92,8 +93,10 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 		{
 			for (auto& Buffer : m_PickCellBuffers)
 			{
+				// 셀의 버텍스 버퍼들 (현재 3개)
 				vector<_float3> VertexPositions = Buffer.second->Get_VertexPositions();
 
+				// Buffer.first == 버퍼의 인덱스 (POINT A,B,C)
 				if (VertexPositions.size() < Buffer.first)
 					return E_FAIL;
 
@@ -101,7 +104,20 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 				
 				Buffer.second->Begin(VertexPositions.data());
 				Buffer.second->End();
+
+				// 움직인 셀의 버텍스를 갱신.
+				for (auto& Index : m_PickCellIndex)
+				{
+					m_Cells[Index][Buffer.first] = VertexPositions[Buffer.first];
+				}
+				
+				m_vCell[Buffer.first] = VertexPositions[Buffer.first];
+
+				m_iCurrentListBoxIndex = m_PickCellIndex[0];
+
+				memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
 			}
+
 		}
 	}
 
@@ -109,6 +125,7 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 	{
 		// 현재 움직이고 있던 버퍼 포지션 클리어.
 		m_PickCellBuffers.clear();
+		m_PickCellIndex.clear();
 	}
 
 	return S_OK;
@@ -150,9 +167,8 @@ HRESULT CWindow_Navigation::Pick_Terrain()
 		m_CellIndices.push_back(pIndex);
 
 		_float3* pPoints = New _float3[CCell::POINT_END];
+		CCWSort_Cell(m_vCell);
 		memcpy(pPoints, m_vCell, sizeof(_float3) * CCell::POINT_END);
-
-		CCWSort_Cell(pPoints);
 
 		m_Cells.push_back(pPoints);
 

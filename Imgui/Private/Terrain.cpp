@@ -192,6 +192,7 @@ HRESULT CTerrain::PickingOnTerrain(_Inout_ _float4* vPickPos)
     Safe_AddRef(pGameInstance);
 
     _float4 vRayPos, vRayDir;
+
     if (FAILED(pGameInstance->Get_MouseRay(m_pContext, g_hWnd, m_pTransformCom->Get_WorldMatrix_Inverse(), &vRayPos, &vRayDir)))
     {
         Safe_Release(pGameInstance);
@@ -235,7 +236,7 @@ HRESULT CTerrain::PickingOnTerrain(_Inout_ _float4* vPickPos)
     return S_OK;
 }
 
-_bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ map<_uint, CVIBuffer_Cell*>& PickCells)
+_bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ vector<_uint>& CellIndex, _Inout_ map<_uint, CVIBuffer_Cell*>& PickCells)
 {
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     Safe_AddRef(pGameInstance);
@@ -280,6 +281,9 @@ _bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ map<_uint, CV
     vPickPos->z = pPickCollider->Get_BoundingCenterPosition().z;
 
     // 셀전체를 순회하며 피킹콜라이더의 센터와 같은 포지션의 버텍스가 있을경우 push back으로 반환처리.
+
+    _uint iCellIndex = { 0 };
+
     for (auto& pCell : m_Cells)
     {
         _uint iVertexIndex = { 0 };
@@ -288,10 +292,12 @@ _bool CTerrain::IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ map<_uint, CV
             if (true == XMVector3Equal(XMLoadFloat3(&Vertex), XMLoadFloat4(vPickPos)))
             {
                 PickCells.insert({ iVertexIndex, pCell });
+                CellIndex.push_back(iCellIndex);
             }
 
             ++iVertexIndex;
         }
+        ++iCellIndex;
     }
 
     Safe_Release(pPickCollider);

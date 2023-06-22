@@ -31,7 +31,7 @@ private:
 	// 현재 피킹하고있는 인덱스 (A,B,C)
 	_uint							m_iCurrentPickIndex = { 0 };
 	_float3							m_vCell[CCell::POINT_END];
-	// 셀을 담고있는 벡터컨테이너
+	// 셀을 담고있는 벡터컨테이너 (인자 마다 float3를 3개씩 들고있음.)
 	vector<_float3*>				m_Cells;
 	// 셀의 인덱스 번호의 이름을 담고있는 벡터컨테이너
 	vector<_char*>					m_CellIndices;
@@ -43,6 +43,8 @@ private:
 	// 현재 피킹한 버텍스 콜라이더를 공유하는 셀들
 	// 버퍼의 셀 인덱스를 저장하기위해 map으로 설정
 	map<_uint, CVIBuffer_Cell*>		m_PickCellBuffers;
+	// 현재 피킹한 버텍스 콜라이더를 사용하는 셀의 벡터
+	vector<_uint>					m_PickCellIndex;
 
 private:
 	HRESULT Pick_Navigation(_double dTimeDelta);
