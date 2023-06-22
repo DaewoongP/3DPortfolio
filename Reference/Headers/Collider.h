@@ -21,14 +21,10 @@ public:
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render();
+	virtual HRESULT Render(_fvector vColor = DirectX::Colors::Green);
 #endif // _DEBUG
 	
 private:
-	PrimitiveBatch<DirectX::VertexPositionColor>* m_pPrimitiveBatch = { nullptr };
-	DirectX::BasicEffect*		m_pEffect = { nullptr };
-	ID3D11InputLayout*			m_pInputLayout = { nullptr };
-
 	class CBounding*			m_pBounding = { nullptr };
 
 public:

@@ -49,6 +49,14 @@ HRESULT CTerrain::Initialize(void* pArg)
 void CTerrain::Tick(_double dTimeDelta)
 {
     __super::Tick(dTimeDelta);
+
+    if (0 < m_Cells.size())
+    {
+        for (auto& pCell : m_Cells)
+        {
+            pCell->Tick(dTimeDelta);
+        }
+    }
 }
 
 void CTerrain::Late_Tick(_double dTimeDelta)
@@ -69,10 +77,8 @@ HRESULT CTerrain::Render()
     m_pTerrainCom->Render();
 
     m_pCellShaderCom->Begin(0);
-
-    if (0 == m_Cells.size())
-        return S_OK;
-    else
+   
+    if (0 < m_Cells.size())
     {
         for (auto& pCell : m_Cells)
         {

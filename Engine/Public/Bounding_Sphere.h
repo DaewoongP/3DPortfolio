@@ -22,11 +22,11 @@ public:
 	HRESULT Initialize(void* pBoundingDesc);
 
 public:
-	virtual void Tick(_fmatrix TransformMatrix) override;
+	virtual void Tick(_fmatrix WorldMatrix) override;
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(PrimitiveBatch<DirectX::VertexPositionColor>* pBatch) override;
+	virtual HRESULT Render(_fvector vColor = DirectX::Colors::Green) override;
 #endif // _DEBUG
 
 private:

@@ -21,16 +21,29 @@ protected:
 	virtual ~CBounding() = default;
 
 public:
-	virtual void Tick(_fmatrix TransformMatrix) PURE;
+	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize(void* pBoundingDesc) PURE;
+	virtual void Tick(_fmatrix WorldMatrix) PURE;
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(PrimitiveBatch<DirectX::VertexPositionColor>* pBatch) PURE;
+	// effect, batch 등을 통해 렌더링 준비
+	HRESULT Begin();
+	virtual HRESULT Render(_fvector vColor = DirectX::Colors::Green) PURE;
+	HRESULT End();
 #endif // _DEBUG
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
+
+protected:
+	PrimitiveBatch<DirectX::VertexPositionColor>* m_pPrimitiveBatch = { nullptr };
+	DirectX::BasicEffect*	m_pEffect = { nullptr };
+	ID3D11InputLayout*		m_pInputLayout = { nullptr };
+	
+protected:
+	_bool					m_isCloned = { false };
 
 public:
 	virtual CBounding* Clone(void* pBoundingDesc) PURE;
