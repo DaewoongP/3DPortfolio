@@ -20,6 +20,7 @@ public:
 public:
     virtual HRESULT Initialize(void* pArg = nullptr) { return S_OK; };
     virtual void Tick(_double dTimeDelta);
+    virtual HRESULT Render();
 
 protected:
     CGameInstance*          m_pGameInstance = { nullptr };

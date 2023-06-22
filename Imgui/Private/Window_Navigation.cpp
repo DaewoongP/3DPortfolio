@@ -1,10 +1,13 @@
 #include "..\Public\Window_Navigation.h"
 #include "Terrain.h"
 #include "ImWindow_Manager.h"
+#include "Bounding_Sphere.h"
 
-CWindow_Navigation::CWindow_Navigation(ID3D11DeviceContext* pContext)
-	: m_pContext(pContext)
+CWindow_Navigation::CWindow_Navigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: m_pDevice(pDevice)
+	, m_pContext(pContext)
 {
+	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 	ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
 }
@@ -18,12 +21,15 @@ HRESULT CWindow_Navigation::Initialize(void* pArg)
 
 	Safe_AddRef(m_pTerrain);
 
+	m_PickCellBuffers.clear();
+
 	return S_OK;
 }
 
 void CWindow_Navigation::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
 	ImGui::Begin("Navigation", nullptr, m_WindowFlag);
 
 	if (true == m_bCellModifyMode)
@@ -33,10 +39,8 @@ void CWindow_Navigation::Tick(_double dTimeDelta)
 		if (ImGui::Button("Modify End", ImVec2(90, 20)))
 			m_bCellModifyMode = false;
 	}
-	else
-	{
-		Pick_Navigation();
-	}
+	
+	Pick_Navigation(dTimeDelta);
 
 	CurrentNavigationPosition();
 
@@ -50,7 +54,7 @@ void CWindow_Navigation::Tick(_double dTimeDelta)
 	ImGui::End();
 }
 
-HRESULT CWindow_Navigation::Pick_Navigation()
+HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 {
 	if (ImGui::Checkbox("Pick Cell", &m_bPickNavigation))
 	{
@@ -58,51 +62,103 @@ HRESULT CWindow_Navigation::Pick_Navigation()
 		if (true == m_bPickNavigation)
 			MODELWINDOW->Set_Picking(false);
 	}
-	
+
 	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) &&
-		m_bPickNavigation &&
+		(true == m_bPickNavigation || true == m_bCellModifyMode) &&
 		m_pGameInstance->IsMouseInClient(m_pContext, g_hWnd))
 	{
 		_float4 vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
-		if (FAILED(m_pTerrain->PickingOnTerrain(&vPickPos)))
-			return E_FAIL;
 
-		// 컨트롤을 누르고 피킹하면 반올림하여 처리
-		if (m_pGameInstance->Get_DIKeyState(DIK_LCONTROL))
+		if (true == m_pTerrain->IsPickingOnCell(&vPickPos, m_PickCellBuffers))
 		{
-			vPickPos.x = roundf(vPickPos.x);
-			vPickPos.y = roundf(vPickPos.y);
-			vPickPos.z = roundf(vPickPos.z);
+			m_bCellModifyMode = true;
 		}
-		// 처음 피킹하면 현재 Input에있는 모든값을 0으로 초기화 해줌.
-		if (CCell::POINT_A == m_iCurrentPickIndex)
+		else
 		{
-			ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
+			Pick_Terrain();
 		}
-		// 피킹처리
-		if (CCell::POINT_END > m_iCurrentPickIndex)
+
+	}
+
+	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_PRESSING) &&
+		true == m_bCellModifyMode &&
+		m_pGameInstance->IsMouseInClient(m_pContext, g_hWnd) &&
+		0 < m_PickCellBuffers.size())
+	{
+		_long dwMouseMove = { 0 };
+		dwMouseMove = m_pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
+
+		if (dwMouseMove)
 		{
-			memcpy(&m_vCell[m_iCurrentPickIndex++], &vPickPos, sizeof _float3);
+			for (auto& Buffer : m_PickCellBuffers)
+			{
+				vector<_float3> VertexPositions = Buffer.second->Get_VertexPositions();
+
+				if (VertexPositions.size() < Buffer.first)
+					return E_FAIL;
+
+				VertexPositions[Buffer.first].y -= _float(dwMouseMove * dTimeDelta);
+				
+				Buffer.second->Begin(VertexPositions.data());
+				Buffer.second->End();
+			}
 		}
-		// 3번의 피킹이 끝나면 벡터컨테이너에 값을 넣고 피킹 인덱스 초기화
-		if (CCell::POINT_END == m_iCurrentPickIndex)
-		{
-			_char* pIndex = New _char[6];
-			_itoa_s((_uint)m_Cells.size(), pIndex, sizeof(6), 10);
+	}
 
-			m_CellIndices.push_back(pIndex);
+	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_UP))
+	{
+		// 현재 움직이고 있던 버퍼 포지션 클리어.
+		m_PickCellBuffers.clear();
+	}
 
-			_float3* pPoints = New _float3[CCell::POINT_END];
-			memcpy(pPoints, m_vCell, sizeof(_float3) * CCell::POINT_END);
+	return S_OK;
+}
 
-			CCWSort_Cell(pPoints);
+HRESULT CWindow_Navigation::Pick_Terrain()
+{
+	if (true == m_bCellModifyMode)
+		return S_OK;
 
-			m_Cells.push_back(pPoints);
+	_float4 vPickPos = _float4(0.f, 0.f, 0.f, 1.f);
 
-			m_iCurrentPickIndex = CCell::POINT_A;
+	if (FAILED(m_pTerrain->PickingOnTerrain(&vPickPos)))
+		return E_FAIL;
 
-			Remake_Cells();
-		}
+	// 컨트롤을 누르고 피킹하면 반올림하여 처리
+	if (m_pGameInstance->Get_DIKeyState(DIK_LCONTROL))
+	{
+		vPickPos.x = roundf(vPickPos.x);
+		vPickPos.y = roundf(vPickPos.y);
+		vPickPos.z = roundf(vPickPos.z);
+	}
+	// 처음 피킹하면 현재 Input에있는 모든값을 0으로 초기화 해줌.
+	if (CCell::POINT_A == m_iCurrentPickIndex)
+	{
+		ZeroMemory(m_vCell, sizeof(_float3) * CCell::POINT_END);
+	}
+	// 피킹처리
+	if (CCell::POINT_END > m_iCurrentPickIndex)
+	{
+		memcpy(&m_vCell[m_iCurrentPickIndex++], &vPickPos, sizeof _float3);
+	}
+	// 3번의 피킹이 끝나면 벡터컨테이너에 값을 넣고 피킹 인덱스 초기화
+	if (CCell::POINT_END == m_iCurrentPickIndex)
+	{
+		_char* pIndex = New _char[6];
+		_itoa_s((_uint)m_Cells.size(), pIndex, sizeof(6), 10);
+
+		m_CellIndices.push_back(pIndex);
+
+		_float3* pPoints = New _float3[CCell::POINT_END];
+		memcpy(pPoints, m_vCell, sizeof(_float3) * CCell::POINT_END);
+
+		CCWSort_Cell(pPoints);
+
+		m_Cells.push_back(pPoints);
+
+		m_iCurrentPickIndex = CCell::POINT_A;
+
+		Remake_Cells();
 	}
 
 	return S_OK;
@@ -354,9 +410,9 @@ void CWindow_Navigation::CCWSort_Cell(_float3* pPoints)
 	}
 }
 
-CWindow_Navigation* CWindow_Navigation::Create(ID3D11DeviceContext* pContext, void* pArg)
+CWindow_Navigation* CWindow_Navigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
-	CWindow_Navigation* pInstance = New CWindow_Navigation(pContext);
+	CWindow_Navigation* pInstance = New CWindow_Navigation(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -369,11 +425,13 @@ CWindow_Navigation* CWindow_Navigation::Create(ID3D11DeviceContext* pContext, vo
 void CWindow_Navigation::Free()
 {
 	__super::Free();
+
 	for (auto& pCell : m_Cells)
 		Safe_Delete(pCell);
 	m_Cells.clear();
 
 	Safe_Release(m_pTerrain);
+	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
 	for (auto& pIndex : m_CellIndices)

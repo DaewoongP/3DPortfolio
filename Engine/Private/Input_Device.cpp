@@ -34,27 +34,22 @@ _byte CInput_Device::Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState)
 
 	return 0;
 }
-_byte CInput_Device::Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState)
+_bool CInput_Device::Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState)
 {
 	switch (eState)
 	{
 	case KEY_DOWN:
-		if (Mouse_Down(eMouseID))
-			return m_MouseState.rgbButtons[eMouseID];
-		break;
+		return Mouse_Down(eMouseID);
 	case KEY_PRESSING:
-		if (Mouse_Pressing(eMouseID))
-			return m_MouseState.rgbButtons[eMouseID];
-		break;
+		return Mouse_Pressing(eMouseID);
 	case KEY_UP:
-		if (Mouse_Up(eMouseID))
-			return m_MouseState.rgbButtons[eMouseID];
+		return Mouse_Up(eMouseID);
 		break;
 	default:
-		return 0;
+		return false;
 	}
 
-	return 0;
+	return false;
 }
 
 _long CInput_Device::Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID)

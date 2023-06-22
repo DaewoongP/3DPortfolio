@@ -15,9 +15,15 @@ private:
 	virtual ~CCollider() = default;
 
 public:
+	_float3 Get_BoundingCenterPosition() const { return m_pBounding->Get_CenterPosition(); }
+
+public:
 	virtual HRESULT Initialize_Prototype(TYPE eColliderType);
 	virtual HRESULT Initialize(class CBounding* pBounding, void* pArg);
 	virtual void	Tick(_fmatrix TransformMatrix);
+
+public:
+	_bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist);
 
 #ifdef _DEBUG
 public:

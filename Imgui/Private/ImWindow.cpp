@@ -22,6 +22,11 @@ void CImWindow::Tick(_double dTimeDelta)
     SetNextWindowSize(m_vWindowSize);
 }
 
+HRESULT CImWindow::Render()
+{
+    return S_OK;
+}
+
 void CImWindow::Free(void)
 {
     Safe_Release(m_pGameInstance);

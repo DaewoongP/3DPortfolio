@@ -45,6 +45,11 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 	m_pBounding->Tick(TransformMatrix);
 }
 
+_bool CCollider::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist)
+{
+	return m_pBounding->RayIntersects(vOrigin, vDirection, fDist);
+}
+
 #ifdef _DEBUG
 HRESULT CCollider::Render(_fvector vColor)
 {

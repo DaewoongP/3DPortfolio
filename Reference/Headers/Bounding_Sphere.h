@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class CBounding_Sphere final : public CBounding
+class ENGINE_DLL CBounding_Sphere final : public CBounding
 {
 public:
 	typedef struct tagBoundingSphereDesc : public CBounding::tagBoundingDesc
@@ -18,11 +18,15 @@ private:
 	virtual ~CBounding_Sphere() = default;
 
 public:
-	HRESULT Initialize_Prototype();
-	HRESULT Initialize(void* pBoundingDesc);
+	virtual _float3 Get_CenterPosition() const override { return m_pSphere->Center; }
 
 public:
+	HRESULT Initialize_Prototype();
+	HRESULT Initialize(void* pBoundingDesc);
 	virtual void Tick(_fmatrix WorldMatrix) override;
+
+public:
+	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) override;
 
 #ifdef _DEBUG
 public:

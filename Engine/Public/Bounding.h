@@ -7,7 +7,7 @@
 
 BEGIN(Engine)
 
-class CBounding abstract : public CBase
+class ENGINE_DLL CBounding abstract : public CBase
 {
 public:
 	typedef struct tagBoundingDesc
@@ -21,9 +21,15 @@ protected:
 	virtual ~CBounding() = default;
 
 public:
+	virtual _float3 Get_CenterPosition() const PURE;
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pBoundingDesc) PURE;
 	virtual void Tick(_fmatrix WorldMatrix) PURE;
+
+public:
+	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) PURE;
 
 #ifdef _DEBUG
 public:

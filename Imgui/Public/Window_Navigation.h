@@ -7,7 +7,7 @@ BEGIN(Tool)
 class CWindow_Navigation : public CImWindow
 {
 private:
-	explicit CWindow_Navigation(ID3D11DeviceContext* pContext);
+	explicit CWindow_Navigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CWindow_Navigation() = default;
 
 public:
@@ -17,8 +17,9 @@ public:
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
-	
+
 private:
+	ID3D11Device*					m_pDevice = { nullptr };
 	ID3D11DeviceContext*			m_pContext = { nullptr };
 
 private:
@@ -38,8 +39,14 @@ private:
 	_int							m_iCurrentListBoxIndex = { 0 };
 	// 셀 값을 변경할 수 있게 처리해주는 bool
 	_bool							m_bCellModifyMode = { false };
+
+	// 현재 피킹한 버텍스 콜라이더를 공유하는 셀들
+	// 버퍼의 셀 인덱스를 저장하기위해 map으로 설정
+	map<_uint, CVIBuffer_Cell*>		m_PickCellBuffers;
+
 private:
-	HRESULT Pick_Navigation();
+	HRESULT Pick_Navigation(_double dTimeDelta);
+	HRESULT Pick_Terrain();
 	// 셀 변경모드가 켜져있을때 현재 네비게이션의 포지션을 변경할 수 있게하는 InputFloat3을 호출
 	HRESULT CurrentNavigationPosition();
 	HRESULT Navigation_List();
@@ -58,7 +65,7 @@ private:
 	void CCWSort_Cell(_float3* pPoints);
 
 public:
-	static CWindow_Navigation* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);
+	static CWindow_Navigation* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

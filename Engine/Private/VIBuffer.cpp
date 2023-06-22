@@ -73,6 +73,7 @@ HRESULT CVIBuffer::Create_Buffer(ID3D11Buffer** ppOut)
 void CVIBuffer::Free()
 {
 	__super::Free();
+
 	Safe_Release(m_pVB);
 	Safe_Release(m_pIB);
 }

@@ -43,7 +43,7 @@ public:
 	HRESULT PickingOnTerrain(_Inout_ _float4* vPickPos);
 	// 피킹이 이미 생성되어있는 셀의 버텍스에 되었는지 체크하여
 	// 피킹 되었을경우 true와 해당 포지션을 반환한다.
-	_bool IsPickingOnCell(_Inout_ _float4* vPickPos);
+	_bool IsPickingOnCell(_Inout_ _float4* vPickPos, _Inout_ map<_uint, CVIBuffer_Cell*>& PickCells);
 
 private:
 	CShader*				m_pShaderCom = { nullptr };

@@ -17,6 +17,10 @@ public:
 	virtual HRESULT Initialize_Prototype(const _float3 * pPoints);
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	HRESULT Begin(const _float3* pPoints);
+	HRESULT End();
+
 private:
 	vector<_float3>			m_VertexPositions;
 

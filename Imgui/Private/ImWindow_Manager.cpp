@@ -61,6 +61,11 @@ void CImWindow_Manager::Render()
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
     }
+
+    for (auto& ImWindow : m_ImWindows)
+    {
+        ImWindow->Render();
+    }
 }
 
 void CImWindow_Manager::Free(void)

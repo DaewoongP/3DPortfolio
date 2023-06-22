@@ -19,12 +19,12 @@ private:
 
 public:
 	_byte		Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState = KEY_PRESSING);
-	_byte		Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState = KEY_PRESSING);
+	_bool		Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState = KEY_PRESSING);
 	_long		Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
 
 public:
-	HRESULT			Ready_Input_Device(HINSTANCE hInst, HWND hWnd);
-	void			Tick(void);
+	HRESULT		Ready_Input_Device(HINSTANCE hInst, HWND hWnd);
+	void		Tick(void);
 
 private:
 	_bool    Key_Down(const _ubyte& ubyKey);
