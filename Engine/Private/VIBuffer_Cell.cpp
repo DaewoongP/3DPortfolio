@@ -8,6 +8,7 @@ CVIBuffer_Cell::CVIBuffer_Cell(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 CVIBuffer_Cell::CVIBuffer_Cell(const CVIBuffer_Cell& rhs)
 	: CVIBuffer(rhs)
+	, m_VertexPositions(rhs.m_VertexPositions)
 {
 }
 
@@ -41,6 +42,7 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 	for (_uint i = 0; i < CCell::POINT_END; ++i)
 	{
 		pVertices[i].vPosition = pPoints[i];
+		m_VertexPositions.push_back(pPoints[i]);
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
@@ -48,6 +50,7 @@ HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
+
 	Safe_Delete_Array(pVertices);
 
 #pragma endregion

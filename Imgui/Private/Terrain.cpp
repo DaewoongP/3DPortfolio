@@ -1,6 +1,6 @@
 #include "Terrain.h"
 #include "GameInstance.h"
-#include "Engine_Defines.h"
+#include "Cell.h"
 
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
@@ -52,11 +52,26 @@ void CTerrain::Tick(_double dTimeDelta)
 
     if (0 < m_Cells.size())
     {
+        vector<_float3> VertexPositions;
+
+        _uint iCellIndex = { 0 };
+
         for (auto& pCell : m_Cells)
         {
             pCell->Tick(dTimeDelta);
+
+            VertexPositions = pCell->Get_VertexPositions();
+
+            for (size_t i = 0; i < VertexPositions.size(); ++i)
+            {
+                // 셀의 인덱스 번호에서 3개를 콜라이더를 만든다.
+                m_CellColliders[iCellIndex * 3 + i]->Tick(XMMatrixTranslation(VertexPositions[i].x, VertexPositions[i].y, VertexPositions[i].z));
+            }
+
+            ++iCellIndex;
         }
     }
+
 }
 
 void CTerrain::Late_Tick(_double dTimeDelta)
@@ -78,17 +93,22 @@ HRESULT CTerrain::Render()
 
     m_pCellShaderCom->Begin(0);
    
-    if (0 < m_Cells.size())
+    if (0 < m_Cells.size() &&
+        0 < m_CellColliders.size())
     {
         for (auto& pCell : m_Cells)
         {
             pCell->Render();
         }
+
+        for (auto& pCellCollider : m_CellColliders)
+        {
+            pCellCollider->Render();
+        }
     }
 
     return S_OK;
 }
-
 
 HRESULT CTerrain::RemakeTerrain(const _tchar* pHeightMap)
 {
@@ -122,17 +142,46 @@ HRESULT CTerrain::RemakeCells(vector<_float3*>& Cells)
     for (auto& pCell : m_Cells)
         Safe_Release(pCell);
     m_Cells.clear();
+    // 재생성이므로 콜라이더도 재생성처리.
+    for (auto& pCellCollider : m_CellColliders)
+        Safe_Release(pCellCollider);
+    m_CellColliders.clear();
+
+    CGameInstance* pGameInstance = CGameInstance::GetInstance();
+    Safe_AddRef(pGameInstance);
 
     for (auto& pPoints : Cells)
     {
+        // Cell Buffer Remake
         CVIBuffer_Cell* pCell = CVIBuffer_Cell::Create(m_pDevice, m_pContext, pPoints);
 
         if (nullptr == pCell)
             return E_FAIL;
-
+        //  버텍스 위치가져와야함.
         m_Cells.push_back(pCell);
+        
+        // Cell Colliders Clone
+        CBounding_Sphere::BOUNDINGSPHEREDESC	BoundingSphere;
+
+        vector<_float3> VertexPositions = pCell->Get_VertexPositions();
+
+        for (size_t i = 0; i < VertexPositions.size(); ++i)
+        {
+            BoundingSphere.vPosition = _float3(0.f, 0.f, 0.f);
+            BoundingSphere.fRadius = 1.f;
+
+            CComponent* pComponent = pGameInstance->Clone_Component(LEVEL_TOOL,
+                TEXT("Prototype_Component_Collider_Sphere"), &BoundingSphere);
+
+            if (nullptr == pComponent)
+                return E_FAIL;
+
+            m_CellColliders.push_back(static_cast<CCollider*>(pComponent));
+        }
     }
-    
+
+    Safe_Release(pGameInstance);
+
     return S_OK;
 }
 
@@ -183,6 +232,17 @@ HRESULT CTerrain::PickingOnTerrain(_Inout_ _float4* vPickPos)
     XMStoreFloat4(vPickPos, vPos);
 
     return S_OK;
+}
+
+_bool CTerrain::IsPickingOnCell(_float4* vPickPos)
+{
+    for (auto& pCollider : m_CellColliders)
+    {
+        
+    }
+
+
+    return false;
 }
 
 HRESULT CTerrain::Add_Component()
@@ -309,6 +369,10 @@ void CTerrain::Free()
     for (auto& pCell : m_Cells)
         Safe_Release(pCell);
     m_Cells.clear();
+
+    for (auto& pCellCollider : m_CellColliders)
+        Safe_Release(pCellCollider);
+    m_CellColliders.clear();
 
     Safe_Release(m_pTextureCom);;
     Safe_Release(m_pShaderCom);

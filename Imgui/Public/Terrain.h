@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CShader;
 class CTexture;
+class CCollider;
 class CRenderer;
 class CTransform;
 class CVIBuffer_Cell;
@@ -40,6 +41,9 @@ public:
 	HRESULT RemakeTerrain(_uint iTextureIndex);
 	HRESULT RemakeCells(vector<_float3*>& Cells);
 	HRESULT PickingOnTerrain(_Inout_ _float4* vPickPos);
+	// 피킹이 이미 생성되어있는 셀의 버텍스에 되었는지 체크하여
+	// 피킹 되었을경우 true와 해당 포지션을 반환한다.
+	_bool IsPickingOnCell(_Inout_ _float4* vPickPos);
 
 private:
 	CShader*				m_pShaderCom = { nullptr };
@@ -49,7 +53,8 @@ private:
 	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 
 	CShader*				m_pCellShaderCom = { nullptr };
-	vector<CVIBuffer_Cell*> m_Cells = { nullptr };
+	vector<CVIBuffer_Cell*> m_Cells;
+	vector<CCollider*>		m_CellColliders;
 
 private:
 	_uint					m_iTextureIndex = { 0 };
