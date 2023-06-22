@@ -80,6 +80,11 @@ HRESULT CPlayer::Render()
 		m_pModelCom->Render(i);
 	}
 
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
@@ -291,6 +296,7 @@ void CPlayer::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pNavigation);
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pPlayerCameraCom);

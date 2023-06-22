@@ -143,7 +143,6 @@ HRESULT CNavigation::Render()
 		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
 			return E_FAIL;
 
-
 		m_pShader->Begin(0);
 
 		m_Cells[m_NaviDesc.iCurrentIndex]->Render();
