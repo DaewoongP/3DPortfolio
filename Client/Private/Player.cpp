@@ -30,7 +30,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 	// 모델의 애니메이션 인덱스 설정
-	m_pModelCom->Set_AnimIndex(0);
+	m_pModelCom->Set_AnimIndex(95);
 
 	m_fMouseSensitivity = 0.1f;
 
@@ -119,7 +119,7 @@ HRESULT CPlayer::Add_Component()
 	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 10.f;
+	TransformDesc.dSpeedPerSec = 20.f;
 	TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Transform */
@@ -259,7 +259,7 @@ void CPlayer::Fix_Mouse()
 void CPlayer::CameraOffset()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition += XMVectorSet(0.f, 0.5f, 0.f, 0.f);
+	vPosition += XMVectorSet(0.f, 5.f, 0.f, 0.f);
 
 	m_pPlayerCameraCom->Set_Position(vPosition);
 }

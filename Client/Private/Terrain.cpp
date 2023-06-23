@@ -68,7 +68,7 @@ HRESULT CTerrain::Add_Component()
         return E_FAIL;
     }
     // Test¿ë ÇÏÀÌÆ®¸Ê
-    m_pBufferCom->RemakeTerrain(TEXT("../../Resources/Terrain/Height.bmp"));
+    //m_pBufferCom->RemakeTerrain(TEXT("../../Resources/Terrain/Height.bmp"));
 
     /* For.Com_Renderer */
     if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),

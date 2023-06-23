@@ -123,7 +123,6 @@ HRESULT CVIBuffer_Cell::Render_Sphere()
 	return S_OK;
 }
 
-
 HRESULT CVIBuffer_Cell::Begin(_float3* pPoints)
 {
 	D3D11_MAPPED_SUBRESOURCE MappedSubResource;

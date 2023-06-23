@@ -119,12 +119,12 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		return E_FAIL;
 
 	Ready_Prototype_Component_Shader();
-	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
 
 	return S_OK;
 }
-
+ 
 HRESULT CMainTool::Ready_Prototype_Component_Shader()
 {
 	/* Prototype_Component_Shader_Terrain */

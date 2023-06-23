@@ -152,7 +152,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Player */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Sword_Elite.dat"), PivotMatrix))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Player.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Player)");
 		return E_FAIL;
@@ -205,7 +205,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Navigation2.Navi")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/YNavi.Navi")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;

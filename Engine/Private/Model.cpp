@@ -520,7 +520,9 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 				m_MaterialDatas[i]->MaterialTexture[j].TexPath, 1);
 
 			if (nullptr == MeshMaterial.pMtrlTexture[j])
-				return E_FAIL;
+			{
+				MSG_BOX("Mtrl Texture NULL");
+			}
 		}
 
 		m_Materials.push_back(MeshMaterial);

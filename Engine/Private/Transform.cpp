@@ -57,13 +57,22 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigati
 
 	vPosition += vDir * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
 	
-	_bool		bIsMove = true;
+	_bool		isMove = true;
+	_float3		vNormal;
 
 	if (nullptr != pNavigation)
-		bIsMove = pNavigation->Is_Move(vPosition);
+		isMove = pNavigation->Is_Move(vPosition, &vNormal);
 
-	if (true == bIsMove)
-		Set_State(STATE_POSITION, vPosition);
+	while (false == isMove)
+	{
+		vDir *= 0.99f;
+		vPosition = Get_State(STATE::STATE_POSITION) + 
+			(vDir - XMLoadFloat3(&vNormal) * (XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
+
+		isMove = pNavigation->Is_Move(vPosition, &vNormal);
+	}
+
+	Set_State(STATE_POSITION, vPosition);
 }
 
 void CTransform::Go_Straight(_double dTimeDelta, CNavigation* pNavigation)

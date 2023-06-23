@@ -39,7 +39,7 @@ HRESULT CCell::Initialize(_float3* pPoints, _int iIndex)
 	return S_OK;
 }
 
-_bool CCell::Is_In(_fvector vPosition, _int* pNeighborIndex)
+_bool CCell::Is_In(_fvector vPosition, _float3* pNormal, _int* pNeighborIndex)
 {
 	for (_uint i = 0; i < NEIGHBOR_END; ++i)
 	{
@@ -49,9 +49,14 @@ _bool CCell::Is_In(_fvector vPosition, _int* pNeighborIndex)
 		if (0 < XMVectorGetX(XMVector3Dot(vDir, vNormal)))
 		{
 			*pNeighborIndex = m_iNeighborIndices[i];
+
+			if (-1 == m_iNeighborIndices[i])
+				XMStoreFloat3(pNormal, vNormal);
+
 			return false;
 		}
 	}
+
 	return true;
 }
 
