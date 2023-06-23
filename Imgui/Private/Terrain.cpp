@@ -85,12 +85,14 @@ HRESULT CTerrain::Render()
         {
             pCell->Render();
         }
+#ifdef _DEBUG
         // 바운딩스피어는 렌더함수 도중에 쉐이더를 던지므로, 색깔이 곱창날 수 있음.
         // 따라서 따로 루프 돌아주는게 안정적임.
         for (auto& pCell : m_Cells)
         {
             pCell->Render_Sphere();
         }
+#endif // _DEBUG   
     }
 
     return S_OK;

@@ -57,6 +57,9 @@ private: /* For.Animations */
 	// 히스토그램을 그리기 위한 함수포인터 변수
 	_float						(*m_FrameSpeedFunc)(void*, _int);
 
+private:
+	class CAnimationNotify* m_pAnimationNotify = { nullptr };
+
 private: /* For. Animations */
 	HRESULT AnimationIndex();
 	HRESULT AnimationPause();
@@ -65,11 +68,11 @@ private: /* For. Animations */
 	// 애니메이션의 특정 프레임에서 처리되는 값들
 	HRESULT AnimationNotify(_double dTimeDelta);
 
-private:
-	class CAnimationNotify* m_pAnimationNotify = { nullptr };
-
 private: /* For. Collider */
 	HRESULT AddCollider();
+
+private: /* For. Collider */
+	_float3						m_ColliderExtents[3];
 
 public:
 	static CWindow_ObjectOptions* Create(void* pArg = nullptr);

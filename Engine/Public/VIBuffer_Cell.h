@@ -18,7 +18,9 @@ public:
 	virtual HRESULT Initialize_Prototype(_float3 * pPoints);
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double dTimeDelta) override;
+#ifdef _DEBUG
 	virtual HRESULT Render_Sphere();
+#endif // _DEBUG
 
 public:
 	HRESULT Begin(_float3* pPoints);

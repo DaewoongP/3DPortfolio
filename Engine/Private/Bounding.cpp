@@ -50,6 +50,7 @@ HRESULT CBounding::Initialize_Prototype()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CBounding::Begin()
 {
 	if (nullptr == m_pPrimitiveBatch)
@@ -82,6 +83,7 @@ HRESULT CBounding::End()
 
 	return S_OK;
 }
+#endif // _DEBUG
 
 void CBounding::Free()
 {

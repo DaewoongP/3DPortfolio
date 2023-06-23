@@ -31,7 +31,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(_fvector vColor = DirectX::Colors::Green) override;
+	virtual HRESULT Render(_fvector vColor = DirectX::Colors::LightGreen) override;
 #endif // _DEBUG
 
 private:

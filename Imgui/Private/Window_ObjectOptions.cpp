@@ -28,6 +28,8 @@ HRESULT CWindow_ObjectOptions::Initialize(void* pArg)
 
 	m_pAnimationNotify = CAnimationNotify::Create();
 
+	ZeroMemory(m_ColliderExtents, sizeof(_float3) * 3);
+
 	return S_OK;
 }
 
@@ -207,7 +209,10 @@ HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
 
 HRESULT CWindow_ObjectOptions::AddCollider()
 {
-	// 콜라이더 추가 예정
+	ImGui::InputFloat3("Extents Width", reinterpret_cast<_float*>(&m_ColliderExtents[0]));
+	ImGui::InputFloat3("Extents Height", reinterpret_cast<_float*>(&m_ColliderExtents[1]));
+	ImGui::InputFloat3("Extents Depth", reinterpret_cast<_float*>(&m_ColliderExtents[2]));
+
 	return S_OK;
 }
 

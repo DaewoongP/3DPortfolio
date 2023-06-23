@@ -35,7 +35,7 @@ public:
 public:
 	// effect, batch 등을 통해 렌더링 준비
 	HRESULT Begin();
-	virtual HRESULT Render(_fvector vColor = DirectX::Colors::Green) PURE;
+	virtual HRESULT Render(_fvector vColor = DirectX::Colors::LightGreen) PURE;
 	HRESULT End();
 #endif // _DEBUG
 
