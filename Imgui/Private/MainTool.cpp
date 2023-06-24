@@ -179,13 +179,14 @@ HRESULT CMainTool::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const
 			wstring wstrProto = pPrototypeTag;
 			wstring wstrFileName = entry.path().filename().c_str();
 
+			_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180));
+
 			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
 			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrProto.c_str(),
-				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str()))))
+				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str(), PivotMatrix))))
 			{
 				//std::filesystem::remove(entry.path());
 				return E_FAIL;
-
 			}
 				
 		}
@@ -222,9 +223,11 @@ HRESULT CMainTool::Ready_Prototype_Object()
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ToolCamera"),
 		CNonAnimModel::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	_matrix PivotMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationY(XMConvertToRadians(180)) * XMMatrixTranslation(0.f, 0.f, -0.5f);
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_ToolModel_Camera"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ToolData/Camera.dat")))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ToolData/Camera.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Create ToolCamera");
 		return E_FAIL;

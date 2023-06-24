@@ -29,8 +29,6 @@ public:
 
 		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
 	}
-	// 카메라 eye, at값을 프레임에 저장
-	void Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt);
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
@@ -58,8 +56,8 @@ public:
 	// 애니메이션의 최대 프레임 개수
 	_uint						m_iAnimationFrames = { 0 };
 	// 현재 애니메이션에 해당하는 채널의 프레임 중 가장 큰 프레임을 기준으로 사이즈를 처리.
-	// 각 프레임 별로 스피드를 관리하는 변수.
-	vector<_float>				m_AnimationFrameSpeeds;
+	// 각 프레임 별로 Notify를 관리
+	vector<NOTIFY>				m_AnimationNotify;
 
 public:
 	static CAnimation* Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

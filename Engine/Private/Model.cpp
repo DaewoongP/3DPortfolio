@@ -83,11 +83,6 @@ void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
 	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
-void CModel::Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt)
-{
-	m_Animations[m_iCurrentAnimIndex]->Set_CameraValueInFrame(iFrameIndex, vEye, vAt);
-}
-
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
 {
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);

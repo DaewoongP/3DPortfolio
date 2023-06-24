@@ -22,20 +22,25 @@ namespace Engine
 		XMFLOAT4		vRotation;
 		XMFLOAT3		vTranslation;
 
+		// 프레임 실행 시간
+		double			dTime;
+	}KEYFRAME;
+
+	typedef struct tagNotify
+	{
+		// 해당 애니메이션 속도값
+		float			fSpeed;
+
 		// 카메라값
-		XMFLOAT3		vEye;
-		XMFLOAT3		vAt;
+		XMFLOAT4		vEye;
+		XMFLOAT4		vAt;
 
 		// 사운드값
 		//const _tchar	szSouneName[MAX_PATH];
 		// 사운드enum...
 
 		// 이펙트, 파티클...
-
-
-		// 프레임 실행 시간
-		double			dTime;
-	}KEYFRAME;
+	}NOTIFY;
 
 	typedef struct tagVertex_Position
 	{

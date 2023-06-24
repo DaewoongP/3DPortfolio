@@ -42,8 +42,6 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 	CurrentObjectListBox();
 
-	SearchObject();
-
 	DeleteObject();
 
 	ObjectOption();
@@ -91,14 +89,6 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 	return S_OK;
 }
 
-HRESULT CWindow_Object::SearchObject()
-{
-	_char test[256] = "";
-	ImGui::InputText("Search Object", test, 0);
-	// 여기서 파일이름 서칭해서 처리
-	return S_OK;
-}
-
 HRESULT CWindow_Object::DeleteObject()
 {
 	if (ImGui::Button("Delete Select Object"))
@@ -136,6 +126,8 @@ HRESULT CWindow_Object::DeleteObject()
 		}
 		if (0 < m_iCurrentListIndex)
 			--m_iCurrentListIndex;
+
+		OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_END, nullptr);
 	}
 
 	if (!m_bClearButton)
@@ -163,6 +155,7 @@ HRESULT CWindow_Object::DeleteObject()
 			m_ObjectNames[m_eCurRadio].clear();
 
 			m_bClearButton = false;
+			OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_END, nullptr);
 		}
 
 		m_iCurrentListIndex = 0;

@@ -17,7 +17,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_isPaused(rhs.m_isPaused)
 	, m_iMaxFrameChannelIndex(rhs.m_iMaxFrameChannelIndex)
 	, m_iAnimationFrames(rhs.m_iAnimationFrames)
-	, m_AnimationFrameSpeeds(rhs.m_AnimationFrameSpeeds)
+	, m_AnimationNotify(rhs.m_AnimationNotify)
 {
 	lstrcpy(m_szName, rhs.m_szName);
 
@@ -39,7 +39,7 @@ _uint CAnimation::Get_CurrentAnimationFrame()
 
 void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
 {
-	m_AnimationFrameSpeeds[iFrameIndex] = fSpeed;
+	m_AnimationNotify[iFrameIndex].fSpeed = fSpeed;
 }
 
 void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex)
@@ -57,11 +57,6 @@ void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameI
 
 		++iChannelIndex;
 	}
-}
-
-void CAnimation::Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt)
-{
-	m_Channels[m_iMaxFrameChannelIndex]->Set_CameraValueInFrame(iFrameIndex, vEye, vAt);
 }
 
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
@@ -104,8 +99,9 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 	}
 	m_iAnimationFrames = iNumKeyFrame;
 
+	m_AnimationNotify.resize(m_iAnimationFrames);
 	for (_uint i = 0; i < m_iAnimationFrames; ++i)
-		m_AnimationFrameSpeeds.push_back(1.f);
+		m_AnimationNotify[i].fSpeed = 1.f;
 
 	return S_OK;
 }
@@ -116,8 +112,8 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 		return;
 
 	// 프레임 별로 애니메이션 스피드 제어.
-	if (m_AnimationFrameSpeeds.size() > 0)
-		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationFrameSpeeds[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
+	if (m_AnimationNotify.size() > 0)
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]].fSpeed;
 	else
 		m_dTimeAcc += m_dTickPerSecond * TimeDelta;
 

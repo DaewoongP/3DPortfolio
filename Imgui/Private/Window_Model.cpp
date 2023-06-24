@@ -246,6 +246,7 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	m_iCurrentModelIndex++;
 	MakeTag(CDummy::DUMMY_NONANIM);
+
 	return S_OK;
 }
 
@@ -270,6 +271,7 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	m_iCurrentModelIndex++;
 	MakeTag(CDummy::DUMMY_ANIM);
+
 	return S_OK;
 }
 
