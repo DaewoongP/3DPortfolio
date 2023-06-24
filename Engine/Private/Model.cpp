@@ -80,7 +80,12 @@ void CModel::Set_AnimationPause(_bool isPause)
 
 void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
 {
-	return m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
+	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
+}
+
+void CModel::Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_CameraValueInFrame(iFrameIndex, vEye, vAt);
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
@@ -510,7 +515,7 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 			{
 				if (j == TextureType_DIFFUSE)
 				{
-					lstrcpy(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("../../Resources/Terrain/NullDiffuse.png"));
+					lstrcpy(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("../../Resources/ToolData/NullDiffuse.png"));
 				}
 				else
 					continue;

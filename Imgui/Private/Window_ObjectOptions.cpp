@@ -202,6 +202,9 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed(_double dTimeDelta)
 
 HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
 {
+	m_pAnimationNotify->Set_CurrentIndex(m_iAnimationFrames, m_iCurrentAnimationFrame);
+	m_pAnimationNotify->Set_CurrentAnimationObject(static_cast<CAnimModel*>(m_pCurrentDummy), m_pCurrentModel);
+
 	m_pAnimationNotify->Tick(dTimeDelta);
 
 	return S_OK;
@@ -209,9 +212,9 @@ HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
 
 HRESULT CWindow_ObjectOptions::AddCollider()
 {
-	ImGui::InputFloat3("Extents Width", reinterpret_cast<_float*>(&m_ColliderExtents[0]));
-	ImGui::InputFloat3("Extents Height", reinterpret_cast<_float*>(&m_ColliderExtents[1]));
-	ImGui::InputFloat3("Extents Depth", reinterpret_cast<_float*>(&m_ColliderExtents[2]));
+	ImGui::InputFloat3("Extents X", reinterpret_cast<_float*>(&m_ColliderExtents[0]));
+	ImGui::InputFloat3("Extents Y", reinterpret_cast<_float*>(&m_ColliderExtents[1]));
+	ImGui::InputFloat3("Extents Z", reinterpret_cast<_float*>(&m_ColliderExtents[2]));
 
 	return S_OK;
 }

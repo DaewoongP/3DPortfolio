@@ -14,6 +14,9 @@ public:
 	_double Get_CurrentKeyFrameTime(_uint iCurrentIndex) const { return m_KeyFrames[iCurrentIndex].dTime; }
 	// 채널 키프레임 중 가장 큰값 반환
 	_uint	Get_NumKeyFrames() const { return m_iNumKeyFrames; }
+	// 원하는 키프레임 인덱스에 카메라 eye, at 값 저장
+	// 애니메이션에 접근하여 처리할 것이기 때문에 프레임 인덱스 인자는 가장 큰값으로 처리할것임.
+	void	Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt);
 
 public:
 	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);

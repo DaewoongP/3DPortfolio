@@ -29,6 +29,8 @@ public:
 
 		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
 	}
+	// 카메라 eye, at값을 프레임에 저장
+	void Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt);
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

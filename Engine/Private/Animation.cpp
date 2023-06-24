@@ -59,6 +59,11 @@ void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameI
 	}
 }
 
+void CAnimation::Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt)
+{
+	m_Channels[m_iMaxFrameChannelIndex]->Set_CameraValueInFrame(iFrameIndex, vEye, vAt);
+}
+
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
 	m_isLoop = true;

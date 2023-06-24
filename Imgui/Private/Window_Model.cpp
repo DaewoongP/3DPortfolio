@@ -227,7 +227,7 @@ HRESULT CWindow_Model::Initialize_DummyTransforms()
 
 HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 {
-	CAnimModel::OBJECTDESC ObjectDesc;
+	CNonAnimModel::OBJECTDESC ObjectDesc;
 	_char szProtoName[MAX_STR] = "Prototype_Component_NonAnimModel_";
 	strcat_s(szProtoName, MAX_STR, m_NonAnimModelNames[m_iCur_Mesh]);
 	CharToWChar(szProtoName, ObjectDesc.pModelPrototypeTag);

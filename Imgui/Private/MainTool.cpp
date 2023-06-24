@@ -119,7 +119,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 		return E_FAIL;
 
 	Ready_Prototype_Component_Shader();
-	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
+	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
 
 	return S_OK;
@@ -217,6 +217,18 @@ HRESULT CMainTool::Ready_Prototype_Object()
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_NonAnimModel"),
 		CNonAnimModel::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* 툴용 카메라 모델 */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ToolCamera"),
+		CNonAnimModel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_ToolModel_Camera"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ToolData/Camera.dat")))))
+	{
+		MSG_BOX("Failed Create ToolCamera");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

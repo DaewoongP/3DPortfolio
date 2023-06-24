@@ -17,9 +17,23 @@ namespace Engine
 
 	typedef struct tagKeyFrame
 	{
+		// 상태값
 		XMFLOAT3		vScale;
 		XMFLOAT4		vRotation;
 		XMFLOAT3		vTranslation;
+
+		// 카메라값
+		XMFLOAT3		vEye;
+		XMFLOAT3		vAt;
+
+		// 사운드값
+		//const _tchar	szSouneName[MAX_PATH];
+		// 사운드enum...
+
+		// 이펙트, 파티클...
+
+
+		// 프레임 실행 시간
 		double			dTime;
 	}KEYFRAME;
 

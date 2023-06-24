@@ -37,6 +37,8 @@ public:
 			return;
 		m_iCurrentAnimIndex = iAnimIndex;
 	}
+	// 카메라 eye, at값을 현재 애니메이션 프레임에 저장
+	void Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix);

@@ -5,6 +5,13 @@ CChannel::CChannel()
 {
 }
 
+void CChannel::Set_CameraValueInFrame(_uint iFrameIndex, _float3 vEye, _float3 vAt)
+{
+	// 원하는 카메라의 위치를 해당 프레임에 저장.
+	m_KeyFrames[iFrameIndex].vEye = vEye;
+	m_KeyFrames[iFrameIndex].vAt = vAt;
+}
+
 HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
 	lstrcpy(m_szName, Channel.Name);
