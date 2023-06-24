@@ -23,6 +23,8 @@ void CWindow_ObjectOptions::Set_CurrentDummy(CDummy::DUMMYTYPE eDummyType, CDumm
 	m_pCurrentModel = dynamic_cast<CModel*>(pDummy->Find_Component(TEXT("Com_Model")));
 
 	m_iNumAnimations = m_pCurrentModel->Get_NumAnimations();
+
+	m_pAnimationNotify->Set_CurrentAnimationObject(static_cast<CAnimModel*>(m_pCurrentDummy), m_pCurrentModel);
 }
 
 HRESULT CWindow_ObjectOptions::Initialize(void* pArg)
@@ -101,6 +103,7 @@ HRESULT CWindow_ObjectOptions::AnimationIndex()
 			m_iAnimationIndex = iIndex;
 			m_pCurrentModel->Set_AnimIndex(m_iAnimationIndex);
 			m_pCurrentDummy->Set_PreToolAnimationIndex(m_iAnimationIndex);
+			m_pAnimationNotify->Set_CurrentAnimationObject(static_cast<CAnimModel*>(m_pCurrentDummy), m_pCurrentModel);
 		}
 	}
 
@@ -166,10 +169,6 @@ HRESULT CWindow_ObjectOptions::AnimationSpeed(_double dTimeDelta)
 
 HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
 {
-	m_pAnimationNotify->Set_CurrentAnimationValue(m_iAnimationIndex, m_iAnimationFrames);
-	m_pAnimationNotify->Set_CurrentFrameIndex(m_iCurrentAnimationFrame);
-	m_pAnimationNotify->Set_CurrentAnimationObject(static_cast<CAnimModel*>(m_pCurrentDummy), m_pCurrentModel);
-
 	m_pAnimationNotify->Tick(dTimeDelta);
 
 	return S_OK;

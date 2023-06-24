@@ -27,8 +27,6 @@ private:
 
 public:
 	void Set_CurrentAnimationObject(class CAnimModel* pAnimDummy, class CModel* pModel);
-	void Set_CurrentAnimationValue(_uint iAnimaitonIndex, _uint iAnimationFrames);
-	void Set_CurrentFrameIndex(_uint iCurrentFrameIndex);
 
 public:
 	HRESULT Initialize(void* pArg);
@@ -45,6 +43,8 @@ private:
 	_uint				m_iFrames = { 0 };
 	// 현재 프레임의 인덱스
 	_uint				m_iCurrentFrameIndex = { 0 };
+	_uint				m_iLerpFirstFrameIndex = { 0 };
+	_uint				m_iLerpLastFrameIndex = { 0 };
 	_bool				m_bCamera = { false };
 
 	_bool				m_bTestCamera = { false };
@@ -54,11 +54,8 @@ private:
 	
 	// 현재 모델의 원래 상태행렬
 	_float4x4			m_DummyMatrix;
-	// 0Frame이 세팅이 되었는지 확인
-	_bool				m_is0FrameSet = { false };
-
-
-	// 현재 재생 중인 애니메이션의 프레임 속도를 담은 벡터 컨테이너
+	// Frame이 세팅이 되었는지 확인
+	vector<_bool>		m_SetFrames;	// 현재 재생 중인 애니메이션의 프레임 속도를 담은 벡터 컨테이너
 	vector<NOTIFY>		m_FrameNotify;
 
 	// 히스토그램을 그리기 위한 함수포인터 변수
@@ -67,6 +64,7 @@ private:
 private:
 	HRESULT NotifyCamera();
 	HRESULT CameraSetLerp();
+	HRESULT LerpReset();
 	HRESULT TestCamera();
 	HRESULT NotifySpeed();
 

@@ -20,18 +20,15 @@ void CAnimationNotify::Set_CurrentAnimationObject(CAnimModel* pAnimDummy, CModel
 	m_pCurrentModelCom = pModel;
 
 	m_FrameNotify.clear();
+	m_SetFrames.clear();
 	m_FrameNotify = m_pCurrentModelCom->Get_CurrentAnimationNotify();
-}
+	m_SetFrames.resize(m_FrameNotify.size());
 
-void CAnimationNotify::Set_CurrentAnimationValue(_uint iAnimaitonIndex, _uint iAnimationFrames)
-{
-	m_iAnimationIndex = iAnimaitonIndex;
-	m_iFrames = iAnimationFrames;
-}
-
-void CAnimationNotify::Set_CurrentFrameIndex(_uint iCurrentFrameIndex)
-{
-	m_iCurrentFrameIndex = iCurrentFrameIndex;
+	for (auto& Notify : m_FrameNotify)
+	{
+		Notify.vEye.w = 1.f;
+		Notify.vAt.w = 1.f;
+	}
 }
 
 HRESULT CAnimationNotify::Initialize(void* pArg)
@@ -67,15 +64,19 @@ void CAnimationNotify::Tick(_double dTimeDelta)
 
 		if (ImGui::BeginTabItem("Camera"))
 		{
+			NotifyCamera();
+
 			CameraSetLerp();
 
-			NotifyCamera();
+			LerpReset();
 
 			ImGui::EndTabItem();
 		}
 
 		ImGui::EndTabBar();
 	}
+	if (m_iFrames >= 30)
+		int a = 1;
 }
 
 HRESULT CAnimationNotify::NotifyCamera()
@@ -104,37 +105,41 @@ HRESULT CAnimationNotify::NotifyCamera()
 	if (true == m_bCamera)
 	{
 		// 현재 플레이어에서의 포지션 오프셋, -> 이걸 변경할 수 있게 만들고
-		if (ImGui::InputFloat3("Offset Eye", reinterpret_cast<_float*>(&m_vEye)))
+		if (ImGui::InputFloat3("Offset Eye", reinterpret_cast<_float*>(&m_FrameNotify[m_iCurrentFrameIndex].vEye)))
 		{
-			if (false == XMVector3Equal(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt)))
+			if (false == XMVector4Equal(
+				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
+				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
 			{
-				if (0 == m_iCurrentFrameIndex)
-					m_is0FrameSet = true;
-
-				_matrix CamMatrix = XMMatrixInverse(nullptr, XMMatrixLookAtLH(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+				m_SetFrames[m_iCurrentFrameIndex] = true;
+				
+				_matrix CamMatrix = XMMatrixInverse(nullptr,
+					XMMatrixLookAtLH(
+						XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
+						XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt),
+						XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 				m_pToolCameraTrans->Set_WorldMatrix(CamMatrix);
-				
-				m_FrameNotify[m_iCurrentFrameIndex].vEye = m_vEye;
-				m_FrameNotify[m_iCurrentFrameIndex].vAt = m_vAt;
 
 				m_pCurrentModelCom->Set_AnimationFrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
 			}
 		}
 
-		if (ImGui::InputFloat3("Offset LookAt", reinterpret_cast<_float*>(&m_vAt)))
+		if (ImGui::InputFloat3("Offset LookAt", reinterpret_cast<_float*>(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
 		{
-			if (false == XMVector3Equal(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt)))
+			if (false == XMVector4Equal(
+				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
+				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
 			{
-				if (0 == m_iCurrentFrameIndex)
-					m_is0FrameSet = true;
+				m_SetFrames[m_iCurrentFrameIndex] = true;
 
-				_matrix CamMatrix = XMMatrixInverse(nullptr, XMMatrixLookAtLH(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+				_matrix CamMatrix = XMMatrixInverse(nullptr,
+					XMMatrixLookAtLH(
+						XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
+						XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt),
+						XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 				m_pToolCameraTrans->Set_WorldMatrix(CamMatrix);
-				
-				m_FrameNotify[m_iCurrentFrameIndex].vEye = m_vEye;
-				m_FrameNotify[m_iCurrentFrameIndex].vAt = m_vAt;
 
 				m_pCurrentModelCom->Set_AnimationFrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
 			}
@@ -142,21 +147,20 @@ HRESULT CAnimationNotify::NotifyCamera()
 
 	}
 
-	if (ImGui::Checkbox("Camera Test", &m_bTestCamera))
-	{
-		if (m_bTestCamera)
-		{
-			if (false == m_is0FrameSet)
-			{
-				MSG_BOX("Camera Notify 0 Frame Not Set");
-				m_bTestCamera = false;
-			}
-		}
-	}
+	if (ImGui::Button("Camera Test"))
+		m_bTestCamera = true;
 
 	if (m_bTestCamera)
 	{
-		TestCamera();
+		if (false == m_SetFrames[0])
+		{
+			MSG_BOX("Camera Notify 0 Frame Not Set");
+			m_bTestCamera = false;
+		}
+		else
+		{
+			TestCamera();
+		}
 	}
 
 	return S_OK;
@@ -164,29 +168,101 @@ HRESULT CAnimationNotify::NotifyCamera()
 
 HRESULT CAnimationNotify::CameraSetLerp()
 {
+	ImGui::SeparatorText("Frame Lerps");
+
+	ImGui::SetNextItemWidth(80.f);
+	ImGui::InputInt("First Frame", (_int*)&m_iLerpFirstFrameIndex);
+	ImGui::SetNextItemWidth(80.f);
+	SameLine();
+	ImGui::InputInt("Last Frame", (_int*)&m_iLerpLastFrameIndex);
+
 	if (false == ImGui::Button("Notify Camera Lerp"))
 		return S_OK;
-
-	if (false == m_is0FrameSet)
+	
+	if (false == m_SetFrames[0])
 	{
 		MSG_BOX("Camera Notify 0 Frame Not Set");
 		return S_OK;
+	}
+
+	if (m_iLerpFirstFrameIndex >= m_iLerpLastFrameIndex)
+	{
+		m_iLerpLastFrameIndex = m_iLerpFirstFrameIndex + 1;
+		MSG_BOX("Lerpframe is Greater than Current Frame");
+	}
+	else if (m_iLerpLastFrameIndex > m_iFrames)
+	{
+		m_iLerpLastFrameIndex = m_iFrames;
+		MSG_BOX("Lerpframe is Smaller than Max Frame");
 	}
 
 	_float4 vEye;
 	ZEROMEM(&vEye);
 	_float4 vAt;
 	ZEROMEM(&vAt);
+	
+	vector<_uint>		m_ChangedFrame;
 
-	// SRT중 가장 많은 프레임을 가진 값을 순회하며 각 프레임에서의 상태값을 저장.
-	// 만약 해당 프레임에서 값이 없을 경우 마지막으로 처리한 값으로 저장.
-	for (_uint i = 0; i < m_iFrames; ++i)
+	_uint iChanged = { 0 };
+
+	for (_uint i  = m_iLerpFirstFrameIndex; i <= m_iLerpLastFrameIndex; ++i)
 	{
-		NOTIFY	Notify;
+		// 값이 적용된 인덱스를 찾는다.
+		if (true == m_SetFrames[i])
+			m_ChangedFrame.push_back(iChanged);
 
-		
+		++iChanged;
 	}
 
+	for (_uint i = 0; i < m_ChangedFrame.size(); ++i)
+	{
+		if (i == m_ChangedFrame.size() - 1)
+		{
+			for (_uint j = m_ChangedFrame[i]; j < m_FrameNotify.size(); ++j)
+			{
+				// 마지막 프레임이면 나머지를 걍 똑같이채우고 나감.
+				m_FrameNotify[j] = m_FrameNotify[m_ChangedFrame[i]];
+			}
+			break;
+		}
+
+		NOTIFY PrevNotify = m_FrameNotify[m_ChangedFrame[i]];
+		NOTIFY NextNotify = m_FrameNotify[m_ChangedFrame[i + 1]];
+
+		_vector vPrevEye = XMLoadFloat4(&PrevNotify.vEye);
+		_vector vNextEye = XMLoadFloat4(&NextNotify.vEye);
+
+		_vector vPrevAt = XMLoadFloat4(&PrevNotify.vAt);
+		_vector vNextAt = XMLoadFloat4(&NextNotify.vAt);
+
+		// 선형보간 처리
+		// PrevFrame + ((NextFrame - PrevFrame) * LerpTime / (NextTime - PrevTime))
+		for (_uint j = m_ChangedFrame[i]; j <= m_ChangedFrame[i + 1]; ++j)
+		{
+			_double dTimePercent = m_FrameNotify[j].dTime / (NextNotify.dTime - PrevNotify.dTime);
+
+			XMStoreFloat4(&m_FrameNotify[j].vEye, vPrevEye + (vNextEye - vPrevEye) * (_float)dTimePercent);
+			XMStoreFloat4(&m_FrameNotify[j].vAt, vPrevAt + (vNextAt - vPrevAt) * (_float)dTimePercent);
+
+			m_FrameNotify[j].vEye.w = 1.f;
+			m_FrameNotify[j].vAt.w = 1.f;
+		}
+
+		MSG_BOX("Notify Lerp Success");
+	}
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::LerpReset()
+{
+	if (ImGui::Button("Lerp Reset"))
+	{
+		for (auto& frame : m_SetFrames)
+		{
+			frame = false;
+		}
+	}
 	return S_OK;
 }
 
@@ -202,6 +278,17 @@ HRESULT CAnimationNotify::TestCamera()
 		
 		pCam->Set_CameraView(m_FrameNotify[m_iCurrentFrameIndex].vEye,
 			m_FrameNotify[m_iCurrentFrameIndex].vAt,
+			_float4(0.f, 1.f, 0.f, 0.f));
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Camera Reset"))
+	{
+		m_bTestCamera = false;
+		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
+
+		pCam->Set_CameraView(_float4(0.f, 2.f, 0.f, 1.f),
+			_float4(2.f, 0.f, 2.f, 1.f),
 			_float4(0.f, 1.f, 0.f, 0.f));
 	}
 
@@ -225,6 +312,7 @@ HRESULT CAnimationNotify::NotifySpeed()
 
 	// 애니메이션 전체적인 스피드값을 그래프로 보여줌.
 	vector<_float>		Speeds;
+
 	for (_uint i = 0; i < m_FrameNotify.size(); ++i)
 	{
 		Speeds.push_back(m_FrameNotify[i].fSpeed);
@@ -243,10 +331,14 @@ HRESULT CAnimationNotify::InputFrameIndex()
 	{
 		if (0 > m_iCurrentFrameIndex)
 			m_iCurrentFrameIndex = 0;
-		else if (m_iFrames - 1 <= m_iCurrentFrameIndex)
+		else if (m_iFrames <= m_iCurrentFrameIndex)
 			m_iCurrentFrameIndex = m_iFrames - 1;
+
 		m_pCurrentModelCom->Set_CurrentKeyFrameIndex(m_iCurrentFrameIndex);
 	}
+
+	m_iCurrentFrameIndex = m_pCurrentModelCom->Get_CurrentAnimationFrame();
+	m_iFrames = m_pCurrentModelCom->Get_AnimationFrames();
 
 	return S_OK;
 }

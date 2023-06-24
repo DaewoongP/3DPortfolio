@@ -44,8 +44,6 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 	DeleteObject();
 
-	ObjectOption();
-
 	End();
 }
 
@@ -84,6 +82,9 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		vTransform.y += 6.f;
 		vTransform.z -= 5.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
+
+
+		ObjectOption();
 	}
 
 	return S_OK;
