@@ -24,6 +24,7 @@ public:
 	void	Set_TransformDesc(CTransform::TRANSFORMDESC TransformDesc) { m_pTransform->Set_Desc(TransformDesc); }
 	void	Set_CameraDesc(CAMERADESC CameraDesc);
 	void	Set_CameraWorldMatrix(_fmatrix CamWorldMatrix) { m_pTransform->Set_WorldMatrix(CamWorldMatrix); }
+	void	Set_LookAtLH(_float4 vEye, _float4 vAt, _float4 vUp = _float4(0.f, 1.f, 0.f, 0.f));
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

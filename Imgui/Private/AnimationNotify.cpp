@@ -18,21 +18,15 @@ void CAnimationNotify::Set_CurrentAnimationObject(CAnimModel* pAnimDummy, CModel
 
 	m_pCurrentAnimDummy = pAnimDummy;
 	m_pCurrentModelCom = pModel;
+
+	m_FrameNotify.clear();
+	m_FrameNotify = m_pCurrentModelCom->Get_CurrentAnimationNotify();
 }
 
 void CAnimationNotify::Set_CurrentAnimationValue(_uint iAnimaitonIndex, _uint iAnimationFrames)
 {
 	m_iAnimationIndex = iAnimaitonIndex;
 	m_iFrames = iAnimationFrames;
-
-	m_FrameNotify.clear();
-	m_FrameNotify.resize(iAnimationFrames);
-	for (auto& Notify : m_FrameNotify)
-	{
-		Notify.fSpeed = 1.f;
-		Notify.vEye = _float4(0.f, 0.f, 0.f, 1.f);
-		Notify.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	}
 }
 
 void CAnimationNotify::Set_CurrentFrameIndex(_uint iCurrentFrameIndex)
@@ -73,9 +67,9 @@ void CAnimationNotify::Tick(_double dTimeDelta)
 
 		if (ImGui::BeginTabItem("Camera"))
 		{
-			NotifyCamera();
+			CameraSetLerp();
 
-			RenderCamera();
+			NotifyCamera();
 
 			ImGui::EndTabItem();
 		}
@@ -110,55 +104,106 @@ HRESULT CAnimationNotify::NotifyCamera()
 	if (true == m_bCamera)
 	{
 		// 현재 플레이어에서의 포지션 오프셋, -> 이걸 변경할 수 있게 만들고
-		if (ImGui::InputFloat3("Camera Offset Eye", reinterpret_cast<_float*>(&m_vEye)))
+		if (ImGui::InputFloat3("Offset Eye", reinterpret_cast<_float*>(&m_vEye)))
 		{
 			if (false == XMVector3Equal(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt)))
 			{
+				if (0 == m_iCurrentFrameIndex)
+					m_is0FrameSet = true;
+
 				_matrix CamMatrix = XMMatrixInverse(nullptr, XMMatrixLookAtLH(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 				m_pToolCameraTrans->Set_WorldMatrix(CamMatrix);
-
+				
 				m_FrameNotify[m_iCurrentFrameIndex].vEye = m_vEye;
 				m_FrameNotify[m_iCurrentFrameIndex].vAt = m_vAt;
+
+				m_pCurrentModelCom->Set_AnimationFrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
 			}
 		}
 
-		if (ImGui::InputFloat3("Camera Offset LookAt", reinterpret_cast<_float*>(&m_vAt)))
+		if (ImGui::InputFloat3("Offset LookAt", reinterpret_cast<_float*>(&m_vAt)))
 		{
 			if (false == XMVector3Equal(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt)))
 			{
+				if (0 == m_iCurrentFrameIndex)
+					m_is0FrameSet = true;
+
 				_matrix CamMatrix = XMMatrixInverse(nullptr, XMMatrixLookAtLH(XMLoadFloat4(&m_vEye), XMLoadFloat4(&m_vAt), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 				m_pToolCameraTrans->Set_WorldMatrix(CamMatrix);
-
+				
 				m_FrameNotify[m_iCurrentFrameIndex].vEye = m_vEye;
 				m_FrameNotify[m_iCurrentFrameIndex].vAt = m_vAt;
+
+				m_pCurrentModelCom->Set_AnimationFrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
 			}
 		}
 
 	}
 
-	ImGui::Checkbox("Camera Test", &m_bTestCamera);
+	if (ImGui::Checkbox("Camera Test", &m_bTestCamera))
+	{
+		if (m_bTestCamera)
+		{
+			if (false == m_is0FrameSet)
+			{
+				MSG_BOX("Camera Notify 0 Frame Not Set");
+				m_bTestCamera = false;
+			}
+		}
+	}
 
 	if (m_bTestCamera)
 	{
-		if (false == XMVector3Equal(XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye), 
-			XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
-		{
-			CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
-
-			pCam->Set_CameraView(m_FrameNotify[m_iCurrentFrameIndex].vEye, 
-				m_FrameNotify[m_iCurrentFrameIndex].vAt, 
-				_float4(0.f, 1.f, 0.f, 0.f));
-		}
+		TestCamera();
 	}
 
 	return S_OK;
 }
 
-HRESULT CAnimationNotify::RenderCamera()
+HRESULT CAnimationNotify::CameraSetLerp()
 {
-	
+	if (false == ImGui::Button("Notify Camera Lerp"))
+		return S_OK;
+
+	if (false == m_is0FrameSet)
+	{
+		MSG_BOX("Camera Notify 0 Frame Not Set");
+		return S_OK;
+	}
+
+	_float4 vEye;
+	ZEROMEM(&vEye);
+	_float4 vAt;
+	ZEROMEM(&vAt);
+
+	// SRT중 가장 많은 프레임을 가진 값을 순회하며 각 프레임에서의 상태값을 저장.
+	// 만약 해당 프레임에서 값이 없을 경우 마지막으로 처리한 값으로 저장.
+	for (_uint i = 0; i < m_iFrames; ++i)
+	{
+		NOTIFY	Notify;
+
+		
+	}
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::TestCamera()
+{
+	// 애니메이션에 스피드 처럼 세팅을 하면
+	// 그 키프레임에 맞는 노티파이를 가져와서 freecam을 움직여주는게 처리가 편할듯.
+
+	if (false == XMVector3Equal(XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
+		XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
+	{
+		CCamera_Free* pCam = dynamic_cast<CCamera_Free*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, TEXT("Layer_Tool"), TEXT("GameObject_Camera_Free")));
+		
+		pCam->Set_CameraView(m_FrameNotify[m_iCurrentFrameIndex].vEye,
+			m_FrameNotify[m_iCurrentFrameIndex].vAt,
+			_float4(0.f, 1.f, 0.f, 0.f));
+	}
 
 	return S_OK;
 }

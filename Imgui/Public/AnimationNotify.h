@@ -54,6 +54,8 @@ private:
 	
 	// 현재 모델의 원래 상태행렬
 	_float4x4			m_DummyMatrix;
+	// 0Frame이 세팅이 되었는지 확인
+	_bool				m_is0FrameSet = { false };
 
 
 	// 현재 재생 중인 애니메이션의 프레임 속도를 담은 벡터 컨테이너
@@ -64,7 +66,8 @@ private:
 
 private:
 	HRESULT NotifyCamera();
-	HRESULT RenderCamera();
+	HRESULT CameraSetLerp();
+	HRESULT TestCamera();
 	HRESULT NotifySpeed();
 
 	HRESULT InputFrameIndex();

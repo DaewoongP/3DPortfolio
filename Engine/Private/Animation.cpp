@@ -1,5 +1,6 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
+#include "Camera.h"
 
 CAnimation::CAnimation()
 {
@@ -42,9 +43,16 @@ void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
 	m_AnimationNotify[iFrameIndex].fSpeed = fSpeed;
 }
 
+void CAnimation::Set_FrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt)
+{
+	m_AnimationNotify[iFrameIndex].vEye = vEye;
+	m_AnimationNotify[iFrameIndex].vAt = vAt;
+}
+
 void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex)
 {
 	_uint iChannelIndex = { 0 };
+
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
@@ -99,9 +107,19 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 	}
 	m_iAnimationFrames = iNumKeyFrame;
 
-	m_AnimationNotify.resize(m_iAnimationFrames);
+	// 노티파이 벡터 초기화
+	m_AnimationNotify.clear();
+
 	for (_uint i = 0; i < m_iAnimationFrames; ++i)
-		m_AnimationNotify[i].fSpeed = 1.f;
+	{
+		NOTIFY Notify;
+		Notify.vEye  = _float4(0.f, 0.f, 0.f, 1.f);
+		Notify.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+		Notify.fSpeed = 1.f;
+		Notify.dTime = m_Channels[m_iMaxFrameChannelIndex]->Get_CurrentKeyFrameTime(i);
+
+		m_AnimationNotify.push_back(Notify);
+	}
 
 	return S_OK;
 }
@@ -126,6 +144,7 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 	}
 
 	_uint		iChannelIndex = 0;
+
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
@@ -133,6 +152,18 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 
 		pChannel->Invalidate_TransformationMatrix(Bones, m_dTimeAcc, &m_ChannelCurrentKeyFrames[iChannelIndex++]);
 	}
+}
+
+void CAnimation::Invalidate_Camera(CCamera* pCamera)
+{
+	// 카메라 컴포넌트를 받아서 처리.
+	// 현재 노티파이에있는 카메라 상태를 처리해준다.
+
+	NOTIFY Notify = m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
+	
+	// 노티파이를 가져와서 내가지금 설정되어있는 플레이어 카메라 행렬이랑 연산을 해줘야할듯.
+	// 일단 저장부터 하고 처리하는게 좋을듯.
+	//pCamera->Set_LookAtLH(Notify.vEye, Notify.vAt);
 }
 
 CAnimation* CAnimation::Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)

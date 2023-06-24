@@ -40,6 +40,8 @@ namespace Engine
 		// 사운드enum...
 
 		// 이펙트, 파티클...
+
+		double			dTime;
 	}NOTIFY;
 
 	typedef struct tagVertex_Position

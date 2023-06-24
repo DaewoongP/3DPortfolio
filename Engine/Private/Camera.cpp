@@ -45,6 +45,16 @@ void CCamera::Set_CameraDesc(CAMERADESC CameraDesc)
 	m_pTransform->LookAt(XMLoadFloat4(&m_vAt));
 }
 
+void CCamera::Set_LookAtLH(_float4 vEye, _float4 vAt, _float4 vUp)
+{
+	m_vEye = vEye;
+	m_vAt = vAt;
+	m_vUp = vUp;
+
+	m_pTransform->Set_State(CTransform::STATE::STATE_POSITION, XMLoadFloat4(&vEye));
+	m_pTransform->LookAt(XMLoadFloat4(&vAt));
+}
+
 HRESULT CCamera::Initialize_Prototype()
 {
 	m_pTransform = CTransform::Create(m_pDevice, m_pContext);

@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Animation.h"
+#include "Camera.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -63,6 +64,11 @@ _uint CModel::Get_CurrentAnimationFrame() const
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationFrame();
 }
 
+vector<NOTIFY> CModel::Get_CurrentAnimationNotify() const
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationNotify();
+}
+
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
@@ -71,6 +77,11 @@ _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 void CModel::Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_FrameSpeed(iFrameIndex, fSpeed);
+}
+
+void CModel::Set_AnimationFrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_FrameCamera(iFrameIndex, vEye, vAt);
 }
 
 void CModel::Set_AnimationPause(_bool isPause)
@@ -126,6 +137,14 @@ void CModel::Play_Animation(_double dTimeDelta)
 	{
 		pBone->Invalidate_CombinedTransformationMatrix(m_Bones);
 	}
+}
+
+void CModel::Invalidate_AnimationCamera(CCamera* pCamera)
+{
+	if (nullptr == pCamera)
+		return;
+
+	m_Animations[m_iCurrentAnimIndex]->Invalidate_Camera(pCamera);
 }
 
 HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)

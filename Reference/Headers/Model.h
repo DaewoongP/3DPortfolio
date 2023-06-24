@@ -26,9 +26,13 @@ public:
 	_uint Get_AnimationFrames() const;
 	// 현재 실행중인 애니메이션의 현재 프레임 인덱스를 반환
 	_uint Get_CurrentAnimationFrame() const;
+	// 현재 애니메이션에 설정된 애니메이션 프레임 노티파이 벡터 반환
+	vector<NOTIFY> Get_CurrentAnimationNotify() const;
 	_float4x4 Get_BoneCombinedTransformationMatrix(_uint iIndex);
 	// 프레임 인덱스에 해당하는 스피드값 설정.
 	void Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed);
+	// 프레임 인덱스에 해당하는 노티파이 카메라 값 설정
+	void Set_AnimationFrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt);
 	void Set_AnimationPause(_bool isPause);
 	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
 	void Set_AnimIndex(_uint iAnimIndex) 
@@ -45,6 +49,7 @@ public:
 
 public:
 	void	Play_Animation(_double dTimeDelta);
+	void	Invalidate_AnimationCamera(class CCamera* pCamera);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 
 public:
