@@ -27,12 +27,18 @@ HRESULT CKatana::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+	m_pModelCom->Set_AnimIndex(1);
+
 	return S_OK;
 }
 
 void CKatana::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
+	// 나중에 뼈 행렬 가져오는거로 처리
+	/*_float4x4 PlayerWeaponBoneMatrix = m_pPlayerModel->Get_BoneCombinedTransformationMatrix(m_iPlayerWeaponIndex);
+	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&PlayerWeaponBoneMatrix));*/
 
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
@@ -105,6 +111,9 @@ HRESULT CKatana::Add_Components()
 		return E_FAIL;
 	}
 
+	if (FAILED(Find_BoneIndices()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -122,6 +131,32 @@ HRESULT CKatana::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix",
 		pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CKatana::Find_BoneIndices()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	m_pPlayerModel = static_cast<CModel*>(pGameInstance->Find_GameObject(LEVEL_GAMEPLAY,
+		TEXT("Layer_Player"), TEXT("GameObject_Player"))->Find_Component(
+			TEXT("Com_Model")));
+
+	if (nullptr == m_pPlayerModel)
+	{
+		MSG_BOX("Failed Find Player model");
+
+		return E_FAIL;
+	}
+
+	Safe_AddRef(m_pPlayerModel);
+
+	if (FAILED(m_pPlayerModel->Find_BoneIndex(TEXT("Weapon_r"), &m_iPlayerWeaponIndex)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -156,7 +191,7 @@ CGameObject* CKatana::Clone(void* pArg)
 void CKatana::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pPlayerModel);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);

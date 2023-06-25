@@ -31,9 +31,14 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
 
+private:
+	_uint					m_iPlayerWeaponIndex = { 0 };
+	CModel*					m_pPlayerModel = { nullptr };
+
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
+	HRESULT Find_BoneIndices();
 
 public:
 	static CKatana* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

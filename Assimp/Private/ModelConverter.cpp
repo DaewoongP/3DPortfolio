@@ -337,7 +337,7 @@ HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePat
 
 			// 애니메이션과 스태틱 모델의 저장 경로가 살짝다름.
 			// 애니메이션의 경우 FBX 폴더 밑에 폴더가 하나 더 생겨서 저장되므로 폴더 한층을 미리 제거.
-			if (eType == TYPE_ANIM)
+			/*if (eType == TYPE_ANIM)
 			{
 				size_t DirSlashIndexTest = ModelDirPath.rfind("/");
 
@@ -346,7 +346,7 @@ HRESULT CModelConverter::Convert_Materials(TYPE eType, const char* pModelFilePat
 				DirSlashIndexTest = ModelDirPath.rfind("/");
 
 				ModelDirPath = ModelDirPath.substr(0, DirSlashIndexTest + 1);
-			}
+			}*/
 
 			// 텍스처 경로 가공
 			while (string::npos != TexturePath.find("../"))

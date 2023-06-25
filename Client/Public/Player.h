@@ -17,7 +17,7 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum STATE { STATE_IDLE, STATE_END };
+	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL, STATE_CROUCH, STATE_JUMP, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
 
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -42,21 +42,28 @@ private:
 
 private:
 	// 채널의 인덱스 값을 가지고 있음.
-	_uint					m_iHeadChannelIndex = { 0 };
+	_uint					m_iWeaponR = { 0 };
 	// 마우스 감도
 	_float					m_fMouseSensitivity = { 0.f };
+
+
+#ifdef _DEBUG
+	_bool					m_isMouseFixed = { true };
+#endif // _DEBUG
+
 
 private:
 	HRESULT Add_Component();
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
-	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
-	HRESULT SetUp_Collider(const _tchar* pColliderFilePath);
-
 	void Key_Input(_double dTimeDelta);
 	void Fix_Mouse();
 	// 1인칭 뷰의 카메라 오프셋값
 	void CameraOffset();
+
+private: /* Setup Files */
+	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
+	HRESULT SetUp_Collider(const _tchar* pColliderFilePath);
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

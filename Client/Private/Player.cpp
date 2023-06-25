@@ -8,6 +8,11 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CPlayer::CPlayer(const CPlayer& rhs)
 	: CGameObject(rhs)
+
+#ifdef _DEBUG
+	, m_isMouseFixed(rhs.m_isMouseFixed)
+#endif // _DEBUG
+
 {
 }
 
@@ -197,10 +202,100 @@ HRESULT CPlayer::SetUp_ShaderResources()
 
 HRESULT CPlayer::Find_BoneIndices()
 {
-	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("RootNode"), &m_iHeadChannelIndex)))
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("Weapon_r"), &m_iWeaponR)))
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CPlayer::Key_Input(_double dTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_W))
+	{
+		m_pTransformCom->Go_Straight(dTimeDelta, m_pNavigation);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_S))
+	{
+		m_pTransformCom->Go_Backward(dTimeDelta, m_pNavigation);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_A))
+	{
+		m_pTransformCom->Go_Left(dTimeDelta, m_pNavigation);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_D))
+	{
+		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
+	}
+
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
+	{
+		m_pModelCom->Set_AnimIndex(85);
+	}
+
+	_long		dwMouseMove = 0;
+
+	CameraOffset();
+
+#ifdef _DEBUG
+	if (false == m_isMouseFixed)
+	{
+		Safe_Release(pGameInstance);
+		return;
+	}
+#endif // _DEBUG
+
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
+	{
+		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
+		m_pPlayerCameraCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
+	}
+
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
+	{
+		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
+		_vector	vCamRight = m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
+
+		m_pPlayerCameraCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
+	}
+
+	Safe_Release(pGameInstance);
+}
+
+void CPlayer::Fix_Mouse()
+{
+#ifdef _DEBUG
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	if (pGameInstance->Get_DIKeyState(DIK_Q))
+	{
+		m_isMouseFixed = !m_isMouseFixed;
+	}
+	Safe_Release(pGameInstance);
+#endif // _DEBUG
+
+	if (false == m_isMouseFixed)
+		return;
+
+	POINT	ptMouse{ g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
+
+	ClientToScreen(g_hWnd, &ptMouse);
+	SetCursorPos(ptMouse.x, ptMouse.y);
+}
+
+void CPlayer::CameraOffset()
+{
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	vPosition += XMVectorSet(0.f, 4.f, 0.3f, 0.f);
+
+	m_pPlayerCameraCom->Set_Position(vPosition);
 }
 
 HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
@@ -254,7 +349,7 @@ HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)
 	CCollider::TYPE eType;
 	// Current Animation Index
 	ReadFile(hFile, &eType, sizeof(CCollider::TYPE), &dwByte, nullptr);
-	
+
 	switch (eType)
 	{
 	case CCollider::TYPE_SPHERE:
@@ -279,75 +374,6 @@ HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)
 	CloseHandle(hFile);
 
 	return S_OK;
-}
-
-void CPlayer::Key_Input(_double dTimeDelta)
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_W))
-	{
-		m_pTransformCom->Go_Straight(dTimeDelta, m_pNavigation);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_S))
-	{
-		m_pTransformCom->Go_Backward(dTimeDelta, m_pNavigation);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_A))
-	{
-		m_pTransformCom->Go_Left(dTimeDelta, m_pNavigation);
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_D))
-	{
-		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
-	}
-
-	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
-	{
-		m_pModelCom->Set_AnimIndex(85);
-	}
-
-	_long		dwMouseMove = 0;
-
-	CameraOffset();
-
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
-	{
-		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-		m_pPlayerCameraCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-	}
-
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
-	{
-		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
-		_vector	vCamRight = m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
-
-		m_pPlayerCameraCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-	}
-
-	Safe_Release(pGameInstance);
-}
-
-void CPlayer::Fix_Mouse()
-{
-	POINT	ptMouse{ g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
-
-	ClientToScreen(g_hWnd, &ptMouse);
-	SetCursorPos(ptMouse.x, ptMouse.y);
-}
-
-void CPlayer::CameraOffset()
-{
-	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition += XMVectorSet(0.f, 4.f, 0.3f, 0.f);
-
-	m_pPlayerCameraCom->Set_Position(vPosition);
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
