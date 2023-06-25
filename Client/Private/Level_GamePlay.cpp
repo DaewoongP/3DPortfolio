@@ -127,7 +127,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props(const _tchar* pLayerTag)
 
 #ifdef _DEBUG
 	MSG_BOX("File Load Success");
-#endif // _DEBUG	
+#endif // _DEBUG
+
+	CloseHandle(hFile);
 
 	Safe_Release(pGameInstance);
 

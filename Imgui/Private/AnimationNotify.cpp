@@ -46,7 +46,7 @@ HRESULT CAnimationNotify::Initialize(void* pArg)
 	Safe_AddRef(m_pToolCameraTrans);
 
 	m_pToolCameraTrans->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, -50.f, 1.f));
-	
+
 	return S_OK;
 }
 
@@ -73,10 +73,14 @@ void CAnimationNotify::Tick(_double dTimeDelta)
 			ImGui::EndTabItem();
 		}
 
+		if (ImGui::BeginTabItem("Notify Save & Load"))
+		{
+			NotifySaveLoad();
+
+			ImGui::EndTabItem();
+		}
 		ImGui::EndTabBar();
 	}
-	if (m_iFrames >= 30)
-		int a = 1;
 }
 
 HRESULT CAnimationNotify::NotifyCamera()
@@ -105,8 +109,11 @@ HRESULT CAnimationNotify::NotifyCamera()
 	if (true == m_bCamera)
 	{
 		// 현재 플레이어에서의 포지션 오프셋, -> 이걸 변경할 수 있게 만들고
-		if (ImGui::InputFloat3("Offset Eye", reinterpret_cast<_float*>(&m_FrameNotify[m_iCurrentFrameIndex].vEye)))
+		if (ImGui::InputFloat3("Offset CamPos", reinterpret_cast<_float*>(&m_FrameNotify[m_iCurrentFrameIndex].vEye)))
 		{
+			if (m_iCurrentFrameIndex == m_iFrames - 1)
+				m_iCurrentFrameIndex -= 1;
+
 			if (false == XMVector4Equal(
 				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
 				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
@@ -125,8 +132,11 @@ HRESULT CAnimationNotify::NotifyCamera()
 			}
 		}
 
-		if (ImGui::InputFloat3("Offset LookAt", reinterpret_cast<_float*>(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
+		if (ImGui::InputFloat3("Offset CamDir", reinterpret_cast<_float*>(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
 		{
+			if (m_iCurrentFrameIndex == m_iFrames - 1)
+				m_iCurrentFrameIndex -= 1;
+
 			if (false == XMVector4Equal(
 				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vEye),
 				XMLoadFloat4(&m_FrameNotify[m_iCurrentFrameIndex].vAt)))
@@ -190,9 +200,9 @@ HRESULT CAnimationNotify::CameraSetLerp()
 		m_iLerpLastFrameIndex = m_iLerpFirstFrameIndex + 1;
 		MSG_BOX("Lerpframe is Greater than Current Frame");
 	}
-	else if (m_iLerpLastFrameIndex > m_iFrames)
+	else if (m_iLerpLastFrameIndex >= m_iFrames - 1)
 	{
-		m_iLerpLastFrameIndex = m_iFrames;
+		m_iLerpLastFrameIndex = m_iFrames - 2;
 		MSG_BOX("Lerpframe is Smaller than Max Frame");
 	}
 
@@ -223,6 +233,7 @@ HRESULT CAnimationNotify::CameraSetLerp()
 				// 마지막 프레임이면 나머지를 걍 똑같이채우고 나감.
 				m_FrameNotify[j] = m_FrameNotify[m_ChangedFrame[i]];
 			}
+
 			break;
 		}
 
@@ -248,7 +259,19 @@ HRESULT CAnimationNotify::CameraSetLerp()
 			m_FrameNotify[j].vAt.w = 1.f;
 		}
 
-		MSG_BOX("Notify Lerp Success");
+
+		wstring MsgIndex;
+		_tchar szPrevFrameIndex[MAX_PATH] = TEXT("");
+		_tchar szNextFrameIndex[MAX_PATH] = TEXT("");
+		_itow_s(m_ChangedFrame[i], szPrevFrameIndex, MAX_PATH, 10);
+		_itow_s(m_ChangedFrame[i + 1], szNextFrameIndex, MAX_PATH, 10);
+
+		MsgIndex = szPrevFrameIndex;
+		MsgIndex += TEXT(" ~ ");
+		MsgIndex += szNextFrameIndex;
+		MsgIndex += TEXT("Notify Lerp Success");
+
+		MessageBox(nullptr, MsgIndex.c_str(), L"System Message", MB_OK);
 	}
 
 	return S_OK;
@@ -258,11 +281,10 @@ HRESULT CAnimationNotify::LerpReset()
 {
 	if (ImGui::Button("Lerp Reset"))
 	{
-		for (auto& frame : m_SetFrames)
-		{
+		for (auto frame : m_SetFrames)
 			frame = false;
-		}
 	}
+
 	return S_OK;
 }
 
@@ -339,6 +361,155 @@ HRESULT CAnimationNotify::InputFrameIndex()
 
 	m_iCurrentFrameIndex = m_pCurrentModelCom->Get_CurrentAnimationFrame();
 	m_iFrames = m_pCurrentModelCom->Get_AnimationFrames();
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::NotifySaveLoad()
+{
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("Notify Save"))
+	{
+		// Pick Disable
+
+		IMFILE->OpenDialog("SaveNotifyDialog", "Choose Folder", ".Notify", "Notify.Notify");
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	NotifySaveButton();
+
+	ImGui::SameLine();
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 1.0f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.7f, 1.0f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.8f, 1.0f, 0.8f));
+
+	if (ImGui::Button("Notify Load"))
+	{
+		// Pick Disable
+
+		IMFILE->OpenDialog("LoadNotifyDialog", "Choose File", ".Notify", ".");
+	}
+
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	NotifyLoadButton();
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::NotifySaveButton()
+{
+	// display
+	if (IMFILE->Display("SaveNotifyDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			string filePath = IMFILE->GetFilePathName();
+			_tchar wszPath[MAX_PATH] = TEXT("");
+			CharToWChar(filePath.c_str(), wszPath);
+			if (FAILED(NotifyWrite_File(wszPath)))
+				MSG_BOX("Failed File Write");
+		}
+
+		// close
+		IMFILE->Close();
+	}
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::NotifyWrite_File(const _tchar* pPath)
+{
+	m_iAnimationIndex = m_pCurrentAnimDummy->Get_PreToolAnimationIndex();
+	m_iFrames = m_pCurrentModelCom->Get_AnimationFrames();
+
+	HANDLE hFile = CreateFile(pPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	// Current Animation Index
+	WriteFile(hFile, &m_iAnimationIndex, sizeof(_uint), &dwByte, nullptr);
+	// Animation's NumFrames
+	WriteFile(hFile, &m_iFrames, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < m_iFrames; ++i)
+	{
+		// Notify Save
+		WriteFile(hFile, &m_FrameNotify[i], sizeof(NOTIFY), &dwByte, nullptr);
+	}
+
+	CloseHandle(hFile);
+
+	MSG_BOX("File Save Success");
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::NotifyLoadButton()
+{
+	// display
+	if (IMFILE->Display("LoadNotifyDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			map<string, string> strMap = IMFILE->GetSelection();
+			string filePathName = IMFILE->GetFilePathName();
+			_tchar wszName[MAX_PATH] = TEXT("");
+			CharToWChar(filePathName.c_str(), wszName);
+			if (FAILED(NotifyRead_File(wszName)))
+				MSG_BOX("Failed File Read");
+		}
+
+		// close
+		IMFILE->Close();
+	}
+
+	return S_OK;
+}
+
+HRESULT CAnimationNotify::NotifyRead_File(const _tchar* pFileName)
+{
+	HANDLE hFile = CreateFile(pFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	// Current Animation Index
+	ReadFile(hFile, &m_iAnimationIndex, sizeof(_uint), &dwByte, nullptr);
+	// Animation's NumFrames
+	ReadFile(hFile, &m_iFrames, sizeof(_uint), &dwByte, nullptr);
+
+	m_FrameNotify.clear();
+	m_SetFrames.clear();
+	for (_uint i = 0; i < m_iFrames; ++i)
+	{
+		NOTIFY Notify;
+		// Notify Save
+		ReadFile(hFile, &Notify, sizeof(NOTIFY), &dwByte, nullptr);
+
+		m_FrameNotify.push_back(Notify);
+		m_SetFrames.push_back(true);
+	}
+
+	m_pCurrentModelCom->Set_AnimIndex(m_iAnimationIndex);
+	m_pCurrentAnimDummy->Set_PreToolAnimationIndex(m_iAnimationIndex);
+
+	CloseHandle(hFile);
+
+	MSG_BOX("File Load Success");
 
 	return S_OK;
 }

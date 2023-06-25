@@ -70,6 +70,14 @@ private:
 
 	HRESULT InputFrameIndex();
 
+
+private: /* Save & Load */
+	HRESULT NotifySaveLoad();
+	HRESULT NotifySaveButton();
+	HRESULT NotifyWrite_File(const _tchar* pPath);
+	HRESULT NotifyLoadButton();
+	HRESULT NotifyRead_File(const _tchar* pFileName);
+
 public:
 	static CAnimationNotify* Create(void* pArg = nullptr);
 	virtual void Free() override;

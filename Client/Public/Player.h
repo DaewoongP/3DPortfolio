@@ -50,6 +50,7 @@ private:
 	HRESULT Add_Component();
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
+	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
 
 	void Key_Input(_double dTimeDelta);
 	void Fix_Mouse();

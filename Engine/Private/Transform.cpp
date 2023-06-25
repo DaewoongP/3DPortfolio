@@ -172,6 +172,19 @@ void CTransform::Turn(_fvector vAxis, _double dTimeDelta)
 	Set_State(STATE::STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 }
 
+void CTransform::Turn(_fvector vAxis, _float fRadian, _double dTimeDelta)
+{
+	_vector vRight = Get_State(STATE::STATE_RIGHT);
+	_vector vUp = Get_State(STATE::STATE_UP);
+	_vector vLook = Get_State(STATE::STATE_LOOK);
+
+	_matrix RotationMatrix = XMMatrixRotationAxis(XMVector3Normalize(vAxis), static_cast<_float>(fRadian * dTimeDelta));
+
+	Set_State(STATE::STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE::STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE::STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+}
+
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTransform* pInstance = new CTransform(pDevice, pContext);

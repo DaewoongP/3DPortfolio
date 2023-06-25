@@ -118,6 +118,7 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _
 
 HRESULT CModel::Initialize(void* pArg)
 {
+
 	return S_OK;
 }
 
@@ -139,12 +140,12 @@ void CModel::Play_Animation(_double dTimeDelta)
 	}
 }
 
-void CModel::Invalidate_AnimationCamera(CCamera* pCamera)
+void CModel::Invalidate_AnimationCamera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
 {
 	if (nullptr == pCamera)
 		return;
 
-	m_Animations[m_iCurrentAnimIndex]->Invalidate_Camera(pCamera);
+	m_Animations[m_iCurrentAnimIndex]->Invalidate_Camera(pCamera, pPlayerTransform, dTimeDelta);
 }
 
 HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)
@@ -165,6 +166,20 @@ HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)
 		MSG_BOX("Failed Find BoneIndex");
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies)
+{
+	if (m_iNumAnimations <= iAnimationIndex)
+	{
+		MSG_BOX("Failed : Animation Out of Index");
+
+		return E_FAIL;
+	}
+
+	m_Animations[iAnimationIndex]->SetUp_AnimationNotifies(Notifies);
 
 	return S_OK;
 }
@@ -479,6 +494,7 @@ HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 	}
 
 	CloseHandle(hFile);
+
 	return S_OK;
 }
 

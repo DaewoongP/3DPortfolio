@@ -21,6 +21,7 @@ private:
 
 public:
 	_vector Get_TransformState(CTransform::STATE eState) { return m_pTransform->Get_State(eState); }
+	_matrix Get_CameraWorldMatrix() const { return m_pTransform->Get_WorldMatrix(); }
 	void	Set_TransformDesc(CTransform::TRANSFORMDESC TransformDesc) { m_pTransform->Set_Desc(TransformDesc); }
 	void	Set_CameraDesc(CAMERADESC CameraDesc);
 	void	Set_CameraWorldMatrix(_fmatrix CamWorldMatrix) { m_pTransform->Set_WorldMatrix(CamWorldMatrix); }
@@ -38,6 +39,7 @@ public:
 	void Go_Right(_double dTimeDelta) { m_pTransform->Go_Right(dTimeDelta); }
 
 	void Turn(_fvector vAxis, _double dTimeDelta) { m_pTransform->Turn(vAxis, dTimeDelta); }
+	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta) { m_pTransform->Turn(vAxis, fRadian, dTimeDelta); }
 	void Set_Position(_fvector vPosition) { m_pTransform->Set_State(CTransform::STATE_POSITION, vPosition); }
 
 protected:

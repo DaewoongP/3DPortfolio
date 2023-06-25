@@ -49,8 +49,9 @@ public:
 
 public:
 	void	Play_Animation(_double dTimeDelta);
-	void	Invalidate_AnimationCamera(class CCamera* pCamera);
+	void	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
+	HRESULT SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies);
 
 public:
 	HRESULT Bind_Material(class CShader* pShader, const char* pConstantName, _uint iMeshIndex, Engine::TextureType MaterialType);

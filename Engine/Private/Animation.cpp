@@ -154,16 +154,40 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 	}
 }
 
-void CAnimation::Invalidate_Camera(CCamera* pCamera)
+void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
 {
 	// 카메라 컴포넌트를 받아서 처리.
 	// 현재 노티파이에있는 카메라 상태를 처리해준다.
-
 	NOTIFY Notify = m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
-	
-	// 노티파이를 가져와서 내가지금 설정되어있는 플레이어 카메라 행렬이랑 연산을 해줘야할듯.
-	// 일단 저장부터 하고 처리하는게 좋을듯.
-	//pCamera->Set_LookAtLH(Notify.vEye, Notify.vAt);
+
+	if (XMVectorGetX(XMVectorEqual(XMLoadFloat4(&Notify.vEye), XMLoadFloat4(&Notify.vAt))))
+		return;
+
+	_vector vCamPos = pCamera->Get_TransformState(CTransform::STATE_POSITION);
+	_vector vPos = pPlayerTransform->Get_State(CTransform::STATE_POSITION);
+
+	_vector vNotifyDir = XMLoadFloat4(&Notify.vAt) - XMLoadFloat4(&Notify.vEye);
+
+	_matrix InvalidateMatrix =
+		XMMatrixInverse(nullptr, 
+			XMMatrixLookAtLH(vPos + XMLoadFloat4(&Notify.vEye), vCamPos + vNotifyDir, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+
+	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
+}
+
+HRESULT CAnimation::SetUp_AnimationNotifies(vector<NOTIFY> Notifies)
+{
+	if (Notifies.size() != m_AnimationNotify.size())
+	{
+		MSG_BOX("Failed Notify size");
+		
+		return E_FAIL;
+	}
+
+	m_AnimationNotify.clear();
+	m_AnimationNotify = Notifies;
+
+	return S_OK;
 }
 
 CAnimation* CAnimation::Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)

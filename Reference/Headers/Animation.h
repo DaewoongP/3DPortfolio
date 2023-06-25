@@ -36,7 +36,8 @@ public:
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
-	void Invalidate_Camera(class CCamera* pCamera);
+	void Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
+	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
 
 public:
 	_tchar						m_szName[MAX_STR] = TEXT("");
