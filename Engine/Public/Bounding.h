@@ -22,6 +22,7 @@ protected:
 
 public:
 	virtual _float3 Get_CenterPosition() const PURE;
+	virtual void Set_BoundingDesc(void* pBoundingDesc) PURE;
 
 public:
 	virtual HRESULT Initialize_Prototype();

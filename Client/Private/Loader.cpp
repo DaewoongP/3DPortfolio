@@ -221,6 +221,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_Component_Collider_AABB */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_AABB)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Collider_OBB */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_OBB)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("°´Ã¼ ·Îµù Áß."));
 
 	/* For.Prototype_GameObject_Player */

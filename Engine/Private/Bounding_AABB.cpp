@@ -12,6 +12,15 @@ CBounding_AABB::CBounding_AABB(const CBounding_AABB& rhs)
 {
 }
 
+void CBounding_AABB::Set_BoundingDesc(void* pBoundingDesc)
+{
+	if (nullptr != pBoundingDesc)
+	{
+		m_pAABB_Original->Extents = static_cast<BOUNDINGAABBDESC*>(pBoundingDesc)->vExtents;
+		m_pAABB_Original->Center = static_cast<BOUNDINGAABBDESC*>(pBoundingDesc)->vPosition;
+	}
+}
+
 HRESULT CBounding_AABB::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
@@ -24,8 +33,7 @@ HRESULT CBounding_AABB::Initialize_Prototype()
 
 HRESULT CBounding_AABB::Initialize(void* pBoundingDesc)
 {
-	m_pAABB_Original->Extents = static_cast<BOUNDINGAABBDESC*>(pBoundingDesc)->vExtents;
-	m_pAABB_Original->Center = static_cast<BOUNDINGAABBDESC*>(pBoundingDesc)->vPosition;
+	Set_BoundingDesc(pBoundingDesc);
 
 	*m_pAABB = *m_pAABB_Original;
 

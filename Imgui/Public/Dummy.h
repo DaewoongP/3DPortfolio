@@ -3,6 +3,7 @@
 #include "Tool_Defines.h"
 
 BEGIN(Engine)
+class CCollider;
 class CTransform;
 END
 
@@ -50,10 +51,16 @@ public:
 	void Set_PreToolAnimationSpeed(_double dSpeed) { m_dPreAnimationSpeed = dSpeed; }
 
 public:
+	virtual void Tick(_double dTimeDelta) override;
+	virtual HRESULT Render() override;
+
+public:
 	CTransform* Get_TransformCom() const { return m_pTransformCom; }
+	void Set_ColliderCom(class CCollider* pCollider) { m_pColliderCom = pCollider; }
 
 protected:
 	CTransform*				m_pTransformCom = { nullptr };
+	CCollider*				m_pColliderCom = { nullptr };
 
 protected:
 	OBJECTDESC				m_ObjectDesc;

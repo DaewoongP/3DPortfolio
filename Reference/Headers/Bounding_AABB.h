@@ -19,6 +19,7 @@ private:
 
 public:
 	virtual _float3 Get_CenterPosition() const  override { return m_pAABB->Center; }
+	virtual void Set_BoundingDesc(void* pBoundingDesc) override;
 
 public:
 	HRESULT Initialize_Prototype();

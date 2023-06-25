@@ -80,7 +80,7 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 
 		_float4 vTransform = pDummy->Get_PreToolTransform();
 		vTransform.y += 6.f;
-		vTransform.z -= 5.f;
+		vTransform.z += 5.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
 
 

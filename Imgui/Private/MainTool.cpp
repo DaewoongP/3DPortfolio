@@ -91,6 +91,16 @@ HRESULT CMainTool::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 		return E_FAIL;
+	
+	/* Prototype_Component_Collider_AABB */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Collider_AABB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
+		return E_FAIL;
+
+	/* Prototype_Component_Collider_OBB */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Collider_OBB"),
+		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
+		return E_FAIL;
 
 	/* Prototype_Component_Texture_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Terrain"),
@@ -265,7 +275,7 @@ HRESULT CMainTool::Add_Windows()
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Object::Create());
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-840, g_iWinSizeY), ImVec2(420, 300));
 
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_ObjectOptions::Create());
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_ObjectOptions::Create(m_pDevice, m_pContext));
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(-420, g_iWinSizeY), ImVec2(410, 300));
 
 	return S_OK;

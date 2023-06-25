@@ -51,6 +51,7 @@ private:
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
 	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
+	HRESULT SetUp_Collider(const _tchar* pColliderFilePath);
 
 	void Key_Input(_double dTimeDelta);
 	void Fix_Mouse();

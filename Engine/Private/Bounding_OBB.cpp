@@ -12,6 +12,20 @@ CBounding_OBB::CBounding_OBB(const CBounding_OBB& rhs)
 {
 }
 
+void CBounding_OBB::Set_BoundingDesc(void* pBoundingDesc)
+{
+	if (nullptr != pBoundingDesc)
+	{
+		m_pOBB_Original->Extents = static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vExtents;
+		m_pOBB_Original->Center = static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vPosition;
+		XMStoreFloat4(&m_pOBB_Original->Orientation,
+			XMQuaternionRotationRollPitchYaw(
+				static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.x,
+				static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.y,
+				static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.z));
+	}
+}
+
 HRESULT CBounding_OBB::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
@@ -24,13 +38,7 @@ HRESULT CBounding_OBB::Initialize_Prototype()
 
 HRESULT CBounding_OBB::Initialize(void* pBoundingDesc)
 {
-	m_pOBB_Original->Extents = static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vExtents;
-	m_pOBB_Original->Center = static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vPosition;
-	XMStoreFloat4(&m_pOBB_Original->Orientation, 
-		XMQuaternionRotationRollPitchYaw(
-			static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.x, 
-			static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.y,
-			static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.z));
+	Set_BoundingDesc(pBoundingDesc);
 
 	*m_pOBB = *m_pOBB_Original;
 

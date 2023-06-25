@@ -1,13 +1,14 @@
 #pragma once
 #include "ImWindow.h"
 #include "Dummy.h"
+#include "Collider.h"
 
 BEGIN(Tool)
 
 class CWindow_ObjectOptions : public CImWindow
 {
 private:
-	explicit CWindow_ObjectOptions();
+	explicit CWindow_ObjectOptions(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CWindow_ObjectOptions() = default;
 
 public:
@@ -17,6 +18,10 @@ public:
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
+
+private:
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 private:
 	class CDummy*				m_pCurrentDummy = { nullptr };
@@ -47,13 +52,28 @@ private: /* For. Animations */
 	HRESULT AnimationNotify(_double dTimeDelta);
 
 private: /* For. Collider */
-	HRESULT AddCollider();
+	CCollider::TYPE				m_ColliderType = { CCollider::TYPE_END };
+
+	CBounding_Sphere::BOUNDINGSPHEREDESC	m_SphereDesc;
+	CBounding_AABB::BOUNDINGAABBDESC		m_AABBDesc;
+	CBounding_OBB::BOUNDINGOBBDESC			m_OBBDesc;
+
+	CCollider*					m_pCollider = { nullptr };
 
 private: /* For. Collider */
-	_float3						m_ColliderExtents[3];
+	HRESULT AddCollider();
+	HRESULT SetUpSphere();
+	HRESULT SetUpAABB();
+	HRESULT SetUpOBB();
+
+	HRESULT ColliderSaveLoad();
+	HRESULT ColliderSaveButton();
+	HRESULT ColliderWrite_File(const _tchar* pPath);
+	HRESULT ColliderLoadButton();
+	HRESULT ColliderRead_File(const _tchar* pFileName);
 
 public:
-	static CWindow_ObjectOptions* Create(void* pArg = nullptr);
+	static CWindow_ObjectOptions* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

@@ -21,6 +21,7 @@ HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 		m_pBounding = CBounding_AABB::Create(m_pDevice, m_pContext);
 		break;
 	case TYPE_OBB:
+		m_pBounding = CBounding_OBB::Create(m_pDevice, m_pContext);
 		break;
 	}
 

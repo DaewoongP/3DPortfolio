@@ -20,6 +20,24 @@ CDummy::CDummy(const CDummy& rhs)
 {
 }
 
+void CDummy::Tick(_double dTimeDelta)
+{
+	__super::Tick(dTimeDelta);
+
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+}
+
+HRESULT CDummy::Render()
+{
+	__super::Render();
+
+	if (nullptr != m_pColliderCom)
+		m_pColliderCom->Render();
+
+	return S_OK;
+}
+
 void CDummy::Free()
 {
 	__super::Free();

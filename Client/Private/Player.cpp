@@ -165,18 +165,16 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 	}
 
-	CBounding_Sphere::BOUNDINGSPHEREDESC	BoundingSphere;
-
-	XMStoreFloat3(&BoundingSphere.vPosition, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-	BoundingSphere.fRadius = 5.f;
-
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingSphere)))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
+
+	if (FAILED(SetUp_Collider(TEXT("../../Resources/GameData/Collider/Collider.Col"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -240,6 +238,45 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 	// for문 돌면서 read file. 하면서 값다 처리.
 	if (FAILED(m_pModelCom->SetUp_AnimationNotifies(iAnimationIndex, Notifies)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)
+{
+	HANDLE hFile = CreateFile(pColliderFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	CCollider::TYPE eType;
+	// Current Animation Index
+	ReadFile(hFile, &eType, sizeof(CCollider::TYPE), &dwByte, nullptr);
+	
+	switch (eType)
+	{
+	case CCollider::TYPE_SPHERE:
+		CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
+		ReadFile(hFile, &SphereDesc, sizeof(CBounding_Sphere::BOUNDINGSPHEREDESC), &dwByte, nullptr);
+		m_pColliderCom->Set_BoundingDesc(&SphereDesc);
+		break;
+	case CCollider::TYPE_AABB:
+		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+		ReadFile(hFile, &AABBDesc, sizeof(CBounding_AABB::BOUNDINGAABBDESC), &dwByte, nullptr);
+		m_pColliderCom->Set_BoundingDesc(&AABBDesc);
+		break;
+	case CCollider::TYPE_OBB:
+		CBounding_OBB::BOUNDINGOBBDESC OBBDesc;
+		ReadFile(hFile, &OBBDesc, sizeof(CBounding_OBB::BOUNDINGOBBDESC), &dwByte, nullptr);
+		m_pColliderCom->Set_BoundingDesc(&OBBDesc);
+		break;
+	default:
+		return E_FAIL;
+	}
+
+	CloseHandle(hFile);
 
 	return S_OK;
 }
