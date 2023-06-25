@@ -124,10 +124,10 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 	return S_OK;
 }
 
-void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta)
+ANIMATIONFLAG CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta)
 {
 	if (m_isPaused)
-		return;
+		return ANIM_PAUSED;
 
 	// 프레임 별로 애니메이션 스피드 제어.
 	if (m_AnimationNotify.size() > 0)
@@ -141,6 +141,8 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 		{
 			m_dTimeAcc = 0.f;
 		}
+		else
+			return ANIM_FINISHED;
 	}
 
 	_uint		iChannelIndex = 0;
@@ -148,10 +150,12 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
-			return;
+			return ANIM_ERROR;
 
 		pChannel->Invalidate_TransformationMatrix(Bones, m_dTimeAcc, &m_ChannelCurrentKeyFrames[iChannelIndex++]);
 	}
+
+	return ANIM_PLAYING;
 }
 
 void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)

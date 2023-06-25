@@ -45,7 +45,11 @@ private:
 	_uint					m_iWeaponR = { 0 };
 	// 마우스 감도
 	_float					m_fMouseSensitivity = { 0.f };
+	// 현재 실행되고 있는 애니메이션 상태.
+	ANIMATIONFLAG			m_eCurrentAnimationFlag = { ANIM_END };
 
+	STATE					m_ePreState;
+	STATE					m_eCurState;
 
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };
@@ -60,6 +64,7 @@ private:
 	void Fix_Mouse();
 	// 1인칭 뷰의 카메라 오프셋값
 	void CameraOffset();
+	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 
 private: /* Setup Files */
 	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
@@ -72,3 +77,30 @@ public:
 };
 
 END
+
+/*
+84 - Att R1
+85 - Att R2
+86 - Att R3
+87 - Att L1
+88 - Att L2
+89 - Att L3
+92 - crouch idle
+93 - crouch run
+94 - crouch walk
+95 - idle
+
+96 - jump start
+97 - jump loop
+98 - jump end
+
+103 - run wall L
+104 - run wall R
+
+231 - climb
+
+233 - drone ride end
+237 - drone ride loop
+239 - drone ride start
+
+*/

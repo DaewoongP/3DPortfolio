@@ -94,6 +94,19 @@ void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
 	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
+void CModel::Set_AnimIndex(_uint iAnimIndex, _bool isLoop)
+{
+	if (iAnimIndex >= m_iNumAnimations)
+		return;
+
+	m_iPreviousAnimIndex = m_iCurrentAnimIndex;
+	m_Animations[m_iPreviousAnimIndex]->Set_TimeZero();
+
+	m_iCurrentAnimIndex = iAnimIndex;
+
+	m_Animations[m_iCurrentAnimIndex]->Set_Loop(isLoop);
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
 {
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
@@ -129,15 +142,19 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_double dTimeDelta)
+ANIMATIONFLAG CModel::Play_Animation(_double dTimeDelta)
 {
+	ANIMATIONFLAG AnimationState = ANIM_END;
+
 	if (0 < m_iNumAnimations)
-		m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
+		AnimationState = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
 
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Invalidate_CombinedTransformationMatrix(m_Bones);
 	}
+
+	return AnimationState;
 }
 
 void CModel::Invalidate_AnimationCamera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)

@@ -6,6 +6,7 @@
 #pragma warning (disable : 4100) // unused variable
 #pragma warning (disable : 6031) // except return
 #pragma warning (disable : 4828) // korean comment
+#pragma warning (disable : 26495) // Value Initialize
 
 #define DIRECTINPUT_VERSION		0x0800
 #include <dinput.h>

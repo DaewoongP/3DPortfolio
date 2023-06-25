@@ -28,6 +28,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
@@ -35,7 +36,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 	// 모델의 애니메이션 인덱스 설정
-	m_pModelCom->Set_AnimIndex(0);
+	m_pModelCom->Set_AnimIndex(95);
+	m_eCurState = STATE_IDLE;
 
 	m_fMouseSensitivity = 0.1f;
 
@@ -44,14 +46,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_double dTimeDelta)
 {
+	// Input이 Tick보다 위에 있어야 걸리는게 없어짐.
 	Key_Input(dTimeDelta);
+	Fix_Mouse();
 
 	__super::Tick(dTimeDelta);
 
-	m_pModelCom->Play_Animation(dTimeDelta);
+	m_eCurrentAnimationFlag = m_pModelCom->Play_Animation(dTimeDelta);
 
-	Fix_Mouse();
-
+	Motion_Change(m_eCurrentAnimationFlag);
+	
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -88,7 +92,6 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 	m_pColliderCom->Render();
 #endif // _DEBUG
-
 
 	return S_OK;
 }
@@ -235,7 +238,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
-		m_pModelCom->Set_AnimIndex(85);
+		m_eCurState = STATE_ATTACK;
 	}
 
 	_long		dwMouseMove = 0;
@@ -293,9 +296,42 @@ void CPlayer::Fix_Mouse()
 void CPlayer::CameraOffset()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition += XMVectorSet(0.f, 4.f, 0.3f, 0.f);
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vPosition += vLook * 0.5f + XMVectorSet(0.f, 4.f, 0.f, 0.f);
 
 	m_pPlayerCameraCom->Set_Position(vPosition);
+}
+
+void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
+{
+	if (ANIM_FINISHED == m_eCurrentAnimationFlag)
+		m_eCurState = STATE_IDLE;
+
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case Client::CPlayer::STATE_IDLE:
+			m_pModelCom->Set_AnimIndex(95);
+			break;
+		case Client::CPlayer::STATE_ATTACK:
+			m_pModelCom->Set_AnimIndex(85, false);
+			break;
+		case Client::CPlayer::STATE_RUN:
+			break;
+		case Client::CPlayer::STATE_RUNWALL:
+			break;
+		case Client::CPlayer::STATE_CROUCH:
+			break;
+		case Client::CPlayer::STATE_JUMP:
+			break;
+		case Client::CPlayer::STATE_CLIMB:
+			break;
+		case Client::CPlayer::STATE_DRONRIDE:
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)

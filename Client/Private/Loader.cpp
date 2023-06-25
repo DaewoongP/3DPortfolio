@@ -158,13 +158,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_Component_Model_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	/* For.Prototype_Component_Model_Katana */
+	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Katana.dat")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
 		return E_FAIL;
-	}
+	}*/
 
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));

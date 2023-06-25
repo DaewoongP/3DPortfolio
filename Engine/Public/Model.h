@@ -35,12 +35,8 @@ public:
 	void Set_AnimationFrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt);
 	void Set_AnimationPause(_bool isPause);
 	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
-	void Set_AnimIndex(_uint iAnimIndex) 
-	{
-		if (iAnimIndex >= m_iNumAnimations)
-			return;
-		m_iCurrentAnimIndex = iAnimIndex;
-	}
+	// 애니메이션 인덱스 설정하면서 루프도 같이 설정
+	void Set_AnimIndex(_uint iAnimIndex, _bool isLoop = true);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix);
@@ -48,7 +44,7 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	void	Play_Animation(_double dTimeDelta);
+	ANIMATIONFLAG	Play_Animation(_double dTimeDelta);
 	void	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 	HRESULT SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies);
@@ -78,6 +74,7 @@ private: /* For.Materials */
 	vector<MESHMATERIAL>		m_Materials;
 
 private: /* For.Animations */
+	_uint							m_iPreviousAnimIndex = { 0 };
 	_uint							m_iCurrentAnimIndex = { 0 };
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;

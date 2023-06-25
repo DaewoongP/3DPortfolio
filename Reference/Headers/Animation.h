@@ -32,10 +32,18 @@ public:
 
 		m_dTickPerSecond = m_dOriginTickPerSecond * dMultiply;
 	}
+	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
+	// 애니메이션을 초기화 하는 함수
+	void Set_TimeZero() 
+	{ 
+		for (auto& iCurrentKeyFrame : m_ChannelCurrentKeyFrames)
+			iCurrentKeyFrame = 0;
+		m_dTimeAcc = 0.0;
+	}
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
-	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
+	ANIMATIONFLAG Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
 	void Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
 

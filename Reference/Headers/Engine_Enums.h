@@ -2,7 +2,14 @@
 
 namespace Engine
 {
-	
+	enum ANIMATIONFLAG
+	{
+		ANIM_PLAYING,
+		ANIM_FINISHED,
+		ANIM_PAUSED,
+		ANIM_ERROR,
+		ANIM_END
+	};
 
 	enum COMPONENTFLAG
 	{
