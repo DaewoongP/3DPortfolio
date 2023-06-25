@@ -18,7 +18,7 @@ HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 		m_pBounding = CBounding_Sphere::Create(m_pDevice, m_pContext);
 		break;
 	case TYPE_AABB:
-		//m_pBounding = CBounding_AABB::Create(m_pDevice, m_pContext);
+		m_pBounding = CBounding_AABB::Create(m_pDevice, m_pContext);
 		break;
 	case TYPE_OBB:
 		break;
@@ -43,11 +43,6 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 		return;
 
 	m_pBounding->Tick(TransformMatrix);
-}
-
-_bool CCollider::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist)
-{
-	return m_pBounding->RayIntersects(vOrigin, vDirection, fDist);
 }
 
 #ifdef _DEBUG
