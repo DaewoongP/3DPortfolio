@@ -60,6 +60,8 @@ public:
 	// 각각의 X,Y,Z 의 각도 값을 받아 처리.
 	void Rotation(_float3 vDegrees);
 	void Turn(_fvector vAxis, _double dTimeDelta);
+	// 시간당 각도값으로 회전하는 함수
+	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta);
 	
 private:
 	TRANSFORMDESC	m_TransformDesc;

@@ -18,8 +18,11 @@ public:
 	// 현재 애니메이션의 프레임 반환
 	// 채널 중 키프레임 최대치 기준.
 	_uint Get_CurrentAnimationFrame();
+	vector<NOTIFY> Get_CurrentAnimationNotify() const { return m_AnimationNotify; }
 	// 프레임 인덱스에 해당하는 스피드값 설정.
 	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
+	// 프레임 인덱스에 해당하는 노티파이 카메라 값 설정
+	void Set_FrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt);
 	void Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex);
 	void Set_Pause(_bool isPause) { m_isPaused = isPause; }
 	void Set_TickPerSecond(_double dMultiply) 
@@ -33,6 +36,8 @@ public:
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
 	void Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
+	void Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
+	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
 
 public:
 	_tchar						m_szName[MAX_STR] = TEXT("");
@@ -56,8 +61,8 @@ public:
 	// 애니메이션의 최대 프레임 개수
 	_uint						m_iAnimationFrames = { 0 };
 	// 현재 애니메이션에 해당하는 채널의 프레임 중 가장 큰 프레임을 기준으로 사이즈를 처리.
-	// 각 프레임 별로 스피드를 관리하는 변수.
-	vector<_float>				m_AnimationFrameSpeeds;
+	// 각 프레임 별로 Notify를 관리
+	vector<NOTIFY>				m_AnimationNotify;
 
 public:
 	static CAnimation* Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

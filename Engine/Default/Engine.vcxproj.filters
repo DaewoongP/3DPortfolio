@@ -273,6 +273,9 @@
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01. Utility\03. Components\Collider\Bounding\DebugDraw</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bounding_AABB.h">
+      <Filter>01. Utility\03. Components\Collider\Bounding\AABB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -391,6 +394,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01. Utility\03. Components\Collider\Bounding\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_AABB.cpp">
+      <Filter>01. Utility\03. Components\Collider\Bounding\AABB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

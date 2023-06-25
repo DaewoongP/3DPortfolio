@@ -333,6 +333,7 @@ HRESULT CWindow_Navigation::NavigationSaveButton()
 		// close
 		IMFILE->Close();
 	}
+
 	return S_OK;
 }
 
@@ -354,6 +355,7 @@ HRESULT CWindow_Navigation::NavigationWrite_File(const _tchar* pPath)
 	CloseHandle(hFile);
 
 	MSG_BOX("File Save Success");
+
 	return S_OK;
 }
 
@@ -376,6 +378,7 @@ HRESULT CWindow_Navigation::NavigationLoadButton()
 		// close
 		IMFILE->Close();
 	}
+
 	return S_OK;
 }
 
@@ -402,12 +405,16 @@ HRESULT CWindow_Navigation::NavigationRead_File(const _tchar* pFileName)
 		m_Cells.push_back(pCell);
 
 		m_iCurrentPickIndex = 0;
+
 		Remake_Cells();
 	}
+
 	memcpy(&m_vCell, m_Cells.front(), sizeof(_float3) * CCell::POINT_END);
+
 	CloseHandle(hFile);
 
 	MSG_BOX("File Load Success");
+
 	return S_OK;
 }
 

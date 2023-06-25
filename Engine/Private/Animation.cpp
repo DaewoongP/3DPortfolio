@@ -1,5 +1,6 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
+#include "Camera.h"
 
 CAnimation::CAnimation()
 {
@@ -17,7 +18,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_isPaused(rhs.m_isPaused)
 	, m_iMaxFrameChannelIndex(rhs.m_iMaxFrameChannelIndex)
 	, m_iAnimationFrames(rhs.m_iAnimationFrames)
-	, m_AnimationFrameSpeeds(rhs.m_AnimationFrameSpeeds)
+	, m_AnimationNotify(rhs.m_AnimationNotify)
 {
 	lstrcpy(m_szName, rhs.m_szName);
 
@@ -39,12 +40,19 @@ _uint CAnimation::Get_CurrentAnimationFrame()
 
 void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
 {
-	m_AnimationFrameSpeeds[iFrameIndex] = fSpeed;
+	m_AnimationNotify[iFrameIndex].fSpeed = fSpeed;
+}
+
+void CAnimation::Set_FrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt)
+{
+	m_AnimationNotify[iFrameIndex].vEye = vEye;
+	m_AnimationNotify[iFrameIndex].vAt = vAt;
 }
 
 void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex)
 {
 	_uint iChannelIndex = { 0 };
+
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
@@ -99,8 +107,19 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 	}
 	m_iAnimationFrames = iNumKeyFrame;
 
+	// 노티파이 벡터 초기화
+	m_AnimationNotify.clear();
+
 	for (_uint i = 0; i < m_iAnimationFrames; ++i)
-		m_AnimationFrameSpeeds.push_back(1.f);
+	{
+		NOTIFY Notify;
+		Notify.vEye  = _float4(0.f, 0.f, 0.f, 1.f);
+		Notify.vAt = _float4(0.f, 0.f, 0.f, 1.f);
+		Notify.fSpeed = 1.f;
+		Notify.dTime = m_Channels[m_iMaxFrameChannelIndex]->Get_CurrentKeyFrameTime(i);
+
+		m_AnimationNotify.push_back(Notify);
+	}
 
 	return S_OK;
 }
@@ -111,8 +130,8 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 		return;
 
 	// 프레임 별로 애니메이션 스피드 제어.
-	if (m_AnimationFrameSpeeds.size() > 0)
-		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationFrameSpeeds[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
+	if (m_AnimationNotify.size() > 0)
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]].fSpeed;
 	else
 		m_dTimeAcc += m_dTickPerSecond * TimeDelta;
 
@@ -125,6 +144,7 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 	}
 
 	_uint		iChannelIndex = 0;
+
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
@@ -132,6 +152,42 @@ void CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double T
 
 		pChannel->Invalidate_TransformationMatrix(Bones, m_dTimeAcc, &m_ChannelCurrentKeyFrames[iChannelIndex++]);
 	}
+}
+
+void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
+{
+	// 카메라 컴포넌트를 받아서 처리.
+	// 현재 노티파이에있는 카메라 상태를 처리해준다.
+	NOTIFY Notify = m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
+
+	if (XMVectorGetX(XMVectorEqual(XMLoadFloat4(&Notify.vEye), XMLoadFloat4(&Notify.vAt))))
+		return;
+
+	_vector vCamPos = pCamera->Get_TransformState(CTransform::STATE_POSITION);
+	_vector vPos = pPlayerTransform->Get_State(CTransform::STATE_POSITION);
+
+	_vector vNotifyDir = XMLoadFloat4(&Notify.vAt) - XMLoadFloat4(&Notify.vEye);
+
+	_matrix InvalidateMatrix =
+		XMMatrixInverse(nullptr, 
+			XMMatrixLookAtLH(vPos + XMLoadFloat4(&Notify.vEye), vCamPos + vNotifyDir, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+
+	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
+}
+
+HRESULT CAnimation::SetUp_AnimationNotifies(vector<NOTIFY> Notifies)
+{
+	if (Notifies.size() != m_AnimationNotify.size())
+	{
+		MSG_BOX("Failed Notify size");
+		
+		return E_FAIL;
+	}
+
+	m_AnimationNotify.clear();
+	m_AnimationNotify = Notifies;
+
+	return S_OK;
 }
 
 CAnimation* CAnimation::Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)

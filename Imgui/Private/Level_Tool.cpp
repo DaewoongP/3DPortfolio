@@ -1,6 +1,7 @@
 #include "Level_Tool.h"
 #include "GameInstance.h"
 #include "Axis.h"
+#include "Dummy.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -80,6 +81,18 @@ HRESULT CLevel_Tool::Ready_For_Layer_Tool(const _tchar* pLayerTag)
 		TEXT("Prototype_GameObject_Axis"), pLayerTag, TEXT("GameObject_Axis_Center"), &eState)))
 	{
 		MSG_BOX("Failed Add GameObject CAxis");
+		return E_FAIL;
+	}
+	
+	CDummy::OBJECTDESC ObjectDesc;
+	lstrcpy(ObjectDesc.pModelPrototypeTag, TEXT("Prototype_ToolModel_Camera"));
+	ObjectDesc.vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+
+	/* For.GameObject_ToolCamera */
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_TOOL,
+		TEXT("Prototype_GameObject_ToolCamera"), pLayerTag, TEXT("GameObject_ToolCamera"), &ObjectDesc)))
+	{
+		MSG_BOX("Failed Add GameObject_ToolCamera");
 		return E_FAIL;
 	}
 

@@ -30,7 +30,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 	// 모델의 애니메이션 인덱스 설정
-	m_pModelCom->Set_AnimIndex(95);
+	m_pModelCom->Set_AnimIndex(0);
 
 	m_fMouseSensitivity = 0.1f;
 
@@ -97,6 +97,10 @@ HRESULT CPlayer::Add_Component()
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Model)");
 		return E_FAIL;
 	}
+
+	// Notify SetUp
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Att_R2.Notify"))))
+		return E_FAIL;
 
 	// Get Model's Bone Index
 	if (FAILED(Find_BoneIndices()))
@@ -201,6 +205,45 @@ HRESULT CPlayer::Find_BoneIndices()
 	return S_OK;
 }
 
+HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
+{
+	// 몇번 애니메이션 인덱스에 어떤 파일 경로를 넣을건지
+	// 아니면 파일 저장자체를 (인덱스, 벡터<노티파이구조체> 정보) 이런식으로 감싸서 저장하고
+	// 여기서 Read file해서 "특정 애니메이션 인덱스", "벡터" 를 인자값으로 넘겨주자
+	_uint				iAnimationIndex = { 0 };
+	_uint				iAnimationFrames = { 0 };
+	vector<NOTIFY>		Notifies;
+
+	HANDLE hFile = CreateFile(pNotifyFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	// Current Animation Index
+	ReadFile(hFile, &iAnimationIndex, sizeof(_uint), &dwByte, nullptr);
+	// Animation's NumFrames
+	ReadFile(hFile, &iAnimationFrames, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iAnimationFrames; ++i)
+	{
+		NOTIFY Notify;
+		// Notify Save
+		ReadFile(hFile, &Notify, sizeof(NOTIFY), &dwByte, nullptr);
+
+		Notifies.push_back(Notify);
+	}
+
+	CloseHandle(hFile);
+
+	// for문 돌면서 read file. 하면서 값다 처리.
+	if (FAILED(m_pModelCom->SetUp_AnimationNotifies(iAnimationIndex, Notifies)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 void CPlayer::Key_Input(_double dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -226,15 +269,21 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
 	}
 
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
+	{
+		m_pModelCom->Set_AnimIndex(85);
+	}
+
 	_long		dwMouseMove = 0;
+
 	CameraOffset();
 
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
-		m_pTransformCom->Turn(vUp, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
-		m_pPlayerCameraCom->Turn(vUp, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
+		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
+		m_pPlayerCameraCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
 
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
@@ -242,7 +291,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
 		_vector	vCamRight = m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
 
-		m_pPlayerCameraCom->Turn(vCamRight, dwMouseMove * dTimeDelta * m_fMouseSensitivity);
+		m_pPlayerCameraCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
 
 	Safe_Release(pGameInstance);
@@ -259,7 +308,7 @@ void CPlayer::Fix_Mouse()
 void CPlayer::CameraOffset()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	vPosition += XMVectorSet(0.f, 5.f, 0.f, 0.f);
+	vPosition += XMVectorSet(0.f, 4.f, 0.3f, 0.f);
 
 	m_pPlayerCameraCom->Set_Position(vPosition);
 }

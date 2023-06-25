@@ -42,11 +42,7 @@ void CWindow_Object::Tick(_double dTimeDelta)
 
 	CurrentObjectListBox();
 
-	SearchObject();
-
 	DeleteObject();
-
-	ObjectOption();
 
 	End();
 }
@@ -86,16 +82,11 @@ HRESULT CWindow_Object::CurrentObjectListBox()
 		vTransform.y += 6.f;
 		vTransform.z -= 5.f;
 		pCam->Set_CameraView(vTransform, pDummy->Get_PreToolTransform(), _float4(0.f, 1.f, 0.f, 0.f));
+
+
+		ObjectOption();
 	}
 
-	return S_OK;
-}
-
-HRESULT CWindow_Object::SearchObject()
-{
-	_char test[256] = "";
-	ImGui::InputText("Search Object", test, 0);
-	// 여기서 파일이름 서칭해서 처리
 	return S_OK;
 }
 
@@ -136,6 +127,8 @@ HRESULT CWindow_Object::DeleteObject()
 		}
 		if (0 < m_iCurrentListIndex)
 			--m_iCurrentListIndex;
+
+		OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_END, nullptr);
 	}
 
 	if (!m_bClearButton)
@@ -163,6 +156,7 @@ HRESULT CWindow_Object::DeleteObject()
 			m_ObjectNames[m_eCurRadio].clear();
 
 			m_bClearButton = false;
+			OBJECT_OPTIONSWINDOW->Set_CurrentDummy(CDummy::DUMMY_END, nullptr);
 		}
 
 		m_iCurrentListIndex = 0;

@@ -227,7 +227,7 @@ HRESULT CWindow_Model::Initialize_DummyTransforms()
 
 HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 {
-	CAnimModel::OBJECTDESC ObjectDesc;
+	CNonAnimModel::OBJECTDESC ObjectDesc;
 	_char szProtoName[MAX_STR] = "Prototype_Component_NonAnimModel_";
 	strcat_s(szProtoName, MAX_STR, m_NonAnimModelNames[m_iCur_Mesh]);
 	CharToWChar(szProtoName, ObjectDesc.pModelPrototypeTag);
@@ -246,6 +246,7 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	m_iCurrentModelIndex++;
 	MakeTag(CDummy::DUMMY_NONANIM);
+
 	return S_OK;
 }
 
@@ -270,6 +271,7 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 
 	m_iCurrentModelIndex++;
 	MakeTag(CDummy::DUMMY_ANIM);
+
 	return S_OK;
 }
 
@@ -354,6 +356,7 @@ HRESULT CWindow_Model::MapSaveButton()
 		// close
 		IMFILE->Close();
 	}
+
 	return S_OK;
 }
 
@@ -396,6 +399,7 @@ HRESULT CWindow_Model::MapWrite_File(const _tchar* pPath)
 	CloseHandle(hFile);
 
 	MSG_BOX("File Save Success");
+
 	return S_OK;
 }
 
@@ -418,6 +422,7 @@ HRESULT CWindow_Model::MapLoadButton()
 		// close
 		IMFILE->Close();
 	}
+
 	return S_OK;
 }
 
@@ -486,6 +491,9 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 	}
 
 	MSG_BOX("File Load Success");
+
+	CloseHandle(hFile);
+
 	return S_OK;
 }
 

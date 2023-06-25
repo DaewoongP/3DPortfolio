@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Animation.h"
+#include "Camera.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -63,6 +64,11 @@ _uint CModel::Get_CurrentAnimationFrame() const
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationFrame();
 }
 
+vector<NOTIFY> CModel::Get_CurrentAnimationNotify() const
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationNotify();
+}
+
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
@@ -73,6 +79,11 @@ void CModel::Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed)
 	m_Animations[m_iCurrentAnimIndex]->Set_FrameSpeed(iFrameIndex, fSpeed);
 }
 
+void CModel::Set_AnimationFrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_FrameCamera(iFrameIndex, vEye, vAt);
+}
+
 void CModel::Set_AnimationPause(_bool isPause)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_Pause(isPause);
@@ -80,7 +91,7 @@ void CModel::Set_AnimationPause(_bool isPause)
 
 void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
 {
-	return m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
+	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
@@ -107,6 +118,7 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _
 
 HRESULT CModel::Initialize(void* pArg)
 {
+
 	return S_OK;
 }
 
@@ -128,6 +140,14 @@ void CModel::Play_Animation(_double dTimeDelta)
 	}
 }
 
+void CModel::Invalidate_AnimationCamera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
+{
+	if (nullptr == pCamera)
+		return;
+
+	m_Animations[m_iCurrentAnimIndex]->Invalidate_Camera(pCamera, pPlayerTransform, dTimeDelta);
+}
+
 HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)
 {
 	*iIndex = 0;
@@ -146,6 +166,20 @@ HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)
 		MSG_BOX("Failed Find BoneIndex");
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CModel::SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies)
+{
+	if (m_iNumAnimations <= iAnimationIndex)
+	{
+		MSG_BOX("Failed : Animation Out of Index");
+
+		return E_FAIL;
+	}
+
+	m_Animations[iAnimationIndex]->SetUp_AnimationNotifies(Notifies);
 
 	return S_OK;
 }
@@ -460,6 +494,7 @@ HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 	}
 
 	CloseHandle(hFile);
+
 	return S_OK;
 }
 
@@ -510,7 +545,7 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 			{
 				if (j == TextureType_DIFFUSE)
 				{
-					lstrcpy(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("../../Resources/Terrain/NullDiffuse.png"));
+					lstrcpy(m_MaterialDatas[i]->MaterialTexture[j].TexPath, TEXT("../../Resources/ToolData/NullDiffuse.png"));
 				}
 				else
 					continue;
