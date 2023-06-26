@@ -6,8 +6,9 @@ namespace Engine
 	{
 		ANIM_PLAYING,
 		ANIM_FINISHED,
+		ANIM_LERP,
+		ANIM_LERP_FINISHED,
 		ANIM_PAUSED,
-		ANIM_ERROR,
 		ANIM_END
 	};
 

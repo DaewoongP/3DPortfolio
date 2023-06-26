@@ -10,6 +10,7 @@ private:
 	virtual ~CChannel() = default;
 
 public:
+	_uint Get_BoneIndex() const { return m_iBoneIndex; }
 	// 존재하는 키프레임 중 인덱스에 해당하는 키프레임의 시간값 반환
 	_double Get_CurrentKeyFrameTime(_uint iCurrentIndex) const { return m_KeyFrames[iCurrentIndex].dTime; }
 	// 채널 키프레임 중 가장 큰값 반환
@@ -19,6 +20,7 @@ public:
 	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);
 	// Time Acc에 해당하는 현재 채널의 키프레임 상태값을 기반으로 선형보간하여 뼈에 상태행렬을 전달하는 함수.
 	void	Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTimeAcc, _Inout_ _uint* pCurrentKeyFrameIndex);
+	void	Lerp_TransformationMatrix(CModel::BONES& Bones, class CChannel* pCurrentChannel, _double dTimeAcc, _uint iCurrentKeyFrameIndex);
 
 private:
 	_tchar				m_szName[MAX_STR] = TEXT("");

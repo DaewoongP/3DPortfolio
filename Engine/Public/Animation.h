@@ -34,18 +34,20 @@ public:
 	}
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
 	// 애니메이션을 초기화 하는 함수
-	void Set_TimeZero() 
+	void Reset() 
 	{ 
 		for (auto& iCurrentKeyFrame : m_ChannelCurrentKeyFrames)
 			iCurrentKeyFrame = 0;
 		m_dTimeAcc = 0.0;
 	}
+	void TimeAccReset() { m_dTimeAcc = 0.0; }
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
 	ANIMATIONFLAG Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
 	void Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
+	ANIMATIONFLAG Lerp_TransformMatrix(CModel::BONES& Bones, class CAnimation* pCurrentAnimation, _double TimeDelta);
 
 public:
 	_tchar						m_szName[MAX_STR] = TEXT("");

@@ -53,21 +53,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_double dTimeDelta)
 {
-	// 애니메이션이 종료 되었을때 따로 처리되는 명령이 없을 경우 IDLE처리
-	if (ANIM_FINISHED == m_eCurrentAnimationFlag)
-		m_eCurState = STATE_IDLE;
-
 	// Input이 Tick보다 위에 있어야 걸리는게 없어짐.
 	Key_Input(dTimeDelta);
-
 	Fix_Mouse();
 
 	__super::Tick(dTimeDelta);
 
-	m_eCurrentAnimationFlag = m_pModelCom->Play_Animation(dTimeDelta);
+	AnimationState(dTimeDelta);
 
-	Motion_Change(m_eCurrentAnimationFlag);
-	
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
@@ -232,7 +225,12 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	{
 		if (STATE_IDLE == m_eCurState)
 			m_eCurState = STATE_RUN;
+
 		m_pTransformCom->Go_Straight(dTimeDelta, m_pNavigation);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_UP))
+	{
+		m_eCurState = STATE_IDLE;
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_S))
@@ -331,6 +329,18 @@ void CPlayer::CameraOffset()
 	m_pPlayerCameraCom->Set_Position(vPosition);
 }
 
+void CPlayer::AnimationState(_double dTimeDelta)
+{
+	m_pModelCom->Play_Animation(dTimeDelta);
+	m_eCurrentAnimationFlag = m_pModelCom->Get_AnimationState();
+
+	// 애니메이션이 종료 되었을때 따로 처리되는 명령이 없을 경우 IDLE처리
+	if (ANIM_FINISHED == m_eCurrentAnimationFlag)
+		m_eCurState = STATE_IDLE;
+
+	Motion_Change(m_eCurrentAnimationFlag);
+}
+
 void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 {
 	if (m_ePreState != m_eCurState)
@@ -344,7 +354,7 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			m_pModelCom->Set_AnimIndex(84 + rand() % 6, false);
 			break;
 		case Client::CPlayer::STATE_RUN:
-			m_pModelCom->Set_AnimIndex(102, false);
+			m_pModelCom->Set_AnimIndex(102);
 			break;
 		case Client::CPlayer::STATE_RUNWALL:
 			break;
@@ -467,7 +477,7 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-	
+
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pNavigation);

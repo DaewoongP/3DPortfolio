@@ -63,6 +63,7 @@ private:
 	void Fix_Mouse();
 	// 1인칭 뷰의 카메라 오프셋값
 	void CameraOffset();
+	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 
 private: /* Setup Files */

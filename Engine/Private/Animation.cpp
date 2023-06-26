@@ -150,7 +150,7 @@ ANIMATIONFLAG CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, 
 	for (auto& pChannel : m_Channels)
 	{
 		if (nullptr == pChannel)
-			return ANIM_ERROR;
+			return ANIM_END;
 
 		pChannel->Invalidate_TransformationMatrix(Bones, m_dTimeAcc, &m_ChannelCurrentKeyFrames[iChannelIndex++]);
 	}
@@ -193,6 +193,33 @@ HRESULT CAnimation::SetUp_AnimationNotifies(vector<NOTIFY> Notifies)
 	m_AnimationNotify = Notifies;
 
 	return S_OK;
+}
+
+ANIMATIONFLAG CAnimation::Lerp_TransformMatrix(CModel::BONES& Bones, CAnimation* pCurrentAnimation, _double TimeDelta)
+{
+	m_dTimeAcc += m_dTickPerSecond * TimeDelta * 0.3;
+
+	if (m_dTimeAcc >= 1.f) // 선형보간 시간 대입
+	{
+		return ANIM_LERP_FINISHED;
+	}
+
+	for (auto& pPrevChannel : m_Channels)
+	{
+		if (nullptr == pPrevChannel)
+			return ANIM_END;
+
+		for (auto& pCurChannel : pCurrentAnimation->m_Channels)
+		{
+			if (nullptr == pCurChannel)
+				return ANIM_END;
+
+			if (pPrevChannel->Get_BoneIndex() == pCurChannel->Get_BoneIndex())
+				pPrevChannel->Lerp_TransformationMatrix(Bones, pCurChannel, m_dTimeAcc, m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]);
+		}
+	}
+
+	return ANIM_LERP;
 }
 
 CAnimation* CAnimation::Create(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)

@@ -99,8 +99,7 @@ void CModel::Set_AnimIndex(_uint iAnimIndex, _bool isLoop)
 	if (iAnimIndex >= m_iNumAnimations)
 		return;
 
-	m_iPreviousAnimIndex = m_iCurrentAnimIndex;
-	m_Animations[m_iPreviousAnimIndex]->Set_TimeZero();
+	m_Animations[m_iPreviousAnimIndex]->TimeAccReset();
 
 	m_iCurrentAnimIndex = iAnimIndex;
 
@@ -142,19 +141,38 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-ANIMATIONFLAG CModel::Play_Animation(_double dTimeDelta)
+void CModel::Play_Animation(_double dTimeDelta)
 {
-	ANIMATIONFLAG AnimationState = ANIM_END;
-
 	if (0 < m_iNumAnimations)
-		AnimationState = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
+	{
+		// 이전 애니메이션과 현재 애니메이션이 다르면
+		if (m_iPreviousAnimIndex != m_iCurrentAnimIndex)
+		{
+			// 이전 애니메이션 상태에서 현재 애니메이션 첫프레임으로 선형보간 처리.
+			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta);
+		}
+		else
+		{
+			m_eAnimationFlag = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_Bones, dTimeDelta);
+		}
+	}
+	
+	if (ANIM_LERP_FINISHED == m_eAnimationFlag)
+	{
+		// 선형보간 완료 or 애니메이션 완료
+		m_iPreviousAnimIndex = m_iCurrentAnimIndex;
+
+		m_Animations[m_iPreviousAnimIndex]->Reset();
+
+		m_Animations[m_iCurrentAnimIndex]->Reset();
+
+		m_eAnimationFlag = ANIM_PLAYING;
+	}
 
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Invalidate_CombinedTransformationMatrix(m_Bones);
 	}
-
-	return AnimationState;
 }
 
 void CModel::Invalidate_AnimationCamera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)

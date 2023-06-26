@@ -118,6 +118,44 @@ void CChannel::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTi
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 }
 
+void CChannel::Lerp_TransformationMatrix(CModel::BONES& Bones, CChannel* pCurrentChannel, _double dTimeAcc, _uint iCurrentKeyFrameIndex)
+{
+	_float3	vScale;
+	ZEROMEM(&vScale);
+	_float4	vRotation;
+	ZEROMEM(&vRotation);
+	_float3	vTranslation;
+	ZEROMEM(&vTranslation);
+
+	_double CurrentChannelTick = pCurrentChannel->m_KeyFrames[1].dTime - pCurrentChannel->m_KeyFrames[0].dTime;
+
+	// 현재 TimeAcc 값이 (Index ~ Index + 1) 안에 존재하는지 검사.
+		// 만약 안에 존재하지 않을경우 증가시켜 다음 프레임 검사.
+	while (dTimeAcc >= CurrentChannelTick)
+		return;
+
+	// TimeAcc - Index.Time / (Index.Time ~ Index.Time + 1)
+	_double		Ratio = dTimeAcc / CurrentChannelTick;
+
+	// 현재 인덱스와 다음 인덱스 까지 상태변환들을 선형보간하기 위한 값 저장.
+	_float3		vSourScale = m_KeyFrames[iCurrentKeyFrameIndex].vScale;
+	_float4		vSourRotation = m_KeyFrames[iCurrentKeyFrameIndex].vRotation;
+	_float3		vSourTranslation = m_KeyFrames[iCurrentKeyFrameIndex].vTranslation;
+
+	_float3		vDestScale = pCurrentChannel->m_KeyFrames[0].vScale;
+	_float4		vDestRotation = pCurrentChannel->m_KeyFrames[0].vRotation;
+	_float3		vDestTranslation = pCurrentChannel->m_KeyFrames[0].vTranslation;
+
+	// 선형보간 함수. Rotation의 경우 Quaternion 형태여서 Slerp 함수 사용.
+	XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), (_float)Ratio));
+	XMStoreFloat4(&vRotation, XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), (_float)Ratio));
+	XMStoreFloat3(&vTranslation, XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), (_float)Ratio));
+
+	// 선형보간되어 제작된 벡터를 행렬에 담아 채널의 이름과 같은 뼈의 인덱스에 값 전달.
+	_matrix		TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&vRotation), XMLoadFloat3(&vTranslation));
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
+}
+
 CChannel* CChannel::Create(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
 	CChannel* pInstance = new CChannel();

@@ -14,6 +14,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	ANIMATIONFLAG Get_AnimationState() const { return m_eAnimationFlag; }
 	// 모델의 메쉬 개수 반환
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
 	// 모델의 애니메이션 개수 반환
@@ -44,7 +45,7 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	ANIMATIONFLAG	Play_Animation(_double dTimeDelta);
+	void	Play_Animation(_double dTimeDelta);
 	void	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 	HRESULT SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies);
@@ -76,6 +77,7 @@ private: /* For.Materials */
 private: /* For.Animations */
 	_uint							m_iPreviousAnimIndex = { 0 };
 	_uint							m_iCurrentAnimIndex = { 0 };
+	ANIMATIONFLAG					m_eAnimationFlag = { ANIM_END };
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;
 
