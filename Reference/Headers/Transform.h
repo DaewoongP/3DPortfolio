@@ -67,6 +67,8 @@ public:
 	void Jump(_float fJumpForce, _double dTimeDelta);
 	// 중력사용
 	void Use_RigidBody() { m_isRigidBody = true; }
+	_bool IsJumping() const { return m_isJumping; }
+	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
 
 private:
 	TRANSFORMDESC	m_TransformDesc;
@@ -77,7 +79,7 @@ private:
 	_bool			m_isRigidBody = { false };
 	// 중력 변수 사용여부
 	_bool			m_bUseGravity = { true };
-	_float3			m_vGravity = _float3(0.f, -5.f, 0.f);
+	_float3			m_vGravity = _float3(0.f, -4.7f, 0.f);
 	// 속도
 	_float3			m_vVelocity;
 	// 최대속도 제한
@@ -90,7 +92,13 @@ private:
 	_float3			m_vAccel;
 
 	// 질량
-	_float			m_fMass = 5.f;
+	_float			m_fMass = 4.f;
+	// 바닥 Y값.
+	_float			m_fOriginGroundY = 0.f;
+	// Crouch 야매
+	_float			m_fGroundY = 0.f;
+
+	_bool			m_isJumping = { false };
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

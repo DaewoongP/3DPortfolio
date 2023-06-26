@@ -20,6 +20,9 @@ CTransform::CTransform(const CTransform& rhs)
 	, m_vForce(rhs.m_vForce)
 	, m_vAccel(rhs.m_vAccel)
 	, m_fMass(rhs.m_fMass)
+	, m_fGroundY(rhs.m_fGroundY)
+	, m_fOriginGroundY(rhs.m_fOriginGroundY)
+	, m_isJumping(rhs.m_isJumping)
 {
 }
 
@@ -59,6 +62,9 @@ HRESULT CTransform::Initialize(void* pArg)
 	ZEROMEM(&m_vForce);
 	ZEROMEM(&m_vAccel);
 
+	m_fGroundY = 4.f;
+	m_fOriginGroundY = 4.f;
+
 	return S_OK;
 }
 
@@ -88,11 +94,12 @@ void CTransform::Tick(_double dTimeDelta)
 	// 현재 포지션 처리.
 	Set_State(STATE_POSITION, Get_State(STATE_POSITION) + XMLoadFloat3(&m_vVelocity));
 
-	if (m_WorldMatrix._42 <= 4.f)
+	if (m_WorldMatrix._42 <= m_fGroundY)
 	{
 		m_vAccel.y = 0.f;
 		m_vVelocity.y = 0.f;
-		m_WorldMatrix._42 = 4.f;
+		m_WorldMatrix._42 = m_fGroundY;
+		m_isJumping = false;
 	}
 		
 
@@ -104,7 +111,13 @@ void CTransform::Tick(_double dTimeDelta)
 
 void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigation* pNavigation)
 {
-	_vector vDir = XMVector3Normalize(XMVectorSet(XMVectorGetX(vMoveDir), 0.f, XMVectorGetZ(vMoveDir), 0.f));
+	_vector vDir;
+	// 리지드 바디 사용할 경우 y값 제거.
+	if (true == m_isRigidBody)
+		vDir = XMVector3Normalize(XMVectorSet(XMVectorGetX(vMoveDir), 0.f, XMVectorGetZ(vMoveDir), 0.f));
+	else
+		vDir = XMVector3Normalize(vMoveDir);
+
 	_vector vPosition = Get_State(STATE::STATE_POSITION);
 
 	vPosition += vDir * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
@@ -248,7 +261,32 @@ void CTransform::Turn(_fvector vAxis, _float fRadian, _double dTimeDelta)
 
 void CTransform::Jump(_float fJumpForce, _double dTimeDelta)
 {
+	m_isJumping = true;
+
 	m_vForce.y += fJumpForce / (_float)dTimeDelta;
+}
+
+void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize)
+{
+	// 점프상태일경우 리턴
+	if (true == m_isJumping)
+		return;
+
+	// 앉기를 눌러서 천천히 내려앉음.
+	if (true == isCrouching)
+	{
+		m_fGroundY -= fCrouchSpeed * fCrouchSize * (_float)dTimeDelta;
+	}
+	else
+	{
+		m_fGroundY += fCrouchSpeed * fCrouchSize * (_float)dTimeDelta;
+	}
+
+	// 예외처리
+	if (m_fGroundY < fCrouchSize)
+		m_fGroundY = fCrouchSize;
+	if (m_fGroundY > m_fOriginGroundY)
+		m_fGroundY = m_fOriginGroundY;
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

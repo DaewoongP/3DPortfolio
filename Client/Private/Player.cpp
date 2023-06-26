@@ -54,6 +54,11 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 
+	if (STATE_CROUCH == m_eCurState)
+		m_pTransformCom->Crouch(true, dTimeDelta, 2.f);
+	else
+		m_pTransformCom->Crouch(false, dTimeDelta, 2.f);
+
 	__super::Tick(dTimeDelta);
 }
 
@@ -134,7 +139,7 @@ HRESULT CPlayer::Add_Component()
 	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 15.f;
+	TransformDesc.dSpeedPerSec = 25.f;
 	TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Transform */
@@ -219,6 +224,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	// straight
 	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
 		if (STATE_IDLE == m_eCurState)
@@ -230,7 +236,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	{
 		m_eCurState = STATE_IDLE;
 	}
-
+	// backward
 	if (pGameInstance->Get_DIKeyState(DIK_S))
 	{
 		if (STATE_IDLE == m_eCurState)
@@ -242,27 +248,37 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	{
 		m_eCurState = STATE_IDLE;
 	}
-
+	// left
 	if (pGameInstance->Get_DIKeyState(DIK_A))
 	{
 		m_pTransformCom->Go_Left(dTimeDelta, m_pNavigation);
 	}
-
+	// right
 	if (pGameInstance->Get_DIKeyState(DIK_D))
 	{
 		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
 	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
+	// jump, SPACE
+	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
-		m_pTransformCom->Jump(10.f, dTimeDelta);
+		m_pTransformCom->Jump(6.f, dTimeDelta);
+	}
+	// dash, Lshift
+	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_DOWN))
+	{
+		// dash
+	}
+	// Crouch, Lcontrol
+	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL))
+	{
+		m_eCurState = STATE_CROUCH;
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL, CInput_Device::KEY_UP))
+	{
+		m_eCurState = STATE_IDLE;
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_C))
-	{
-		// crouch
-	}
-
+	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON))
 	{
 		if (STATE_ATTACK != m_eCurState &&
@@ -283,7 +299,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		return;
 	}
 #endif // _DEBUG
-
+	// Mouse Move Horizontal
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
@@ -291,7 +307,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 		m_pPlayerCameraCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
-
+	// Mouse Move Vertical
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
 	{
 		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
@@ -375,6 +391,7 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		case Client::CPlayer::STATE_RUNWALL:
 			break;
 		case Client::CPlayer::STATE_CROUCH:
+			m_pModelCom->Set_AnimIndex(92);
 			break;
 		case Client::CPlayer::STATE_JUMP:
 			break;
