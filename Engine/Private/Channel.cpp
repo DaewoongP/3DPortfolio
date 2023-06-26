@@ -85,6 +85,7 @@ void CChannel::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTi
 		vScale = LastKeyFrame.vScale;
 		vRotation = LastKeyFrame.vRotation;
 		vTranslation = LastKeyFrame.vTranslation;
+		// return LastKeyFrame;
 	}
 	else
 	{

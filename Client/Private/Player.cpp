@@ -41,13 +41,25 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_fMouseSensitivity = 0.1f;
 
+	// 카메라 초기 설정.
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	vPosition += vLook * 0.5f + XMVectorSet(0.f, 4.f, 0.f, 0.f);
+
+	m_pPlayerCameraCom->Set_Position(vPosition);
+
 	return S_OK;
 }
 
 void CPlayer::Tick(_double dTimeDelta)
 {
+	// 애니메이션이 종료 되었을때 따로 처리되는 명령이 없을 경우 IDLE처리
+	if (ANIM_FINISHED == m_eCurrentAnimationFlag)
+		m_eCurState = STATE_IDLE;
+
 	// Input이 Tick보다 위에 있어야 걸리는게 없어짐.
 	Key_Input(dTimeDelta);
+
 	Fix_Mouse();
 
 	__super::Tick(dTimeDelta);
@@ -131,7 +143,7 @@ HRESULT CPlayer::Add_Component()
 	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 20.f;
+	TransformDesc.dSpeedPerSec = 15.f;
 	TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Transform */
@@ -218,6 +230,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
+		if (STATE_IDLE == m_eCurState)
+			m_eCurState = STATE_RUN;
 		m_pTransformCom->Go_Straight(dTimeDelta, m_pNavigation);
 	}
 
@@ -234,6 +248,16 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (pGameInstance->Get_DIKeyState(DIK_D))
 	{
 		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE))
+	{
+		//m_pTransformCom->Jump(dTimeDelta);
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_C))
+	{
+		// crouch
 	}
 
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
@@ -277,15 +301,20 @@ void CPlayer::Fix_Mouse()
 #ifdef _DEBUG
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-	if (pGameInstance->Get_DIKeyState(DIK_Q))
+
+	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
 	{
-		m_isMouseFixed = !m_isMouseFixed;
+		if (m_isMouseFixed)
+			m_isMouseFixed = false;
+		else
+			m_isMouseFixed = true;
 	}
+
 	Safe_Release(pGameInstance);
-#endif // _DEBUG
 
 	if (false == m_isMouseFixed)
 		return;
+#endif // _DEBUG
 
 	POINT	ptMouse{ g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
 
@@ -304,9 +333,6 @@ void CPlayer::CameraOffset()
 
 void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 {
-	if (ANIM_FINISHED == m_eCurrentAnimationFlag)
-		m_eCurState = STATE_IDLE;
-
 	if (m_ePreState != m_eCurState)
 	{
 		switch (m_eCurState)
@@ -315,9 +341,10 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			m_pModelCom->Set_AnimIndex(95);
 			break;
 		case Client::CPlayer::STATE_ATTACK:
-			m_pModelCom->Set_AnimIndex(85, false);
+			m_pModelCom->Set_AnimIndex(84 + rand() % 6, false);
 			break;
 		case Client::CPlayer::STATE_RUN:
+			m_pModelCom->Set_AnimIndex(102, false);
 			break;
 		case Client::CPlayer::STATE_RUNWALL:
 			break;

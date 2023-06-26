@@ -55,7 +55,6 @@ private:
 	_bool					m_isMouseFixed = { true };
 #endif // _DEBUG
 
-
 private:
 	HRESULT Add_Component();
 	HRESULT SetUp_ShaderResources();
@@ -102,5 +101,4 @@ END
 233 - drone ride end
 237 - drone ride loop
 239 - drone ride start
-
 */

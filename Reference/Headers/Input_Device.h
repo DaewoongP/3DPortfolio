@@ -18,7 +18,7 @@ private:
 	virtual ~CInput_Device() = default;
 
 public:
-	_byte		Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState = KEY_PRESSING);
+	_bool		Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState = KEY_PRESSING);
 	_bool		Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState = KEY_PRESSING);
 	_long		Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
 

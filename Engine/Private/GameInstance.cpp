@@ -224,7 +224,7 @@ unordered_map<const _tchar*, class CComponent*> CGameInstance::Find_PrototypesBy
 	return m_pComponent_Manager->Find_PrototypesBySubTag(iLevelIndex, pSubTag);
 }
 
-_byte	CGameInstance::Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState)
+_bool	CGameInstance::Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState)
 {
 	NULL_CHECK_RETURN_MSG(m_pInput_Device, 0, TEXT("Input_Device NULL"));
 

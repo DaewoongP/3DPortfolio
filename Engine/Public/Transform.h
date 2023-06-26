@@ -62,12 +62,16 @@ public:
 	void Turn(_fvector vAxis, _double dTimeDelta);
 	// 시간당 각도값으로 회전하는 함수
 	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta);
-	
+	// 점프
+	void Jump(_double dTimeDelta);
+
 private:
 	TRANSFORMDESC	m_TransformDesc;
 
 private:
 	_float4x4		m_WorldMatrix;
+	_bool			m_isJump = { false };
+	_float			test = 0.f;
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

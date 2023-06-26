@@ -21,6 +21,7 @@ HRESULT CCell::Initialize(_float3* pPoints, _int iIndex)
 
 	_vector		vLine;
 
+	// x, z,를 - 붙이면서 스왑하면 수직벡터를 구할 수 있음.
 	vLine = (XMLoadFloat3(&pPoints[POINT_B]) - XMLoadFloat3(&pPoints[POINT_A]));
 	m_vNormals[NEIGHBOR_AB] = _float3(XMVectorGetZ(vLine) * -1.f, 0.f, XMVectorGetX(vLine));
 

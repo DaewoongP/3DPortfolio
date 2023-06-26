@@ -92,7 +92,6 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 
 	m_ChannelCurrentKeyFrames.resize(m_iNumChannels);
 
-
 	_uint iNumKeyFrame = { 0 };
 	_uint iChannelIndex = { 0 };
 	// 채널을 순회하면서 모든 채널중 가장 큰 키프레임을 찾아 해당 채널의 인덱스와 해당 프레임을 저장.
@@ -103,6 +102,7 @@ HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONE
 			iNumKeyFrame = pChannel->Get_NumKeyFrames();
 			m_iMaxFrameChannelIndex = iChannelIndex;
 		}
+
 		++iChannelIndex;
 	}
 	m_iAnimationFrames = iNumKeyFrame;
@@ -168,13 +168,14 @@ void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransfor
 		return;
 
 	_vector vCamPos = pCamera->Get_TransformState(CTransform::STATE_POSITION);
+	_vector vCamDir = pCamera->Get_TransformState(CTransform::STATE_LOOK);
 	_vector vPos = pPlayerTransform->Get_State(CTransform::STATE_POSITION);
 
 	_vector vNotifyDir = XMLoadFloat4(&Notify.vAt) - XMLoadFloat4(&Notify.vEye);
 
-	_matrix InvalidateMatrix =
+	_matrix InvalidateMatrix = 
 		XMMatrixInverse(nullptr, 
-			XMMatrixLookAtLH(vPos + XMLoadFloat4(&Notify.vEye), vCamPos + vNotifyDir, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+			XMMatrixLookAtLH(vCamPos + XMLoadFloat4(&Notify.vEye), vCamDir + XMLoadFloat4(&Notify.vEye) + XMVector3Normalize(vCamDir + vNotifyDir), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
 }

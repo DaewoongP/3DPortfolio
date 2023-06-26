@@ -58,7 +58,7 @@ public: /* For.Component_Manager*/
 	unordered_map<const _tchar*, class CComponent*> Find_PrototypesBySubTag(_uint iLevelIndex, const _tchar * pSubTag);
 
 public: /* For.Input_Device*/
-	_byte		Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState = CInput_Device::KEY_PRESSING);
+	_bool		Get_DIKeyState(_ubyte ubyKeyID, CInput_Device::KEYSTATE eState = CInput_Device::KEY_PRESSING);
 	_bool		Get_DIMouseState(CInput_Device::MOUSEKEYSTATE eMouseID, CInput_Device::KEYSTATE eState = CInput_Device::KEY_PRESSING);
 	_long		Get_DIMouseMove(CInput_Device::MOUSEMOVESTATE eMouseMoveID);
 

@@ -12,27 +12,21 @@ CInput_Device::CInput_Device()
 	ZeroMemory(&m_MouseState, sizeof(DIMOUSESTATE));
 	ZeroMemory(&m_PreMouseState, sizeof(DIMOUSESTATE));
 }
-_byte CInput_Device::Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState)
+_bool CInput_Device::Get_DIKeyState(_ubyte ubyKeyID, KEYSTATE eState)
 {
 	switch (eState)
 	{
 	case KEY_DOWN:
-		if (Key_Down(ubyKeyID))
-			return m_byKeyState[ubyKeyID];
-		break;
+		return Key_Down(ubyKeyID);
 	case KEY_PRESSING:
-		if (Key_Pressing(ubyKeyID))
-			return m_byKeyState[ubyKeyID];
-		break;
+		return Key_Pressing(ubyKeyID);
 	case KEY_UP:
-		if (Key_Up(ubyKeyID))
-			return m_byKeyState[ubyKeyID];
-		break;
+		return Key_Up(ubyKeyID);
 	default:
-		return 0;
+		return false;
 	}
 
-	return 0;
+	return false;
 }
 _bool CInput_Device::Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState)
 {
@@ -44,7 +38,6 @@ _bool CInput_Device::Get_DIMouseState(MOUSEKEYSTATE eMouseID, KEYSTATE eState)
 		return Mouse_Pressing(eMouseID);
 	case KEY_UP:
 		return Mouse_Up(eMouseID);
-		break;
 	default:
 		return false;
 	}

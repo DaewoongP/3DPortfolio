@@ -66,6 +66,7 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigati
 	while (false == isMove)
 	{
 		vDir *= 0.99f;
+		
 		vPosition = Get_State(STATE::STATE_POSITION) + 
 			(vDir - XMLoadFloat3(&vNormal) * (XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
 
@@ -183,6 +184,12 @@ void CTransform::Turn(_fvector vAxis, _float fRadian, _double dTimeDelta)
 	Set_State(STATE::STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
 	Set_State(STATE::STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
 	Set_State(STATE::STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+}
+
+void CTransform::Jump(_double dTimeDelta)
+{
+	// 점프해서 지금 네비메쉬한테 y값이 닿았는지 검사.
+	
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
