@@ -44,6 +44,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double dTimeDelta) override;
 
 public:
 	void Move_Direction(_fvector vMoveDir, _double dTimeDelta, class CNavigation* pNavigation = nullptr);
@@ -63,15 +64,33 @@ public:
 	// 시간당 각도값으로 회전하는 함수
 	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta);
 	// 점프
-	void Jump(_double dTimeDelta);
+	void Jump(_float fJumpForce, _double dTimeDelta);
+	// 중력사용
+	void Use_RigidBody() { m_isRigidBody = true; }
 
 private:
 	TRANSFORMDESC	m_TransformDesc;
 
 private:
 	_float4x4		m_WorldMatrix;
-	_bool			m_isJump = { false };
-	_float			test = 0.f;
+
+	_bool			m_isRigidBody = { false };
+	// 중력 변수 사용여부
+	_bool			m_bUseGravity = { true };
+	_float3			m_vGravity = _float3(0.f, -5.f, 0.f);
+	// 속도
+	_float3			m_vVelocity;
+	// 최대속도 제한
+	_float			m_fLimitVelocity = 0.f;
+
+	// 힘
+	_float3			m_vForce;
+
+	// 가속도
+	_float3			m_vAccel;
+
+	// 질량
+	_float			m_fMass = 5.f;
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

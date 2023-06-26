@@ -30,7 +30,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void	Tick(_double dTimeDelta) override;
+	virtual void	Late_Tick(_double dTimeDelta) override;
 
 public:
 	void Go_Straight(_double dTimeDelta) { m_pTransform->Go_Straight(dTimeDelta); }

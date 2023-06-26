@@ -157,9 +157,9 @@ void CModel::Play_Animation(_double dTimeDelta)
 		}
 	}
 	
+	// 선형보간 완료시 처리
 	if (ANIM_LERP_FINISHED == m_eAnimationFlag)
 	{
-		// 선형보간 완료 or 애니메이션 완료
 		m_iPreviousAnimIndex = m_iCurrentAnimIndex;
 
 		m_Animations[m_iPreviousAnimIndex]->Reset();

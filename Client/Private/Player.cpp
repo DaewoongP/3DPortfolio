@@ -41,35 +41,33 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_fMouseSensitivity = 0.1f;
 
-	// 카메라 초기 설정.
-	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	vPosition += vLook * 0.5f + XMVectorSet(0.f, 4.f, 0.f, 0.f);
-
-	m_pPlayerCameraCom->Set_Position(vPosition);
+	m_pTransformCom->Use_RigidBody();
 
 	return S_OK;
 }
 
+// Tick : 이동 관련 연산 처리.
 void CPlayer::Tick(_double dTimeDelta)
 {
-	// Input이 Tick보다 위에 있어야 걸리는게 없어짐.
 	Key_Input(dTimeDelta);
 	Fix_Mouse();
 
-	__super::Tick(dTimeDelta);
-
 	AnimationState(dTimeDelta);
 
-	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+	__super::Tick(dTimeDelta);
 }
 
 void CPlayer::Late_Tick(_double dTimeDelta)
 {
-	__super::Late_Tick(dTimeDelta);
-
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+
+	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
+	m_pPlayerCameraCom->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	__super::Late_Tick(dTimeDelta);
 }
 
 HRESULT CPlayer::Render()
@@ -235,7 +233,14 @@ void CPlayer::Key_Input(_double dTimeDelta)
 
 	if (pGameInstance->Get_DIKeyState(DIK_S))
 	{
+		if (STATE_IDLE == m_eCurState)
+			m_eCurState = STATE_RUN;
+
 		m_pTransformCom->Go_Backward(dTimeDelta, m_pNavigation);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_S, CInput_Device::KEY_UP))
+	{
+		m_eCurState = STATE_IDLE;
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_A))
@@ -248,9 +253,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE))
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
-		//m_pTransformCom->Jump(dTimeDelta);
+		m_pTransformCom->Jump(10.f, dTimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_C))
@@ -258,14 +263,18 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		// crouch
 	}
 
-	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON))
 	{
-		m_eCurState = STATE_ATTACK;
+		if (STATE_ATTACK != m_eCurState &&
+			STATE_RUNWALL != m_eCurState &&
+			STATE_CLIMB != m_eCurState &&
+			STATE_DRONRIDE != m_eCurState)
+		{
+			m_eCurState = STATE_ATTACK;
+		}
 	}
 
 	_long		dwMouseMove = 0;
-
-	CameraOffset();
 
 #ifdef _DEBUG
 	if (false == m_isMouseFixed)
@@ -288,6 +297,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
 		_vector	vCamRight = m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
 
+		m_pTransformCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 		m_pPlayerCameraCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
 
@@ -320,13 +330,15 @@ void CPlayer::Fix_Mouse()
 	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 
-void CPlayer::CameraOffset()
+void CPlayer::TransformOffset()
 {
 	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-	vPosition += vLook * 0.5f + XMVectorSet(0.f, 4.f, 0.f, 0.f);
 
-	m_pPlayerCameraCom->Set_Position(vPosition);
+	_vector vOffsetPosition = vPosition + XMVectorSet(0.f, 4.f, 0.f, 1.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vOffsetPosition);
+
+	m_pPlayerCameraCom->Set_Position(vOffsetPosition);
 }
 
 void CPlayer::AnimationState(_double dTimeDelta)
@@ -343,6 +355,10 @@ void CPlayer::AnimationState(_double dTimeDelta)
 
 void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 {
+	// 모션 변경 처리 전 예외처리.
+	if (false == (ANIM_PLAYING == eAnimationFlag || ANIM_FINISHED == eAnimationFlag))
+		return;
+
 	if (m_ePreState != m_eCurState)
 	{
 		switch (m_eCurState)

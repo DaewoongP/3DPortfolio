@@ -82,7 +82,7 @@ HRESULT CCamera::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCamera::Tick(_double dTimeDelta)
+void CCamera::Late_Tick(_double dTimeDelta)
 {
 	NULL_CHECK_RETURN_MSG(m_pPipeLine, , TEXT("PipeLine NULL"));
 

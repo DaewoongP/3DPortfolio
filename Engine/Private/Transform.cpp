@@ -12,6 +12,14 @@ CTransform::CTransform(const CTransform& rhs)
 	: CComponent(rhs)
 	, m_TransformDesc(rhs.m_TransformDesc)
 	, m_WorldMatrix(rhs.m_WorldMatrix)
+	, m_isRigidBody(rhs.m_isRigidBody)
+	, m_bUseGravity(rhs.m_bUseGravity)
+	, m_vGravity(rhs.m_vGravity)
+	, m_vVelocity(rhs.m_vVelocity)
+	, m_fLimitVelocity(rhs.m_fLimitVelocity)
+	, m_vForce(rhs.m_vForce)
+	, m_vAccel(rhs.m_vAccel)
+	, m_fMass(rhs.m_fMass)
 {
 }
 
@@ -47,12 +55,56 @@ HRESULT CTransform::Initialize(void* pArg)
 	if (nullptr != pArg)
 		memcpy(&m_TransformDesc, pArg, sizeof m_TransformDesc);
 
+	ZEROMEM(&m_vVelocity);
+	ZEROMEM(&m_vForce);
+	ZEROMEM(&m_vAccel);
+
 	return S_OK;
+}
+
+void CTransform::Tick(_double dTimeDelta)
+{
+	if (false == m_isRigidBody)
+		return;
+
+	if (m_bUseGravity)
+	{	
+		// 중력 F = G * M;
+		XMStoreFloat3(&m_vForce, 
+			XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vGravity) * m_fMass);
+	}
+
+	//공기저항 f = -kv
+	//AddForce(m_Velocity * m_fAirResistance * -1.0f);
+
+	//가속도  A = F / M
+	XMStoreFloat3(&m_vAccel,
+		XMLoadFloat3(&m_vForce) / m_fMass);
+
+	// 속도  V = A * dt
+	XMStoreFloat3(&m_vVelocity,
+		XMLoadFloat3(&m_vVelocity) + XMLoadFloat3(&m_vAccel) * (_float)dTimeDelta);
+
+	// 현재 포지션 처리.
+	Set_State(STATE_POSITION, Get_State(STATE_POSITION) + XMLoadFloat3(&m_vVelocity));
+
+	if (m_WorldMatrix._42 <= 4.f)
+	{
+		m_vAccel.y = 0.f;
+		m_vVelocity.y = 0.f;
+		m_WorldMatrix._42 = 4.f;
+	}
+		
+
+	// 처리한 힘 초기화.
+	ZEROMEM(&m_vForce);
+
+	__super::Tick(dTimeDelta);
 }
 
 void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigation* pNavigation)
 {
-	_vector vDir = XMVector3Normalize(vMoveDir);
+	_vector vDir = XMVector3Normalize(XMVectorSet(XMVectorGetX(vMoveDir), 0.f, XMVectorGetZ(vMoveDir), 0.f));
 	_vector vPosition = Get_State(STATE::STATE_POSITION);
 
 	vPosition += vDir * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
@@ -63,6 +115,8 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigati
 	if (nullptr != pNavigation)
 		isMove = pNavigation->Is_Move(vPosition, &vNormal);
 
+	_uint iExcept = { 0 };
+
 	while (false == isMove)
 	{
 		vDir *= 0.99f;
@@ -71,6 +125,12 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta, CNavigati
 			(vDir - XMLoadFloat3(&vNormal) * (XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) * static_cast<_float>(m_TransformDesc.dSpeedPerSec * dTimeDelta);
 
 		isMove = pNavigation->Is_Move(vPosition, &vNormal);
+
+		if (++iExcept > 100)
+		{
+			vPosition = Get_State(STATE::STATE_POSITION);
+			break;
+		}
 	}
 
 	Set_State(STATE_POSITION, vPosition);
@@ -186,10 +246,9 @@ void CTransform::Turn(_fvector vAxis, _float fRadian, _double dTimeDelta)
 	Set_State(STATE::STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 }
 
-void CTransform::Jump(_double dTimeDelta)
+void CTransform::Jump(_float fJumpForce, _double dTimeDelta)
 {
-	// 점프해서 지금 네비메쉬한테 y값이 닿았는지 검사.
-	
+	m_vForce.y += fJumpForce / (_float)dTimeDelta;
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
