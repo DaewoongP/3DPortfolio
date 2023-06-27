@@ -38,7 +38,7 @@ private:
 	CCollider*				m_pColliderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CTransform*				m_pTransformCom = { nullptr };
-	CNavigation*			m_pNavigation = { nullptr };
+	CNavigation*			m_pNavigationCom = { nullptr };
 
 private:
 	// 채널의 인덱스 값을 가지고 있음.
@@ -52,6 +52,9 @@ private:
 	STATE					m_ePreState;
 	STATE					m_eCurState;
 
+
+	DASHDESC				m_Dash;
+
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };
 #endif // _DEBUG
@@ -60,12 +63,17 @@ private:
 	HRESULT Add_Component();
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
+	HRESULT Initailize_Skills();
 	void Key_Input(_double dTimeDelta);
 	void Fix_Mouse();
 	// 1인칭 뷰의 카메라 오프셋값
 	void TransformOffset();
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
+
+private: /* Skills */
+	void Tick_Skills(_double dTimeDelta);
+	void Dash(_double dTimeDelta);
 
 private: /* Setup Files */
 	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);

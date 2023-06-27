@@ -17,6 +17,11 @@ HRESULT CCell::Initialize(_float3* pPoints, _int iIndex)
 {
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
 
+	for (_uint i = 0; i < POINT_END; ++i)
+	{
+		m_vPoints[i].y = 0;
+	}
+
 	m_iIndex = iIndex;
 
 	_vector		vLine;

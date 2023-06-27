@@ -1,6 +1,5 @@
 #pragma once
 #include "Process.h"
-
 namespace Client
 {
 	const unsigned int g_iWinSizeX = 1280;
@@ -8,6 +7,8 @@ namespace Client
 
 	enum LEVELID { LEVEL_STATIC, LEVEL_LOGO, LEVEL_GAMEPLAY, LEVEL_LOADING, LEVEL_END };
 }
+
+#include "Client_Struct.h"
 
 extern HINSTANCE g_hInst;
 extern HWND g_hWnd;

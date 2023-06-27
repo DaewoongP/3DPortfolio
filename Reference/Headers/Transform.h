@@ -7,7 +7,7 @@ class ENGINE_DLL CTransform final : public CComponent
 {
 public:
 	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
-
+	
 public:
 	typedef struct tagTransformDesc
 	{
@@ -40,6 +40,9 @@ public:
 	void Set_Scale(const _float3& vScale);
 	void Set_Desc(TRANSFORMDESC TransformDesc) { m_TransformDesc = TransformDesc; }
 	void Set_WorldMatrix(_fmatrix WorldMatrix) { XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix); }
+	// 최대 속도제한 설정
+	void Set_LimitVelocity(_float fLimit) { m_fLimitVelocity = fLimit; }
+	void Set_Speed(_double dSpeed) { m_TransformDesc.dSpeedPerSec = dSpeed; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -47,11 +50,12 @@ public:
 	virtual void Tick(_double dTimeDelta) override;
 
 public:
-	void Move_Direction(_fvector vMoveDir, _double dTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Straight(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Backward(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Left(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Right(_double dTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Check_Move(_vector vCurrentPosition, _vector vVelocity);
+	void Move_Direction(_fvector vMoveDir, _double dTimeDelta);
+	void Go_Straight(_double dTimeDelta);
+	void Go_Backward(_double dTimeDelta);
+	void Go_Left(_double dTimeDelta);
+	void Go_Right(_double dTimeDelta);
 	void Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
 	void LookAt(_fvector vTargetPosition);
 	// 각도값 고정
@@ -65,21 +69,20 @@ public:
 	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta);
 	// 점프
 	void Jump(_float fJumpForce, _double dTimeDelta);
-	// 중력사용
-	void Use_RigidBody() { m_isRigidBody = true; }
+	// 리지드 바디 사용
+	void Use_RigidBody(class CNavigation* pNavigation);
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
-	_float Dash(_float fDashForce, _double dTimeDelta, class CNavigation* pNavigation);
 
 private:
 	TRANSFORMDESC	m_TransformDesc;
+	class CNavigation* m_pNavigation = { nullptr };
 
 private:
 	_float4x4		m_WorldMatrix;
 
 	_bool			m_isRigidBody = { false };
-	// 중력 변수 사용여부
-	_bool			m_bUseGravity = { true };
+
 	_float3			m_vGravity = _float3(0.f, -4.7f, 0.f);
 	// 속도
 	_float3			m_vVelocity;
@@ -95,11 +98,12 @@ private:
 	// 질량
 	_float			m_fMass = 4.f;
 	// 저항
-	_float			m_fAirResistance = 20.f;
+	_float			m_fAirResistance = 0.4f;
+	_float			m_fGroundResistance = 40.f;
 
 	// 바닥 Y값.
 	_float			m_fOriginGroundY = 0.f;
-	// Crouch 야매
+	// Crouch 처리용
 	_float			m_fGroundY = 0.f;
 
 	_bool			m_isJumping = { false };

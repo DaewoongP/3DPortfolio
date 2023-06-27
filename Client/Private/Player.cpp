@@ -32,6 +32,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	if (FAILED(Initailize_Skills()))
+		return E_FAIL;
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
@@ -41,7 +44,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_fMouseSensitivity = 0.1f;
 
-	m_pTransformCom->Use_RigidBody();
+	m_pTransformCom->Use_RigidBody(m_pNavigationCom);
 
 	return S_OK;
 }
@@ -58,6 +61,8 @@ void CPlayer::Tick(_double dTimeDelta)
 		m_pTransformCom->Crouch(true, dTimeDelta, 2.f);
 	else
 		m_pTransformCom->Crouch(false, dTimeDelta, 2.f);
+
+	Tick_Skills(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
 }
@@ -140,7 +145,7 @@ HRESULT CPlayer::Add_Component()
 	}
 
 	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 25.f;
+	TransformDesc.dSpeedPerSec = 15.f;
 	TransformDesc.dRotationPerSec = 3.f;
 
 	/* For.Com_Transform */
@@ -176,7 +181,7 @@ HRESULT CPlayer::Add_Component()
 
 	/* For.Com_Navigation */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigation), &NavigationDesc)))
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Navigation)");
 		return E_FAIL;
@@ -220,6 +225,18 @@ HRESULT CPlayer::Find_BoneIndices()
 	return S_OK;
 }
 
+HRESULT CPlayer::Initailize_Skills()
+{
+	/* Dash */
+	m_Dash.isUsed = false;
+	m_Dash.dCurTime = 0.0;
+	m_Dash.dOriginCoolTime = 3.0;
+	m_Dash.dCoolTime = 0.0;
+	m_Dash.dDuration = 0.15;
+
+	return S_OK;
+}
+
 void CPlayer::Key_Input(_double dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -233,7 +250,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			m_eCurState = STATE_RUN;
 		}
 		
-		m_pTransformCom->Go_Straight(dTimeDelta, m_pNavigation);
+		m_pTransformCom->Go_Straight(dTimeDelta);
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_UP))
 	{
@@ -245,7 +262,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		if (STATE_IDLE == m_eCurState)
 			m_eCurState = STATE_RUN;
 
-		m_pTransformCom->Go_Backward(dTimeDelta, m_pNavigation);
+		m_pTransformCom->Go_Backward(dTimeDelta);
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_S, CInput_Device::KEY_UP))
 	{
@@ -254,12 +271,12 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// left
 	if (pGameInstance->Get_DIKeyState(DIK_A))
 	{
-		m_pTransformCom->Go_Left(dTimeDelta, m_pNavigation);
+		m_pTransformCom->Go_Left(dTimeDelta);
 	}
 	// right
 	if (pGameInstance->Get_DIKeyState(DIK_D))
 	{
-		m_pTransformCom->Go_Right(dTimeDelta, m_pNavigation);
+		m_pTransformCom->Go_Right(dTimeDelta);
 	}
 	// jump, SPACE
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
@@ -269,7 +286,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// dash, Lshift
 	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_DOWN))
 	{
-		m_pTransformCom->Dash(10.f, dTimeDelta, m_pNavigation);
+		m_Dash.isUsed = true;
+		m_Dash.dCurTime = 0.0;
 	}
 	// Crouch, Lcontrol
 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL))
@@ -430,6 +448,37 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 	}
 }
 
+void CPlayer::Dash(_double dTimeDelta)
+{
+	// 스킬 현재 시간 초기화는 사용하였을때 딱한번 처리.
+	
+	if (0.0 < m_Dash.dCoolTime)
+	{
+		// 쿨타임이라 사용 불가.
+		m_Dash.dCoolTime -= dTimeDelta;
+		// shift 미리눌림방지
+		m_Dash.isUsed = false;
+	}
+	// 누르질 않음.
+	if (false == m_Dash.isUsed)
+		return;
+
+	m_Dash.dCurTime += dTimeDelta;
+
+	m_pTransformCom->Set_LimitVelocity(m_Dash.fLimitVelocity);
+	m_pTransformCom->Set_Speed(m_Dash.fSpeed);
+
+	if (m_Dash.dCurTime >= m_Dash.dDuration)
+	{
+		// 초기화
+		m_pTransformCom->Set_LimitVelocity(1.f);
+		m_pTransformCom->Set_Speed(15.f);
+		m_Dash.isUsed = false;
+		m_Dash.dCurTime = 0.0;
+		m_Dash.dCoolTime = m_Dash.dOriginCoolTime;
+	}
+}
+
 HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 {
 	// 몇번 애니메이션 인덱스에 어떤 파일 경로를 넣을건지
@@ -533,13 +582,18 @@ CGameObject* CPlayer::Clone(void* pArg)
 	return pInstance;
 }
 
+void CPlayer::Tick_Skills(_double dTimeDelta)
+{
+	Dash(dTimeDelta);
+}
+
 void CPlayer::Free()
 {
 	__super::Free();
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pNavigation);
+	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pTransformCom);

@@ -156,6 +156,9 @@
     <ClCompile Include="..\private\Prop.cpp">
       <Filter>02. GameObjects\Props</Filter>
     </ClCompile>
+    <ClCompile Include="..\Public\Client_Struct.h">
+      <Filter>99. Headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
