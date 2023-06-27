@@ -67,6 +67,7 @@ void CPlayer::Late_Tick(_double dTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
+	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
@@ -228,8 +229,10 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
 		if (STATE_IDLE == m_eCurState)
+		{
 			m_eCurState = STATE_RUN;
-
+		}
+		
 		m_pTransformCom->Go_Straight(dTimeDelta, m_pNavigation);
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_UP))
@@ -266,7 +269,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// dash, Lshift
 	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_DOWN))
 	{
-		// dash
+		m_pTransformCom->Dash(10.f, dTimeDelta, m_pNavigation);
 	}
 	// Crouch, Lcontrol
 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL))
@@ -279,7 +282,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 
 	// attack, Lbutton, Lclick
-	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON))
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
 		if (STATE_ATTACK != m_eCurState &&
 			STATE_RUNWALL != m_eCurState &&
@@ -287,6 +290,27 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			STATE_DRONRIDE != m_eCurState)
 		{
 			m_eCurState = STATE_ATTACK;
+		}
+
+		if (STATE_ATTACK == m_eCurState &&
+			ANIM_LERP != m_eCurrentAnimationFlag)
+		{
+			_float fCurrentFramePercent = (_float)m_pModelCom->Get_CurrentAnimationFrame() / m_pModelCom->Get_AnimationFrames();
+
+			// 실제 게임이랑 속도 맞춤.
+			if (fCurrentFramePercent >= 0.3f)
+			{
+				_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
+				// if Attack Right
+				if (84 == iCurrnetAnimIndex || 
+					85 == iCurrnetAnimIndex || 
+					86 == iCurrnetAnimIndex)
+					m_pModelCom->Set_AnimIndex(87 + rand() % 3, false);
+				else if (87 == iCurrnetAnimIndex ||
+					88 == iCurrnetAnimIndex ||
+					89 == iCurrnetAnimIndex)
+					m_pModelCom->Set_AnimIndex(84 + rand() % 3, false);
+			}
 		}
 	}
 
@@ -363,8 +387,11 @@ void CPlayer::AnimationState(_double dTimeDelta)
 	m_eCurrentAnimationFlag = m_pModelCom->Get_AnimationState();
 
 	// 애니메이션이 종료 되었을때 따로 처리되는 명령이 없을 경우 IDLE처리
-	if (ANIM_FINISHED == m_eCurrentAnimationFlag)
+	if (ANIM_FINISHED == m_eCurrentAnimationFlag &&
+		m_ePreState == m_eCurState)
+	{
 		m_eCurState = STATE_IDLE;
+	}
 
 	Motion_Change(m_eCurrentAnimationFlag);
 }
@@ -379,27 +406,26 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 	{
 		switch (m_eCurState)
 		{
-		case Client::CPlayer::STATE_IDLE:
+		case STATE_IDLE:
 			m_pModelCom->Set_AnimIndex(95);
 			break;
-		case Client::CPlayer::STATE_ATTACK:
+		case STATE_ATTACK:
 			m_pModelCom->Set_AnimIndex(84 + rand() % 6, false);
 			break;
-		case Client::CPlayer::STATE_RUN:
+		case STATE_RUN:
 			m_pModelCom->Set_AnimIndex(102);
 			break;
-		case Client::CPlayer::STATE_RUNWALL:
+		case STATE_RUNWALL:
 			break;
-		case Client::CPlayer::STATE_CROUCH:
+		case STATE_CROUCH:
 			m_pModelCom->Set_AnimIndex(92);
 			break;
-		case Client::CPlayer::STATE_JUMP:
+		case STATE_CLIMB:
 			break;
-		case Client::CPlayer::STATE_CLIMB:
-			break;
-		case Client::CPlayer::STATE_DRONRIDE:
+		case STATE_DRONRIDE:
 			break;
 		}
+
 		m_ePreState = m_eCurState;
 	}
 }

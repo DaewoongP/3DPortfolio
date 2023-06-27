@@ -20,7 +20,7 @@ public:
 	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);
 	// Time Acc에 해당하는 현재 채널의 키프레임 상태값을 기반으로 선형보간하여 뼈에 상태행렬을 전달하는 함수.
 	void	Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTimeAcc, _Inout_ _uint* pCurrentKeyFrameIndex);
-	void	Lerp_TransformationMatrix(CModel::BONES& Bones, class CChannel* pCurrentChannel, _double dTimeAcc, _uint iCurrentKeyFrameIndex);
+	void	Lerp_TransformationMatrix(CModel::BONES& Bones, class CChannel* pCurrentChannel, _double dDuration, _double dTimeAcc, _uint iCurrentKeyFrameIndex);
 
 private:
 	_tchar				m_szName[MAX_STR] = TEXT("");

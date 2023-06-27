@@ -17,7 +17,7 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL, STATE_DASH, STATE_CROUCH, STATE_JUMP, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
+	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL, STATE_DASH, STATE_CROUCH, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
 
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -48,6 +48,7 @@ private:
 	// 현재 실행되고 있는 애니메이션 상태.
 	ANIMATIONFLAG			m_eCurrentAnimationFlag = { ANIM_END };
 
+	// 현재와 이전 상태를 비교해서 애니메이션 변경처리
 	STATE					m_ePreState;
 	STATE					m_eCurState;
 

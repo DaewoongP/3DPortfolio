@@ -14,6 +14,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	_uint Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 	ANIMATIONFLAG Get_AnimationState() const { return m_eAnimationFlag; }
 	// 모델의 메쉬 개수 반환
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }

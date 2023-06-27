@@ -85,7 +85,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             pGameInstance->Tick_Timer(TEXT("Timer_60"));
 
-            pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+            pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")) * 1.05);
 
             if (FAILED(pMainApp->Render()))
             {

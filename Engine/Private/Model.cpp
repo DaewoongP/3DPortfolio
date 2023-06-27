@@ -99,6 +99,8 @@ void CModel::Set_AnimIndex(_uint iAnimIndex, _bool isLoop)
 	if (iAnimIndex >= m_iNumAnimations)
 		return;
 
+	m_iPreviousAnimIndex = m_iCurrentAnimIndex;
+
 	m_Animations[m_iPreviousAnimIndex]->TimeAccReset();
 
 	m_iCurrentAnimIndex = iAnimIndex;

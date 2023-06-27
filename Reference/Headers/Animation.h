@@ -58,7 +58,7 @@ public:
 	// 각 채널의 현재 키프레임 인덱스
 	vector<_uint>				m_ChannelCurrentKeyFrames;
 
-	_double						m_dDuration = { 0.0 };
+	_double						m_dDuration = { 0.2 };
 	_double						m_dOriginTickPerSecond = { 0.0 };
 	_double						m_dTickPerSecond = { 0.0 };
 	_double						m_dTimeAcc = { 0.0 };

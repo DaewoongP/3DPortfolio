@@ -69,6 +69,7 @@ public:
 	void Use_RigidBody() { m_isRigidBody = true; }
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
+	_float Dash(_float fDashForce, _double dTimeDelta, class CNavigation* pNavigation);
 
 private:
 	TRANSFORMDESC	m_TransformDesc;
@@ -93,6 +94,9 @@ private:
 
 	// 질량
 	_float			m_fMass = 4.f;
+	// 저항
+	_float			m_fAirResistance = 20.f;
+
 	// 바닥 Y값.
 	_float			m_fOriginGroundY = 0.f;
 	// Crouch 야매

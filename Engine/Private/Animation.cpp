@@ -175,7 +175,7 @@ void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransfor
 
 	_matrix InvalidateMatrix = 
 		XMMatrixInverse(nullptr, 
-			XMMatrixLookAtLH(vCamPos + XMLoadFloat4(&Notify.vEye), vCamDir + XMLoadFloat4(&Notify.vEye) + XMVector3Normalize(vCamDir + vNotifyDir), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+			XMMatrixLookAtLH(vCamPos + XMLoadFloat4(&Notify.vEye), vCamPos + XMLoadFloat4(&Notify.vAt) + XMVector3Normalize(vCamDir + vNotifyDir), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
 }
@@ -197,9 +197,11 @@ HRESULT CAnimation::SetUp_AnimationNotifies(vector<NOTIFY> Notifies)
 
 ANIMATIONFLAG CAnimation::Lerp_TransformMatrix(CModel::BONES& Bones, CAnimation* pCurrentAnimation, _double TimeDelta)
 {
-	m_dTimeAcc += m_dTickPerSecond * TimeDelta * 0.3;
+	_double dDuration = 0.2;
 
-	if (m_dTimeAcc >= 1.f) // 선형보간 시간 대입
+	m_dTimeAcc += TimeDelta;
+
+	if (m_dTimeAcc >= dDuration) // 선형보간 시간 대입
 	{
 		return ANIM_LERP_FINISHED;
 	}
@@ -215,7 +217,7 @@ ANIMATIONFLAG CAnimation::Lerp_TransformMatrix(CModel::BONES& Bones, CAnimation*
 				return ANIM_END;
 
 			if (pPrevChannel->Get_BoneIndex() == pCurChannel->Get_BoneIndex())
-				pPrevChannel->Lerp_TransformationMatrix(Bones, pCurChannel, m_dTimeAcc, m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]);
+				pPrevChannel->Lerp_TransformationMatrix(Bones, pCurChannel, dDuration, m_dTimeAcc, m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]);
 		}
 	}
 

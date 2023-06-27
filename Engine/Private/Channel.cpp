@@ -118,7 +118,7 @@ void CChannel::Invalidate_TransformationMatrix(CModel::BONES& Bones, _double dTi
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 }
 
-void CChannel::Lerp_TransformationMatrix(CModel::BONES& Bones, CChannel* pCurrentChannel, _double dTimeAcc, _uint iCurrentKeyFrameIndex)
+void CChannel::Lerp_TransformationMatrix(CModel::BONES& Bones, CChannel* pCurrentChannel, _double dDuration, _double dTimeAcc, _uint iCurrentKeyFrameIndex)
 {
 	_float3	vScale;
 	ZEROMEM(&vScale);
@@ -127,17 +127,11 @@ void CChannel::Lerp_TransformationMatrix(CModel::BONES& Bones, CChannel* pCurren
 	_float3	vTranslation;
 	ZEROMEM(&vTranslation);
 
-	_double CurrentChannelTick = pCurrentChannel->m_KeyFrames[1].dTime - pCurrentChannel->m_KeyFrames[0].dTime;
-
-	// 현재 TimeAcc 값이 (Index ~ Index + 1) 안에 존재하는지 검사.
-		// 만약 안에 존재하지 않을경우 증가시켜 다음 프레임 검사.
-	while (dTimeAcc >= CurrentChannelTick)
+	while (dTimeAcc >= dDuration)
 		return;
 
-	// TimeAcc - Index.Time / (Index.Time ~ Index.Time + 1)
-	_double		Ratio = dTimeAcc / CurrentChannelTick;
+	_double		Ratio = dTimeAcc / dDuration;
 
-	// 현재 인덱스와 다음 인덱스 까지 상태변환들을 선형보간하기 위한 값 저장.
 	_float3		vSourScale = m_KeyFrames[iCurrentKeyFrameIndex].vScale;
 	_float4		vSourRotation = m_KeyFrames[iCurrentKeyFrameIndex].vRotation;
 	_float3		vSourTranslation = m_KeyFrames[iCurrentKeyFrameIndex].vTranslation;

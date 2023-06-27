@@ -80,10 +80,11 @@ void CTransform::Tick(_double dTimeDelta)
 			XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vGravity) * m_fMass);
 	}
 
-	//공기저항 f = -kv
-	//AddForce(m_Velocity * m_fAirResistance * -1.0f);
+	// 공기저항 F = -K * V
+	XMStoreFloat3(&m_vForce, 
+		XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vVelocity) * m_fAirResistance * -1.f);
 
-	//가속도  A = F / M
+	// 가속도  A = F / M
 	XMStoreFloat3(&m_vAccel,
 		XMLoadFloat3(&m_vForce) / m_fMass);
 
@@ -92,6 +93,7 @@ void CTransform::Tick(_double dTimeDelta)
 		XMLoadFloat3(&m_vVelocity) + XMLoadFloat3(&m_vAccel) * (_float)dTimeDelta);
 
 	// 현재 포지션 처리.
+	// 여기서 네비게이션 메쉬 처리도 같이 해야할듯.
 	Set_State(STATE_POSITION, Get_State(STATE_POSITION) + XMLoadFloat3(&m_vVelocity));
 
 	if (m_WorldMatrix._42 <= m_fGroundY)
@@ -287,6 +289,18 @@ void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpe
 		m_fGroundY = fCrouchSize;
 	if (m_fGroundY > m_fOriginGroundY)
 		m_fGroundY = m_fOriginGroundY;
+}
+
+_float CTransform::Dash(_float fDashForce, _double dTimeDelta, CNavigation* pNavigation)
+{
+	// 쿨타임 반환
+	// 쿨타임 처리함수를 define으로 잡아두면 편할듯.
+	// 아마 트랜스폼을 안써도 써야할거같음
+	_vector vLook = XMVector3Normalize(Get_State(STATE_LOOK));
+
+	XMStoreFloat3(&m_vForce, vLook * fDashForce / (_float)dTimeDelta);
+	
+	return _float();
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
