@@ -99,7 +99,7 @@ private:
 	_float			m_fMass = 4.f;
 	// 저항
 	_float			m_fAirResistance = 0.4f;
-	_float			m_fGroundResistance = 40.f;
+	_float			m_fGroundResistance = 100.f;
 
 	// 바닥 Y값.
 	_float			m_fOriginGroundY = 0.f;

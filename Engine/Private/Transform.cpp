@@ -174,22 +174,35 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)
 	_vector vDir;
 
 	if (true == m_isRigidBody)
+	{
+		// 속도처리 있는 움직임.
+
 		vDir = XMVector3Normalize(XMVectorSet(XMVectorGetX(vMoveDir), 0.f, XMVectorGetZ(vMoveDir), 0.f));
+
+		_vector vVelocity = vDir * (_float)m_TransformDesc.dSpeedPerSec * (_float)dTimeDelta;
+
+		XMStoreFloat3(&m_vVelocity, XMLoadFloat3(&m_vVelocity) + vVelocity);
+
+		// x,z로만 상한선 처리.
+		_vector vLimitXZ = XMVectorSet(m_vVelocity.x, 0.f, m_vVelocity.z, 1.f);
+
+		if (XMVectorGetX(XMVector3Length(vLimitXZ)) > m_fLimitVelocity)
+		{
+			vLimitXZ = XMVector3Normalize(vLimitXZ) * m_fLimitVelocity;
+			m_vVelocity.x = XMVectorGetX(vLimitXZ);
+			m_vVelocity.z = XMVectorGetZ(vLimitXZ);
+		}
+	}
 	else
+	{
+		// 일반적인 움직임.
 		vDir = XMVector3Normalize(vMoveDir);
 
-	_vector vVelocity = vDir * (_float)m_TransformDesc.dSpeedPerSec * (_float)dTimeDelta;
+		_vector		vPosition = Get_State(STATE_POSITION);
 
-	XMStoreFloat3(&m_vVelocity, XMLoadFloat3(&m_vVelocity) + vVelocity);
+		vPosition += vDir * (_float)m_TransformDesc.dSpeedPerSec * (_float)dTimeDelta;
 
-	// x,z로만 상한선 처리.
-	_vector vLimitXZ = XMVectorSet(m_vVelocity.x, 0.f, m_vVelocity.z, 1.f);
-
-	if (XMVectorGetX(XMVector3Length(vLimitXZ)) > m_fLimitVelocity)
-	{
-		vLimitXZ = XMVector3Normalize(vLimitXZ) * m_fLimitVelocity;
-		m_vVelocity.x = XMVectorGetX(vLimitXZ);
-		m_vVelocity.z= XMVectorGetZ(vLimitXZ);
+		Set_State(STATE_POSITION, vPosition);
 	}
 }
 
