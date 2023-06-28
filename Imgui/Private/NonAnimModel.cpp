@@ -25,9 +25,12 @@ HRESULT CNonAnimModel::Initialize(void* pArg)
         m_ObjectDesc = *(static_cast<OBJECTDESC*>(pArg));
     else
         return E_FAIL;
-        
 
-    if (FAILED(__super::Initialize(pArg)))
+    CTransform::TRANSFORMDESC TransformDesc;
+    TransformDesc.dSpeedPerSec = 10.f;
+    TransformDesc.dRotationPerSec = 5.f;
+
+    if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
 
     if(FAILED(Add_Component(m_ObjectDesc)))
@@ -82,17 +85,6 @@ HRESULT CNonAnimModel::Add_Component(OBJECTDESC ObjectDesc)
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
     {
         MSG_BOX("Failed CNonAnimModel Add_Component : (Com_Renderer)");
-        return E_FAIL;
-    }
-
-    CTransform::TRANSFORMDESC TransformDesc;
-    TransformDesc.dSpeedPerSec = 10.f;
-    TransformDesc.dRotationPerSec = 5.f;
-    if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Transform"),
-        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
-    {
-        MSG_BOX("Failed CNonAnimModel Add_Component : (Com_Transform)");
         return E_FAIL;
     }
 
@@ -167,5 +159,4 @@ void CNonAnimModel::Free()
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
-    //Safe_Release(m_pColliderCom);
 }

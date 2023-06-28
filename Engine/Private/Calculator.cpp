@@ -1,5 +1,6 @@
 #include "..\Public\Calculator.h"
 #include "PipeLine.h"
+#include <limits>
 
 IMPLEMENT_SINGLETON(CCalculator)
 
@@ -85,14 +86,17 @@ _bool CCalculator::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
 	return false;
 }
 
-void CCalculator::VectorToLineXZ(_vector vPosition, _vector vDirection, _float* pA, _float* pB)
+HRESULT CCalculator::VectorToLineXZ(_vector vPosition, _vector vDirection, _float* pA, _float* pB)
 {
 	// 기울기 
 	_vector vSourPos = vPosition + vDirection;
+
 	// Z증가량 / X증가량
-	*pA = (_float)(XMVectorGetZ(vSourPos) - XMVectorGetZ(vPosition)) / (XMVectorGetX(vSourPos) - XMVectorGetX(vPosition));
+	*pA = (_float)(XMVectorGetZ(vDirection)) / XMVectorGetX(vDirection);
 	// Z 절편 
 	*pB = XMVectorGetZ(vPosition) - (*pA) * XMVectorGetX(vPosition);
+
+	return S_OK;
 }
 
 void CCalculator::Free()

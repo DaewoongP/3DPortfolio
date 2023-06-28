@@ -130,7 +130,7 @@ HRESULT CMainTool::Ready_Prototype_Component()
 
 	Ready_Prototype_Component_Shader();
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
-	//Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_ANIM, TEXT("..\\..\\Resources\\ParsingData\\Anim"), TEXT("Prototype_Component_AnimModel_"));
 
 	return S_OK;
 }

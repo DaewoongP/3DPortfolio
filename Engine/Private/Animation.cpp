@@ -110,9 +110,9 @@ ANIMATIONFLAG CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, 
 
 	// 프레임 별로 애니메이션 스피드 제어.
 	if (m_AnimationNotify.size() > 0)
-		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]].fSpeed;
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta * m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]].fSpeed * 1.05;
 	else
-		m_dTimeAcc += m_dTickPerSecond * TimeDelta;
+		m_dTimeAcc += m_dTickPerSecond * TimeDelta * 1.05;
 
 	if (m_dTimeAcc >= m_dDuration)
 	{

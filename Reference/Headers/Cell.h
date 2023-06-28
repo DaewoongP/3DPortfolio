@@ -27,7 +27,7 @@ public:
 
 public:
 	// 포지션을 기반으로 이 셀안에 포지션이 있는지 체크.
-	_bool Is_In(_fvector vPosition, _Inout_ _float3* pLineStartPos, _Inout_ _float3* pLineToDirection, _Inout_ _float3* pNormal, _Inout_ _int* pNeighborIndex);
+	_bool Is_In(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ _int* pNeighborIndex);
 	// 다른셀의 두점을받아 이셀과 공유하는지 검사.
 	_bool Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 

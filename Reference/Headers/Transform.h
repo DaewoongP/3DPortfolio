@@ -25,6 +25,7 @@ private:
 	virtual ~CTransform() = default;
 
 public:
+	TRANSFORMDESC Get_Desc() const { return m_TransformDesc; }
 	_vector Get_State(STATE _eState) 
 	{
 		return XMLoadFloat4x4(&m_WorldMatrix).r[static_cast<_uint>(_eState)];
@@ -83,7 +84,7 @@ private:
 
 	_bool			m_isRigidBody = { false };
 
-	_float3			m_vGravity = _float3(0.f, -4.7f, 0.f);
+	_float3			m_vGravity = _float3(0.f, -2.f, 0.f);
 	// 속도
 	_float3			m_vVelocity;
 	// 최대속도 제한
@@ -96,10 +97,9 @@ private:
 	_float3			m_vAccel;
 
 	// 질량
-	_float			m_fMass = 4.f;
+	_float			m_fMass = 5.f;
 	// 저항
-	_float			m_fAirResistance = 0.4f;
-	_float			m_fGroundResistance = 40.f;
+	_float			m_fResistance = 30.f;
 
 	// 바닥 Y값.
 	_float			m_fOriginGroundY = 0.f;

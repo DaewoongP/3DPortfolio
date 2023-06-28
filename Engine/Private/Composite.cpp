@@ -1,5 +1,7 @@
 #include "..\Public\Composite.h"
 #include "Component_Manager.h"
+#include "Object_Manager.h"
+#include "GameObject.h"
 
 CComposite::CComposite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -26,14 +28,6 @@ void CComposite::Late_Tick(_double dTimeDelta)
 		Pair.second->Late_Tick(dTimeDelta);
 }
 
-HRESULT CComposite::Render()
-{
-	for (auto& Pair : m_Components)
-		Pair.second->Render();
-
-	return S_OK;
-}
-
 HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg)
 {
 	CComponent_Manager* pComponentManager = CComponent_Manager::GetInstance();
@@ -51,6 +45,24 @@ HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag
 	Safe_AddRef(pComponent);
 
 	Safe_Release(pComponentManager);
+
+	return S_OK;
+}
+
+HRESULT CComposite::Add_Part(const _tchar* pPrototypeTag, const _tchar* pObjectTag, _Inout_ CGameObject** ppOut, void* pArg)
+{
+	CObject_Manager* pObjectManager = CObject_Manager::GetInstance();
+	Safe_AddRef(pObjectManager);
+
+	CGameObject* pGameObject = pObjectManager->Clone_GameObject(pPrototypeTag, pArg);
+	
+	m_Components.emplace(pObjectTag , pGameObject);
+
+	*ppOut = pGameObject;
+
+	Safe_AddRef(pGameObject);
+
+	Safe_Release(pObjectManager);
 
 	return S_OK;
 }
@@ -90,5 +102,4 @@ void CComposite::Free()
 	for (auto& Pair : m_Components)
 		Safe_Release(Pair.second);
 	m_Components.clear();
-
 }

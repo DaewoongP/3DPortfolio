@@ -49,6 +49,22 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
+const CBone* CModel::Get_Bone(const _tchar* pBoneName)
+{
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
+		{
+			if (!lstrcmp(pBoneName, pBone->Get_Name()))
+				return true;
+			else
+				return false;
+		});
+
+	if (iter == m_Bones.end())
+		return nullptr;
+
+	return (*iter);
+}
+
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
@@ -108,9 +124,9 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_double dTimeDelta)
+void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying)
 {
-	if (0 < m_iNumAnimations)
+	if (0 < m_iNumAnimations && true == isPlaying)
 	{
 		// 이전 애니메이션과 현재 애니메이션이 다르면
 		if (m_iPreviousAnimIndex != m_iCurrentAnimIndex)
@@ -125,7 +141,7 @@ void CModel::Play_Animation(_double dTimeDelta)
 	}
 	
 	// 선형보간 완료시 처리
-	if (ANIM_LERP_FINISHED == m_eAnimationFlag)
+	if (ANIM_LERP_FINISHED == m_eAnimationFlag && true == isPlaying)
 	{
 		m_iPreviousAnimIndex = m_iCurrentAnimIndex;
 
@@ -558,7 +574,7 @@ HRESULT CModel::Ready_Materials(const _tchar* pModelFilePath)
 
 			if (nullptr == MeshMaterial.pMtrlTexture[j])
 			{
-				MSG_BOX("Mtrl Texture NULL");
+				//MSG_BOX("Mtrl Texture NULL");
 			}
 		}
 

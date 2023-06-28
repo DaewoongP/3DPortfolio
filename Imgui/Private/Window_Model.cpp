@@ -137,7 +137,7 @@ HRESULT CWindow_Model::Select_ModelFiles()
 HRESULT CWindow_Model::Setting_Transform()
 {
 	// 임시 삭제 기능.
-	if (ImGui::Button("File Delete"))
+	/*if (ImGui::Button("File Delete"))
 	{
 		string Path = "C:/Users/msi/Desktop/git/3DFramework/Resources/ParsingData/NonAnim/";
 		string Name = m_NonAnimModelNames[m_iCur_Mesh];
@@ -150,7 +150,7 @@ HRESULT CWindow_Model::Setting_Transform()
 			MSG_BOX("Failed");
 		else
 			MSG_BOX("Deleted");
-	}
+	}*/
 
 
 	SetNextItemWidth(300.f);

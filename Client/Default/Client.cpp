@@ -56,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Default"))))
         return FALSE;
-    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_60"))))
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_144"))))
         return FALSE;
 
     MSG msg;
@@ -81,11 +81,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         pGameInstance->Tick_Timer(TEXT("Timer_Default"));
         dTimerAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
 
-        if (dTimerAcc >= 1.0 / 60.0)
+        if (dTimerAcc >= 1.0 / 144.0)
         {
-            pGameInstance->Tick_Timer(TEXT("Timer_60"));
+            pGameInstance->Tick_Timer(TEXT("Timer_144"));
 
-            pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_60")) * 1.05);
+            pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_144")));
 
             if (FAILED(pMainApp->Render()))
             {

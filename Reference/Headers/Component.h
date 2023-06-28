@@ -32,7 +32,7 @@ protected:
 	_bool			m_isCloned = { false };
 
 protected:
-	_tchar			m_pPrototypeTag[MAX_STR];
+	_tchar			m_pPrototypeTag[MAX_STR] = TEXT("");
 
 public:
 	virtual CComponent* Clone(void* pArg) PURE;

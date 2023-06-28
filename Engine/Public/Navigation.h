@@ -27,7 +27,7 @@ public:
 
 public:
 	// 네비게이션 메쉬 상에서 움직일 수 있는지 체크.
-	_bool Is_Move(_fvector vPosition, _Inout_ _float3* pLineStartPos, _Inout_ _float3* pLineToDirection, _Inout_ _float3* pNormal);
+	_bool Is_Move(_fvector vPosition, _Inout_ _float3* pNormal);
 
 #ifdef _DEBUG
 public:

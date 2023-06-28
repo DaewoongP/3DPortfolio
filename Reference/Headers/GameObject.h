@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Composite.h"
+#include "Transform.h"
 
 BEGIN(Engine)
 
@@ -24,6 +24,9 @@ public:
 
 protected:
 	_tchar		m_pTag[MAX_STR] = TEXT("");
+
+protected:
+	class CTransform*			m_pTransformCom = { nullptr };
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

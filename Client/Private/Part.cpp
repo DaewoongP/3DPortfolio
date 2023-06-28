@@ -34,6 +34,22 @@ void CPart::Tick(_double dTimeDelta)
 
 void CPart::Late_Tick(_double dTimeDelta)
 {
+	_matrix BoneMatrix;
+
+	/* 부모(뼈의 오프셋 * 뼈의 컴바인드 * 피벗) */
+	BoneMatrix = XMLoadFloat4x4(&m_ParentMatrixDesc.OffsetMatrix) *
+		XMLoadFloat4x4(m_ParentMatrixDesc.pCombindTransformationMatrix) *
+		XMLoadFloat4x4(&m_ParentMatrixDesc.PivotMatrix);
+
+	// 스케일 제거.
+	BoneMatrix.r[0] = XMVector3Normalize(BoneMatrix.r[0]);
+	BoneMatrix.r[1] = XMVector3Normalize(BoneMatrix.r[1]);
+	BoneMatrix.r[2] = XMVector3Normalize(BoneMatrix.r[2]);
+
+	// 월드행렬 * 부모의 뼈행렬 * 부모의 월드행렬
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() *
+		BoneMatrix * XMLoadFloat4x4(m_ParentMatrixDesc.pParentWorldMatrix));
+
 	__super::Late_Tick(dTimeDelta);
 }
 

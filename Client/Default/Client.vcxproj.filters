@@ -43,14 +43,14 @@
     <Filter Include="02. GameObjects\ForkLift">
       <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\Katana">
-      <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\Props">
       <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\Parts">
       <UniqueIdentifier>{c4530ccc-05f5-41f8-946a-eeef06748859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\Player\Katana">
+      <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,7 +94,7 @@
       <Filter>02. GameObjects\ForkLift</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Katana.h">
-      <Filter>02. GameObjects\Katana</Filter>
+      <Filter>02. GameObjects\Player\Katana</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\99. Loading</Filter>
@@ -154,7 +154,7 @@
       <Filter>02. GameObjects\ForkLift</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Katana.cpp">
-      <Filter>02. GameObjects\Katana</Filter>
+      <Filter>02. GameObjects\Player\Katana</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01. Levels\99. Loading</Filter>

@@ -12,12 +12,13 @@ private:
 
 public:
 	// 뼈의 이름 반환
-	const _tchar*	Get_Name() const { return m_szName; }
+	const _tchar*		Get_Name() const { return m_szName; }
 	// 뼈의 최종 상태 행렬 반환.
-	_float4x4		Get_CombinedTransformationMatrix() const { return m_CombinedTransformationMatrix; }
-	_float4x4		Get_OffsetMatrix() const { return m_OffsetMatrix; }
-	void			Set_OffsetMatrix(const _float4x4& OffsetMatrix) { m_OffsetMatrix = OffsetMatrix; }
-	void			Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
+	_float4x4			Get_CombinedTransformationMatrix() const { return m_CombinedTransformationMatrix; }
+	const _float4x4*	Get_CombinedTransformationMatrixPtr() const { return &m_CombinedTransformationMatrix; }
+	_float4x4			Get_OffsetMatrix() const { return m_OffsetMatrix; }
+	void				Set_OffsetMatrix(const _float4x4& OffsetMatrix) { m_OffsetMatrix = OffsetMatrix; }
+	void				Set_TransformationMatrix(_fmatrix TransformationMatrix) { XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix); }
 
 public:
 	HRESULT Initialize(Engine::NODE* pNode);

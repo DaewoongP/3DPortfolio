@@ -14,12 +14,14 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	_float4x4 Get_PivotMatrix() const { return m_PivotMatrix; }
 	_uint Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 	ANIMATIONFLAG Get_AnimationState() const { return m_eAnimationFlag; }
 	// 모델의 메쉬 개수 반환
 	_uint Get_NumMeshes() const { return m_iNumMeshes; }
 	// 모델의 애니메이션 개수 반환
 	_uint Get_NumAnimations() const { return m_iNumAnimations; }
+	const class CBone* Get_Bone(const _tchar* pBoneName);
 	// 현재 실행중인 애니메이션
 	class CAnimation* Get_Animation() const { return m_Animations[m_iCurrentAnimIndex]; }
 	class CAnimation* Get_Animation(_uint iAnimationIndex) const { return m_Animations[iAnimationIndex]; }
@@ -35,7 +37,7 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	void	Play_Animation(_double dTimeDelta);
+	void	Play_Animation(_double dTimeDelta, _bool isPlaying = true);
 	void	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 	HRESULT SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies);

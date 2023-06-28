@@ -8,7 +8,6 @@ class CCamera;
 class CShader;
 class CCollider;
 class CRenderer;
-class CTransform;
 class CNavigation;
 END
 
@@ -37,11 +36,10 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
-	CTransform*				m_pTransformCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
 
 private:
-	unordered_map<const _tchar*, class CPart*> m_PlayerParts;
+	class CKatana*			m_pKatana = { nullptr };
 
 private:
 	// 채널의 인덱스 값을 가지고 있음.
@@ -55,7 +53,7 @@ private:
 	STATE					m_ePreState;
 	STATE					m_eCurState;
 
-
+	_float					m_fSpeed;
 	DASHDESC				m_Dash;
 
 #ifdef _DEBUG

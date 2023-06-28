@@ -21,7 +21,8 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void* pArg)
 {
-    if (FAILED(__super::Initialize(pArg)))
+    CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
+    if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
 
     if (FAILED(Add_Component()))
@@ -83,15 +84,6 @@ HRESULT CTerrain::Add_Component()
         TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
     {
         MSG_BOX("Failed CTerrain Add_Component : (Com_Texture)");
-        return E_FAIL;
-    }
-
-    /* For.Com_Transform */
-    CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-    if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
-    {
-        MSG_BOX("Failed CTerrain Add_Component : (Com_Transform)");
         return E_FAIL;
     }
 
@@ -168,6 +160,5 @@ void CTerrain::Free()
     Safe_Release(m_pBufferCom);
     Safe_Release(m_pTextureCom);
     Safe_Release(m_pRendererCom);
-    Safe_Release(m_pTransformCom);
     Safe_Release(m_pNavigationCom);
 }

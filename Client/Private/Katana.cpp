@@ -21,14 +21,23 @@ HRESULT CKatana::Initialize_Prototype()
 
 HRESULT CKatana::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
+	if (FAILED(__super::Initialize(&TransformDesc)))
+		return E_FAIL;
+
+	if (FAILED(Initialize_ParentMatrix(*reinterpret_cast<PARENTMATRIXDESC*>(pArg))))
 		return E_FAIL;
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimIndex(1);
+	return S_OK;
+}
 
+HRESULT CKatana::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
+{
+	m_ParentMatrixDesc = ParentDesc;
+	
 	return S_OK;
 }
 
@@ -36,11 +45,7 @@ void CKatana::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	// 나중에 뼈 행렬 가져오는거로 처리
-	/*_float4x4 PlayerWeaponBoneMatrix = m_pPlayerModel->Get_BoneCombinedTransformationMatrix(m_iPlayerWeaponIndex);
-	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&PlayerWeaponBoneMatrix));*/
-
-	m_pModelCom->Play_Animation(dTimeDelta);
+	m_pModelCom->Play_Animation(dTimeDelta, false);
 }
 
 void CKatana::Late_Tick(_double dTimeDelta)
@@ -84,17 +89,6 @@ HRESULT CKatana::Add_Components()
 		return E_FAIL;
 	}
 
-	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 5.f;
-	TransformDesc.dRotationPerSec = 3.f;
-	/* For.Com_Transform */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-	{
-		MSG_BOX("Failed CKatana Add_Component : (Com_Transform)");
-		return E_FAIL;
-	}
-
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
@@ -104,22 +98,20 @@ HRESULT CKatana::Add_Components()
 	}
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
 		MSG_BOX("Failed CKatana Add_Component : (Com_Shader)");
 		return E_FAIL;
 	}
 
-	if (FAILED(Find_BoneIndices()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 HRESULT CKatana::SetUp_ShaderResources()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+	// Part의 경우 월드행렬을 다 저장된거로 던져야함.
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -131,32 +123,6 @@ HRESULT CKatana::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix",
 		pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CKatana::Find_BoneIndices()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	m_pPlayerModel = static_cast<CModel*>(pGameInstance->Find_GameObject(LEVEL_GAMEPLAY,
-		TEXT("Layer_Player"), TEXT("GameObject_Player"))->Find_Component(
-			TEXT("Com_Model")));
-
-	if (nullptr == m_pPlayerModel)
-	{
-		MSG_BOX("Failed Find Player model");
-
-		return E_FAIL;
-	}
-
-	Safe_AddRef(m_pPlayerModel);
-
-	if (FAILED(m_pPlayerModel->Find_BoneIndex(TEXT("Weapon_r"), &m_iPlayerWeaponIndex)))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -191,9 +157,8 @@ CGameObject* CKatana::Clone(void* pArg)
 void CKatana::Free()
 {
 	__super::Free();
-	Safe_Release(m_pPlayerModel);
+	
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTransformCom);
 }

@@ -35,7 +35,11 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void* pArg)
 {
-    if (FAILED(__super::Initialize(pArg)))
+    CTransform::TRANSFORMDESC TransformDesc;
+    TransformDesc.dSpeedPerSec = 0.f;
+    TransformDesc.dRotationPerSec = 0.f;
+
+    if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
 
     if (FAILED(Add_Component()))
@@ -263,14 +267,6 @@ HRESULT CTerrain::Add_Component()
     }
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Transform"),
-        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom))))
-    {
-        MSG_BOX("Failed CTerrain Add_Component : (Com_Transform)");
-        return E_FAIL;
-    }
-
-    if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Shader_Terrain"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
     {
@@ -379,7 +375,6 @@ void CTerrain::Free()
 
     Safe_Release(m_pTextureCom);;
     Safe_Release(m_pShaderCom);
-    Safe_Release(m_pTransformCom);
     Safe_Release(m_pTerrainCom);
     Safe_Release(m_pRendererCom);
 }

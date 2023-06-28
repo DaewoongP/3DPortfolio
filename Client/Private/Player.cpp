@@ -1,6 +1,7 @@
 #include "..\Public\Player.h"
 #include "GameInstance.h"
 #include "Part.h"
+#include "Katana.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -15,6 +16,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 #endif // _DEBUG
 
 {
+
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -27,7 +29,11 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	m_fSpeed = 1.5f;
+
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_fSpeed, XMConvertToRadians(3.f));
+
+	if (FAILED(__super::Initialize(&TransformDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Component()))
@@ -38,7 +44,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(Initailize_Skills()))
 		return E_FAIL;
-
+	
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
@@ -46,7 +52,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pModelCom->Set_AnimIndex(95);
 	m_eCurState = STATE_IDLE;
 
-	m_fMouseSensitivity = 0.1f;
+	m_fMouseSensitivity = 0.2f;
 
 	m_pTransformCom->Use_RigidBody(m_pNavigationCom);
 
@@ -148,18 +154,6 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 	}
 
-	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 15.f;
-	TransformDesc.dRotationPerSec = 3.f;
-
-	/* For.Com_Transform */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
-	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_Transform)");
-		return E_FAIL;
-	}
-
 	CCamera::CAMERADESC CameraDesc;
 	CameraDesc.vEye = _float4(5.f, 5.f, 5.f, 1.f);
 	CameraDesc.vAt = _float4(10.f, 0.f, 10.f, 1.f);
@@ -169,8 +163,8 @@ HRESULT CPlayer::Add_Component()
 	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 1000.f;
-	CameraDesc.TransformDesc.dSpeedPerSec = TransformDesc.dSpeedPerSec;
-	CameraDesc.TransformDesc.dRotationPerSec = TransformDesc.dRotationPerSec;
+	CameraDesc.TransformDesc.dSpeedPerSec = m_pTransformCom->Get_Desc().dSpeedPerSec;
+	CameraDesc.TransformDesc.dRotationPerSec = m_pTransformCom->Get_Desc().dRotationPerSec;
 
 	/* For.Com_Camera */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
@@ -205,6 +199,25 @@ HRESULT CPlayer::Add_Component()
 	return S_OK;
 }
 
+HRESULT CPlayer::Add_Parts()
+{
+	CPart::PARENTMATRIXDESC ParentMatrixDesc;
+	ZEROMEM(&ParentMatrixDesc);
+
+	const CBone* pBone = m_pModelCom->Get_Bone(TEXT("Weapon_r"));
+
+	ParentMatrixDesc.PivotMatrix = m_pModelCom->Get_PivotMatrix();
+	ParentMatrixDesc.OffsetMatrix = pBone->Get_OffsetMatrix();
+	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
+	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Katana"),
+		TEXT("Part_Katana"), reinterpret_cast<CGameObject**>(&m_pKatana), &ParentMatrixDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CPlayer::SetUp_ShaderResources()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -216,22 +229,6 @@ HRESULT CPlayer::SetUp_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
-HRESULT CPlayer::Add_Parts()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	CPart::PARENTMATRIXDESC ParentMatrixDesc;
-	ZEROMEM(&ParentMatrixDesc);
-
-	
-	CPart* pKatana = static_cast<CPart*>(pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Katana"), &ParentMatrixDesc));
 
 	Safe_Release(pGameInstance);
 
@@ -251,9 +248,11 @@ HRESULT CPlayer::Initailize_Skills()
 	/* Dash */
 	m_Dash.isUsed = false;
 	m_Dash.dCurTime = 0.0;
-	m_Dash.dOriginCoolTime = 3.0;
+	m_Dash.dOriginCoolTime = 2.0;
 	m_Dash.dCoolTime = 0.0;
-	m_Dash.dDuration = 0.15;
+	m_Dash.dDuration = 0.1;
+	m_Dash.fLimitVelocity = 10.f;
+	m_Dash.fSpeed = 50.f;
 
 	return S_OK;
 }
@@ -302,7 +301,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// jump, SPACE
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
-		m_pTransformCom->Jump(6.f, dTimeDelta);
+		m_pTransformCom->Jump(4.f, dTimeDelta);
 	}
 	// dash, Lshift
 	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_DOWN))
@@ -339,7 +338,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			_float fCurrentFramePercent = (_float)pAnimation->Get_CurrentAnimationFrame() / pAnimation->Get_AnimationFrames();
 
 			// 실제 게임이랑 속도 맞춤.
-			if (fCurrentFramePercent >= 0.3f)
+			if (fCurrentFramePercent >= 0.35f)
 			{
 				_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
 				// if Attack Right
@@ -495,7 +494,7 @@ void CPlayer::Dash(_double dTimeDelta)
 	{
 		// 초기화
 		m_pTransformCom->Set_LimitVelocity(1.f);
-		m_pTransformCom->Set_Speed(15.f);
+		m_pTransformCom->Set_Speed(m_fSpeed);
 		m_Dash.isUsed = false;
 		m_Dash.dCurTime = 0.0;
 		m_Dash.dCoolTime = m_Dash.dOriginCoolTime;
@@ -614,11 +613,11 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pKatana);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTransformCom);
 	Safe_Release(m_pPlayerCameraCom);
 }

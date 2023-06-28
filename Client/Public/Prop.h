@@ -6,7 +6,6 @@ BEGIN(Engine)
 class CModel;
 class CShader;
 class CRenderer;
-class CTransform;
 END
 
 BEGIN(Client)
@@ -38,7 +37,6 @@ private:
 	CModel* m_pModelCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };
-	CTransform* m_pTransformCom = { nullptr };
 
 public:
 	HRESULT Add_Components(PROPDESC PropDesc);

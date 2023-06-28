@@ -29,8 +29,10 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
+	if (FAILED(__super::Initialize(&TransformDesc)))
 		return E_FAIL;
+
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
@@ -79,6 +81,8 @@ HRESULT CBackGround::Render()
 
 	m_pShaderCom->Begin(0);
 
+	m_pVIBufferCom->Render();
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 	
@@ -92,16 +96,6 @@ HRESULT CBackGround::Add_Components()
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Renderer)");
-		return E_FAIL;
-	}
-		
-
-	/* For.Com_Transform */
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
-	{
-		MSG_BOX("Failed BackGround Add_Component : (Com_Transform)");
 		return E_FAIL;
 	}
 
@@ -183,5 +177,4 @@ void CBackGround::Free()
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTransformCom);	
 }

@@ -32,7 +32,8 @@ HRESULT CProp::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(__super::Initialize(pArg)))
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
+	if (FAILED(__super::Initialize(&TransformDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Components(PropDesc)))
@@ -87,18 +88,6 @@ HRESULT CProp::Add_Components(PROPDESC PropDesc)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-
-	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 5.f;
-	TransformDesc.dRotationPerSec = 3.f;
-
-	/* For.Com_Transform */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-	{
-		MSG_BOX("Failed CProp Add_Component : (Com_Transform)");
-		return E_FAIL;
-	}
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, PropDesc.pModelPrototypeTag,
@@ -172,5 +161,4 @@ void CProp::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTransformCom);
 }

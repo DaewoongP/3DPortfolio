@@ -23,8 +23,7 @@ CTransform::CTransform(const CTransform& rhs)
 	, m_fGroundY(rhs.m_fGroundY)
 	, m_fOriginGroundY(rhs.m_fOriginGroundY)
 	, m_isJumping(rhs.m_isJumping)
-	, m_fAirResistance(rhs.m_fAirResistance)
-	, m_fGroundResistance(rhs.m_fGroundResistance)
+	, m_fResistance(rhs.m_fResistance)
 {
 }
 
@@ -90,15 +89,8 @@ void CTransform::Tick(_double dTimeDelta)
 		XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vGravity) * m_fMass);
 
 	// 저항 F = -K * V
-	_float fResistance = 0.f;
-
-	if (true == m_isJumping)
-		fResistance = m_fAirResistance;
-	else
-		fResistance = m_fGroundResistance;
-
 	XMStoreFloat3(&m_vForce, 
-		XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vVelocity) * fResistance * -1.f);
+		XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vVelocity) * m_fResistance * -1.f);
 
 	// 가속도  A = F / M
 	XMStoreFloat3(&m_vAccel,
@@ -143,27 +135,25 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 
 	// 움직일수 있는지 체크
 	// X,Z로만 체크.
-	isMove = m_pNavigation->Is_Move(vXZPosition, &vLineStartPoint, &vLineDirection, &vNormal);
+	isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal);
+	_uint iExcept = { 0 };
 
-	if (false == isMove)
+	while (false == isMove)
 	{
-		// 움직일 수 있으면 직선의 방정식 교점을 통해서 그 위치로부터 슬라이딩벡터를 추가하여 처리.
-		// 그럼 못움직일때의 선분 벡터도 구해와야함.
-		
-		CCalculator* pCalculator = CCalculator::GetInstance();
-		Safe_AddRef(pCalculator);
-		// 기울기, Z절편
-		_float fA = 0.f;
-		_float fB = 0.f;
-
-		pCalculator->VectorToLineXZ(XMLoadFloat3(&vLineStartPoint), XMLoadFloat3(&vLineDirection), &fA, &fB);
+		vDir *= 0.99f;
 
 		vXZPosition = vXZOriginPosition +
-			(vDir - XMLoadFloat3(&vNormal) * 
-			(XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) * 
+			(vDir - XMLoadFloat3(&vNormal) *
+				(XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) *
 			XMVectorGetX(XMVector3Length(vXZVelocity));
 
-		Safe_Release(pCalculator);
+		isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal);
+
+		if (++iExcept > 100)
+		{
+			vXZPosition = vXZOriginPosition;
+			break;
+		}
 	}
 
 	_vector vMovedPosition = XMVectorSet(

@@ -6,7 +6,6 @@ BEGIN(Engine)
 class CShader;
 class CTexture;
 class CRenderer;
-class CTransform;
 class CNavigation;
 class CVIBuffer_Terrain;
 END
@@ -35,7 +34,6 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
 	CRenderer*			m_pRendererCom = { nullptr };
-	CTransform*			m_pTransformCom = { nullptr };
 	CNavigation*		m_pNavigationCom = { nullptr };
 	CVIBuffer_Terrain*	m_pBufferCom = { nullptr };
 

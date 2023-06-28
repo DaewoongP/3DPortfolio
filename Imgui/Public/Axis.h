@@ -6,7 +6,6 @@
 BEGIN(Engine)
 class CShader;
 class CRenderer;
-class CTransform;
 class CVIBuffer_Line;
 END
 
@@ -38,7 +37,6 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CVIBuffer_Line*			m_pLineCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
-	CTransform*				m_pTransformCom = { nullptr };
 
 private:
 	_float		m_fDistance = { 0 };

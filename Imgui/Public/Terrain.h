@@ -7,7 +7,6 @@ class CShader;
 class CTexture;
 class CCollider;
 class CRenderer;
-class CTransform;
 class CVIBuffer_Cell;
 class CVIBuffer_Terrain;
 END
@@ -51,7 +50,6 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
-	CTransform*				m_pTransformCom = { nullptr };
 	CVIBuffer_Terrain*		m_pTerrainCom = { nullptr };
 
 	CShader*				m_pCellShaderCom = { nullptr };

@@ -41,5 +41,4 @@ HRESULT CDummy::Render()
 void CDummy::Free()
 {
 	__super::Free();
-	Safe_Release(m_pTransformCom);
 }

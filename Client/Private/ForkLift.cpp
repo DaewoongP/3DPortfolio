@@ -2,12 +2,12 @@
 #include "GameInstance.h"
 
 CForkLift::CForkLift(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CGameObject(pDevice, pContext)
+	: CPart(pDevice, pContext)
 {
 }
 
 CForkLift::CForkLift(const CForkLift & rhs)
-	: CGameObject(rhs)
+	: CPart(rhs)
 {
 }
 
@@ -21,13 +21,24 @@ HRESULT CForkLift::Initialize_Prototype()
 
 HRESULT CForkLift::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
+	if (FAILED(__super::Initialize(&TransformDesc)))
+		return E_FAIL;
+
+	if (FAILED(Initialize_ParentMatrix(*reinterpret_cast<PARENTMATRIXDESC*>(pArg))))
 		return E_FAIL;
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;	
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(7.f, 0.f, 15.f, 1.f));
+	m_pTransformCom->Set_Scale(_float3(100.f, 100.f, 100.f));
+
+	return S_OK;
+}
+
+HRESULT CForkLift::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
+{
+	m_ParentMatrixDesc = ParentDesc;
 
 	return S_OK;
 }
@@ -35,6 +46,8 @@ HRESULT CForkLift::Initialize(void* pArg)
 void CForkLift::Tick(_double TimeDelta)
 {
  	__super::Tick(TimeDelta);
+
+	m_pModelCom->Play_Animation(TimeDelta);
 }
 
 void CForkLift::Late_Tick(_double TimeDelta)
@@ -77,17 +90,6 @@ HRESULT CForkLift::Add_Components()
 		return E_FAIL;
 	}
 
-	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.dSpeedPerSec = 5.f;
-	TransformDesc.dRotationPerSec = 3.f;
-	/* For.Com_Transform */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
-	{
-		MSG_BOX("Failed ForkLift Add_Component : (Com_Transform)");
-		return E_FAIL;
-	}
-
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
@@ -109,13 +111,14 @@ HRESULT CForkLift::Add_Components()
 
 HRESULT CForkLift::SetUp_ShaderResources()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+	// Part의 경우 월드행렬을 다 저장된거로 던져야함.
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
 
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix",
 		pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 
@@ -123,7 +126,7 @@ HRESULT CForkLift::SetUp_ShaderResources()
 		pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);	
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -160,5 +163,4 @@ void CForkLift::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pTransformCom);
 }

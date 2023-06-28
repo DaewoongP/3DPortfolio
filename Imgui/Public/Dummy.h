@@ -4,7 +4,6 @@
 
 BEGIN(Engine)
 class CCollider;
-class CTransform;
 END
 
 BEGIN(Tool)
@@ -59,7 +58,6 @@ public:
 	void Set_ColliderCom(class CCollider* pCollider) { m_pColliderCom = pCollider; }
 
 protected:
-	CTransform*				m_pTransformCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 
 protected:

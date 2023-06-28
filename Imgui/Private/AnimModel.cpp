@@ -26,7 +26,11 @@ HRESULT CAnimModel::Initialize(void* pArg)
     else
         return E_FAIL;
 
-	if (FAILED(__super::Initialize(pArg)))
+    CTransform::TRANSFORMDESC TransformDesc;
+    TransformDesc.dSpeedPerSec = 10.f;
+    TransformDesc.dRotationPerSec = 5.f;
+
+	if (FAILED(__super::Initialize(&TransformDesc)))
         return E_FAIL;
 
 	if (FAILED(Add_Component(m_ObjectDesc)))
@@ -81,17 +85,6 @@ HRESULT CAnimModel::Add_Component(OBJECTDESC ObjectDesc)
         TEXT("Prototype_Component_Renderer"),
         TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
         return E_FAIL;
-
-    CTransform::TRANSFORMDESC TransformDesc;
-    TransformDesc.dSpeedPerSec = 10.f;
-    TransformDesc.dRotationPerSec = 5.f;
-    if (FAILED(__super::Add_Component(LEVEL_TOOL,
-        TEXT("Prototype_Component_Transform"),
-        TEXT("Com_Transform"), reinterpret_cast<CComponent**>(&m_pTransformCom), &TransformDesc)))
-    {
-        MSG_BOX("Failed CAnimModel Add_Component : (Com_Transform)");
-        return E_FAIL;
-    }
 
     if (FAILED(__super::Add_Component(LEVEL_TOOL,
         TEXT("Prototype_Component_Shader_AnimModel"),
