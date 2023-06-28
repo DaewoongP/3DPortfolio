@@ -23,6 +23,8 @@ HRESULT CWindow_Navigation::Initialize(void* pArg)
 
 	m_PickCellBuffers.clear();
 
+	ZEROMEM(&m_eCurrentCellFlag);
+
 	return S_OK;
 }
 
@@ -65,6 +67,80 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 		if (true == m_bPickNavigation)
 		{
 			MODELWINDOW->Set_Picking(false);
+		}
+	}
+
+	if (true == m_bPickNavigation)
+	{
+		m_isMoveCell = CELL_MOVE & m_eCurrentCellFlag;
+		m_isNullCell = CELL_NULL & m_eCurrentCellFlag;
+		m_isWallCell = CELL_WALL & m_eCurrentCellFlag;
+		m_isClimbCell = CELL_CLIMB & m_eCurrentCellFlag;
+		m_isFallCell = CELL_FALL & m_eCurrentCellFlag;
+
+		if (ImGui::Checkbox("Move", &m_isMoveCell))
+		{
+			// true면 추가 false면 해제
+			if (m_isMoveCell)
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_MOVE);
+			}
+			else
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_MOVE);
+			}
+		}
+
+		SameLine();
+		if (ImGui::Checkbox("Null", &m_isNullCell))
+		{
+			if (m_isNullCell)
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_NULL);
+			}
+			else
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_NULL);
+			}
+		}
+
+		SameLine();
+		if (ImGui::Checkbox("Wall", &m_isWallCell))
+		{
+			if (m_isWallCell)
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_WALL);
+			}
+			else
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_WALL);
+			}
+		}
+
+		SameLine();
+		if (ImGui::Checkbox("Climb", &m_isClimbCell))
+		{
+			if (m_isClimbCell)
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_CLIMB);
+			}
+			else
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_CLIMB);
+			}
+		}
+
+		SameLine();
+		if (ImGui::Checkbox("Fall", &m_isFallCell))
+		{
+			if (m_isFallCell)
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_FALL);
+			}
+			else
+			{
+				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_FALL);
+			}
 		}
 	}
 
@@ -176,6 +252,8 @@ HRESULT CWindow_Navigation::Pick_Terrain()
 
 			m_iCurrentPickIndex = CCell::POINT_A;
 
+			m_eCellFlags.push_back(m_eCurrentCellFlag);
+
 			Remake_Cells();
 		}
 	}
@@ -189,6 +267,7 @@ HRESULT CWindow_Navigation::CurrentNavigationPosition()
 	if (ImGui::InputFloat3("Cell A", reinterpret_cast<_float*>(&m_vCell[0]), "%.2f") && m_bCellModifyMode)
 	{
 		m_Cells[m_iCurrentListBoxIndex][0] = m_vCell[0];
+		m_eCellFlags[m_iCurrentListBoxIndex] = m_eCurrentCellFlag;
 		CCWSort_Cell(m_Cells[m_iCurrentListBoxIndex]);
 		Remake_Cells();
 	}
@@ -196,6 +275,7 @@ HRESULT CWindow_Navigation::CurrentNavigationPosition()
 	if (ImGui::InputFloat3("Cell B", reinterpret_cast<_float*>(&m_vCell[1]), "%.2f") && m_bCellModifyMode)
 	{
 		m_Cells[m_iCurrentListBoxIndex][1] = m_vCell[1];
+		m_eCellFlags[m_iCurrentListBoxIndex] = m_eCurrentCellFlag;
 		CCWSort_Cell(m_Cells[m_iCurrentListBoxIndex]);
 		Remake_Cells();
 	}
@@ -203,6 +283,7 @@ HRESULT CWindow_Navigation::CurrentNavigationPosition()
 	if (ImGui::InputFloat3("Cell C", reinterpret_cast<_float*>(&m_vCell[2]), "%.2f") && m_bCellModifyMode)
 	{
 		m_Cells[m_iCurrentListBoxIndex][2] = m_vCell[2];
+		m_eCellFlags[m_iCurrentListBoxIndex] = m_eCurrentCellFlag;
 		CCWSort_Cell(m_Cells[m_iCurrentListBoxIndex]);
 		Remake_Cells();
 	}
@@ -268,7 +349,10 @@ HRESULT CWindow_Navigation::Delete_Cell()
 			--m_iCurrentListBoxIndex;
 
 		if (m_Cells.size() > 0)
+		{
 			memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
+			m_eCellFlags[m_iCurrentListBoxIndex] = m_eCurrentCellFlag;
+		}
 
 		m_pTerrain->RemakeCells(m_Cells);
 	}

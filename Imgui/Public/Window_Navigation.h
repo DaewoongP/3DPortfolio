@@ -48,6 +48,16 @@ private:
 
 	_bool							m_isCellPicked = { false };
 	_float4							m_vPickPos;
+	
+private:
+	// 셀플래그를 담고있는 벡터 컨테이너.
+	vector<CELLFLAG>				m_eCellFlags;
+	CELLFLAG						m_eCurrentCellFlag;
+	_bool							m_isMoveCell = { false };
+	_bool							m_isNullCell = { false };
+	_bool							m_isWallCell = { false };
+	_bool							m_isClimbCell = { false };
+	_bool							m_isFallCell = { false };
 
 private:
 	HRESULT Pick_Navigation(_double dTimeDelta);

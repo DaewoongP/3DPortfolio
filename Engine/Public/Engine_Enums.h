@@ -12,24 +12,18 @@ namespace Engine
 		ANIM_END
 	};
 
-	enum COMPONENTFLAG
+	enum CELLFLAG
 	{
-		// 16bit flag
-		COM_VIBUFFER	= 0x0001,
-		COM_TRANSFORM	= 0x0002,
-		COM_COLLIDER	= 0x0004,
-		COM_RIGIDBODY	= 0x0008,
-		COM_CAMERA		= 0x0010,
-		COM_RENDERER	= 0x0020,
-		COM_TEXTURE		= 0x0040,
-		TEST_3			= 0x0080,
-		TEST_4			= 0x0100,
-		TEST_5			= 0x0200,
-		TEST_6			= 0x0400,
-		TEST_7			= 0x0800,
-		TEST_8			= 0x1000,
-		TEST_9			= 0x2000,
-		TEST_10			= 0x4000,
-		TEST_11			= 0x8000,
+		// 일반 이동가능한 셀
+		CELL_MOVE		= 0x0001,
+		// 어떠한 상호작용도 존재하지 않고 이동불가능한 셀
+		CELL_NULL		= 0x0002,
+		// 벽을 타고 달릴수있게 처리한 셀
+		CELL_WALL		= 0x0004,
+		// Y값이 아래에서 해당셀로 넘어가려할때 일정Y값이면 오르는 모션과함께
+		// 셀위로 올라가지는 셀
+		CELL_CLIMB		= 0x0008,
+		// 특정 Y값보다 내려가면 사망처리되는 떨어지는셀.
+		CELL_FALL		= 0x0010,
 	};
 }

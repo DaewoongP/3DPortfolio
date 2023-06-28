@@ -133,6 +133,8 @@ HRESULT CPlayer::Add_Component()
 	// Notify SetUp
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Att_R2.Notify"))))
 		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Run.Notify"))))
+		return E_FAIL;
 
 	// Get Model's Bone Index
 	if (FAILED(Find_BoneIndices()))
@@ -250,7 +252,7 @@ HRESULT CPlayer::Initailize_Skills()
 	m_Dash.dCurTime = 0.0;
 	m_Dash.dOriginCoolTime = 2.0;
 	m_Dash.dCoolTime = 0.0;
-	m_Dash.dDuration = 0.1;
+	m_Dash.dDuration = 0.07;
 	m_Dash.fLimitVelocity = 10.f;
 	m_Dash.fSpeed = 50.f;
 
@@ -265,7 +267,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// straight
 	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
-		if (STATE_IDLE == m_eCurState)
+		if (STATE_IDLE == m_eCurState && false == m_pTransformCom->IsJumping())
 		{
 			m_eCurState = STATE_RUN;
 		}
@@ -279,8 +281,10 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// backward
 	if (pGameInstance->Get_DIKeyState(DIK_S))
 	{
-		if (STATE_IDLE == m_eCurState)
+		if (STATE_IDLE == m_eCurState && false == m_pTransformCom->IsJumping())
+		{
 			m_eCurState = STATE_RUN;
+		}
 
 		m_pTransformCom->Go_Backward(dTimeDelta);
 	}
@@ -302,6 +306,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
 		m_pTransformCom->Jump(4.f, dTimeDelta);
+		m_eCurState = STATE_IDLE;
 	}
 	// dash, Lshift
 	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_DOWN))

@@ -140,8 +140,6 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 
 	while (false == isMove)
 	{
-		vDir *= 0.99f;
-
 		vXZPosition = vXZOriginPosition +
 			(vDir - XMLoadFloat3(&vNormal) *
 				(XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) *

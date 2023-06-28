@@ -14,13 +14,13 @@ private:
 	virtual ~CCell() = default;
 
 public:
-	_vector Get_Point(POINT ePoint) {
-		return XMLoadFloat3(&m_vPoints[ePoint]);
-	}
-	
+	CELLFLAG Get_CellFlag() const { return m_eCellFlag; }
+	_vector Get_Point(POINT ePoint) { return XMLoadFloat3(&m_vPoints[ePoint]); }
 	void SetUp_Neighbor(NEIGHBOR eNeighbor, CCell* pNeighbor) {
 		m_iNeighborIndices[eNeighbor] = pNeighbor->m_iIndex;
 	}
+	// 비트플래그 형태. move / null 과 조합.
+	void Set_CellFlag(CELLFLAG eFlag) { m_eCellFlag = eFlag; }
 
 public:
 	HRESULT Initialize(_float3* pPoints, _int iIndex);
@@ -45,6 +45,8 @@ private:
 	_float3					m_vPoints[POINT_END];
 	_float3					m_vNormals[NEIGHBOR_END];
 	_int					m_iNeighborIndices[NEIGHBOR_END] = { -1, -1, -1 };
+
+	CELLFLAG				m_eCellFlag = { CELL_MOVE };
 
 #ifdef _DEBUG
 private:
