@@ -54,6 +54,8 @@ HRESULT CAxis::Initialize(void* pArg)
 
 void CAxis::Tick(_double dTimeDelta)
 {
+	Set_Position();
+
 	__super::Tick(dTimeDelta);
 }
 
@@ -69,8 +71,6 @@ HRESULT CAxis::Render()
 {
 	if (!m_isRendering)
 		return S_OK;
-
-	Set_Position();
 
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;

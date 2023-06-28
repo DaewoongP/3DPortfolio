@@ -267,7 +267,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// straight
 	if (pGameInstance->Get_DIKeyState(DIK_W))
 	{
-		if (STATE_IDLE == m_eCurState && false == m_pTransformCom->IsJumping())
+		if (STATE_IDLE == m_eCurState && 
+			false == m_pTransformCom->IsJumping() &&
+			STATE_ATTACK != m_eCurState)
 		{
 			m_eCurState = STATE_RUN;
 		}
@@ -276,12 +278,15 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_UP))
 	{
-		m_eCurState = STATE_IDLE;
+		if (STATE_ATTACK != m_eCurState)
+			m_eCurState = STATE_IDLE;
 	}
 	// backward
 	if (pGameInstance->Get_DIKeyState(DIK_S))
 	{
-		if (STATE_IDLE == m_eCurState && false == m_pTransformCom->IsJumping())
+		if (STATE_IDLE == m_eCurState && 
+			false == m_pTransformCom->IsJumping() &&
+			STATE_ATTACK != m_eCurState)
 		{
 			m_eCurState = STATE_RUN;
 		}
@@ -290,7 +295,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_S, CInput_Device::KEY_UP))
 	{
-		m_eCurState = STATE_IDLE;
+		if (STATE_ATTACK != m_eCurState)
+			m_eCurState = STATE_IDLE;
 	}
 	// left
 	if (pGameInstance->Get_DIKeyState(DIK_A))
@@ -306,7 +312,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
 		m_pTransformCom->Jump(4.f, dTimeDelta);
-		m_eCurState = STATE_IDLE;
+		if (STATE_ATTACK != m_eCurState)
+			m_eCurState = STATE_IDLE;
 	}
 	// dash, Lshift
 	if (pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_DOWN))
@@ -322,7 +329,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL, CInput_Device::KEY_UP))
 	{
-		m_eCurState = STATE_IDLE;
+		if (STATE_ATTACK != m_eCurState)
+			m_eCurState = STATE_IDLE;
 	}
 
 	// attack, Lbutton, Lclick
@@ -343,6 +351,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			_float fCurrentFramePercent = (_float)pAnimation->Get_CurrentAnimationFrame() / pAnimation->Get_AnimationFrames();
 
 			// 실제 게임이랑 속도 맞춤.
+			// 0.35퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
 			if (fCurrentFramePercent >= 0.35f)
 			{
 				_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();

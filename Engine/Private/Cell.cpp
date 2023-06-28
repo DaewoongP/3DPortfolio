@@ -13,7 +13,7 @@ CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	ZEROMEMSIZE(m_vPoints, sizeof(_float3) * POINT_END);
 }
 
-HRESULT CCell::Initialize(_float3* pPoints, _int iIndex)
+HRESULT CCell::Initialize(CELLFLAG eCellFlag, _float3* pPoints, _int iIndex)
 {
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
 
@@ -23,6 +23,7 @@ HRESULT CCell::Initialize(_float3* pPoints, _int iIndex)
 	}
 
 	m_iIndex = iIndex;
+	m_eCellFlag = eCellFlag;
 
 	_vector		vLine;
 
@@ -119,11 +120,11 @@ HRESULT CCell::Render()
 }
 #endif
 
-CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float3* pPoints, _int iIndex)
+CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CELLFLAG eCellFlag, _float3* pPoints, _int iIndex)
 {
 	CCell* pInstance = new CCell(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(pPoints, iIndex)))
+	if (FAILED(pInstance->Initialize(eCellFlag, pPoints, iIndex)))
 	{
 		MSG_BOX("Failed to Created CCell");
 		Safe_Release(pInstance);

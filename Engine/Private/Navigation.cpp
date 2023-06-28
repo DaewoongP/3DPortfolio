@@ -40,9 +40,13 @@ HRESULT CNavigation::Initialize_Prototype(const _tchar* pNavigationFilePath)
 
 	for (_uint i = 0; i < iSize; ++i)
 	{
+		CELLFLAG eCellFlag;
+
+		ReadFile(hFile, &eCellFlag, sizeof(CELLFLAG), &dwByte, nullptr);
+		
 		ReadFile(hFile, vPoints, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
 
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, (_int)m_Cells.size());
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, eCellFlag, vPoints, (_int)m_Cells.size());
 		if (nullptr == pCell)
 			return E_FAIL;
 

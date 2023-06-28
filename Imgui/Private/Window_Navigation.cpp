@@ -73,7 +73,6 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 	if (true == m_bPickNavigation)
 	{
 		m_isMoveCell = CELL_MOVE & m_eCurrentCellFlag;
-		m_isNullCell = CELL_NULL & m_eCurrentCellFlag;
 		m_isWallCell = CELL_WALL & m_eCurrentCellFlag;
 		m_isClimbCell = CELL_CLIMB & m_eCurrentCellFlag;
 		m_isFallCell = CELL_FALL & m_eCurrentCellFlag;
@@ -88,19 +87,6 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 			else
 			{
 				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_MOVE);
-			}
-		}
-
-		SameLine();
-		if (ImGui::Checkbox("Null", &m_isNullCell))
-		{
-			if (m_isNullCell)
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_NULL);
-			}
-			else
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_NULL);
 			}
 		}
 
@@ -432,9 +418,12 @@ HRESULT CWindow_Navigation::NavigationWrite_File(const _tchar* pPath)
 	
 	_uint iSize = (_uint)m_Cells.size();
 	WriteFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
-	for (auto pCell : m_Cells)
-		WriteFile(hFile, pCell, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
 
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		WriteFile(hFile, &m_eCellFlags[i], sizeof(CELLFLAG), &dwByte, nullptr);
+		WriteFile(hFile, m_Cells[i], sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
+	}
 	
 	CloseHandle(hFile);
 
@@ -479,6 +468,9 @@ HRESULT CWindow_Navigation::NavigationRead_File(const _tchar* pFileName)
 
 	for (_uint i = 0; i < iSize; ++i)
 	{
+		CELLFLAG eCellFlag;
+		ReadFile(hFile, &eCellFlag, sizeof(CELLFLAG), &dwByte, nullptr);
+
 		_float3* pCell = New _float3[CCell::POINT_END];
 		ReadFile(hFile, pCell, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
 
@@ -487,6 +479,8 @@ HRESULT CWindow_Navigation::NavigationRead_File(const _tchar* pFileName)
 		m_CellIndices.push_back(pIndex);
 
 		m_Cells.push_back(pCell);
+
+		m_eCellFlags.push_back(eCellFlag);
 
 		m_iCurrentPickIndex = 0;
 

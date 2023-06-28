@@ -19,11 +19,9 @@ public:
 	void SetUp_Neighbor(NEIGHBOR eNeighbor, CCell* pNeighbor) {
 		m_iNeighborIndices[eNeighbor] = pNeighbor->m_iIndex;
 	}
-	// 비트플래그 형태. move / null 과 조합.
-	void Set_CellFlag(CELLFLAG eFlag) { m_eCellFlag = eFlag; }
 
 public:
-	HRESULT Initialize(_float3* pPoints, _int iIndex);
+	HRESULT Initialize(CELLFLAG eCellFlag, _float3* pPoints, _int iIndex);
 
 public:
 	// 포지션을 기반으로 이 셀안에 포지션이 있는지 체크.
@@ -54,7 +52,7 @@ private:
 #endif
 
 public:
-	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float3* pPoints, _int iIndex);
+	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CELLFLAG eCellFlag, _float3* pPoints, _int iIndex);
 	virtual void Free() override;
 };
 
