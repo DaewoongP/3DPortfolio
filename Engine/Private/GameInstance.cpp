@@ -153,6 +153,13 @@ HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const _tchar* pPrototyp
 	return m_pObject_Manager->Add_GameObject(iLevelIndex, pPrototypeTag, pLayerTag, pGameObjectTag, pArg);
 }
 
+CGameObject* CGameInstance::Clone_GameObject(const _tchar* pPrototypeTag, void* pArg)
+{
+	NULL_CHECK_RETURN_MSG(m_pObject_Manager, nullptr, TEXT("Object_Manager NULL"));
+
+	return m_pObject_Manager->Clone_GameObject(pPrototypeTag, pArg);
+}
+
 CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
 {
 	NULL_CHECK_RETURN_MSG(m_pObject_Manager, nullptr, TEXT("Object_Manager NULL"));

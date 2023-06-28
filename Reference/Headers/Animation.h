@@ -14,15 +14,19 @@ public:
 	// 현재 애니메이션 이름 반환
 	const _tchar* Get_AnimationName() const { return m_szName; }
 	// 애니메이션의 프레임 개수 반환
-	_uint Get_AnimationFrames();
-	// 현재 애니메이션의 프레임 반환
-	// 채널 중 키프레임 최대치 기준.
-	_uint Get_CurrentAnimationFrame();
-	vector<NOTIFY> Get_CurrentAnimationNotify() const { return m_AnimationNotify; }
+	_uint Get_AnimationFrames() { return m_iAnimationFrames; }
+	// 채널 중 키프레임 최대치 기준, **현재 애니메이션의 프레임 반환**
+	_uint Get_CurrentAnimationFrame() { return m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]; }
+	vector<NOTIFY> Get_CurrentAnimationNotify() { return m_AnimationNotify; }
 	// 프레임 인덱스에 해당하는 스피드값 설정.
-	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed);
+	void Set_FrameSpeed(_uint iFrameIndex, _float fSpeed) {
+		m_AnimationNotify[iFrameIndex].fSpeed = fSpeed;
+	}
 	// 프레임 인덱스에 해당하는 노티파이 카메라 값 설정
-	void Set_FrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt);
+	void Set_FrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt) {
+		m_AnimationNotify[iFrameIndex].vEye = vEye;
+		m_AnimationNotify[iFrameIndex].vAt = vAt;
+	}
 	void Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex);
 	void Set_Pause(_bool isPause) { m_isPaused = isPause; }
 	void Set_TickPerSecond(_double dMultiply) 

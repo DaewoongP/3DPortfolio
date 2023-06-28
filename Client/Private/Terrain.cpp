@@ -49,7 +49,7 @@ HRESULT CTerrain::Render()
 
     m_pShaderCom->Begin(0);
 
-    m_pBufferCom->Render();
+    //m_pBufferCom->Render();
     
 #ifdef _DEBUG
     m_pNavigationCom->Render();

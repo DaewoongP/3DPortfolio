@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "Part.h"
 #include "Client_Defines.h"
 
 BEGIN(Engine)
@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CKatana final : public CGameObject
+class CKatana final : public CPart
 {
 private:
 	explicit CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

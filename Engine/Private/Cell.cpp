@@ -45,7 +45,7 @@ HRESULT CCell::Initialize(_float3* pPoints, _int iIndex)
 	return S_OK;
 }
 
-_bool CCell::Is_In(_fvector vPosition, _float3* pNormal, _int* pNeighborIndex)
+_bool CCell::Is_In(_fvector vPosition, _Inout_ _float3* pLineStartPos, _Inout_ _float3* pLineToDirection, _Inout_ _float3* pNormal, _Inout_ _int* pNeighborIndex)
 {
 	for (_uint i = 0; i < NEIGHBOR_END; ++i)
 	{
@@ -58,6 +58,25 @@ _bool CCell::Is_In(_fvector vPosition, _float3* pNormal, _int* pNeighborIndex)
 
 			if (-1 == m_iNeighborIndices[i])
 				XMStoreFloat3(pNormal, vNormal);
+
+			switch (i)
+			{
+			case POINT_A:
+				*pLineStartPos = m_vPoints[POINT_A];
+				// ABº¤ÅÍ
+				XMStoreFloat3(pLineToDirection, XMLoadFloat3(&m_vPoints[POINT_B]) - XMLoadFloat3(&m_vPoints[POINT_A]));
+				break;
+			case POINT_B:
+				*pLineStartPos = m_vPoints[POINT_B];
+				// BCº¤ÅÍ
+				XMStoreFloat3(pLineToDirection, XMLoadFloat3(&m_vPoints[POINT_C]) - XMLoadFloat3(&m_vPoints[POINT_B]));
+				break;
+			case POINT_C:
+				*pLineStartPos = m_vPoints[POINT_C];
+				// CAº¤ÅÍ
+				XMStoreFloat3(pLineToDirection, XMLoadFloat3(&m_vPoints[POINT_A]) - XMLoadFloat3(&m_vPoints[POINT_C]));
+				break;
+			}
 
 			return false;
 		}

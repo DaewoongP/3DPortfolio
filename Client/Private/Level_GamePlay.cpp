@@ -11,8 +11,7 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Layer_Katana(TEXT("Layer_Katana")), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("Layer_Props")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("Layer_Props")), E_FAIL);
 	
 	
 	// 디버깅용 카메라 및 객체.. 등등
@@ -52,28 +51,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Katana(const _tchar* pLayerTag)
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Katana"), pLayerTag, TEXT("GameObject_Katana"))))
-	{
-		MSG_BOX("Failed Add_GameObject : (GameObject_Katana)");
-		return E_FAIL;
-	}
-
-	Safe_Release(pGameInstance);
-
-	return S_OK;
-}
-
 HRESULT CLevel_GamePlay::Ready_Layer_Props(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\Stage1.Map"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\StateTest.Map"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
@@ -110,11 +93,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props(const _tchar* pLayerTag)
 			return E_FAIL;
 		}
 
-		_float3 vScale;
-		_float3 vRotation;
 		// Object State
-		ReadFile(hFile, &(vScale), sizeof(_float3), &dwByte, nullptr);
-		ReadFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(PropDesc.vScale), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(PropDesc.vRotation), sizeof(_float3), &dwByte, nullptr);
 		ReadFile(hFile, &(PropDesc.vPosition), sizeof(_float4), &dwByte, nullptr);
 
 		if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,

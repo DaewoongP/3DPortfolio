@@ -41,6 +41,9 @@ private:
 	CNavigation*			m_pNavigationCom = { nullptr };
 
 private:
+	unordered_map<const _tchar*, class CPart*> m_PlayerParts;
+
+private:
 	// 채널의 인덱스 값을 가지고 있음.
 	_uint					m_iWeaponR = { 0 };
 	// 마우스 감도
@@ -61,6 +64,7 @@ private:
 
 private:
 	HRESULT Add_Component();
+	HRESULT Add_Parts();
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
 	HRESULT Initailize_Skills();

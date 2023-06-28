@@ -136,6 +136,23 @@ HRESULT CWindow_Model::Select_ModelFiles()
 
 HRESULT CWindow_Model::Setting_Transform()
 {
+	// 임시 삭제 기능.
+	if (ImGui::Button("File Delete"))
+	{
+		string Path = "C:/Users/msi/Desktop/git/3DFramework/Resources/ParsingData/NonAnim/";
+		string Name = m_NonAnimModelNames[m_iCur_Mesh];
+		string ext = ".dat";
+		Path += Name;
+		Path += ext;
+		filesystem::path tPath(Path.c_str());
+		
+		if (false == std::filesystem::remove(tPath))
+			MSG_BOX("Failed");
+		else
+			MSG_BOX("Deleted");
+	}
+
+
 	SetNextItemWidth(300.f);
 	if (InputFloat3("Scale", reinterpret_cast<_float*>(&m_vScale)))
 	{

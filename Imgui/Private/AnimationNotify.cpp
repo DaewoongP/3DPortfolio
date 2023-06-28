@@ -21,7 +21,9 @@ void CAnimationNotify::Set_CurrentAnimationObject(CAnimModel* pAnimDummy, CModel
 
 	m_FrameNotify.clear();
 	m_SetFrames.clear();
-	m_FrameNotify = m_pCurrentModelCom->Get_CurrentAnimationNotify();
+	m_pCurrentAnimationCom = m_pCurrentModelCom->Get_Animation();
+
+	m_FrameNotify = m_pCurrentAnimationCom->Get_CurrentAnimationNotify();
 	m_SetFrames.resize(m_FrameNotify.size());
 
 	for (auto& Notify : m_FrameNotify)
@@ -53,7 +55,7 @@ HRESULT CAnimationNotify::Initialize(void* pArg)
 void CAnimationNotify::Tick(_double dTimeDelta)
 {
 	// 사운드, 파티클, 이펙트, 카메라 등등의 처리
-	if (nullptr != m_pCurrentModelCom && ImGui::BeginTabBar("Notify"))
+	if (nullptr != m_pCurrentAnimationCom && ImGui::BeginTabBar("Notify"))
 	{
 		if (ImGui::BeginTabItem("Speed"))
 		{
@@ -128,7 +130,7 @@ HRESULT CAnimationNotify::NotifyCamera()
 
 				m_pToolCameraTrans->Set_WorldMatrix(CamMatrix);
 
-				m_pCurrentModelCom->Set_AnimationFrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
+				m_pCurrentAnimationCom->Set_FrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
 			}
 		}
 
@@ -151,7 +153,7 @@ HRESULT CAnimationNotify::NotifyCamera()
 
 				m_pToolCameraTrans->Set_WorldMatrix(CamMatrix);
 
-				m_pCurrentModelCom->Set_AnimationFrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
+				m_pCurrentAnimationCom->Set_FrameCamera(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].vEye, m_FrameNotify[m_iCurrentFrameIndex].vAt);
 			}
 		}
 
@@ -328,7 +330,8 @@ HRESULT CAnimationNotify::NotifySpeed()
 	{
 		if (0 > m_FrameNotify[m_iCurrentFrameIndex].fSpeed)
 			m_FrameNotify[m_iCurrentFrameIndex].fSpeed = 0.1f;
-		m_pCurrentModelCom->Set_AnimationFrameSpeed(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].fSpeed);
+
+		m_pCurrentAnimationCom->Set_FrameSpeed(m_iCurrentFrameIndex, m_FrameNotify[m_iCurrentFrameIndex].fSpeed);
 	}
 
 
@@ -359,8 +362,8 @@ HRESULT CAnimationNotify::InputFrameIndex()
 		m_pCurrentModelCom->Set_CurrentKeyFrameIndex(m_iCurrentFrameIndex);
 	}
 
-	m_iCurrentFrameIndex = m_pCurrentModelCom->Get_CurrentAnimationFrame();
-	m_iFrames = m_pCurrentModelCom->Get_AnimationFrames();
+	m_iCurrentFrameIndex = m_pCurrentAnimationCom->Get_CurrentAnimationFrame();
+	m_iFrames = m_pCurrentAnimationCom->Get_AnimationFrames();
 
 	return S_OK;
 }
@@ -428,7 +431,7 @@ HRESULT CAnimationNotify::NotifySaveButton()
 HRESULT CAnimationNotify::NotifyWrite_File(const _tchar* pPath)
 {
 	m_iAnimationIndex = m_pCurrentAnimDummy->Get_PreToolAnimationIndex();
-	m_iFrames = m_pCurrentModelCom->Get_AnimationFrames();
+	m_iFrames = m_pCurrentAnimationCom->Get_AnimationFrames();
 
 	HANDLE hFile = CreateFile(pPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 

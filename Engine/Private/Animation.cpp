@@ -28,27 +28,6 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	}
 }
 
-_uint CAnimation::Get_AnimationFrames()
-{
-	return m_iAnimationFrames;
-}
-
-_uint CAnimation::Get_CurrentAnimationFrame()
-{
-	return m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex];
-}
-
-void CAnimation::Set_FrameSpeed(_uint iFrameIndex, _float fSpeed)
-{
-	m_AnimationNotify[iFrameIndex].fSpeed = fSpeed;
-}
-
-void CAnimation::Set_FrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt)
-{
-	m_AnimationNotify[iFrameIndex].vEye = vEye;
-	m_AnimationNotify[iFrameIndex].vAt = vAt;
-}
-
 void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameIndex)
 {
 	_uint iChannelIndex = { 0 };

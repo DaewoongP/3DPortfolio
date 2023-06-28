@@ -49,6 +49,9 @@
     <Filter Include="02. GameObjects\Props">
       <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\Parts">
+      <UniqueIdentifier>{c4530ccc-05f5-41f8-946a-eeef06748859}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -101,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Prop.h">
       <Filter>02. GameObjects\Props</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Part.h">
+      <Filter>02. GameObjects\Parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="..\Public\Client_Struct.h">
       <Filter>99. Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Part.cpp">
+      <Filter>02. GameObjects\Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

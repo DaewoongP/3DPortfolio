@@ -2,12 +2,12 @@
 #include "GameInstance.h"
 
 CKatana::CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CPart(pDevice, pContext)
 {
 }
 
 CKatana::CKatana(const CKatana& rhs)
-	: CGameObject(rhs)
+	: CPart(rhs)
 {
 }
 

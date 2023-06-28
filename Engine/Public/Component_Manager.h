@@ -1,10 +1,13 @@
 #pragma once
+#include "Bone.h"
+#include "Mesh.h"
 #include "Model.h"
 #include "Camera.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Collider.h"
 #include "Renderer.h"
+#include "Animation.h"
 #include "Transform.h"
 #include "Navigation.h"
 #include "VIBuffer_Rect.h"

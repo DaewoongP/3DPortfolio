@@ -167,7 +167,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}*/
 
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
-	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
+	
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
 	
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
@@ -213,7 +214,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/MoveTest.Navi")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/StateTest.Navi")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;
@@ -306,6 +307,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag)
 {
+	_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+
 	fs::directory_iterator iter(pPath);
 
 	while (iter != fs::end(iter))
@@ -320,7 +323,7 @@ HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _
 			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
 
 			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, wstrProto.c_str(),
-				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str()))))
+				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str(), PivotMatrix))))
 			{
 				MSG_BOX("Failed Add_Prototype : (Model Data File)");
 				return E_FAIL;

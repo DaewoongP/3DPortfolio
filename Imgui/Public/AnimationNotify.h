@@ -35,6 +35,7 @@ public:
 private:
 	class CAnimModel*	m_pCurrentAnimDummy = { nullptr };
 	class CModel*		m_pCurrentModelCom = { nullptr };
+	class CAnimation*	m_pCurrentAnimationCom = { nullptr };
 	class CNonAnimModel* m_pToolCamera = { nullptr };
 	class CTransform*	m_pToolCameraTrans = { nullptr };
 	// 현재 애니메이션의 인덱스

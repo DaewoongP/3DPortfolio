@@ -1,5 +1,6 @@
 #include "..\Public\Transform.h"
 #include "Navigation.h"
+#include "Calculator.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -135,29 +136,34 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 
 	_bool		isMove = true;
 	_float3		vNormal;
+	_float3		vLineStartPoint, vLineDirection;
+	ZEROMEM(&vNormal);
+	ZEROMEM(&vLineStartPoint);
+	ZEROMEM(&vLineDirection);
 
 	// 움직일수 있는지 체크
 	// X,Z로만 체크.
-	isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal);
+	isMove = m_pNavigation->Is_Move(vXZPosition, &vLineStartPoint, &vLineDirection, &vNormal);
 
-	_uint iExcept = { 0 };
-
-	while (false == isMove)
+	if (false == isMove)
 	{
-		vDir *= 0.99f;
+		// 움직일 수 있으면 직선의 방정식 교점을 통해서 그 위치로부터 슬라이딩벡터를 추가하여 처리.
+		// 그럼 못움직일때의 선분 벡터도 구해와야함.
+		
+		CCalculator* pCalculator = CCalculator::GetInstance();
+		Safe_AddRef(pCalculator);
+		// 기울기, Z절편
+		_float fA = 0.f;
+		_float fB = 0.f;
+
+		pCalculator->VectorToLineXZ(XMLoadFloat3(&vLineStartPoint), XMLoadFloat3(&vLineDirection), &fA, &fB);
 
 		vXZPosition = vXZOriginPosition +
 			(vDir - XMLoadFloat3(&vNormal) * 
 			(XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) * 
 			XMVectorGetX(XMVector3Length(vXZVelocity));
 
-		isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal);
-
-		if (++iExcept > 100)
-		{
-			vXZPosition = vXZOriginPosition;
-			break;
-		}
+		Safe_Release(pCalculator);
 	}
 
 	_vector vMovedPosition = XMVectorSet(

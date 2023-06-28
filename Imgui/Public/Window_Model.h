@@ -53,9 +53,9 @@ private:
 	// 툴에 있는 모든 스태틱 모델 프로토타입을 저장한 맵컨테이너
 	unordered_map<const _tchar*, CComponent*> m_NonAnimModelPrototypes;
 	// 현재 프로토타입이 저장되어있는 맵과 같은 인덱스를 가진 이름을 보관한 벡터 컨테이너
-	vector<const _char*>				m_NonAnimModelNames;
-	// 현재 프로토타입이 저장되어있는 맵과 같은 인덱스를 가진 이름을 보관한 벡터 컨테이너
 	vector<const _char*>				m_AnimModelNames;
+	// 현재 프로토타입이 저장되어있는 맵과 같은 인덱스를 가진 이름을 보관한 벡터 컨테이너
+	vector<const _char*>				m_NonAnimModelNames;
 
 private:
 	HRESULT	Select_ModelFiles();

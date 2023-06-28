@@ -1,5 +1,6 @@
 #include "..\Public\Player.h"
 #include "GameInstance.h"
+#include "Part.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -30,6 +31,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Add_Component()))
+		return E_FAIL;
+
+	if (FAILED(Add_Parts()))
 		return E_FAIL;
 
 	if (FAILED(Initailize_Skills()))
@@ -214,6 +218,23 @@ HRESULT CPlayer::SetUp_ShaderResources()
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Add_Parts()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CPart::PARENTMATRIXDESC ParentMatrixDesc;
+	ZEROMEM(&ParentMatrixDesc);
+
+	
+	CPart* pKatana = static_cast<CPart*>(pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Katana"), &ParentMatrixDesc));
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 
@@ -292,7 +313,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// Crouch, Lcontrol
 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL))
 	{
-		m_eCurState = STATE_CROUCH;
+		if (STATE_ATTACK != m_eCurState)
+			m_eCurState = STATE_CROUCH;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL, CInput_Device::KEY_UP))
 	{
@@ -313,7 +335,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		if (STATE_ATTACK == m_eCurState &&
 			ANIM_LERP != m_eCurrentAnimationFlag)
 		{
-			_float fCurrentFramePercent = (_float)m_pModelCom->Get_CurrentAnimationFrame() / m_pModelCom->Get_AnimationFrames();
+			CAnimation* pAnimation = m_pModelCom->Get_Animation();
+			_float fCurrentFramePercent = (_float)pAnimation->Get_CurrentAnimationFrame() / pAnimation->Get_AnimationFrames();
 
 			// ½ÇÁ¦ °ÔÀÓÀÌ¶û ¼Óµµ ¸ÂÃã.
 			if (fCurrentFramePercent >= 0.3f)

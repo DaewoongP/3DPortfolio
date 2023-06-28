@@ -38,6 +38,8 @@ HRESULT CProp::Initialize(void* pArg)
 	if (FAILED(Add_Components(PropDesc)))
 		return E_FAIL;
 
+	m_pTransformCom->Set_Scale(PropDesc.vScale);
+	m_pTransformCom->Rotation(PropDesc.vRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&PropDesc.vPosition));
 
 	return S_OK;

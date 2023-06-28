@@ -144,7 +144,7 @@ HRESULT CWindow_Navigation::Pick_Terrain()
 		}
 
 		// 컨트롤을 누르고 피킹하면 반올림하여 처리
-		if (m_pGameInstance->Get_DIKeyState(DIK_LCONTROL))
+		if (m_pGameInstance->Get_DIKeyState(DIK_LCONTROL) && false == m_isCellPicked)
 		{
 			m_vPickPos.x = roundf(m_vPickPos.x);
 			m_vPickPos.y = roundf(m_vPickPos.y);

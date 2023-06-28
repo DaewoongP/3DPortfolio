@@ -71,11 +71,11 @@ HRESULT CNavigation::Initialize(void* pArg)
 	return S_OK;
 }
 
-_bool CNavigation::Is_Move(_fvector vPosition, _float3* pNormal)
+_bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pLineStartPos, _Inout_ _float3* pLineToDirection, _Inout_ _float3* pNormal)
 {
 	_int		iNeighborIndex = -1;
 
-	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vPosition, pNormal, &iNeighborIndex))
+	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vPosition, pLineStartPos, pLineToDirection, pNormal, &iNeighborIndex))
 	{
 		return true;
 	}
@@ -88,7 +88,7 @@ _bool CNavigation::Is_Move(_fvector vPosition, _float3* pNormal)
 				if (-1 == iNeighborIndex)
 					return false;
 
-				if (true == m_Cells[iNeighborIndex]->Is_In(vPosition, pNormal, &iNeighborIndex))
+				if (true == m_Cells[iNeighborIndex]->Is_In(vPosition, pLineStartPos, pLineToDirection, pNormal, &iNeighborIndex))
 					break;
 			}
 
@@ -110,7 +110,10 @@ HRESULT CNavigation::Render()
 		return E_FAIL;
 
 	_float4x4		WorldMatrix;
+	
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+
+	WorldMatrix._42 += 0.3f;
 
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);

@@ -17,6 +17,8 @@ public:
 	typedef struct tagPropDesc
 	{
 		_tchar pModelPrototypeTag[MAX_STR] = TEXT("");
+		_float3 vScale = _float3(0.f, 0.f, 0.f);
+		_float3 vRotation = _float3(0.f, 0.f, 0.f);
 		_float4 vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}PROPDESC;
 

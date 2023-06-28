@@ -49,49 +49,9 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
-const _tchar* CModel::Get_AnimationName() const
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_AnimationName();
-}
-
-_uint CModel::Get_AnimationFrames() const
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_AnimationFrames();
-}
-
-_uint CModel::Get_CurrentAnimationFrame() const
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationFrame();
-}
-
-vector<NOTIFY> CModel::Get_CurrentAnimationNotify() const
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationNotify();
-}
-
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();
-}
-
-void CModel::Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed)
-{
-	m_Animations[m_iCurrentAnimIndex]->Set_FrameSpeed(iFrameIndex, fSpeed);
-}
-
-void CModel::Set_AnimationFrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt)
-{
-	m_Animations[m_iCurrentAnimIndex]->Set_FrameCamera(iFrameIndex, vEye, vAt);
-}
-
-void CModel::Set_AnimationPause(_bool isPause)
-{
-	m_Animations[m_iCurrentAnimIndex]->Set_Pause(isPause);
-}
-
-void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
-{
-	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
 void CModel::Set_AnimIndex(_uint iAnimIndex, _bool isLoop)
@@ -106,6 +66,11 @@ void CModel::Set_AnimIndex(_uint iAnimIndex, _bool isLoop)
 	m_iCurrentAnimIndex = iAnimIndex;
 
 	m_Animations[m_iCurrentAnimIndex]->Set_Loop(isLoop);
+}
+
+void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)

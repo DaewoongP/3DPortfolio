@@ -21,24 +21,13 @@ public:
 	// 모델의 애니메이션 개수 반환
 	_uint Get_NumAnimations() const { return m_iNumAnimations; }
 	// 현재 실행중인 애니메이션
-	class CAnimation* Get_Animation() { return m_Animations[m_iCurrentAnimIndex]; }
-	// 현재 실행중인 애니메이션 이름 반환.
-	const _tchar* Get_AnimationName() const;
-	// 현재 애니메이션의 프레임 개수 반환
-	_uint Get_AnimationFrames() const;
-	// 현재 실행중인 애니메이션의 현재 프레임 인덱스를 반환
-	_uint Get_CurrentAnimationFrame() const;
-	// 현재 애니메이션에 설정된 애니메이션 프레임 노티파이 벡터 반환
-	vector<NOTIFY> Get_CurrentAnimationNotify() const;
+	class CAnimation* Get_Animation() const { return m_Animations[m_iCurrentAnimIndex]; }
+	class CAnimation* Get_Animation(_uint iAnimationIndex) const { return m_Animations[iAnimationIndex]; }
 	_float4x4 Get_BoneCombinedTransformationMatrix(_uint iIndex);
-	// 프레임 인덱스에 해당하는 스피드값 설정.
-	void Set_AnimationFrameSpeed(_uint iFrameIndex, _float fSpeed);
-	// 프레임 인덱스에 해당하는 노티파이 카메라 값 설정
-	void Set_AnimationFrameCamera(_uint iFrameIndex, _float4 vEye, _float4 vAt);
-	void Set_AnimationPause(_bool isPause);
-	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
 	// 애니메이션 인덱스 설정하면서 루프도 같이 설정
 	void Set_AnimIndex(_uint iAnimIndex, _bool isLoop = true);
+	// 현재 키프레임을 변경
+	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix);

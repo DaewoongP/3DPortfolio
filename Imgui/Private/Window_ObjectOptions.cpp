@@ -26,9 +26,12 @@ void CWindow_ObjectOptions::Set_CurrentDummy(CDummy::DUMMYTYPE eDummyType, CDumm
 	
 	m_pCurrentModel = dynamic_cast<CModel*>(pDummy->Find_Component(TEXT("Com_Model")));
 
-	m_iNumAnimations = m_pCurrentModel->Get_NumAnimations();
+	if (dynamic_cast<CAnimModel*>(m_pCurrentDummy))
+	{
+		m_iNumAnimations = m_pCurrentModel->Get_NumAnimations();
 
-	m_pAnimationNotify->Set_CurrentAnimationObject(static_cast<CAnimModel*>(m_pCurrentDummy), m_pCurrentModel);
+		m_pAnimationNotify->Set_CurrentAnimationObject(static_cast<CAnimModel*>(m_pCurrentDummy), m_pCurrentModel);
+	}
 }
 
 HRESULT CWindow_ObjectOptions::Initialize(void* pArg)
@@ -91,17 +94,19 @@ HRESULT CWindow_ObjectOptions::AnimationIndex()
 	_itoa_s(m_iNumAnimations - 1, szNum, MAX_STR, 10);
 
 	_int iIndex = m_pCurrentDummy->Get_PreToolAnimationIndex();
-	WCharToChar(m_pCurrentModel->Get_AnimationName(), m_szAnimationName);
+	CAnimation* pCurrentAnimation = m_pCurrentModel->Get_Animation();
 
-	m_iAnimationFrames = m_pCurrentModel->Get_AnimationFrames();
-	m_iCurrentAnimationFrame = m_pCurrentModel->Get_CurrentAnimationFrame();
+	WCharToChar(pCurrentAnimation->Get_AnimationName(), m_szAnimationName);
+
+	m_iAnimationFrames = pCurrentAnimation->Get_AnimationFrames();
+	m_iCurrentAnimationFrame = pCurrentAnimation->Get_CurrentAnimationFrame();
 
 	SetNextItemWidth(100.f);
 	if (ImGui::InputInt("Animation Index", &iIndex))
 	{
 		// 정지버튼 비활성화
 		m_bPauseButton = false;
-		m_pCurrentModel->Set_AnimationPause(false);
+		pCurrentAnimation->Set_Pause(false);
 		// 예외처리
 		if (m_iNumAnimations - 1 < (_uint)iIndex ||
 			0 > iIndex)
@@ -125,12 +130,14 @@ HRESULT CWindow_ObjectOptions::AnimationIndex()
 
 HRESULT CWindow_ObjectOptions::AnimationPause()
 {
+	CAnimation* pCurrentAnimation = m_pCurrentModel->Get_Animation();
+
 	if (!m_bPauseButton)
 	{
 		if (ImGui::Button("Pause"))
 		{
 			m_bPauseButton = true;
-			m_pCurrentModel->Set_AnimationPause(true);
+			pCurrentAnimation->Set_Pause(true);
 		}
 	}
 	else
@@ -138,7 +145,7 @@ HRESULT CWindow_ObjectOptions::AnimationPause()
 		if (ImGui::Button("Start"))
 		{
 			m_bPauseButton = false;
-			m_pCurrentModel->Set_AnimationPause(false);
+			pCurrentAnimation->Set_Pause(false);
 		}
 	}
 
