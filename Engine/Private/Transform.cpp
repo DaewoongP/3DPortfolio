@@ -49,12 +49,17 @@ void CTransform::Set_Scale(const _float3& vScale)
 	Set_State(STATE::STATE_LOOK, XMVector3Normalize(Get_State(STATE::STATE_LOOK)) * vScale.z);
 }
 
-void CTransform::Use_RigidBody(CNavigation* pNavigation)
+
+void CTransform::Use_RigidBody(CNavigation* pNavigation, _float fLimitVelocity, _float fMass, _float fResistance)
 {
 	m_pNavigation = pNavigation;
 	Safe_AddRef(m_pNavigation);
 
 	m_isRigidBody = true;
+
+	m_fLimitVelocity = fLimitVelocity;
+	m_fMass = fMass;
+	m_fResistance = fResistance;
 }
 
 HRESULT CTransform::Initialize_Prototype()
@@ -70,7 +75,28 @@ HRESULT CTransform::Initialize(void* pArg)
 	ZEROMEM(&m_vVelocity);
 	ZEROMEM(&m_vForce);
 	ZEROMEM(&m_vAccel);
+	ZEROMEM(&m_eCurrentCellFlag);
+	m_fGroundY = 4.f;
+	m_fOriginGroundY = 4.f;
 
+	return S_OK;
+}
+
+void CTransform::Tick(_double dTimeDelta)
+{
+	RigidBody(dTimeDelta);
+
+	__super::Tick(dTimeDelta);
+}
+
+HRESULT CTransform::Reset()
+{
+	// 초기값 세팅으로 변경.
+
+	ZEROMEM(&m_vVelocity);
+	ZEROMEM(&m_vForce);
+	ZEROMEM(&m_vAccel);
+	ZEROMEM(&m_eCurrentCellFlag);
 	m_fGroundY = 4.f;
 	m_fOriginGroundY = 4.f;
 	m_fLimitVelocity = 1.f;
@@ -78,9 +104,9 @@ HRESULT CTransform::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CTransform::Tick(_double dTimeDelta)
+void CTransform::RigidBody(_double dTimeDelta)
 {
-	if (false == m_isRigidBody || 
+	if (false == m_isRigidBody ||
 		nullptr == m_pNavigation)
 		return;
 
@@ -89,7 +115,7 @@ void CTransform::Tick(_double dTimeDelta)
 		XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vGravity) * m_fMass);
 
 	// 저항 F = -K * V
-	XMStoreFloat3(&m_vForce, 
+	XMStoreFloat3(&m_vForce,
 		XMLoadFloat3(&m_vForce) + XMLoadFloat3(&m_vVelocity) * m_fResistance * -1.f);
 
 	// 가속도  A = F / M
@@ -113,8 +139,6 @@ void CTransform::Tick(_double dTimeDelta)
 
 	// 처리한 힘 초기화.
 	ZEROMEM(&m_vForce);
-
-	__super::Tick(dTimeDelta);
 }
 
 void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
@@ -132,10 +156,10 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 	ZEROMEM(&vNormal);
 	ZEROMEM(&vLineStartPoint);
 	ZEROMEM(&vLineDirection);
-
+	
 	// 움직일수 있는지 체크
 	// X,Z로만 체크.
-	isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal);
+	isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal, &m_eCurrentCellFlag);
 	_uint iExcept = { 0 };
 
 	while (false == isMove)
@@ -145,7 +169,7 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 				(XMVector3Dot(vDir, XMLoadFloat3(&vNormal)))) *
 			XMVectorGetX(XMVector3Length(vXZVelocity));
 
-		isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal);
+		isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal, &m_eCurrentCellFlag);
 
 		if (++iExcept > 100)
 		{
@@ -160,7 +184,17 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 		XMVectorGetZ(vXZPosition), 
 		1.f);
 
+	Check_Cell();
+
 	Set_State(STATE_POSITION, vMovedPosition);
+}
+
+void CTransform::Check_Cell()
+{
+	if (m_eCurrentCellFlag & CELL_FALL)
+	{
+		m_fGroundY = -999.f;
+	}
 }
 
 void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)

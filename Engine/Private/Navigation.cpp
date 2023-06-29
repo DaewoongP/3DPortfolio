@@ -72,14 +72,23 @@ HRESULT CNavigation::Initialize(void* pArg)
 	if (nullptr != pArg)
 		memcpy(&m_NaviDesc, pArg, sizeof(NAVIGATIONDESC));
 
+	m_iInitialIndex = m_NaviDesc.iCurrentIndex;
+
 	return S_OK;
 }
 
-_bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal)
+HRESULT CNavigation::Reset()
+{
+	m_NaviDesc.iCurrentIndex = m_iInitialIndex;
+
+	return S_OK;
+}
+
+_bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ CELLFLAG* pFlag)
 {
 	_int		iNeighborIndex = -1;
 
-	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vPosition, pNormal, &iNeighborIndex))
+	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vPosition, pNormal, &iNeighborIndex, pFlag))
 	{
 		return true;
 	}
@@ -92,7 +101,7 @@ _bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal)
 				if (-1 == iNeighborIndex)
 					return false;
 
-				if (true == m_Cells[iNeighborIndex]->Is_In(vPosition, pNormal, &iNeighborIndex))
+				if (true == m_Cells[iNeighborIndex]->Is_In(vPosition, pNormal, &iNeighborIndex, pFlag))
 					break;
 			}
 

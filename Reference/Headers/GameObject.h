@@ -17,10 +17,11 @@ public:
 
 public:
 	virtual HRESULT Initialize_Prototype();
-	virtual HRESULT Initialize(void* pArg);
-	virtual void	Tick(_double dTimeDelta);
-	virtual void	Late_Tick(_double dTimeDelta);
-	virtual HRESULT Render();
+	virtual HRESULT Initialize(void* pArg, CTransform::TRANSFORMDESC* pTransformDesc);
+	virtual void	Tick(_double dTimeDelta) override;
+	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
+	virtual HRESULT Render() override;
+	virtual HRESULT Reset() override;
 
 protected:
 	_tchar		m_pTag[MAX_STR] = TEXT("");

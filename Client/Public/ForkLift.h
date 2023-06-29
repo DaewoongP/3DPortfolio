@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc) override;
 	virtual void Tick(_double TimeDelta) override;
-	virtual void Late_Tick(_double TimeDelta) override;
+	virtual GAMEEVENT Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
 private:

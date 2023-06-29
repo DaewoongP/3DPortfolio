@@ -11,8 +11,9 @@ protected:
 	virtual ~CComposite() = default;
 
 public:
-	virtual void Tick(_double dTimeDelta);
-	virtual void Late_Tick(_double dTimeDelta);
+	virtual void Tick(_double dTimeDelta) override;
+	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
+	virtual HRESULT Reset() override;
 
 public:
 	HRESULT		Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);

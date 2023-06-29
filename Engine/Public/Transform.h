@@ -49,9 +49,12 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
+	virtual HRESULT Reset() override;
 
 public:
+	void RigidBody(_double dTimeDelta);
 	void Check_Move(_vector vCurrentPosition, _vector vVelocity);
+	void Check_Cell();
 	void Move_Direction(_fvector vMoveDir, _double dTimeDelta);
 	void Go_Straight(_double dTimeDelta);
 	void Go_Backward(_double dTimeDelta);
@@ -71,7 +74,7 @@ public:
 	// 점프
 	void Jump(_float fJumpForce, _double dTimeDelta);
 	// 리지드 바디 사용
-	void Use_RigidBody(class CNavigation* pNavigation);
+	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 5.f, _float fResistance = 30.f);
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
 
@@ -79,33 +82,30 @@ private:
 	TRANSFORMDESC	m_TransformDesc;
 	class CNavigation* m_pNavigation = { nullptr };
 
-private:
+private: // 공용적인 변수값
 	_float4x4		m_WorldMatrix;
-
 	_bool			m_isRigidBody = { false };
-
 	_float3			m_vGravity = _float3(0.f, -2.f, 0.f);
 	// 속도
 	_float3			m_vVelocity;
-	// 최대속도 제한
-	_float			m_fLimitVelocity = 0.f;
-
 	// 힘
 	_float3			m_vForce;
-
 	// 가속도
 	_float3			m_vAccel;
-
-	// 질량
-	_float			m_fMass = 5.f;
-	// 저항
-	_float			m_fResistance = 30.f;
-
 	// 바닥 Y값.
 	_float			m_fOriginGroundY = 0.f;
-	// Crouch 처리용
-	_float			m_fGroundY = 0.f;
+	// 현재 셀 상태값
+	CELLFLAG		m_eCurrentCellFlag;
 
+private: // 객체 변수값.
+	// 최대속도 제한
+	_float			m_fLimitVelocity = 0.f;
+	// 질량
+	_float			m_fMass = 0.f;
+	// 저항
+	_float			m_fResistance = 0.f;
+	// Crouch 처리용 (Player)
+	_float			m_fGroundY = 0.f;
 	_bool			m_isJumping = { false };
 
 public:

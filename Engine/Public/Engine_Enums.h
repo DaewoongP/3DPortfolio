@@ -23,6 +23,15 @@ namespace Engine
 		// Y값이 아래에서 해당셀로 넘어가려할때 일정Y값이면 오르는 모션과함께
 		// 셀위로 올라가지는 셀
 		CELL_CLIMB		= 0x0008,
-		
+	};
+
+	// Late Tick이 종료되면 현재 상태를 반환하여 처리
+	enum GAMEEVENT
+	{
+		GAME_NOEVENT,
+		GAME_OBJECT_DEAD,
+		GAME_STAGE_RESET,
+		GAME_STAGE_END,
+		GAME_END
 	};
 }

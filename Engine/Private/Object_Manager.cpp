@@ -136,11 +136,32 @@ void CObject_Manager::Tick(_double dTimeDelta)
 
 void CObject_Manager::Late_Tick(_double dTimeDelta)
 {
+	GAMEEVENT eGameEvent;
+	// 이벤트 플래그를 받아서 상호작용 처리.
+
 	for (_uint i = 0; i < m_iNumLevels; ++i)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			Pair.second->Late_Tick(dTimeDelta);
+			eGameEvent = Pair.second->Late_Tick(dTimeDelta);
+
+			if (GAME_STAGE_RESET == eGameEvent)
+			{
+				Reset_Stage();
+
+				return;
+			}
+		}
+	}
+}
+
+void CObject_Manager::Reset_Stage()
+{
+	for (_uint i = 0; i < m_iNumLevels; ++i)
+	{
+		for (auto& Pair : m_pLayers[i])
+		{
+			Pair.second->ResetStage();
 		}
 	}
 }

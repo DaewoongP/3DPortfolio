@@ -33,7 +33,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_fSpeed, XMConvertToRadians(3.f));
 
-	if (FAILED(__super::Initialize(&TransformDesc)))
+	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Component()))
@@ -77,7 +77,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 }
 
-void CPlayer::Late_Tick(_double dTimeDelta)
+GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
@@ -88,7 +88,17 @@ void CPlayer::Late_Tick(_double dTimeDelta)
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	m_pPlayerCameraCom->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
+	// 아래와 같은 형태로 처리가능.
+	//GAMEEVENT eGameEventFlag = __super::Late_Tick(dTimeDelta);
 	__super::Late_Tick(dTimeDelta);
+
+	// test
+	if (m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1] < -3.f)
+	{
+		return GAME_STAGE_RESET;
+	}
+
+	return GAME_NOEVENT;
 }
 
 HRESULT CPlayer::Render()
@@ -116,6 +126,22 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 	m_pColliderCom->Render();
 #endif // _DEBUG
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Reset()
+{
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
+	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
+	// 모델의 애니메이션 인덱스 설정
+	m_pModelCom->Set_AnimIndex(95);
+	m_eCurState = STATE_IDLE;
+
+	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
 
 	return S_OK;
 }

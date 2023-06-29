@@ -21,13 +21,16 @@ HRESULT CGameObject::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CGameObject::Initialize(void* pArg)
+HRESULT CGameObject::Initialize(void* pArg, CTransform::TRANSFORMDESC* pTransformDesc)
 {
-	if (nullptr != pArg)
-		m_pTransformCom->Set_Desc(*reinterpret_cast<CTransform::TRANSFORMDESC*>(pArg));
+	if (nullptr != pTransformDesc)
+	{
+		m_pTransformCom->Set_Desc(*pTransformDesc);
 
-	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
-	Safe_AddRef(m_pTransformCom);
+		m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
+
+		Safe_AddRef(m_pTransformCom);
+	}
 
 	return S_OK;
 }
@@ -37,14 +40,22 @@ void CGameObject::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 }
 
-void CGameObject::Late_Tick(_double dTimeDelta)
+GAMEEVENT CGameObject::Late_Tick(_double dTimeDelta)
 {
-	__super::Late_Tick(dTimeDelta);
+	return __super::Late_Tick(dTimeDelta);
 }
 
 HRESULT CGameObject::Render()
 {
 	if (FAILED(__super::Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CGameObject::Reset()
+{
+	if (FAILED(__super::Reset()))
 		return E_FAIL;
 
 	return S_OK;

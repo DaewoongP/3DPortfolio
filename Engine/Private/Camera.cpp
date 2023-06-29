@@ -82,12 +82,14 @@ HRESULT CCamera::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CCamera::Late_Tick(_double dTimeDelta)
+GAMEEVENT CCamera::Late_Tick(_double dTimeDelta)
 {
-	NULL_CHECK_RETURN_MSG(m_pPipeLine, , TEXT("PipeLine NULL"));
+	NULL_CHECK_RETURN_MSG(m_pPipeLine, GAME_NOEVENT, TEXT("PipeLine NULL"));
 
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->Get_WorldMatrix_Inverse());
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+
+	return GAME_NOEVENT;
 }
 
 CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

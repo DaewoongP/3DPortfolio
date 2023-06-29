@@ -21,7 +21,7 @@ HRESULT CPart::Initialize_Prototype()
 
 HRESULT CPart::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg, nullptr)))
 		return E_FAIL;
 
 	return S_OK;
@@ -32,7 +32,7 @@ void CPart::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 }
 
-void CPart::Late_Tick(_double dTimeDelta)
+GAMEEVENT CPart::Late_Tick(_double dTimeDelta)
 {
 	_matrix BoneMatrix;
 
@@ -50,7 +50,7 @@ void CPart::Late_Tick(_double dTimeDelta)
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() *
 		BoneMatrix * XMLoadFloat4x4(m_ParentMatrixDesc.pParentWorldMatrix));
 
-	__super::Late_Tick(dTimeDelta);
+	return __super::Late_Tick(dTimeDelta);
 }
 
 HRESULT CPart::Render()

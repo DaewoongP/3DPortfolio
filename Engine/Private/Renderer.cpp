@@ -21,6 +21,18 @@ HRESULT CRenderer::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CRenderer::Reset()
+{
+	for (auto& RenderList : m_RenderObjects)
+	{
+		for (auto& pGameObject : RenderList)
+			Safe_Release(pGameObject);
+		RenderList.clear();
+	}
+
+	return S_OK;
+}
+
 void CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pGameObject)
 {
 	if (eRenderGroup < RENDERGROUP::RENDER_PRIORITY ||

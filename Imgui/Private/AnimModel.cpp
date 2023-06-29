@@ -30,7 +30,7 @@ HRESULT CAnimModel::Initialize(void* pArg)
     TransformDesc.dSpeedPerSec = 10.f;
     TransformDesc.dRotationPerSec = 5.f;
 
-	if (FAILED(__super::Initialize(&TransformDesc)))
+	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
         return E_FAIL;
 
 	if (FAILED(Add_Component(m_ObjectDesc)))
@@ -47,12 +47,14 @@ void CAnimModel::Tick(_double dTimeDelta)
     m_pModelCom->Play_Animation(dTimeDelta);
 }
 
-void CAnimModel::Late_Tick(_double dTimeDelta)
+GAMEEVENT CAnimModel::Late_Tick(_double dTimeDelta)
 {
     __super::Late_Tick(dTimeDelta);
 
     if (nullptr != m_pRendererCom)
         m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+    return GAME_NOEVENT;
 }
 
 HRESULT CAnimModel::Render()

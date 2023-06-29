@@ -33,7 +33,7 @@ HRESULT CProp::Initialize(void* pArg)
 	}
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-	if (FAILED(__super::Initialize(&TransformDesc)))
+	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Components(PropDesc)))
@@ -51,12 +51,14 @@ void CProp::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 }
 
-void CProp::Late_Tick(_double TimeDelta)
+GAMEEVENT CProp::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+	return GAME_NOEVENT;
 }
 
 HRESULT CProp::Render()

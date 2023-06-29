@@ -63,10 +63,31 @@ void CLayer::Tick(_double dTimeDelta)
 		pGameObject.second->Tick(dTimeDelta);
 }
 
-void CLayer::Late_Tick(_double dTimeDelta)
+GAMEEVENT CLayer::Late_Tick(_double dTimeDelta)
+{
+	GAMEEVENT eGameEventFlag;
+	for (auto& pGameObject : m_GameObjects)
+	{
+		eGameEventFlag = pGameObject.second->Late_Tick(dTimeDelta);
+		if (GAME_STAGE_RESET == eGameEventFlag)
+		{
+			// 스테이지 초기화면 바로 리셋
+			return GAME_STAGE_RESET;
+		}
+	}
+
+	return GAME_NOEVENT;
+}
+
+HRESULT CLayer::ResetStage()
 {
 	for (auto& pGameObject : m_GameObjects)
-		pGameObject.second->Late_Tick(dTimeDelta);
+	{
+		if (FAILED(pGameObject.second->Reset()))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 CLayer* CLayer::Create()

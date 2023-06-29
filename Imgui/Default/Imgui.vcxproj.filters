@@ -38,52 +38,52 @@
       <Filter>96. Managers\Window</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Tool.cpp">
-      <Filter>01. ImWindow\Tool &amp; Terrain</Filter>
+      <Filter>01. ImWindow\00. Tool &amp; Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ToolInstance.cpp">
       <Filter>96. Managers\Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
-      <Filter>02. ToolObject\Terrain</Filter>
+      <Filter>02. ToolObject\01. Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Free.cpp">
-      <Filter>02. ToolObject\Camera_Free</Filter>
+      <Filter>02. ToolObject\03. Camera_Free</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Navigation.cpp">
-      <Filter>01. ImWindow\Navigation</Filter>
+      <Filter>01. ImWindow\03. Navigation</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_UI.cpp">
-      <Filter>01. ImWindow\UI</Filter>
+      <Filter>01. ImWindow\05. UI</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiFileDialog.cpp">
       <Filter>98. Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Light.cpp">
-      <Filter>01. ImWindow\Light</Filter>
+      <Filter>01. ImWindow\04. Light</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Axis.cpp">
-      <Filter>02. ToolObject\Axis</Filter>
+      <Filter>02. ToolObject\02. Axis</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Model.cpp">
-      <Filter>01. ImWindow\Model</Filter>
+      <Filter>01. ImWindow\01. Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Window_Object.cpp">
-      <Filter>01. ImWindow\Object</Filter>
+      <Filter>01. ImWindow\02. Object</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimModel.cpp">
-      <Filter>02. ToolObject\DummyObject\Model</Filter>
+      <Filter>02. ToolObject\00. DummyObject\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NonAnimModel.cpp">
-      <Filter>02. ToolObject\DummyObject\Model</Filter>
+      <Filter>02. ToolObject\00. DummyObject\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy.cpp">
-      <Filter>02. ToolObject\DummyObject</Filter>
+      <Filter>02. ToolObject\00. DummyObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Window_ObjectOptions.cpp">
-      <Filter>01. ImWindow\Object\OptionWindow</Filter>
+      <Filter>01. ImWindow\02. Object\OptionWindow</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AnimationNotify.cpp">
-      <Filter>01. ImWindow\Object\OptionWindow\AnimationNotify</Filter>
+      <Filter>01. ImWindow\02. Object\OptionWindow\AnimationNotify</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,22 +124,22 @@
       <Filter>96. Managers\Window</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Tool.h">
-      <Filter>01. ImWindow\Tool &amp; Terrain</Filter>
+      <Filter>01. ImWindow\00. Tool &amp; Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ToolInstance.h">
       <Filter>96. Managers\Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Terrain.h">
-      <Filter>02. ToolObject\Terrain</Filter>
+      <Filter>02. ToolObject\01. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Free.h">
-      <Filter>02. ToolObject\Camera_Free</Filter>
+      <Filter>02. ToolObject\03. Camera_Free</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Navigation.h">
-      <Filter>01. ImWindow\Navigation</Filter>
+      <Filter>01. ImWindow\03. Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_UI.h">
-      <Filter>01. ImWindow\UI</Filter>
+      <Filter>01. ImWindow\05. UI</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiFileDialog.h">
       <Filter>98. Imgui</Filter>
@@ -154,31 +154,31 @@
       <Filter>98. Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Light.h">
-      <Filter>01. ImWindow\Light</Filter>
+      <Filter>01. ImWindow\04. Light</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Axis.h">
-      <Filter>02. ToolObject\Axis</Filter>
+      <Filter>02. ToolObject\02. Axis</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Model.h">
-      <Filter>01. ImWindow\Model</Filter>
+      <Filter>01. ImWindow\01. Model</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Window_Object.h">
-      <Filter>01. ImWindow\Object</Filter>
+      <Filter>01. ImWindow\02. Object</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NonAnimModel.h">
-      <Filter>02. ToolObject\DummyObject\Model</Filter>
+      <Filter>02. ToolObject\00. DummyObject\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimModel.h">
-      <Filter>02. ToolObject\DummyObject\Model</Filter>
+      <Filter>02. ToolObject\00. DummyObject\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy.h">
-      <Filter>02. ToolObject\DummyObject</Filter>
+      <Filter>02. ToolObject\00. DummyObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Window_ObjectOptions.h">
-      <Filter>01. ImWindow\Object\OptionWindow</Filter>
+      <Filter>01. ImWindow\02. Object\OptionWindow</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AnimationNotify.h">
-      <Filter>01. ImWindow\Object\OptionWindow\AnimationNotify</Filter>
+      <Filter>01. ImWindow\02. Object\OptionWindow\AnimationNotify</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -209,47 +209,47 @@
     <Filter Include="02. ToolObject">
       <UniqueIdentifier>{414f2479-5282-4c23-954a-6e4f4668db7e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. ToolObject\Terrain">
-      <UniqueIdentifier>{338d7f44-6e6b-44b5-a14c-a394e65251ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. ShaderFiles">
       <UniqueIdentifier>{a9f8ace1-6aa8-4dff-a346-ddfc6cd6ef47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. ToolObject\Camera_Free">
-      <UniqueIdentifier>{c523fe43-2f3e-414a-a531-9c466dca5235}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. ImWindow\Light">
-      <UniqueIdentifier>{08763a61-47f1-4480-a559-c5cafbb514a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. ImWindow\UI">
-      <UniqueIdentifier>{940470a4-51a9-434b-9968-118ceb59f3f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. ToolObject\Axis">
-      <UniqueIdentifier>{7d914554-17d5-42ef-a0b3-71d9479048ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. ToolObject\DummyObject">
+    <Filter Include="02. ToolObject\00. DummyObject">
       <UniqueIdentifier>{cd3c57c5-f724-44cb-8cd6-d08239b5078a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Model">
-      <UniqueIdentifier>{22ee1db2-a7d9-4979-801f-4e3c7e455b82}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. ImWindow\Tool &amp; Terrain">
-      <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. ToolObject\DummyObject\Model">
+    <Filter Include="02. ToolObject\00. DummyObject\Model">
       <UniqueIdentifier>{88f4677f-1c34-419e-9e5a-b754ffabc18e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Object">
+    <Filter Include="02. ToolObject\01. Terrain">
+      <UniqueIdentifier>{338d7f44-6e6b-44b5-a14c-a394e65251ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ToolObject\02. Axis">
+      <UniqueIdentifier>{7d914554-17d5-42ef-a0b3-71d9479048ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. ToolObject\03. Camera_Free">
+      <UniqueIdentifier>{c523fe43-2f3e-414a-a531-9c466dca5235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\00. Tool &amp; Terrain">
+      <UniqueIdentifier>{1ed5c598-2858-4c14-bcfb-9b2ba9001290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\01. Model">
+      <UniqueIdentifier>{22ee1db2-a7d9-4979-801f-4e3c7e455b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\02. Object">
       <UniqueIdentifier>{705ffff4-2ba7-41ce-9bf8-b88dc8b699b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Navigation">
-      <UniqueIdentifier>{860ed18a-9be6-4a39-89da-c43ce5733179}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. ImWindow\Object\OptionWindow">
+    <Filter Include="01. ImWindow\02. Object\OptionWindow">
       <UniqueIdentifier>{a090a46a-59f3-4e5e-ac17-8a7a1befb87e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. ImWindow\Object\OptionWindow\AnimationNotify">
+    <Filter Include="01. ImWindow\02. Object\OptionWindow\AnimationNotify">
       <UniqueIdentifier>{bbd18bd8-b4cf-404b-a6d9-8edab1682054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\03. Navigation">
+      <UniqueIdentifier>{860ed18a-9be6-4a39-89da-c43ce5733179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\04. Light">
+      <UniqueIdentifier>{08763a61-47f1-4480-a559-c5cafbb514a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. ImWindow\05. UI">
+      <UniqueIdentifier>{940470a4-51a9-434b-9968-118ceb59f3f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

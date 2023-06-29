@@ -48,12 +48,14 @@ void CKatana::Tick(_double dTimeDelta)
 	m_pModelCom->Play_Animation(dTimeDelta, false);
 }
 
-void CKatana::Late_Tick(_double dTimeDelta)
+GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+	return GAME_NOEVENT;
 }
 
 HRESULT CKatana::Render()

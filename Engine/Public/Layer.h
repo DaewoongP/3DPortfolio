@@ -22,7 +22,9 @@ public:
 
 public:
 	void Tick(_double dTimeDelta);
-	void Late_Tick(_double dTimeDelta);
+	GAMEEVENT Late_Tick(_double dTimeDelta);
+
+	HRESULT ResetStage();
 
 private:
 	unordered_map<const _tchar*, class CGameObject*>	m_GameObjects;

@@ -25,32 +25,35 @@
     <Filter Include="02. GameObjects">
       <UniqueIdentifier>{a527309f-c54d-4a88-b17a-74827b92292c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\BackGround">
-      <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97. ShaderFiles">
       <UniqueIdentifier>{c7122d60-1c37-4d7c-b690-fdfc286c14b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\Terrain">
-      <UniqueIdentifier>{e1dfe010-7cfe-4b63-98ae-d83f3b4393db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\FreeCam">
-      <UniqueIdentifier>{8008fbe6-02b5-4a71-8dfb-57073fc91837}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\Player">
-      <UniqueIdentifier>{df0bf52c-230e-4ea0-8d0f-1028bddfee5c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\ForkLift">
       <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\Props">
-      <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\00. Player">
+      <UniqueIdentifier>{df0bf52c-230e-4ea0-8d0f-1028bddfee5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\Parts">
+    <Filter Include="02. GameObjects\00. Player\Katana">
+      <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Parts">
       <UniqueIdentifier>{c4530ccc-05f5-41f8-946a-eeef06748859}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\Player\Katana">
-      <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\98. BackGround">
+      <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. Debug">
+      <UniqueIdentifier>{c5240f45-e1ef-4bfb-b66c-08449eda0c9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. Debug\Terrain">
+      <UniqueIdentifier>{e1dfe010-7cfe-4b63-98ae-d83f3b4393db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. Debug\FreeCam">
+      <UniqueIdentifier>{8008fbe6-02b5-4a71-8dfb-57073fc91837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Props">
+      <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,31 +85,31 @@
       <Filter>01. Levels\01. GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
-      <Filter>02. GameObjects\Terrain</Filter>
+      <Filter>02. GameObjects\99. Debug\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Free.h">
-      <Filter>02. GameObjects\FreeCam</Filter>
+      <Filter>02. GameObjects\99. Debug\FreeCam</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Player.h">
-      <Filter>02. GameObjects\Player</Filter>
+      <Filter>02. GameObjects\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ForkLift.h">
       <Filter>02. GameObjects\ForkLift</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Katana.h">
-      <Filter>02. GameObjects\Player\Katana</Filter>
+      <Filter>02. GameObjects\00. Player\Katana</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>02. GameObjects\BackGround</Filter>
+      <Filter>02. GameObjects\98. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Prop.h">
-      <Filter>02. GameObjects\Props</Filter>
+      <Filter>02. GameObjects\02. Props</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Part.h">
-      <Filter>02. GameObjects\Parts</Filter>
+      <Filter>02. GameObjects\01. Parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,37 +139,37 @@
       <Filter>01. Levels\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>02. GameObjects\BackGround</Filter>
+      <Filter>02. GameObjects\98. BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_GamePlay.cpp">
       <Filter>01. Levels\01. GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
-      <Filter>02. GameObjects\Terrain</Filter>
+      <Filter>02. GameObjects\99. Debug\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Free.cpp">
-      <Filter>02. GameObjects\FreeCam</Filter>
+      <Filter>02. GameObjects\99. Debug\FreeCam</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
-      <Filter>02. GameObjects\Player</Filter>
+      <Filter>02. GameObjects\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
       <Filter>02. GameObjects\ForkLift</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Katana.cpp">
-      <Filter>02. GameObjects\Player\Katana</Filter>
+      <Filter>02. GameObjects\00. Player\Katana</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01. Levels\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Prop.cpp">
-      <Filter>02. GameObjects\Props</Filter>
+      <Filter>02. GameObjects\02. Props</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Client_Struct.h">
       <Filter>99. Headers</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Part.cpp">
-      <Filter>02. GameObjects\Parts</Filter>
+      <Filter>02. GameObjects\01. Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

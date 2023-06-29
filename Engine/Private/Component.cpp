@@ -31,11 +31,17 @@ void CComponent::Tick(_double dTimeDelta)
 {
 }
 
-void CComponent::Late_Tick(_double dTimeDelta)
+GAMEEVENT CComponent::Late_Tick(_double dTimeDelta)
 {
+	return GAME_NOEVENT;
 }
 
 HRESULT CComponent::Render()
+{
+	return S_OK;
+}
+
+HRESULT CComponent::Reset()
 {
 	return S_OK;
 }

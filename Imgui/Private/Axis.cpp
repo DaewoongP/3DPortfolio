@@ -34,7 +34,7 @@ HRESULT CAxis::Initialize_Prototype()
 HRESULT CAxis::Initialize(void* pArg)
 {
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-	if (FAILED(__super::Initialize(&TransformDesc)))
+	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Component()))
@@ -59,12 +59,14 @@ void CAxis::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 }
 
-void CAxis::Late_Tick(_double dTimeDelta)
+GAMEEVENT CAxis::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 	
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+
+	return GAME_NOEVENT;
 }
 
 HRESULT CAxis::Render()

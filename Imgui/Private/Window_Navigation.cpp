@@ -73,8 +73,6 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 	if (true == m_bPickNavigation)
 	{
 		m_isMoveCell = CELL_MOVE & m_eCurrentCellFlag;
-		m_isWallCell = CELL_WALL & m_eCurrentCellFlag;
-		m_isClimbCell = CELL_CLIMB & m_eCurrentCellFlag;
 		m_isFallCell = CELL_FALL & m_eCurrentCellFlag;
 
 		if (ImGui::Checkbox("Move", &m_isMoveCell))
@@ -87,32 +85,6 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 			else
 			{
 				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_MOVE);
-			}
-		}
-
-		SameLine();
-		if (ImGui::Checkbox("Wall", &m_isWallCell))
-		{
-			if (m_isWallCell)
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_WALL);
-			}
-			else
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_WALL);
-			}
-		}
-
-		SameLine();
-		if (ImGui::Checkbox("Climb", &m_isClimbCell))
-		{
-			if (m_isClimbCell)
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_CLIMB);
-			}
-			else
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_CLIMB);
 			}
 		}
 
@@ -326,6 +298,9 @@ HRESULT CWindow_Navigation::Delete_Cell()
 		auto iter = m_Cells.begin();
 		Safe_Delete(m_Cells[m_iCurrentListBoxIndex]);
 		m_Cells.erase(iter + m_iCurrentListBoxIndex);
+
+		auto iterFlag = m_eCellFlags.begin();
+		m_eCellFlags.erase(iterFlag + m_iCurrentListBoxIndex);
 
 		auto iterName = m_CellIndices.begin();
 		Safe_Delete_Array(m_CellIndices[m_iCurrentListBoxIndex]);

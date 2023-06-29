@@ -22,7 +22,7 @@ HRESULT CCamera_Free::Initialize_Prototype()
 
 HRESULT CCamera_Free::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg, nullptr)))
 		return E_FAIL;
 
 	if (FAILED(Add_Component()))
@@ -50,9 +50,11 @@ void CCamera_Free::Tick(_double dTimeDelta)
 	}
 }
 
-void CCamera_Free::Late_Tick(_double dTimeDelta)
+GAMEEVENT CCamera_Free::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
+
+	return GAME_NOEVENT;
 }
 
 HRESULT CCamera_Free::Add_Component()

@@ -54,8 +54,6 @@ private:
 	vector<CELLFLAG>				m_eCellFlags;
 	CELLFLAG						m_eCurrentCellFlag;
 	_bool							m_isMoveCell = { false };
-	_bool							m_isWallCell = { false };
-	_bool							m_isClimbCell = { false };
 	_bool							m_isFallCell = { false };
 
 private:

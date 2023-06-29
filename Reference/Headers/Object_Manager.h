@@ -31,6 +31,7 @@ public:
 public:
 	void	Tick(_double dTimeDelta);
 	void	Late_Tick(_double dTimeDelta);
+	void	Reset_Stage();
 
 private:
 	typedef unordered_map<const _tchar*, class CLayer*>		LAYERS;

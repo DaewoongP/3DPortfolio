@@ -46,7 +46,7 @@ HRESULT CCell::Initialize(CELLFLAG eCellFlag, _float3* pPoints, _int iIndex)
 	return S_OK;
 }
 
-_bool CCell::Is_In(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ _int* pNeighborIndex)
+_bool CCell::Is_In(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ _int* pNeighborIndex, _Inout_ CELLFLAG* pFlag)
 {
 	for (_uint i = 0; i < NEIGHBOR_END; ++i)
 	{
@@ -60,9 +60,13 @@ _bool CCell::Is_In(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ _int* p
 			if (-1 == m_iNeighborIndices[i])
 				XMStoreFloat3(pNormal, vNormal);
 
+			*pFlag = m_eCellFlag;
+
 			return false;
 		}
 	}
+
+	*pFlag = m_eCellFlag;
 
 	return true;
 }

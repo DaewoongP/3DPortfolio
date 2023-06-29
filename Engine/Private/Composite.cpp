@@ -22,10 +22,20 @@ void CComposite::Tick(_double dTimeDelta)
 		Pair.second->Tick(dTimeDelta);
 }
 
-void CComposite::Late_Tick(_double dTimeDelta)
+GAMEEVENT CComposite::Late_Tick(_double dTimeDelta)
 {
 	for (auto& Pair : m_Components)
 		Pair.second->Late_Tick(dTimeDelta);
+
+	return GAME_NOEVENT;
+}
+
+HRESULT CComposite::Reset()
+{
+	for (auto& Pair : m_Components)
+		Pair.second->Reset();
+
+	return S_OK;
 }
 
 HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg)

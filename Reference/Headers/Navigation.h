@@ -23,11 +23,12 @@ private:
 
 public:
 	virtual HRESULT Initialize_Prototype(const _tchar* pNavigationFilePath);
-	virtual HRESULT Initialize(void* pArg);
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Reset() override;
 
 public:
 	// 네비게이션 메쉬 상에서 움직일 수 있는지 체크.
-	_bool Is_Move(_fvector vPosition, _Inout_ _float3* pNormal);
+	_bool Is_Move(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ CELLFLAG* pFlag);
 
 #ifdef _DEBUG
 public:
@@ -37,6 +38,7 @@ public:
 	
 private:
 	NAVIGATIONDESC					m_NaviDesc;
+	_int							m_iInitialIndex = { 0 };
 	vector<class CCell*>			m_Cells;
 
 #ifdef _DEBUG

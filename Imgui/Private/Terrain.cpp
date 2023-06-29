@@ -39,7 +39,7 @@ HRESULT CTerrain::Initialize(void* pArg)
     TransformDesc.dSpeedPerSec = 0.f;
     TransformDesc.dRotationPerSec = 0.f;
 
-    if (FAILED(__super::Initialize(&TransformDesc)))
+    if (FAILED(__super::Initialize(pArg, &TransformDesc)))
         return E_FAIL;
 
     if (FAILED(Add_Component()))
@@ -64,12 +64,14 @@ void CTerrain::Tick(_double dTimeDelta)
 
 }
 
-void CTerrain::Late_Tick(_double dTimeDelta)
+GAMEEVENT CTerrain::Late_Tick(_double dTimeDelta)
 {
     __super::Late_Tick(dTimeDelta);
 
     if (nullptr != m_pRendererCom)
         m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+
+    return GAME_NOEVENT;
 }
 
 HRESULT CTerrain::Render()
