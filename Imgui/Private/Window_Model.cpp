@@ -566,7 +566,7 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 				pDummy->Set_BoundingDesc(eType, &AABBDesc);
 				break;
 			case Engine::CCollider::TYPE_OBB:
-				CBounding_OBB::BOUNDINGOBBDESC OBBDesc = pDummy->Get_OBBDesc();
+				CBounding_OBB::BOUNDINGOBBDESC OBBDesc;
 				ReadFile(hFile, &(OBBDesc), sizeof(CBounding_OBB::BOUNDINGOBBDESC), &dwByte, nullptr);
 				pCollider = static_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_OBB")));
 				pCollider->Set_BoundingDesc(&OBBDesc);

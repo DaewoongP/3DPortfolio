@@ -332,6 +332,11 @@ HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _
 	{
 		const fs::directory_entry& entry = *iter;
 
+		if (fs::is_directory(entry.path()))
+		{
+			Ready_Prototype_Component_ModelData(eType, entry.path().c_str(), pPrototypeTag);
+		}
+
 		if (!lstrcmp(entry.path().extension().c_str(), TEXT(".dat")))
 		{
 			wstring wstrProto = pPrototypeTag;

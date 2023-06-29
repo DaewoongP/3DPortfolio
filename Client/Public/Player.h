@@ -39,7 +39,7 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
 
-private:
+private: // 사실 이거 굳이 가지고 있을 필요는 없음. 이미 컴포넌트로 Tick을 돌고있음,
 	class CKatana*			m_pKatana = { nullptr };
 
 private:

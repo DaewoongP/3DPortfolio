@@ -33,10 +33,7 @@ HRESULT CColProp::Initialize(void* pArg)
 		if (FAILED(__super::Initialize(&PropDesc)))
 			return E_FAIL;
 
-		if (FAILED(Add_Components()))
-			return E_FAIL;
-
-		if (FAILED(SetUp_Collider(ColPropDesc.szColliderFilePath)))
+		if (FAILED(Add_Components(ColPropDesc)))
 			return E_FAIL;
 	}
 
@@ -45,6 +42,7 @@ HRESULT CColProp::Initialize(void* pArg)
 
 void CColProp::Tick(_double TimeDelta)
 {
+	m_pTransformCom->Go_Right(TimeDelta);
 	__super::Tick(TimeDelta);
 }
 
@@ -66,58 +64,42 @@ HRESULT CColProp::Render()
 	return S_OK;
 }
 
-HRESULT CColProp::Add_Components()
+HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 {
-	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
-	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT CColProp::SetUp_Collider(const _tchar* pColliderFilePath)
-{
-	HANDLE hFile = CreateFile(pColliderFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-
-	if (INVALID_HANDLE_VALUE == hFile)
-		return E_FAIL;
-
-	_ulong	dwByte = 0;
-
-	CCollider::TYPE eType;
-	// Current Animation Index
-	ReadFile(hFile, &eType, sizeof(CCollider::TYPE), &dwByte, nullptr);
-
-	switch (eType)
+	_tchar pPrototypeName[MAX_STR] = TEXT("");
+	switch (ColDesc.eColliderType)
 	{
 	case CCollider::TYPE_SPHERE:
-		CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
-		ReadFile(hFile, &SphereDesc, sizeof(CBounding_Sphere::BOUNDINGSPHEREDESC), &dwByte, nullptr);
-		m_pColliderCom->Set_BoundingDesc(&SphereDesc);
+		/* For.Com_Collider */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.SphereDesc)))
+		{
+			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
+			return E_FAIL;
+		}
 		break;
 	case CCollider::TYPE_AABB:
-		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-		ReadFile(hFile, &AABBDesc, sizeof(CBounding_AABB::BOUNDINGAABBDESC), &dwByte, nullptr);
-		m_pColliderCom->Set_BoundingDesc(&AABBDesc);
+		/* For.Com_Collider */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.AABBDesc)))
+		{
+			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
+			return E_FAIL;
+		}
 		break;
 	case CCollider::TYPE_OBB:
-		CBounding_OBB::BOUNDINGOBBDESC OBBDesc;
-		ReadFile(hFile, &OBBDesc, sizeof(CBounding_OBB::BOUNDINGOBBDESC), &dwByte, nullptr);
-		m_pColliderCom->Set_BoundingDesc(&OBBDesc);
+		/* For.Com_Collider */
+		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.OBBDesc)))
+		{
+			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
+			return E_FAIL;
+		}
 		break;
-	default:
-		return E_FAIL;
 	}
-
-	CloseHandle(hFile);
 
 	return S_OK;
 }
-
 
 CColProp* CColProp::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

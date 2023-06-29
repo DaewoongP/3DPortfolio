@@ -7,6 +7,7 @@
 #define			ZEROMEMSIZE(_ptr, _size)		ZeroMemory(_ptr, sizeof _size)
 #define			CharToWChar(_pChar, _pWchar)	MultiByteToWideChar(CP_ACP, 0, _pChar, (int)strlen(_pChar), _pWchar, MAX_PATH);
 #define         WCharToChar(_pWchar, _pChar)    WideCharToMultiByte(CP_ACP, 0, _pWchar, -1, _pChar, MAX_PATH, nullptr, nullptr);
+#define			COLLIDERCOLOR					DirectX::Colors::Gold
 
 ///////////////////////// default Macros /////////////////////////////
 #ifndef			MSG_BOX

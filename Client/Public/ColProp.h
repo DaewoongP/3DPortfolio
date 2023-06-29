@@ -1,9 +1,6 @@
 #pragma once
 #include "Prop.h"
-
-BEGIN(Engine)
-class CCollider;
-END
+#include "Collider.h"
 
 BEGIN(Client)
 
@@ -12,7 +9,10 @@ class CColProp : public CProp
 public:
 	typedef struct tagColPropDesc : public tagPropDesc
 	{
-		const _tchar*	szColliderFilePath = TEXT("");
+		CCollider::TYPE				eColliderType;
+		CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
+		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+		CBounding_OBB::BOUNDINGOBBDESC OBBDesc;
 	}COLPROPDESC;
 
 private:
@@ -28,9 +28,8 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	HRESULT Add_Components();
-	HRESULT SetUp_Collider(const _tchar * pColliderFilePath);
-
+	HRESULT Add_Components(COLPROPDESC ColDesc);
+	
 private:
 	CCollider*		m_pColliderCom = { nullptr };
 

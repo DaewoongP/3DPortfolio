@@ -28,7 +28,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(_fvector vColor = DirectX::Colors::LightGreen);
+	virtual HRESULT Render(_fvector vColor = COLLIDERCOLOR);
 #endif // _DEBUG
 	
 private:
