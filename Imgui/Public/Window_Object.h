@@ -21,6 +21,7 @@ public:
 	}
 	// 현재 오브젝트 리스트에 오브젝트를 추가
 	void Set_Object(CDummy::DUMMYTYPE eType, CGameObject* pObject);
+	void Set_UseCollider(_bool bUseCollider = true) { m_bUseCollider = bUseCollider; }
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
@@ -38,6 +39,9 @@ private:
 	vector<class CGameObject*>	m_Objects[CDummy::DUMMY_END];
 	// 현재 툴에 깔린 오브젝트들의 이름값들.
 	vector<_char*>				m_ObjectNames[CDummy::DUMMY_END];
+
+	// 콜라이더 저장 여부를 확인하기 위한 변수.
+	_bool									m_bUseCollider;
 
 private:
 	HRESULT Select_Objects();

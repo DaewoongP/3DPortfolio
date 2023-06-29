@@ -7,11 +7,14 @@ CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CCollider::CCollider(const CCollider& rhs)
 	: CComponent(rhs)
+	, m_eColliderType(rhs.m_eColliderType)
 {
 }
 
 HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 {
+	m_eColliderType = eColliderType;
+
 	switch (eColliderType)
 	{
 	case TYPE_SPHERE:

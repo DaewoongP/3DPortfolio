@@ -17,6 +17,7 @@ private:
 	virtual ~CCollider() = default;
 
 public:
+	TYPE Get_ColliderType() const { return m_eColliderType; }
 	_float3 Get_BoundingCenterPosition() const { return m_pBounding->Get_CenterPosition(); }
 	void Set_BoundingDesc(void* pBoundingDesc) { m_pBounding->Set_BoundingDesc(pBoundingDesc); }
 
@@ -32,6 +33,7 @@ public:
 	
 private:
 	class CBounding*			m_pBounding = { nullptr };
+	TYPE						m_eColliderType = { TYPE_END };
 
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType);

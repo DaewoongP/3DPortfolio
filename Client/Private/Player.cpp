@@ -92,9 +92,10 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	//GAMEEVENT eGameEventFlag = __super::Late_Tick(dTimeDelta);
 	__super::Late_Tick(dTimeDelta);
 
-	// test
-	if (m_pTransformCom->Get_State(CTransform::STATE_POSITION).m128_f32[1] < -3.f)
+	// Y값이 특정 값 이하로 떨어지면 스테이지 초기화.
+	if (XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) < -10.f)
 	{
+		// 사망처리도 여기서하면 좋을듯.
 		return GAME_STAGE_RESET;
 	}
 

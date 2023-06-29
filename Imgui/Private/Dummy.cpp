@@ -38,7 +38,31 @@ HRESULT CDummy::Render()
 	return S_OK;
 }
 
+void CDummy::Set_BoundingDesc(CCollider::TYPE eType, void* pBoundingDesc)
+{
+	if (nullptr == pBoundingDesc)
+		return;
+
+	m_eColliderType = eType;
+
+	switch (eType)
+	{
+	case Engine::CCollider::TYPE_SPHERE:
+		m_pBoundingSphereDesc = *(CBounding_Sphere::BOUNDINGSPHEREDESC*)(pBoundingDesc);
+		break;
+	case Engine::CCollider::TYPE_AABB:
+		m_pBoundingAABBDesc = *(CBounding_AABB::BOUNDINGAABBDESC*)(pBoundingDesc);
+		break;
+	case Engine::CCollider::TYPE_OBB:
+		m_pBoundingOBBDesc = *(CBounding_OBB::BOUNDINGOBBDESC*)(pBoundingDesc);
+		break;
+	}
+
+}
+
 void CDummy::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pColliderCom);
 }

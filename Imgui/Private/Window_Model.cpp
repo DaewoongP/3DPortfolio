@@ -411,6 +411,35 @@ HRESULT CWindow_Model::MapWrite_File(const _tchar* pPath)
 		WriteFile(hFile, &(vScale), sizeof(_float3), &dwByte, nullptr);
 		WriteFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
 		WriteFile(hFile, &(vTransform), sizeof(_float4), &dwByte, nullptr);
+
+		// Collider
+		_bool bUseCollider = pDummy->Get_ColliderInMap();
+		const CCollider* pCollider = pDummy->Get_ColliderCom();
+
+		WriteFile(hFile, &bUseCollider, sizeof(_bool), &dwByte, nullptr);
+
+		if (true == bUseCollider)
+		{
+			CCollider::TYPE eType = pCollider->Get_ColliderType();
+
+			WriteFile(hFile, &eType, sizeof(CCollider::TYPE), &dwByte, nullptr);
+			
+			switch (eType)
+			{
+			case Engine::CCollider::TYPE_SPHERE:
+				CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc = pDummy->Get_SphereDesc();
+				WriteFile(hFile, &(SphereDesc), sizeof(CBounding_Sphere::BOUNDINGSPHEREDESC), &dwByte, nullptr);
+				break;
+			case Engine::CCollider::TYPE_AABB:
+				CBounding_AABB::BOUNDINGAABBDESC AABBDesc = pDummy->Get_AABBDesc();
+				WriteFile(hFile, &(AABBDesc), sizeof(CBounding_AABB::BOUNDINGAABBDESC), &dwByte, nullptr);
+				break;
+			case Engine::CCollider::TYPE_OBB:
+				CBounding_OBB::BOUNDINGOBBDESC OBBDesc = pDummy->Get_OBBDesc();
+				WriteFile(hFile, &(OBBDesc), sizeof(CBounding_OBB::BOUNDINGOBBDESC), &dwByte, nullptr);
+				break;
+			}
+		}
 	}
 
 	CloseHandle(hFile);
@@ -489,6 +518,7 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 		ReadFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
 		ReadFile(hFile, &(ObjectDesc.vPosition), sizeof(_float4), &dwByte, nullptr);
 
+
 		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
 			TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
 		{
@@ -505,6 +535,51 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 		pDummy->Set_PreToolRotation(vRotation);
 		pDummy->Set_PreToolTransform(ObjectDesc.vPosition);
 		OBJECTWINDOW->Set_Object(CDummy::DUMMY_NONANIM, pObject);
+
+		
+		// Collider
+		_bool bUseCollider = { false };
+		ReadFile(hFile, &bUseCollider, sizeof(_bool), &dwByte, nullptr);
+
+		if (true == bUseCollider)
+		{
+			CCollider::TYPE eType;
+
+			ReadFile(hFile, &eType, sizeof(CCollider::TYPE), &dwByte, nullptr);
+
+			CCollider* pCollider = { nullptr };
+
+			switch (eType)
+			{
+			case Engine::CCollider::TYPE_SPHERE:
+				CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
+				ReadFile(hFile, &(SphereDesc), sizeof(CBounding_Sphere::BOUNDINGSPHEREDESC), &dwByte, nullptr);
+				pCollider = static_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_Sphere")));
+				pCollider->Set_BoundingDesc(&SphereDesc);
+				pDummy->Set_BoundingDesc(eType, &SphereDesc);
+				break;
+			case Engine::CCollider::TYPE_AABB:
+				CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+				ReadFile(hFile, &(AABBDesc), sizeof(CBounding_AABB::BOUNDINGAABBDESC), &dwByte, nullptr);
+				pCollider = static_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_AABB")));
+				pCollider->Set_BoundingDesc(&AABBDesc);
+				pDummy->Set_BoundingDesc(eType, &AABBDesc);
+				break;
+			case Engine::CCollider::TYPE_OBB:
+				CBounding_OBB::BOUNDINGOBBDESC OBBDesc = pDummy->Get_OBBDesc();
+				ReadFile(hFile, &(OBBDesc), sizeof(CBounding_OBB::BOUNDINGOBBDESC), &dwByte, nullptr);
+				pCollider = static_cast<CCollider*>(m_pGameInstance->Clone_Component(LEVEL_TOOL, TEXT("Prototype_Component_Collider_OBB")));
+				pCollider->Set_BoundingDesc(&OBBDesc);
+				pDummy->Set_BoundingDesc(eType, &OBBDesc);
+				break;
+			}
+
+			OBJECTWINDOW->Set_UseCollider(bUseCollider);
+			pDummy->Set_ColliderCom(pCollider);
+		}
+
+		pDummy->Set_ColliderInMap(bUseCollider);
+
 	}
 
 	MSG_BOX("File Load Success");

@@ -191,6 +191,37 @@ HRESULT CWindow_ObjectOptions::AnimationNotify(_double dTimeDelta)
 
 HRESULT CWindow_ObjectOptions::AddCollider()
 {
+	_bool UseCurrentCollider = m_pCurrentDummy->Get_ColliderInMap();
+
+	if (ImGui::Checkbox("Apply Collider", &UseCurrentCollider))
+	{
+		if (nullptr == m_pCollider)
+		{
+			m_pCurrentDummy->Set_ColliderInMap(UseCurrentCollider);
+			MSG_BOX("Failed Apply Collider");
+		}
+		else
+		{
+			switch (m_ColliderType)
+			{
+			case Engine::CCollider::TYPE_SPHERE:
+				m_pCurrentDummy->Set_BoundingDesc(m_ColliderType, &m_SphereDesc);
+				break;
+			case Engine::CCollider::TYPE_AABB:
+				m_pCurrentDummy->Set_BoundingDesc(m_ColliderType, &m_AABBDesc);
+				break;
+			case Engine::CCollider::TYPE_OBB:
+				m_pCurrentDummy->Set_BoundingDesc(m_ColliderType, &m_OBBDesc);
+				break;
+			}
+
+			m_pCurrentDummy->Set_ColliderInMap(UseCurrentCollider);
+			OBJECTWINDOW->Set_UseCollider(UseCurrentCollider);
+			m_pCurrentDummy->Set_ColliderCom(m_pCollider);
+		}
+		
+	}
+
 	// 콜라이더 타입 설정.
 	if (ImGui::RadioButton("Sphere", (_int*)&m_ColliderType, CCollider::TYPE_SPHERE))
 	{
@@ -226,8 +257,6 @@ HRESULT CWindow_ObjectOptions::AddCollider()
 		SetUpOBB();
 		break;
 	}
-
-	m_pCurrentDummy->Set_ColliderCom(m_pCollider);
 
 	return S_OK;
 }
@@ -431,6 +460,7 @@ HRESULT CWindow_ObjectOptions::ColliderRead_File(const _tchar* pFileName)
 	}
 
 	m_pCurrentDummy->Set_ColliderCom(m_pCollider);
+	Safe_AddRef(m_pCollider);
 
 	CloseHandle(hFile);
 

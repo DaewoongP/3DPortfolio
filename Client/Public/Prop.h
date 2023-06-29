@@ -10,7 +10,7 @@ END
 
 BEGIN(Client)
 
-class CProp final : public CGameObject
+class CProp : public CGameObject
 {
 public:
 	typedef struct tagPropDesc
@@ -21,7 +21,7 @@ public:
 		_float4 vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	}PROPDESC;
 
-private:
+protected:
 	explicit CProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CProp(const CProp& rhs);
 	virtual ~CProp() = default;
@@ -33,7 +33,7 @@ public:
 	virtual GAMEEVENT Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
-private:
+protected:
 	CModel* m_pModelCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };

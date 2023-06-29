@@ -48,6 +48,7 @@ HRESULT CProp::Initialize(void* pArg)
 
 void CProp::Tick(_double TimeDelta)
 {
+	
 	__super::Tick(TimeDelta);
 }
 

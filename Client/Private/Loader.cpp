@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "Katana.h"
 #include "ForkLift.h"
-#include "Prop.h"
+#include "ColProp.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -278,6 +278,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CProp::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Prop)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_ColProp */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ColProp"),
+		CColProp::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ColProp)");
 		return E_FAIL;
 	}
 		

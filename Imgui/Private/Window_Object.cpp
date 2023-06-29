@@ -61,7 +61,7 @@ HRESULT CWindow_Object::Select_Objects()
 
 HRESULT CWindow_Object::CurrentObjectListBox()
 {
-	ImGui::SetNextItemWidth(300.f);
+	ImGui::SetNextItemWidth(450.f);
 	if (ImGui::ListBox("Objects", &m_iCurrentListIndex, m_ObjectNames[m_eCurRadio].data(), (_int)m_ObjectNames[m_eCurRadio].size(), 10))
 	{
 		// 리스트박스에서 오브젝트를 클릭하면 해당 오브젝트가 있는 곳으로 카메라가 이동

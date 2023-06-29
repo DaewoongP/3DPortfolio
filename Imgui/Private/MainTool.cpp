@@ -184,21 +184,30 @@ HRESULT CMainTool::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const
 	{
 		const fs::directory_entry& entry = *iter;
 
-		if (!lstrcmp(entry.path().extension().c_str(), TEXT(".dat")))
+		// 현재 entry 변수가 디렉토리인지 확인 후 디렉토리이면 재귀
+		if (fs::is_directory(entry.path()))
 		{
-			wstring wstrProto = pPrototypeTag;
-			wstring wstrFileName = entry.path().filename().c_str();
-
-			_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180));
-
-			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
-			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrProto.c_str(),
-				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str(), PivotMatrix))))
-			{
-				//std::filesystem::remove(entry.path());
+			if (FAILED(Ready_Prototype_Component_ModelData(eType, entry.path().c_str(), pPrototypeTag)))
 				return E_FAIL;
+		}
+		else
+		{
+			if (!lstrcmp(entry.path().extension().c_str(), TEXT(".dat")))
+			{
+				wstring wstrProto = pPrototypeTag;
+				wstring wstrFileName = entry.path().filename().c_str();
+
+				_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180));
+
+				wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrProto.c_str(),
+					CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str(), PivotMatrix))))
+				{
+					//std::filesystem::remove(entry.path());
+					return E_FAIL;
+				}
+
 			}
-				
 		}
 
 		iter++;

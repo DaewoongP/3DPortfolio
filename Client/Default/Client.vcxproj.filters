@@ -55,6 +55,9 @@
     <Filter Include="02. GameObjects\02. Props">
       <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Props\Collider">
+      <UniqueIdentifier>{4e7987a9-e9d4-415e-b840-5848fde1d18a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -110,6 +113,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Part.h">
       <Filter>02. GameObjects\01. Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ColProp.h">
+      <Filter>02. GameObjects\02. Props\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Part.cpp">
       <Filter>02. GameObjects\01. Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ColProp.cpp">
+      <Filter>02. GameObjects\02. Props\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

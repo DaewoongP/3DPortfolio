@@ -1,10 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Tool_Defines.h"
-
-BEGIN(Engine)
-class CCollider;
-END
+#include "Collider.h"
 
 BEGIN(Tool)
 
@@ -55,10 +52,31 @@ public:
 
 public:
 	CTransform* Get_TransformCom() const { return m_pTransformCom; }
+	CCollider* Get_ColliderCom() const { return m_pColliderCom; }
+	CBounding_Sphere::BOUNDINGSPHEREDESC Get_SphereDesc() const { return m_pBoundingSphereDesc; }
+	CBounding_OBB::BOUNDINGOBBDESC		 Get_OBBDesc() const { return m_pBoundingOBBDesc; }
+	CBounding_AABB::BOUNDINGAABBDESC	 Get_AABBDesc() const { return m_pBoundingAABBDesc; }
 	void Set_ColliderCom(class CCollider* pCollider) { m_pColliderCom = pCollider; }
-
+	_bool Get_ColliderInMap() { return m_UseColliderInMap; }
+	void Set_ColliderInMap(_bool bUse) {
+		if (nullptr != m_pColliderCom && true == bUse)
+			m_UseColliderInMap = bUse;
+		else if (false == bUse)
+			m_UseColliderInMap = bUse;
+		else
+			MSG_BOX("Set Collider First");
+	}
+	void Set_BoundingDesc(CCollider::TYPE eType, void* pBoundingDesc);
+	
 protected:
+	_bool					m_UseColliderInMap = { false };
 	CCollider*				m_pColliderCom = { nullptr };
+
+	CCollider::TYPE			m_eColliderType = { CCollider::TYPE_END };
+
+	CBounding_Sphere::BOUNDINGSPHEREDESC	m_pBoundingSphereDesc;
+	CBounding_OBB::BOUNDINGOBBDESC			m_pBoundingOBBDesc;
+	CBounding_AABB::BOUNDINGAABBDESC		m_pBoundingAABBDesc;
 
 protected:
 	OBJECTDESC				m_ObjectDesc;

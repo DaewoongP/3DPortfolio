@@ -7,7 +7,6 @@ class CModel;
 class CShader;
 class CTexture;
 class CRenderer;
-class CCollider;
 END
 
 BEGIN(Tool)
@@ -31,7 +30,6 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };
-	CCollider* m_pColliderCom = { nullptr };
 
 private:
 	HRESULT	Add_Component(OBJECTDESC ObjectDesc);

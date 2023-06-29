@@ -172,6 +172,7 @@
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\public\ColProp.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
@@ -191,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
+    <ClCompile Include="..\private\ColProp.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />
