@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Base.h"
 
 BEGIN(Engine)
@@ -12,9 +11,11 @@ protected:
 	virtual ~CComponent() = default;
 
 public:
+	void Set_Owner(class CComposite* pOwner) { m_pOwner = pOwner; }
 	void Set_Tag(const _tchar * pTag) {
 		lstrcpy(m_pPrototypeTag, pTag);
 	}
+	const class CComposite* Get_Owner() const { return m_pOwner; }
 	const _tchar* Get_Tag() const { return m_pPrototypeTag; }
 
 public:
@@ -26,11 +27,12 @@ public:
 	virtual HRESULT Reset();
 
 protected:
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 protected:
-	_bool			m_isCloned = { false };
+	class CComposite*			m_pOwner = { nullptr };
+	_bool						m_isCloned = { false };
 
 protected:
 	_tchar			m_pPrototypeTag[MAX_STR] = TEXT("");

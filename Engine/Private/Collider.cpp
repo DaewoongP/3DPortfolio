@@ -1,4 +1,6 @@
 #include "..\Public\Collider.h"
+#include "Composite.h"
+#include "GameObject.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -61,6 +63,69 @@ HRESULT CCollider::Render(_fvector vColor)
 }
 #endif // _DEBUG
 
+_bool CCollider::Intersects(CCollider* pOtherCollider, _float3* pCollisionBox)
+{
+	return m_pBounding->Intersects(pOtherCollider->m_pBounding, pCollisionBox);
+}
+
+void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider* pOtherCollider)
+{
+	if (nullptr == m_pOwner ||
+		nullptr == pOtherCollider)
+		return;
+
+	COLLISIONDESC CollisionDesc;
+
+	// 이전에 충돌이 없었고, 방금 충돌함 (Enter)
+	if (false == IsCollision(pOtherCollider))
+	{
+		CollisionDesc.ColDir = eCollisionDirection;
+		CollisionDesc.pOtherCollider = pOtherCollider;
+
+		m_Collisions.emplace(pOtherCollider, CollisionDesc);
+
+		Safe_AddRef(pOtherCollider);
+
+		static_cast<CGameObject*>(m_pOwner)->OnCollisionEnter(CollisionDesc);
+	}
+}
+
+_bool CCollider::IsCollision(CCollider* pOtherCollider)
+{
+	if (nullptr == pOtherCollider)
+		return false;
+
+	auto iter = m_Collisions.find(pOtherCollider);
+
+	if (iter == m_Collisions.end())
+		return false;
+
+	// 이미 맵안에 들어가있었기때문에 Stay인게 확정.
+	// 나머지는 갱신할 필요 없음.
+
+	static_cast<CGameObject*>(m_pOwner)->OnCollisionStay(iter->second);
+
+	return true;
+}
+
+void CCollider::ExitCollision(CCollider* pOtherCollider)
+{
+	// 충돌을 안했는데 안에 있었다면 Exit상태 처리.
+	if (nullptr == pOtherCollider)
+		return;
+
+	auto iter = m_Collisions.find(pOtherCollider);
+
+	if (iter == m_Collisions.end())
+		return;
+
+	static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(iter->second);
+
+	iter->first->Release();
+
+	m_Collisions.erase(iter);
+}
+
 CCollider* CCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType)
 {
 	CCollider* pInstance = new CCollider(pDevice, pContext);
@@ -92,4 +157,9 @@ void CCollider::Free()
 	__super::Free();
 
 	Safe_Release(m_pBounding);
+
+	// 키값은 nullptr로 채우는 작업이 불가능함.
+	for (auto& iter : m_Collisions)
+		iter.first->Release();
+	m_Collisions.clear();
 }

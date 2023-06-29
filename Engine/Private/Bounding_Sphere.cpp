@@ -47,6 +47,11 @@ void CBounding_Sphere::Tick(_fmatrix WorldMatrix)
 	m_pSphere_Original->Transform(*m_pSphere, WorldMatrix);
 }
 
+_bool CBounding_Sphere::Intersects(CBounding* pOtherSphere, _float3* pCollisionBox)
+{
+	return _bool();
+}
+
 _bool CBounding_Sphere::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist)
 {
 	return m_pSphere->Intersects(vOrigin, vDirection, fDist);

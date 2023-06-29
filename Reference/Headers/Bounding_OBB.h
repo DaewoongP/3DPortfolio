@@ -26,6 +26,9 @@ public:
 	HRESULT Initialize(void* pBoundingDesc);
 	virtual void Tick(_fmatrix WorldMatrix) override;
 
+public:
+	virtual _bool Intersects(CBounding* pOtherBounding, _float3* pCollisionBox);
+
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render(_fvector vColor = COLLIDERCOLOR) override;

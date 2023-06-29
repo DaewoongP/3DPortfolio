@@ -30,7 +30,7 @@ private:
 	HRESULT Render_UI();
 
 private:
-	list<class CGameObject*>				m_RenderObjects[static_cast<_uint>(RENDERGROUP::RENDER_END)];
+	list<class CGameObject*>				m_RenderObjects[RENDER_END];
 
 public:
 	static CRenderer* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

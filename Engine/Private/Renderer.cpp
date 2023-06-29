@@ -23,12 +23,6 @@ HRESULT CRenderer::Initialize(void* pArg)
 
 HRESULT CRenderer::Reset()
 {
-	for (auto& RenderList : m_RenderObjects)
-	{
-		for (auto& pGameObject : RenderList)
-			Safe_Release(pGameObject);
-		RenderList.clear();
-	}
 
 	return S_OK;
 }

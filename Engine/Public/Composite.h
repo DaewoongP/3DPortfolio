@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CComposite : public CComponent
+class ENGINE_DLL CComposite abstract : public CComponent
 {
 protected:
 	explicit CComposite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

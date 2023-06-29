@@ -4,6 +4,7 @@
 #include "Object_Manager.h"
 #include "Timer_Manager.h"
 #include "Calculator.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -15,6 +16,7 @@ CGameInstance::CGameInstance()
 	, m_pInput_Device{ CInput_Device::GetInstance() }
 	, m_pPipeLine{ CPipeLine::GetInstance() }
 	, m_pCalculator{ CCalculator::GetInstance() }
+	, m_pCollision_Manager{ CCollision_Manager::GetInstance() }
 {
 	Safe_AddRef(m_pCalculator);
 	Safe_AddRef(m_pPipeLine);
@@ -24,6 +26,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pTimer_Manager);
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pInput_Device);
+	Safe_AddRef(m_pCollision_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
@@ -64,6 +67,7 @@ void CGameInstance::Tick_Engine(_double dTimeDelta)
 	m_pObject_Manager->Tick(dTimeDelta);
 	m_pPipeLine->Tick();
 	m_pObject_Manager->Late_Tick(dTimeDelta);
+	m_pCollision_Manager->Tick();
 	m_pLevel_Manager->Tick(dTimeDelta);
 }
 
@@ -308,9 +312,19 @@ _bool CGameInstance::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
 	return m_pCalculator->IsMouseInClient(pContext, hWnd);
 }
 
+HRESULT CGameInstance::Add_Collider(CCollision_Manager::COLTYPE eCollisionType, CCollider* pCollider)
+{
+	if (nullptr == m_pCollision_Manager)
+		return E_FAIL;
+
+	return m_pCollision_Manager->Add_Collider(eCollisionType, pCollider);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
+
+	CCollision_Manager::GetInstance()->DestroyInstance();
 
 	CPipeLine::GetInstance()->DestroyInstance();
 
@@ -331,6 +345,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pCalculator);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pInput_Device);

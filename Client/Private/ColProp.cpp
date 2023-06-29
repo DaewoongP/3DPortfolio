@@ -48,8 +48,14 @@ void CColProp::Tick(_double TimeDelta)
 
 GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
+	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_STATIC, m_pColliderCom);
+
+	Safe_Release(pGameInstance);
 	return __super::Late_Tick(TimeDelta);
 }
 

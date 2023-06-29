@@ -44,6 +44,14 @@ namespace Engine
 		double			dTime;
 	}NOTIFY;
 
+	typedef struct tagCollisionDesc
+	{
+		enum COLDIR { COLDIR_LEFT, COLDIR_RIGHT, COLDIR_UP, COLDIR_DOWN, COLDIR_FRONT, COLDIR_BACK, COLDIR_END };
+
+		COLDIR					ColDir = { COLDIR_END };
+		class CCollider*		pOtherCollider = { nullptr };
+	}COLLISIONDESC;
+
 	typedef struct tagVertex_Position
 	{
 		XMFLOAT3		vPosition;

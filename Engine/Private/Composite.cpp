@@ -48,6 +48,8 @@ HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag
 	if (nullptr == pComponent)
 		return E_FAIL;
 
+	pComponent->Set_Owner(this);
+
 	m_Components.emplace(pComponentTag, pComponent);
 
 	*ppOut = pComponent;

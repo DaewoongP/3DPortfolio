@@ -79,11 +79,16 @@ void CPlayer::Tick(_double dTimeDelta)
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+
+	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
 
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	m_pPlayerCameraCom->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -99,7 +104,27 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 		return GAME_STAGE_RESET;
 	}
 
+	if (pGameInstance->Get_DIKeyState(DIK_R))
+	{
+		Safe_Release(pGameInstance);
+		return GAME_STAGE_RESET;
+	}
+
+	Safe_Release(pGameInstance);
 	return GAME_NOEVENT;
+}
+
+void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+{
+	cout << "Collision Enter" << endl;
+}
+void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
+{
+	cout << "Collision Stay" << endl;
+}
+void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
+{
+	cout << "Collision Exit" << endl;
 }
 
 HRESULT CPlayer::Render()
@@ -222,7 +247,7 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 	}
 
-	if (FAILED(SetUp_Collider(TEXT("../../Resources/GameData/Collider/Collider.Col"))))
+	if (FAILED(SetUp_Collider(TEXT("../../Resources/GameData/Collider/Player.Col"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -235,7 +260,7 @@ HRESULT CPlayer::Add_Parts()
 
 	const CBone* pBone = m_pModelCom->Get_Bone(TEXT("Weapon_r"));
 
-	ParentMatrixDesc.PivotMatrix = m_pModelCom->Get_PivotMatrix();
+	ParentMatrixDesc.PivotMatrix = m_pModelCom->Get_PivotFloat4x4();
 	ParentMatrixDesc.OffsetMatrix = pBone->Get_OffsetMatrix();
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
@@ -451,17 +476,6 @@ void CPlayer::Fix_Mouse()
 	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 
-void CPlayer::TransformOffset()
-{
-	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-
-	_vector vOffsetPosition = vPosition + XMVectorSet(0.f, 4.f, 0.f, 1.f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vOffsetPosition);
-
-	m_pPlayerCameraCom->Set_Position(vOffsetPosition);
-}
-
 void CPlayer::AnimationState(_double dTimeDelta)
 {
 	m_pModelCom->Play_Animation(dTimeDelta);
@@ -585,6 +599,11 @@ HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)
 {
 	HANDLE hFile = CreateFile(pColliderFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
+	// 콜라이더에도 피벗을 적용시켜줘야함.
+	// 툴에서 적용한건 그냥 로컬에 적용한거라 좀 다름.
+	// 특히 트랜스폼이 피벗으로 들어갔을경우 문제가 있을 수 있음.
+	_matrix PivotMatrix = m_pModelCom->Get_PivotMatrix();
+
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
@@ -604,6 +623,7 @@ HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)
 	case CCollider::TYPE_AABB:
 		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 		ReadFile(hFile, &AABBDesc, sizeof(CBounding_AABB::BOUNDINGAABBDESC), &dwByte, nullptr);
+		XMStoreFloat3(&AABBDesc.vPosition, XMVector3TransformCoord(XMLoadFloat3(&AABBDesc.vPosition), PivotMatrix));
 		m_pColliderCom->Set_BoundingDesc(&AABBDesc);
 		break;
 	case CCollider::TYPE_OBB:

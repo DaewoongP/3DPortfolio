@@ -47,6 +47,26 @@ void CBounding_AABB::Tick(_fmatrix WorldMatrix)
 	m_pAABB_Original->Transform(*m_pAABB, Remove_Rotation(WorldMatrix));
 }
 
+_bool CBounding_AABB::Intersects(CBounding* pOtherBox, _float3* pCollisionBox)
+{
+	const DirectX::BoundingBox* otherAABB = static_cast<CBounding_AABB*>(pOtherBox)->m_pAABB;
+	_vector vCenterLine, vRadius;
+	ZEROMEM(&vCenterLine);
+
+	vCenterLine = XMVectorAbs(XMLoadFloat3(&m_pAABB->Center) - XMLoadFloat3(&otherAABB->Center));
+
+	vRadius = XMLoadFloat3(&m_pAABB->Extents) + XMLoadFloat3(&otherAABB->Extents);
+
+	if (true == XMVector3GreaterOrEqual(vRadius, vCenterLine))
+	{
+		XMStoreFloat3(pCollisionBox, (vRadius - vCenterLine) / vRadius);
+
+		return true;
+	}
+
+	return false;
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_AABB::Render(_fvector vColor)
 {

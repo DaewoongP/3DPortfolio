@@ -29,6 +29,9 @@ public:
 	virtual HRESULT Initialize(void* pBoundingDesc) PURE;
 	virtual void Tick(_fmatrix WorldMatrix) PURE;
 
+public:
+	virtual _bool Intersects(CBounding* pOtherBounding, _float3* pCollisionBox) PURE;
+
 #ifdef _DEBUG
 public:
 	// effect, batch 등을 통해 렌더링 준비

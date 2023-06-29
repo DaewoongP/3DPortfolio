@@ -1,7 +1,8 @@
 #pragma once
-#include "Component_Manager.h"
 #include "PipeLine.h"
 #include "Input_Device.h"
+#include "Component_Manager.h"
+#include "Collision_Manager.h"
 
 BEGIN(Engine)
 
@@ -75,6 +76,9 @@ public: /* For. Calculator */
 	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
 	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
 
+public: /* For. Collision_Manager */
+	HRESULT Add_Collider(CCollision_Manager::COLTYPE eCollisionType, class CCollider* pCollider);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -84,6 +88,7 @@ private:
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
 	class CCalculator*				m_pCalculator = { nullptr };
+	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

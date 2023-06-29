@@ -28,6 +28,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
+	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
+	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
+	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Reset() override;
 
@@ -67,10 +70,9 @@ private:
 	HRESULT SetUp_ShaderResources();
 	HRESULT Find_BoneIndices();
 	HRESULT Initailize_Skills();
+
 	void Key_Input(_double dTimeDelta);
 	void Fix_Mouse();
-	// 1인칭 뷰의 카메라 오프셋값
-	void TransformOffset();
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 

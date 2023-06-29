@@ -52,6 +52,11 @@ void CBounding_OBB::Tick(_fmatrix WorldMatrix)
 	m_pOBB_Original->Transform(*m_pOBB,WorldMatrix);
 }
 
+_bool CBounding_OBB::Intersects(CBounding* pOtherBounding, _float3* pCollisionBox)
+{
+	return _bool();
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_OBB::Render(_fvector vColor)
 {

@@ -20,6 +20,9 @@ public:
 	virtual HRESULT Initialize(void* pArg, CTransform::TRANSFORMDESC* pTransformDesc);
 	virtual void	Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
+	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) {}
+	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) {}
+	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) {}
 	virtual HRESULT Render() override;
 	virtual HRESULT Reset() override;
 

@@ -10,7 +10,7 @@ class ENGINE_DLL CCollider final : public CComponent
 {
 public:
 	enum TYPE { TYPE_SPHERE, TYPE_AABB, TYPE_OBB, TYPE_END };
-
+	
 private:
 	explicit CCollider(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	explicit CCollider(const CCollider& rhs);
@@ -30,10 +30,19 @@ public:
 public:
 	virtual HRESULT Render(_fvector vColor = COLLIDERCOLOR);
 #endif // _DEBUG
-	
+
+public:
+	_bool Intersects(CCollider* pOtherCollider, _float3* pCollisionBox);
+	void OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider* pOtherCollider);
+	_bool IsCollision(CCollider* pOtherCollider);
+	void ExitCollision(CCollider* pOtherCollider);
+
 private:
 	class CBounding*			m_pBounding = { nullptr };
 	TYPE						m_eColliderType = { TYPE_END };
+
+private:
+	unordered_map<CCollider*, COLLISIONDESC>	m_Collisions;
 
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType);

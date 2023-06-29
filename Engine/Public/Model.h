@@ -14,7 +14,8 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	_float4x4 Get_PivotMatrix() const { return m_PivotMatrix; }
+	_float4x4 Get_PivotFloat4x4() const { return m_PivotMatrix; }
+	_matrix Get_PivotMatrix() { return XMLoadFloat4x4(&m_PivotMatrix); }
 	_uint Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 	ANIMATIONFLAG Get_AnimationState() const { return m_eAnimationFlag; }
 	// 모델의 메쉬 개수 반환
