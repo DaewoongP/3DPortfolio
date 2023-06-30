@@ -24,6 +24,8 @@ void CCollision_Manager::Tick()
 	Collision(COLTYPE_STATIC, COLTYPE_DYNAMIC);
 	Collision(COLTYPE_DYNAMIC, COLTYPE_DYNAMIC);
 
+	ExitCollision();
+
 	ClearColliders();
 }
 
@@ -109,6 +111,27 @@ void CCollision_Manager::Check_Direction(class CCollider* pSourCollider, class C
 		{
 			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_FRONT, pDestCollider);
 			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_BACK, pSourCollider);
+		}
+	}
+}
+
+void CCollision_Manager::ExitCollision()
+{
+	if (0 == m_Colliders[COLTYPE_EXIT].size())
+		return;
+
+	for (_uint i = 0; i < COLTYPE_END; ++i)
+	{
+		for (auto& pCollider : m_Colliders[i])
+		{
+			for (auto& pColliderExit : m_Colliders[COLTYPE_EXIT])
+			{
+				if (pCollider == pColliderExit)
+					continue;
+
+				pCollider->ExitCollision(pColliderExit);
+				pColliderExit->ExitCollision(pCollider);
+			}
 		}
 	}
 }

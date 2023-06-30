@@ -324,8 +324,6 @@ void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
 
-	CCollision_Manager::GetInstance()->DestroyInstance();
-
 	CPipeLine::GetInstance()->DestroyInstance();
 
 	CObject_Manager::GetInstance()->DestroyInstance();
@@ -337,6 +335,8 @@ void CGameInstance::Release_Engine()
 	CTimer_Manager::GetInstance()->DestroyInstance();
 
 	CCalculator::GetInstance()->DestroyInstance();
+
+	CCollision_Manager::GetInstance()->DestroyInstance();
 
 	CInput_Device::GetInstance()->DestroyInstance();
 

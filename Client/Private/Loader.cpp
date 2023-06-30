@@ -177,7 +177,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	
-	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
 	
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 

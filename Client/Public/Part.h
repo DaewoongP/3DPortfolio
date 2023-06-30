@@ -26,6 +26,9 @@ public:
 	virtual HRESULT Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc) PURE;
 	virtual void	Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT	Late_Tick(_double dTimeDelta) override;
+	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
+	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
+	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
 
 protected:

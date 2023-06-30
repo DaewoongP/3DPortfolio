@@ -1,5 +1,6 @@
 #include "..\Public\Katana.h"
 #include "GameInstance.h"
+#include "Player.h"
 
 CKatana::CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPart(pDevice, pContext)
@@ -45,17 +46,53 @@ void CKatana::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	m_pModelCom->Play_Animation(dTimeDelta, false);
+	if (CPlayer::STATE_ATTACK == static_cast<CPlayer*>(m_pOwner)->Get_CurrentState())
+	{
+		m_pModelCom->Set_AnimIndex(1, false);
+		m_pModelCom->Play_Animation(dTimeDelta);
+		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+		_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
+		XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
+		AABBDesc.vExtents = _float3(2.f, 2.f, 2.f);
+		m_pColliderCom->Set_BoundingDesc(&AABBDesc);
+
+		m_isAttacked = true;
+	}
+	else
+	{
+		m_isAttacked = false;
+		m_pModelCom->Play_Animation(dTimeDelta, false);
+	}
 }
 
 GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	
+	if (true == m_isAttacked)
+	{
+		// 충돌처리
+		m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+		// 테스트용으로 다이나믹으로 처리함.
+		pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
+	}
+	else
+		pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_EXIT, m_pColliderCom);
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
+	Safe_Release(pGameInstance);
+
 	return GAME_NOEVENT;
+}
+
+void CKatana::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+{
+	cout << "Katana Collision Enter" << endl;
 }
 
 HRESULT CKatana::Render()
@@ -77,6 +114,11 @@ HRESULT CKatana::Render()
 
 		m_pModelCom->Render(i);
 	}
+
+#ifdef _DEBUG
+	if (m_isAttacked)
+		m_pColliderCom->Render();
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -104,6 +146,17 @@ HRESULT CKatana::Add_Components()
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
 		MSG_BOX("Failed CKatana Add_Component : (Com_Shader)");
+		return E_FAIL;
+	}
+
+	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+	AABBDesc.vExtents = _float3(5.f, 5.f, 5.f);
+	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	/* For.Com_Collider */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
 
@@ -159,8 +212,9 @@ CGameObject* CKatana::Clone(void* pArg)
 void CKatana::Free()
 {
 	__super::Free();
-	
+
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pColliderCom);
 }

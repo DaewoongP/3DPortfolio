@@ -37,9 +37,6 @@
     <Filter Include="02. GameObjects\00. Player\Katana">
       <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\01. Parts">
-      <UniqueIdentifier>{c4530ccc-05f5-41f8-946a-eeef06748859}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\98. BackGround">
       <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
     </Filter>
@@ -52,11 +49,17 @@
     <Filter Include="02. GameObjects\99. Debug\FreeCam">
       <UniqueIdentifier>{8008fbe6-02b5-4a71-8dfb-57073fc91837}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Props">
+    <Filter Include="02. GameObjects\02. Parts">
+      <UniqueIdentifier>{c4530ccc-05f5-41f8-946a-eeef06748859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Props">
       <UniqueIdentifier>{5569ac07-f926-4622-9a6b-6d829ca4f109}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Props\ColliderProps">
+    <Filter Include="02. GameObjects\03. Props\ColliderProps">
       <UniqueIdentifier>{4e7987a9-e9d4-415e-b840-5848fde1d18a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Monster">
+      <UniqueIdentifier>{6f40b148-68c7-4d09-a50a-c0e8cac360fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,13 +112,16 @@
       <Filter>02. GameObjects\98. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Prop.h">
-      <Filter>02. GameObjects\02. Props</Filter>
+      <Filter>02. GameObjects\03. Props</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Part.h">
-      <Filter>02. GameObjects\01. Parts</Filter>
+      <Filter>02. GameObjects\02. Parts</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ColProp.h">
-      <Filter>02. GameObjects\02. Props\ColliderProps</Filter>
+      <Filter>02. GameObjects\03. Props\ColliderProps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Monster.h">
+      <Filter>02. GameObjects\01. Monster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -169,16 +175,19 @@
       <Filter>01. Levels\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Prop.cpp">
-      <Filter>02. GameObjects\02. Props</Filter>
+      <Filter>02. GameObjects\03. Props</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\Client_Struct.h">
       <Filter>99. Headers</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Part.cpp">
-      <Filter>02. GameObjects\01. Parts</Filter>
+      <Filter>02. GameObjects\02. Parts</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ColProp.cpp">
-      <Filter>02. GameObjects\02. Props\ColliderProps</Filter>
+      <Filter>02. GameObjects\03. Props\ColliderProps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster.cpp">
+      <Filter>02. GameObjects\01. Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

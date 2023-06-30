@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Part.h"
 #include "Katana.h"
+#include "ColProp.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -67,10 +68,7 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 
-	if (STATE_CROUCH == m_eCurState)
-		m_pTransformCom->Crouch(true, dTimeDelta, 2.f);
-	else
-		m_pTransformCom->Crouch(false, dTimeDelta, 2.f);
+	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 2.f);
 
 	Tick_Skills(dTimeDelta);
 
@@ -116,15 +114,24 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 
 void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	cout << "Collision Enter" << endl;
+	if (COLLISIONDESC::COLDIR_FRONT == CollisionDesc.ColDir ||
+		COLLISIONDESC::COLDIR_BACK == CollisionDesc.ColDir)
+		return;
+	m_fWallRunY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	m_vWallRunDirection = m_pTransformCom->Get_Velocity();
 }
+
 void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
-	cout << "Collision Stay" << endl;
+	if (COLLISIONDESC::COLDIR_FRONT == CollisionDesc.ColDir ||
+		COLLISIONDESC::COLDIR_BACK == CollisionDesc.ColDir)
+		return;
+	m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallRunDirection));
 }
+
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
-	cout << "Collision Exit" << endl;
+	m_fWallRunY = 0.f;
 }
 
 HRESULT CPlayer::Render()
@@ -378,11 +385,13 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	{
 		if (STATE_ATTACK != m_eCurState)
 			m_eCurState = STATE_CROUCH;
+		m_isCrouch = true;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_LCONTROL, CInput_Device::KEY_UP))
 	{
 		if (STATE_ATTACK != m_eCurState)
 			m_eCurState = STATE_IDLE;
+		m_isCrouch = false;
 	}
 
 	// attack, Lbutton, Lclick

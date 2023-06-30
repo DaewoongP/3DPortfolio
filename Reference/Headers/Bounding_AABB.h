@@ -20,6 +20,10 @@ private:
 public:
 	virtual _float3 Get_CenterPosition() const  override { return m_pAABB->Center; }
 	virtual void Set_BoundingDesc(void* pBoundingDesc) override;
+	void Set_AABB(BOUNDINGAABBDESC AABBDesc) {
+		m_pAABB->Center = AABBDesc.vPosition;
+		m_pAABB->Extents = AABBDesc.vExtents;
+	}
 
 public:
 	HRESULT Initialize_Prototype();

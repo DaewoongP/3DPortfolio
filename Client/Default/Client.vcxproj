@@ -180,6 +180,7 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\public\Monster.h" />
     <ClInclude Include="..\public\Part.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Prop.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\private\Monster.cpp" />
     <ClCompile Include="..\private\Part.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Prop.cpp" />

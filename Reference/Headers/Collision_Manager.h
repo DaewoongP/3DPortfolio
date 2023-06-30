@@ -8,7 +8,8 @@ class CCollision_Manager final : public CBase
 	DECLARE_SINGLETON(CCollision_Manager)
 
 public:
-	enum COLTYPE { COLTYPE_STATIC, COLTYPE_DYNAMIC, COLTYPE_END };
+	// 정적타입, 동적타입, 해당 프레임에서 exit를 호출하기위한 탕
+	enum COLTYPE { COLTYPE_STATIC, COLTYPE_DYNAMIC, COLTYPE_EXIT, COLTYPE_END };
 
 private:
 	explicit CCollision_Manager();
@@ -22,6 +23,7 @@ public:
 	void Collision(COLTYPE eSourType, COLTYPE eDestType);
 	void Check_Direction(class CCollider* pSourCollider, class CCollider* pDestCollider, _float3 vCollisionBox);
 
+	void ExitCollision();
 	void ClearColliders();
 
 private:

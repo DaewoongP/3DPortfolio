@@ -306,12 +306,12 @@ void CTransform::Rotation(_float3 vDegrees)
 	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
 	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
-	
-	_matrix RotationMatrixZ = XMMatrixRotationZ(XMConvertToRadians(vDegrees.z));
+
 	_matrix RotationMatrixX = XMMatrixRotationX(XMConvertToRadians(vDegrees.x));
 	_matrix RotationMatrixY = XMMatrixRotationY(XMConvertToRadians(vDegrees.y));
+	_matrix RotationMatrixZ = XMMatrixRotationZ(XMConvertToRadians(vDegrees.z));
 	
-	_matrix RotationMatrix = RotationMatrixZ * RotationMatrixX * RotationMatrixY;
+	_matrix RotationMatrix = RotationMatrixX * RotationMatrixY * RotationMatrixZ;
 
 	Set_State(STATE::STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
 	Set_State(STATE::STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
@@ -323,7 +323,7 @@ void CTransform::Turn(_fvector vAxis, _double dTimeDelta)
 	_vector vRight = Get_State(STATE::STATE_RIGHT);
 	_vector vUp = Get_State(STATE::STATE_UP);
 	_vector vLook = Get_State(STATE::STATE_LOOK);
-
+	
 	_matrix RotationMatrix = XMMatrixRotationAxis(XMVector3Normalize(vAxis), static_cast<_float>(m_TransformDesc.dRotationPerSec * dTimeDelta));
 
 	Set_State(STATE::STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
@@ -372,6 +372,21 @@ void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpe
 		m_fGroundY = fCrouchSize;
 	if (m_fGroundY > m_fOriginGroundY)
 		m_fGroundY = m_fOriginGroundY;
+}
+
+void CTransform::WallRun(_float fWallRunY, _fvector vWallRunDirection)
+{
+	// 최대속도로 고정
+	_vector vVelocity = XMVectorSet(XMVectorGetX(vWallRunDirection), 0.f, XMVectorGetZ(vWallRunDirection), 0.f);
+	vVelocity = XMVector3Normalize(vVelocity);
+
+	vVelocity *= m_fLimitVelocity;
+
+	m_isJumping = false;
+
+	_vector vPos = XMVectorSet(m_WorldMatrix._41, fWallRunY, m_WorldMatrix._43, 1.f);
+	
+	Set_State(CTransform::STATE_POSITION, vPos);
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

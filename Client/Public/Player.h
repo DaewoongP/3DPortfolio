@@ -24,6 +24,9 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
+	STATE Get_CurrentState() const { return m_eCurState; }
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
@@ -57,8 +60,13 @@ private:
 	STATE					m_ePreState;
 	STATE					m_eCurState;
 
+	_bool					m_isCrouch = { false };
+
 	_float					m_fSpeed;
 	DASHDESC				m_Dash;
+
+	_float					m_fWallRunY = { 0.f };
+	_float3					m_vWallRunDirection;
 
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };

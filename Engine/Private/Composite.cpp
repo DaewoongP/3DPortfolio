@@ -67,6 +67,8 @@ HRESULT CComposite::Add_Part(const _tchar* pPrototypeTag, const _tchar* pObjectT
 	Safe_AddRef(pObjectManager);
 
 	CGameObject* pGameObject = pObjectManager->Clone_GameObject(pPrototypeTag, pArg);
+
+	pGameObject->Set_Owner(this);
 	
 	m_Components.emplace(pObjectTag , pGameObject);
 

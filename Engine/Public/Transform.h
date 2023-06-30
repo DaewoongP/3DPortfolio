@@ -25,6 +25,7 @@ private:
 	virtual ~CTransform() = default;
 
 public:
+	_float3 Get_Velocity() const { return m_vVelocity; }
 	TRANSFORMDESC Get_Desc() const { return m_TransformDesc; }
 	_vector Get_State(STATE _eState) 
 	{
@@ -53,7 +54,7 @@ public:
 
 public:
 	void RigidBody(_double dTimeDelta);
-	void Check_Move(_vector vCurrentPosition, _vector vVelocity);
+	void Check_Move(_fvector vCurrentPosition, _fvector vVelocity);
 	void Check_Cell();
 	void Move_Direction(_fvector vMoveDir, _double dTimeDelta);
 	void Go_Straight(_double dTimeDelta);
@@ -77,6 +78,7 @@ public:
 	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 5.f, _float fResistance = 30.f);
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
+	void WallRun(_float fWallRunY, _fvector vWallRunDirection);
 
 private:
 	TRANSFORMDESC	m_TransformDesc;

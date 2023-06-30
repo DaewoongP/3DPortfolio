@@ -1,6 +1,7 @@
 #include "..\Public\Collider.h"
 #include "Composite.h"
 #include "GameObject.h"
+#include "Collision_Manager.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -92,9 +93,6 @@ void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider
 
 _bool CCollider::IsCollision(CCollider* pOtherCollider)
 {
-	if (nullptr == pOtherCollider)
-		return false;
-
 	auto iter = m_Collisions.find(pOtherCollider);
 
 	if (iter == m_Collisions.end())

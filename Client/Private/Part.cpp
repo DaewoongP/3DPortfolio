@@ -53,6 +53,18 @@ GAMEEVENT CPart::Late_Tick(_double dTimeDelta)
 	return __super::Late_Tick(dTimeDelta);
 }
 
+void CPart::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+{
+}
+
+void CPart::OnCollisionStay(COLLISIONDESC CollisionDesc)
+{
+}
+
+void CPart::OnCollisionExit(COLLISIONDESC CollisionDesc)
+{
+}
+
 HRESULT CPart::Render()
 {
 	if (FAILED(__super::Render()))
