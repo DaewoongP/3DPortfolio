@@ -63,15 +63,10 @@ void CKatana::Tick(_double dTimeDelta)
 		m_isAttacked = false;
 		m_pModelCom->Play_Animation(dTimeDelta, false);
 	}
-}
-
-GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
-{
-	__super::Late_Tick(dTimeDelta);
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-	
+
 	if (true == m_isAttacked)
 	{
 		// 충돌처리
@@ -81,11 +76,15 @@ GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 	}
 	else
 		pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_EXIT, m_pColliderCom);
+	Safe_Release(pGameInstance);
+}
+
+GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
+{
+	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-
-	Safe_Release(pGameInstance);
 
 	return GAME_NOEVENT;
 }

@@ -43,10 +43,7 @@ HRESULT CColProp::Initialize(void* pArg)
 void CColProp::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
-}
 
-GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
-{
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
@@ -55,6 +52,10 @@ GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
 	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_STATIC, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
+}
+
+GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
+{
 	__super::Late_Tick(TimeDelta);
 
 	return m_eGameEvent;

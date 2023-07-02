@@ -66,8 +66,8 @@ void CGameInstance::Tick_Engine(_double dTimeDelta)
 	m_pInput_Device->Tick();
 	m_pObject_Manager->Tick(dTimeDelta);
 	m_pPipeLine->Tick();
-	m_pObject_Manager->Late_Tick(dTimeDelta);
 	m_pCollision_Manager->Tick();
+	m_pObject_Manager->Late_Tick(dTimeDelta);
 	m_pLevel_Manager->Tick(dTimeDelta);
 }
 

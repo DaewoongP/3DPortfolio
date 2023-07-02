@@ -89,6 +89,8 @@ void CPlayer::Tick(_double dTimeDelta)
 	}
 
 	__super::Tick(dTimeDelta);
+	// 面倒贸府
+	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
@@ -98,9 +100,6 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-
-	// 面倒贸府
-	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
 	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
 
@@ -134,16 +133,20 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	Safe_AddRef(pGameInstance);
 
 	// Wall Run
-	if (nullptr != pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Props")))
+	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_Props")))
 	{
 		m_fWallRunY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
 		if (m_fWallRunY > 4.f)
 		{
 			m_fWallRunAngle = 0.f;
 			m_isWallRun = { true };
 		}
 		else
+		{
 			m_fWallRunY = 0.f;
+		}
+			
 	}
 
 	Safe_Release(pGameInstance);
@@ -151,10 +154,18 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
-	if (m_fWallRunY > 4.f)
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (nullptr != pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Props")))
 	{
-		CollisionStayWall(CollisionDesc);
+		if (m_fWallRunY > 4.f)
+		{
+			CollisionStayWall(CollisionDesc);
+		}
 	}
+
+	Safe_Release(pGameInstance);
 }
 
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
@@ -609,6 +620,24 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 	}
 	else
 		m_isWallRotated = false;
+	/*CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
+	{
+		m_fWallRunY = 0.f;
+		m_isWallRun = false;
+		if (0 > m_fWallRunAngle)
+		{
+			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 4.f, g_TimeDelta);
+		}
+		else
+		{
+			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 4.f, g_TimeDelta);
+		}
+	}
+
+	Safe_Release(pGameInstance);*/
 
 	m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir));
 }

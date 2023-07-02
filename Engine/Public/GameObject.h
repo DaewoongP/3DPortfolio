@@ -14,7 +14,9 @@ protected:
 public:
 	class CTransform* Get_Transform() { return m_pTransformCom; }
 	const _tchar*	Get_Tag() const { return m_pTag; }
+	const _tchar*	Get_LayerTag() const { return m_pLayerTag; }
 	void			Set_Tag(const _tchar * pTag) { lstrcpy(m_pTag, pTag); }
+	void			Set_LayerTag(const _tchar* pTag) { lstrcpy(m_pLayerTag, pTag); }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -29,6 +31,7 @@ public:
 
 protected:
 	_tchar		m_pTag[MAX_STR] = TEXT("");
+	_tchar		m_pLayerTag[MAX_STR] = TEXT("");
 	GAMEEVENT	m_eGameEvent = { GAME_END };
 
 protected:

@@ -74,11 +74,13 @@ public:
 	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta);
 	// 점프
 	void Jump(_float fJumpForce, _double dTimeDelta);
+	void Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta);
 	// 리지드 바디 사용
 	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 5.f, _float fResistance = 30.f);
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
 	void WallRun(_float fWallRunY, _fvector vWallRunDirection);
+	void ZeroVelocity();
 
 private:
 	TRANSFORMDESC	m_TransformDesc;

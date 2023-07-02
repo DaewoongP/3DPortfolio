@@ -351,6 +351,14 @@ void CTransform::Jump(_float fJumpForce, _double dTimeDelta)
 	m_vForce.y += fJumpForce / (_float)dTimeDelta;
 }
 
+void CTransform::Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta)
+{
+	m_isJumping = true;
+
+	XMStoreFloat3(&m_vForce, XMLoadFloat3(&m_vForce) + vDir * fJumpForce / (_float)dTimeDelta);
+}
+
+
 void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize)
 {
 	// 점프상태일경우 리턴
@@ -376,17 +384,16 @@ void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpe
 
 void CTransform::WallRun(_float fWallRunY, _fvector vWallRunDirection)
 {
-	// 최대속도로 고정
-	_vector vVelocity = XMVectorSet(XMVectorGetX(vWallRunDirection), 0.f, XMVectorGetZ(vWallRunDirection), 0.f);
-	vVelocity = XMVector3Normalize(vVelocity);
-
-	vVelocity *= m_fLimitVelocity;
-
 	m_isJumping = false;
 
 	_vector vPos = XMVectorSet(m_WorldMatrix._41, fWallRunY, m_WorldMatrix._43, 1.f);
 	
 	Set_State(CTransform::STATE_POSITION, vPos);
+}
+
+void CTransform::ZeroVelocity()
+{
+	XMStoreFloat3(&m_vVelocity, XMVectorZero());
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
