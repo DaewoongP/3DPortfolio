@@ -42,7 +42,7 @@ private:
 	TYPE						m_eColliderType = { TYPE_END };
 
 private:
-	unordered_map<CCollider*, COLLISIONDESC>	m_Collisions;
+	vector<COLLISIONDESC>		m_Collisions;
 
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType);

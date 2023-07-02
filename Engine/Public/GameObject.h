@@ -28,6 +28,7 @@ public:
 
 protected:
 	_tchar		m_pTag[MAX_STR] = TEXT("");
+	GAMEEVENT	m_eGameEvent = { GAME_END };
 
 protected:
 	class CTransform*			m_pTransformCom = { nullptr };

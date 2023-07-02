@@ -49,7 +49,7 @@ namespace Engine
 		enum COLDIR { COLDIR_LEFT, COLDIR_RIGHT, COLDIR_UP, COLDIR_DOWN, COLDIR_FRONT, COLDIR_BACK, COLDIR_END };
 
 		COLDIR					ColDir = { COLDIR_END };
-		class CCollider*		pOtherCollider = { nullptr };
+		const class CCollider*		pOtherCollider = { nullptr };
 	}COLLISIONDESC;
 
 	typedef struct tagVertex_Position

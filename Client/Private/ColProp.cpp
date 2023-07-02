@@ -56,7 +56,25 @@ GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
 	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_STATIC, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
-	return __super::Late_Tick(TimeDelta);
+	__super::Late_Tick(TimeDelta);
+
+	return m_eGameEvent;
+}
+
+void CColProp::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+{
+	//cout << "Props Enter" << endl;
+	//m_eGameEvent = GAME_OBJECT_DEAD;
+}
+
+void CColProp::OnCollisionStay(COLLISIONDESC CollisionDesc)
+{
+	//cout << "Props Stay" << endl;
+}
+
+void CColProp::OnCollisionExit(COLLISIONDESC CollisionDesc)
+{
+	//cout << "Props Exit" << endl;
 }
 
 HRESULT CColProp::Render()

@@ -83,9 +83,7 @@ void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider
 		CollisionDesc.ColDir = eCollisionDirection;
 		CollisionDesc.pOtherCollider = pOtherCollider;
 
-		m_Collisions.emplace(pOtherCollider, CollisionDesc);
-
-		Safe_AddRef(pOtherCollider);
+		m_Collisions.push_back(CollisionDesc);
 
 		static_cast<CGameObject*>(m_pOwner)->OnCollisionEnter(CollisionDesc);
 	}
@@ -93,15 +91,19 @@ void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider
 
 _bool CCollider::IsCollision(CCollider* pOtherCollider)
 {
-	auto iter = m_Collisions.find(pOtherCollider);
+	auto iter = find_if(m_Collisions.begin(), m_Collisions.end(), [&](COLLISIONDESC CollDesc)
+		{
+			if (CollDesc.pOtherCollider == pOtherCollider)
+				return true;
+			return false;
+		});
 
 	if (iter == m_Collisions.end())
 		return false;
 
 	// 이미 맵안에 들어가있었기때문에 Stay인게 확정.
 	// 나머지는 갱신할 필요 없음.
-
-	static_cast<CGameObject*>(m_pOwner)->OnCollisionStay(iter->second);
+	static_cast<CGameObject*>(m_pOwner)->OnCollisionStay(*iter);
 
 	return true;
 }
@@ -112,14 +114,17 @@ void CCollider::ExitCollision(CCollider* pOtherCollider)
 	if (nullptr == pOtherCollider)
 		return;
 
-	auto iter = m_Collisions.find(pOtherCollider);
+	auto iter = find_if(m_Collisions.begin(), m_Collisions.end(), [&](COLLISIONDESC CollDesc) 
+		{
+			if (CollDesc.pOtherCollider == pOtherCollider)
+				return true;
+			return false;
+		});
 
 	if (iter == m_Collisions.end())
 		return;
 
-	static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(iter->second);
-
-	iter->first->Release();
+	static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(*iter);
 
 	m_Collisions.erase(iter);
 }
@@ -156,8 +161,7 @@ void CCollider::Free()
 
 	Safe_Release(m_pBounding);
 
-	// 키값은 nullptr로 채우는 작업이 불가능함.
-	for (auto& iter : m_Collisions)
-		iter.first->Release();
+	for (auto Collision : m_Collisions)
+		const_cast<CCollider*>(Collision.pOtherCollider)->ExitCollision(this);
 	m_Collisions.clear();
 }

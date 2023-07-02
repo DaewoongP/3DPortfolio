@@ -114,6 +114,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 
 void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
+	//cout << "Enter" << endl;
 	if (COLLISIONDESC::COLDIR_FRONT == CollisionDesc.ColDir ||
 		COLLISIONDESC::COLDIR_BACK == CollisionDesc.ColDir)
 		return;
@@ -123,6 +124,7 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
+	//cout << "Stay" << endl;
 	if (COLLISIONDESC::COLDIR_FRONT == CollisionDesc.ColDir ||
 		COLLISIONDESC::COLDIR_BACK == CollisionDesc.ColDir)
 		return;
@@ -131,6 +133,7 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
+	//cout << "Exit" << endl;
 	m_fWallRunY = 0.f;
 }
 

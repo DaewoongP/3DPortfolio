@@ -66,13 +66,22 @@ void CLayer::Tick(_double dTimeDelta)
 GAMEEVENT CLayer::Late_Tick(_double dTimeDelta)
 {
 	GAMEEVENT eGameEventFlag;
-	for (auto& pGameObject : m_GameObjects)
+	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
 	{
-		eGameEventFlag = pGameObject.second->Late_Tick(dTimeDelta);
+		eGameEventFlag = iter->second->Late_Tick(dTimeDelta);
 		if (GAME_STAGE_RESET == eGameEventFlag)
 		{
 			// 스테이지 초기화면 바로 리셋
 			return GAME_STAGE_RESET;
+		}
+		else if (GAME_OBJECT_DEAD == eGameEventFlag)
+		{
+			Safe_Release(iter->second);
+			iter = m_GameObjects.erase(iter);
+		}
+		else
+		{
+			++iter;
 		}
 	}
 

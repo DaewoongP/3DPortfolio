@@ -92,7 +92,17 @@ GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 
 void CKatana::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	cout << "Katana Collision Enter" << endl;
+	//cout << "Katana Collision Enter" << endl;
+}
+
+void CKatana::OnCollisionStay(COLLISIONDESC CollisionDesc)
+{
+	//cout << "Katana Collision Stay" << endl;
+}
+
+void CKatana::OnCollisionExit(COLLISIONDESC CollisionDesc)
+{
+	//cout << "Katana Collision Exit" << endl;
 }
 
 HRESULT CKatana::Render()
