@@ -11,6 +11,7 @@
 // 전역 변수:
 HINSTANCE   g_hInst;                                // 현재 인스턴스입니다.
 HWND        g_hWnd;
+double     g_TimeDelta;
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
@@ -84,8 +85,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         if (dTimerAcc >= 1.0 / 144.0)
         {
             pGameInstance->Tick_Timer(TEXT("Timer_144"));
-
-            pMainApp->Tick(pGameInstance->Get_TimeDelta(TEXT("Timer_144")));
+            g_TimeDelta = pGameInstance->Get_TimeDelta(TEXT("Timer_144"));
+            pMainApp->Tick(g_TimeDelta);
 
             if (FAILED(pMainApp->Render()))
             {

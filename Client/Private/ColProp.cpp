@@ -42,7 +42,6 @@ HRESULT CColProp::Initialize(void* pArg)
 
 void CColProp::Tick(_double TimeDelta)
 {
-	m_pTransformCom->Go_Right(TimeDelta);
 	__super::Tick(TimeDelta);
 }
 

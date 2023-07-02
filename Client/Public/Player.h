@@ -16,7 +16,8 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL, STATE_DASH, STATE_CROUCH, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
+	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, STATE_CROUCH, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
+	enum ONCOLLISION { ON_ENTER, ON_STAY, ON_EXIT, ON_END };
 
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -66,7 +67,13 @@ private:
 	DASHDESC				m_Dash;
 
 	_float					m_fWallRunY = { 0.f };
-	_float3					m_vWallRunDirection;
+	_float					m_fWallRunAngle = { 0.f };
+	_bool					m_isWallRotated = { false };
+	_float3					m_vWallDir;
+	_bool					m_isWallRun = { false };
+
+private:
+	_float4x4				m_CameraMatrix;
 
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };
@@ -83,6 +90,10 @@ private:
 	void Fix_Mouse();
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
+
+
+private: /* Collisions */
+	void CollisionStayWall(COLLISIONDESC CollisionDesc);
 
 private: /* Skills */
 	void Tick_Skills(_double dTimeDelta);

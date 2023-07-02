@@ -12,6 +12,7 @@ protected:
 	virtual ~CGameObject() = default;
 
 public:
+	class CTransform* Get_Transform() { return m_pTransformCom; }
 	const _tchar*	Get_Tag() const { return m_pTag; }
 	void			Set_Tag(const _tchar * pTag) { lstrcpy(m_pTag, pTag); }
 

@@ -40,7 +40,7 @@ HRESULT CCollider::Initialize(CBounding* pBounding, void* pArg)
 	
 	if (nullptr == m_pBounding)
 		return E_FAIL;
-
+	
 	return S_OK;
 }
 
@@ -162,6 +162,6 @@ void CCollider::Free()
 	Safe_Release(m_pBounding);
 
 	for (auto Collision : m_Collisions)
-		const_cast<CCollider*>(Collision.pOtherCollider)->ExitCollision(this);
+		Collision.pOtherCollider->ExitCollision(this);
 	m_Collisions.clear();
 }
