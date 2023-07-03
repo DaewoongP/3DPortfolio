@@ -388,6 +388,8 @@ void CTransform::WallRun(_float fWallRunY, _fvector vWallRunDirection)
 
 	_vector vPos = XMVectorSet(m_WorldMatrix._41, fWallRunY, m_WorldMatrix._43, 1.f);
 	
+	XMStoreFloat3(&m_vVelocity, vWallRunDirection);
+
 	Set_State(CTransform::STATE_POSITION, vPos);
 }
 

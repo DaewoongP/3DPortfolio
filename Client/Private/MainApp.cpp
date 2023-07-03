@@ -16,17 +16,6 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
-	// 콘솔창 실행 함수
-#ifdef _DEBUG
-	if (::AllocConsole() == TRUE)
-	{
-		FILE* nfp[3];
-		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
-		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
-		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
-		std::ios::sync_with_stdio();
-	}
-#endif // _DEBUG
 
 	// 그래픽 디바이스를 만들기 위한 구조체 할당
 	GRAPHICDESC		GraphicDesc;
@@ -169,7 +158,6 @@ CMainApp* CMainApp::Create()
 
 void CMainApp::Free()
 {
-	FreeConsole();
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);

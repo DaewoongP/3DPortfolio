@@ -90,7 +90,7 @@ private:
 	void Fix_Mouse();
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
-
+	void WallRunCameraReset(_double dTimeDelta);
 
 private: /* Collisions */
 	void CollisionStayWall(COLLISIONDESC CollisionDesc);

@@ -6,6 +6,35 @@
 #include "MainApp.h"
 #include "GameInstance.h"
 
+#ifdef _DEBUG
+void SetConsoleWindowSize(_int width, _int height)
+{
+    // 콘솔 핸들 얻음
+    _tchar consoleTitle[MAX_PATH];
+    GetConsoleTitle(consoleTitle, MAX_PATH);
+    HWND console = FindWindow(NULL, consoleTitle);
+
+    // 콘솔 크기 조절
+    RECT ConsoleRect;
+    GetWindowRect(console, &ConsoleRect);
+    MoveWindow(console, ConsoleRect.left, ConsoleRect.top, width, height, TRUE);
+}
+
+void SetConsoleWindowPosition(_int x, _int y)
+{
+    // 콘솔 핸들 얻음
+    _tchar consoleTitle[MAX_PATH];
+    GetConsoleTitle(consoleTitle, MAX_PATH);
+    HWND console = FindWindow(NULL, consoleTitle);
+
+    // 콘솔 위치 조절
+    RECT ConsoleRect;
+    GetWindowRect(console, &ConsoleRect);
+    MoveWindow(console, x, y, ConsoleRect.right - ConsoleRect.left, ConsoleRect.bottom - ConsoleRect.top, TRUE);
+}
+
+#endif //_DEBUG
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -32,6 +61,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: 여기에 코드를 입력합니다.
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+    if (::AllocConsole() == TRUE)
+    {
+        FILE* nfp[3];
+        freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+        freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+        freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+        std::ios::sync_with_stdio();
+    }
+
+    _int ConsoleCX = 800, ConsoleCY = 600;
+    // Set console size
+    SetConsoleWindowSize(ConsoleCX, ConsoleCY);
+    // Get the screen size
+    _int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    // Set console position
+    SetConsoleWindowPosition(1920, 0);
 #endif
 
     CMainApp* pMainApp = { nullptr };
@@ -101,6 +147,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Safe_Release(pGameInstance);
 
 	Safe_Release(pMainApp);
+#ifdef _DEBUG
+    FreeConsole();
+#endif // _DEBUG
 
 	return (int)msg.wParam;
 }

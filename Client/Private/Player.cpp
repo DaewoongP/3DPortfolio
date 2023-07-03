@@ -74,19 +74,7 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	Tick_Skills(dTimeDelta);
 
-	if (false == m_isWallRun &&
-		0.1f <= fabs(m_fWallRunAngle))
-	{
-		if (m_fWallRunAngle > 0.f)
-			m_fWallRunAngle -= 60.f * (_float)dTimeDelta;
-		else
-			m_fWallRunAngle += 60.f * (_float)dTimeDelta;
-
-		
-		m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
-		if (m_isWallRotated)
-			m_pTransformCom->Set_WorldMatrix(XMMatrixRotationY(XMConvertToRadians(180.f)) * m_pTransformCom->Get_WorldMatrix());
-	}
+	WallRunCameraReset(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
 	// 충돌처리
@@ -582,6 +570,29 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 	}
 }
 
+void CPlayer::WallRunCameraReset(_double dTimeDelta)
+{
+	if (false == m_isWallRun &&
+		0.1f <= fabs(m_fWallRunAngle))
+	{
+		if (!XMVectorGetX(XMVectorEqual(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)), XMVectorSet(0.f, 0.f, 1.f, 0.f))))
+		{
+			if (m_fWallRunAngle > 0.1f)
+				m_fWallRunAngle -= 60.f * (_float)dTimeDelta;
+			else if (m_fWallRunAngle < 0.1f)
+				m_fWallRunAngle += 60.f * (_float)dTimeDelta;
+			else
+				m_fWallRunAngle = 0.f;
+
+			m_eCurState = STATE_IDLE;
+
+			m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
+			if (m_isWallRotated)
+				m_pTransformCom->Set_WorldMatrix(XMMatrixRotationY(XMConvertToRadians(180.f)) * m_pTransformCom->Get_WorldMatrix());
+		}
+	}
+}
+
 void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 {
 	CGameObject* pWall = static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner());
@@ -602,7 +613,12 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 	{
 		if (-15.f < m_fWallRunAngle)
 			m_fWallRunAngle -= 60.f * (_float)g_TimeDelta;
-
+		
+		if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
+			m_eCurState = STATE_RUNWALL_L;
+		else
+			m_eCurState = STATE_RUNWALL_R;
+		// Turn
 		m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
 	}
 	else
@@ -610,6 +626,10 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		if (15.f > m_fWallRunAngle)
 			m_fWallRunAngle += 60.f * (_float)g_TimeDelta;
 
+		if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
+			m_eCurState = STATE_RUNWALL_R;
+		else
+			m_eCurState = STATE_RUNWALL_L;
 		m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
 	}
 
@@ -617,29 +637,35 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 	{
 		m_isWallRotated = true;
 		m_pTransformCom->Set_WorldMatrix(XMMatrixRotationY(XMConvertToRadians(180.f)) * m_pTransformCom->Get_WorldMatrix());
+
+		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * 0.3f);
 	}
 	else
+	{
 		m_isWallRotated = false;
-	/*CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
 
+		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * -0.3f);
+	}
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	
+	// 벽점프
 	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
 		m_fWallRunY = 0.f;
 		m_isWallRun = false;
 		if (0 > m_fWallRunAngle)
 		{
-			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 4.f, g_TimeDelta);
 		}
 		else
 		{
-			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 4.f, g_TimeDelta);
 		}
 	}
 
-	Safe_Release(pGameInstance);*/
-
-	m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir));
+	Safe_Release(pGameInstance);
 }
 
 void CPlayer::Tick_Skills(_double dTimeDelta)
