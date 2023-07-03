@@ -1,6 +1,7 @@
 #include "..\Public\Player.h"
 #include "GameInstance.h"
 #include "Part.h"
+#include "Layer.h"
 #include "Katana.h"
 #include "ColProp.h"
 
@@ -102,6 +103,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	if (XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) < -10.f)
 	{
 		// 사망처리도 여기서하면 좋을듯.
+		Safe_Release(pGameInstance);
 		return GAME_STAGE_RESET;
 	}
 
@@ -121,7 +123,7 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	Safe_AddRef(pGameInstance);
 
 	// Wall Run
-	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_Props")))
+	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_fWallRunY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -134,7 +136,6 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		{
 			m_fWallRunY = 0.f;
 		}
-			
 	}
 
 	Safe_Release(pGameInstance);
@@ -189,6 +190,7 @@ HRESULT CPlayer::Render()
 
 #ifdef _DEBUG
 	m_pColliderCom->Render();
+	m_pNavigationCom->Render();
 #endif // _DEBUG
 
 	return S_OK;
@@ -405,7 +407,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// jump, SPACE
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
-		m_pTransformCom->Jump(4.f, dTimeDelta);
+		m_pTransformCom->Jump(6.f, dTimeDelta);
 		if (STATE_ATTACK != m_eCurState)
 			m_eCurState = STATE_IDLE;
 	}
@@ -428,7 +430,6 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			m_eCurState = STATE_IDLE;
 		m_isCrouch = false;
 	}
-
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
@@ -460,6 +461,15 @@ void CPlayer::Key_Input(_double dTimeDelta)
 					89 == iCurrnetAnimIndex)
 					m_pModelCom->Set_AnimIndex(84 + rand() % 3, false);
 			}
+		}
+	}
+	// Hook
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
+	{
+		m_eCurState = STATE_HOOK;
+		if (true == Check_Hook())
+		{
+
 		}
 	}
 
@@ -519,7 +529,6 @@ void CPlayer::Fix_Mouse()
 
 void CPlayer::AnimationState(_double dTimeDelta)
 {
-	m_pModelCom->Play_Animation(dTimeDelta);
 	m_eCurrentAnimationFlag = m_pModelCom->Get_AnimationState();
 
 	// 애니메이션이 종료 되었을때 따로 처리되는 명령이 없을 경우 IDLE처리
@@ -530,6 +539,8 @@ void CPlayer::AnimationState(_double dTimeDelta)
 	}
 
 	Motion_Change(m_eCurrentAnimationFlag);
+
+	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
@@ -559,6 +570,9 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			break;
 		case STATE_CROUCH:
 			m_pModelCom->Set_AnimIndex(92);
+			break;
+		case STATE_HOOK:
+			m_pModelCom->Set_AnimIndex(63, false);
 			break;
 		case STATE_CLIMB:
 			break;
@@ -657,15 +671,48 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		m_isWallRun = false;
 		if (0 > m_fWallRunAngle)
 		{
-			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 6.f, g_TimeDelta);
 		}
 		else
 		{
-			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 6.f, g_TimeDelta);
 		}
 	}
 
 	Safe_Release(pGameInstance);
+}
+
+_bool CPlayer::Check_Hook()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	_float4 vRayPos, vRayDir;
+
+	if (FAILED(pGameInstance->Get_WorldMouseRay(m_pContext, g_hWnd, &vRayPos, &vRayDir)))
+	{
+		Safe_Release(pGameInstance);
+		return false;
+	}
+	Safe_Release(pGameInstance);
+	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Hook"));
+	// 거리별 컬링은 나중에 생각하고.
+	_float fDist = 50.f;
+
+	for (auto& pObject : pHookLayer->Get_AllGameObject())
+	{
+		CCollider* pCollider = static_cast<CColProp*>(pObject.second)->Get_Collider();
+		if (nullptr == pCollider)
+			continue;
+
+		if (true == pCollider->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
+		{
+			m_pTransformCom->Jump(XMLoadFloat4(&vRayDir), fDist * 0.5f, g_TimeDelta);
+
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void CPlayer::Tick_Skills(_double dTimeDelta)

@@ -305,6 +305,13 @@ HRESULT CGameInstance::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _f
 	return m_pCalculator->Get_MouseRay(pContext, hWnd, PickingWorldMatrix_Inverse, vRayPos, vRayDir);
 }
 
+HRESULT CGameInstance::Get_WorldMouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _float4* vRayPos, _float4* vRayDir)
+{
+	NULL_CHECK_RETURN_MSG(m_pCalculator, E_FAIL, TEXT("Calculator NULL"));
+
+	return m_pCalculator->Get_WorldMouseRay(pContext, hWnd, vRayPos, vRayDir);
+}
+
 _bool CGameInstance::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
 {
 	NULL_CHECK_RETURN_MSG(m_pCalculator, false, TEXT("Calculator NULL"));

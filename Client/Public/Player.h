@@ -16,7 +16,7 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, STATE_CROUCH, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
+	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, STATE_CROUCH, STATE_HOOK, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
 	enum ONCOLLISION { ON_ENTER, ON_STAY, ON_EXIT, ON_END };
 
 private:
@@ -66,6 +66,7 @@ private:
 	_float					m_fSpeed;
 	DASHDESC				m_Dash;
 
+private: // WallRun
 	_float					m_fWallRunY = { 0.f };
 	_float					m_fWallRunAngle = { 0.f };
 	_bool					m_isWallRotated = { false };
@@ -92,6 +93,8 @@ private:
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 	void WallRunCameraReset(_double dTimeDelta);
 
+	_bool Check_Hook();
+
 private: /* Collisions */
 	void CollisionStayWall(COLLISIONDESC CollisionDesc);
 
@@ -112,6 +115,10 @@ public:
 END
 
 /*
+
+62 - Hook Pull
+63 - Hook Throw
+
 84 - Att R1
 85 - Att R2
 86 - Att R3
@@ -135,4 +142,5 @@ END
 233 - drone ride end
 237 - drone ride loop
 239 - drone ride start
+
 */

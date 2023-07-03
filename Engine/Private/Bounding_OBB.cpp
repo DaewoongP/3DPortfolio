@@ -52,6 +52,11 @@ void CBounding_OBB::Tick(_fmatrix WorldMatrix)
 	m_pOBB_Original->Transform(*m_pOBB,WorldMatrix);
 }
 
+_bool CBounding_OBB::RayIntersects(_fvector vOrigin, _fvector vDirection, _float& fDist)
+{
+	return _bool();
+}
+
 _bool CBounding_OBB::Intersects(CBounding* pOtherBounding, _float3* pCollisionBox)
 {
 	return _bool();

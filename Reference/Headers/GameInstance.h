@@ -74,6 +74,7 @@ public: /* For.PipeLine*/
 
 public: /* For. Calculator */
 	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
+	HRESULT Get_WorldMouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
 	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
 
 public: /* For. Collision_Manager */

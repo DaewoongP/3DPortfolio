@@ -63,7 +63,7 @@ float4 PS_MAIN_PHONG(PS_IN_PHONG In) : SV_TARGET0
     if (In.vWorldPos.x == 0.f && In.vWorldPos.z < 1.f)
         discard;
     
-    vColor = float4(1.f, 1.f, 1.f, 1.f);
+    vColor = float4(0.f, 1.f, 1.f, 1.f);
     return vColor;
 }
 

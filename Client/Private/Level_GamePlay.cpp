@@ -11,7 +11,8 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("Layer_Props")), E_FAIL);
+	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
+	FAILED_CHECK_RETURN(Ready_Layer_Props(), E_FAIL);
 	
 	
 	// 디버깅용 카메라 및 객체.. 등등
@@ -51,7 +52,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Props(const _tchar* pLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Props()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -113,11 +114,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props(const _tchar* pLayerTag)
 
 			void* pDesc = { nullptr };
 
+			
 			switch (ColPropDesc.eColliderType)
 			{
 			case Engine::CCollider::TYPE_SPHERE:
 				ReadFile(hFile, &ColPropDesc.SphereDesc, sizeof(CBounding_Sphere::BOUNDINGSPHEREDESC), &dwByte, nullptr);
-
 				break;
 			case Engine::CCollider::TYPE_AABB:
 				ReadFile(hFile, &ColPropDesc.AABBDesc, sizeof(CBounding_AABB::BOUNDINGAABBDESC), &dwByte, nullptr);
@@ -127,17 +128,30 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props(const _tchar* pLayerTag)
 				break;
 			}
 
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
-				TEXT("Prototype_GameObject_ColProp"), pLayerTag, wszName, &ColPropDesc)))
+			// 훅 레이어 따로처리.
+			if (wcswcs(wszName, TEXT("hook")))
 			{
-				MSG_BOX("Failed Add_GameObject : (GameObject_ColProps)");
-				return E_FAIL;
+				if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+					TEXT("Prototype_GameObject_ColProp"), TEXT("Layer_Hook"), wszName, &ColPropDesc)))
+				{
+					MSG_BOX("Failed Add_GameObject : (GameObject_ColProps)");
+					return E_FAIL;
+				}
+			}
+			else
+			{
+				if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+					TEXT("Prototype_GameObject_ColProp"), TEXT("Layer_ColProps"), wszName, &ColPropDesc)))
+				{
+					MSG_BOX("Failed Add_GameObject : (GameObject_ColProps)");
+					return E_FAIL;
+				}
 			}
 		}
 		else // 콜라이더가 없는 오브젝트
 		{
 			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
-				TEXT("Prototype_GameObject_Prop"), pLayerTag, wszName, &PropDesc)))
+				TEXT("Prototype_GameObject_Prop"), TEXT("Layer_Props"), wszName, &PropDesc)))
 			{
 				MSG_BOX("Failed Add_GameObject : (GameObject_Props)");
 				return E_FAIL;

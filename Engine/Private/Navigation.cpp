@@ -126,7 +126,7 @@ HRESULT CNavigation::Render()
 	
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
 
-	WorldMatrix._42 += 0.3f;
+	WorldMatrix._42 += 0.2f;
 
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);
@@ -145,18 +145,38 @@ HRESULT CNavigation::Render()
 
 	if (-1 == m_NaviDesc.iCurrentIndex)
 	{
-
 		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
 			return E_FAIL;
 
 		m_pShader->Begin(0);
 
+		vector<CCell*> FallCells;
+
 		for (auto& pCell : m_Cells)
+		{
+			if (CELL_FALL == pCell->Get_CellFlag())
+				FallCells.push_back(pCell);
+			else
+				pCell->Render();
+		}
+		
+		vColor = _float4(1.f, 0.f, 1.f, 1.f);
+		// Fall Cells
+		if (FAILED(m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
+			return E_FAIL;
+
+		m_pShader->Begin(0);
+
+		for (auto& pCell : FallCells)
+		{
 			pCell->Render();
+		}
+
+		FallCells.clear();
 	}
 	else
 	{
-		WorldMatrix._42 = 0.1f;
+		WorldMatrix._42 += 0.1f;
 		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
 			return E_FAIL;
 

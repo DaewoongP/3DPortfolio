@@ -15,6 +15,9 @@ public:
 		CBounding_OBB::BOUNDINGOBBDESC OBBDesc;
 	}COLPROPDESC;
 
+public:
+	CCollider* Get_Collider() { return m_pColliderCom; }
+
 private:
 	explicit CColProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CColProp(const CColProp& rhs);

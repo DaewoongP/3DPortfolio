@@ -27,6 +27,7 @@ public:
 	virtual void Tick(_fmatrix WorldMatrix) override;
 
 public:
+	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist);
 	virtual _bool Intersects(CBounding* pOtherBounding, _float3* pCollisionBox);
 
 #ifdef _DEBUG

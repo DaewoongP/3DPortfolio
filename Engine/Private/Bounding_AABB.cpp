@@ -47,6 +47,11 @@ void CBounding_AABB::Tick(_fmatrix WorldMatrix)
 	m_pAABB_Original->Transform(*m_pAABB, Remove_Rotation(WorldMatrix));
 }
 
+_bool CBounding_AABB::RayIntersects(_fvector vOrigin, _fvector vDirection, _float& fDist)
+{
+	return _bool();
+}
+
 _bool CBounding_AABB::Intersects(CBounding* pOtherBox, _float3* pCollisionBox)
 {
 	const DirectX::BoundingBox* otherAABB = static_cast<CBounding_AABB*>(pOtherBox)->m_pAABB;

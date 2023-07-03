@@ -312,7 +312,6 @@ HRESULT CWindow_Navigation::Delete_Cell()
 		if (m_Cells.size() > 0)
 		{
 			memcpy(m_vCell, m_Cells[m_iCurrentListBoxIndex], sizeof(_float3) * CCell::POINT_END);
-			m_eCellFlags[m_iCurrentListBoxIndex] = m_eCurrentCellFlag;
 		}
 
 		m_pTerrain->RemakeCells(m_Cells);

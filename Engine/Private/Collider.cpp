@@ -64,6 +64,11 @@ HRESULT CCollider::Render(_fvector vColor)
 }
 #endif // _DEBUG
 
+_bool CCollider::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist)
+{
+	return m_pBounding->RayIntersects(vOrigin, vDirection, fDist);
+}
+
 _bool CCollider::Intersects(CCollider* pOtherCollider, _float3* pCollisionBox)
 {
 	return m_pBounding->Intersects(pOtherCollider->m_pBounding, pCollisionBox);

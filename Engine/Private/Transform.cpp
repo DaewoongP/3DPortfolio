@@ -195,6 +195,8 @@ void CTransform::Check_Cell()
 	{
 		m_fGroundY = -999.f;
 	}
+	else
+		m_fGroundY = m_fOriginGroundY;
 }
 
 void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)

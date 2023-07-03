@@ -30,6 +30,7 @@ public:
 	virtual void Tick(_fmatrix WorldMatrix) PURE;
 
 public:
+	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) PURE;
 	virtual _bool Intersects(CBounding* pOtherBounding, _float3* pCollisionBox) PURE;
 
 #ifdef _DEBUG

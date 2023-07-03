@@ -32,6 +32,7 @@ public:
 #endif // _DEBUG
 
 public:
+	_bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist);
 	_bool Intersects(CCollider* pOtherCollider, _float3* pCollisionBox);
 	void OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider* pOtherCollider);
 	_bool IsCollision(CCollider* pOtherCollider);
