@@ -16,6 +16,7 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
+	srand((_uint)time(NULL));
 
 	// 그래픽 디바이스를 만들기 위한 구조체 할당
 	GRAPHICDESC		GraphicDesc;
@@ -45,7 +46,6 @@ void CMainApp::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
-	
 	// 엔진의 Tick 호출
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 

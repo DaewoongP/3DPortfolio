@@ -18,7 +18,6 @@ CPlayer::CPlayer(const CPlayer& rhs)
 #endif // _DEBUG
 
 {
-
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -430,6 +429,15 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			m_eCurState = STATE_IDLE;
 		m_isCrouch = false;
 	}
+	// Hook
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
+	{
+		m_eCurState = STATE_HOOK;
+		if (true == Check_Hook())
+		{
+
+		}
+	}
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
@@ -461,15 +469,6 @@ void CPlayer::Key_Input(_double dTimeDelta)
 					89 == iCurrnetAnimIndex)
 					m_pModelCom->Set_AnimIndex(84 + rand() % 3, false);
 			}
-		}
-	}
-	// Hook
-	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
-	{
-		m_eCurState = STATE_HOOK;
-		if (true == Check_Hook())
-		{
-
 		}
 	}
 

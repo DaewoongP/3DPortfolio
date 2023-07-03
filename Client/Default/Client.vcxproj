@@ -169,7 +169,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
     <ClInclude Include="..\Public\BackGround.h" />
+    <ClInclude Include="..\public\Blue_Snow.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\ColProp.h" />
@@ -192,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
+    <ClCompile Include="..\private\Blue_Snow.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\ColProp.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
@@ -221,7 +224,9 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

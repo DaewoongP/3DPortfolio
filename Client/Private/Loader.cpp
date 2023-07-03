@@ -1,13 +1,18 @@
 #include "..\Public\Loader.h"
 #include "GameInstance.h"
-#include "BackGround.h"
-#include "Texture.h"
-#include "Terrain.h"
-#include "Camera_Free.h"
+
 #include "Player.h"
 #include "Katana.h"
-#include "ForkLift.h"
 #include "ColProp.h"
+#include "Texture.h"
+#include "BackGround.h"
+
+#ifdef _DEBUG
+#include "Terrain.h"
+#include "ForkLift.h"
+#include "Blue_Snow.h"
+#include "Camera_Free.h"
+#endif // _DEBUG
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -125,6 +130,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
 #ifdef _DEBUG
+
 	/* For.Prototype_Component_Texture_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2))))
@@ -132,6 +138,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Terrain)");
 		return E_FAIL;
 	}
+
+	/* For.Prototype_Component_Texture_Snow */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Snow/Snow.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Snow)");
+		return E_FAIL;
+	}
+
 #endif // _DEBUG
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
@@ -139,11 +154,35 @@ HRESULT CLoader::Loading_For_GamePlay()
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
 #ifdef _DEBUG
+
 	/*For.Prototype_Component_VIBuffer_Terrain*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Terrain)");
+		return E_FAIL;
+	}
+
+	CVIBuffer_Rect_Instance::INSTANCEDESC InstanceDesc;
+	ZEROMEM(&InstanceDesc);
+	InstanceDesc.vExtents = _float3(10.f, 4.f, 10.f);
+	InstanceDesc.vSpeed = _uint2(2, 10);
+	InstanceDesc.fLifeTime = 10.f;
+	InstanceDesc.fHeight = 10.f;
+
+	/*For.Prototype_Component_VIBuffer_Rect_Instance*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
+		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &InstanceDesc, 30))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Instance)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Model_Fiona */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Fiona)");
 		return E_FAIL;
 	}
 
@@ -167,14 +206,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_Component_Model_ForkLift */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ForkLift"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat")))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
-		return E_FAIL;
-	}
-
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
@@ -191,6 +222,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_Terrain)");
 		return E_FAIL;
 	}
+
+	/* Prototype_Component_Shader_VtxTexInstance */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxTexInstance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexInstance.hlsl"),
+			VTXRECTINSTANCE_DECL::Elements, VTXRECTINSTANCE_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxTexInstance)");
+		return E_FAIL;
+	}
+
 #endif // _DEBUG
 
 	/* Prototype_Component_Shader_VtxNorTex */
@@ -307,11 +348,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_ForkLift */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ForkLift"),
-		CForkLift::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_Blue_Snow */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Blue_Snow"),
+		CBlue_Snow::Create(m_pDevice, m_pContext))))
 	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ForkLift)");
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Blue_Snow)");
 		return E_FAIL;
 	}
 #endif // _DEBUG

@@ -61,6 +61,15 @@
     <Filter Include="02. GameObjects\01. Monster">
       <UniqueIdentifier>{6f40b148-68c7-4d09-a50a-c0e8cac360fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\04. Effects">
+      <UniqueIdentifier>{f03047c8-241f-4677-bcc2-9afe7e087e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. Effects\Instancing">
+      <UniqueIdentifier>{1ce2b66c-a904-41a2-b838-0f89813b6d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. Effects\Instancing\Blue_Snow">
+      <UniqueIdentifier>{4143d185-239e-4e1a-a62d-5f4f0116b8b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -122,6 +131,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Monster.h">
       <Filter>02. GameObjects\01. Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Blue_Snow.h">
+      <Filter>02. GameObjects\04. Effects\Instancing\Blue_Snow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp">
+      <Filter>97. ShaderFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +204,9 @@
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02. GameObjects\01. Monster</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Blue_Snow.cpp">
+      <Filter>02. GameObjects\04. Effects\Instancing\Blue_Snow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
@@ -204,6 +222,12 @@
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Terrain.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

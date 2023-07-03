@@ -197,6 +197,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Debug(const _tchar* pLayerTag)
 		return E_FAIL;
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Blue_Snow"), pLayerTag, TEXT("GameObject_Blue_Snow"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Blue_Snow)");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

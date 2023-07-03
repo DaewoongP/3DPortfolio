@@ -139,6 +139,12 @@
     <Filter Include="01. Utility\05. Calculator">
       <UniqueIdentifier>{dcca13e2-9e6e-4aa8-af62-e61196f7519d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\07. VIBuffer\Instance">
+      <UniqueIdentifier>{f8df0e84-1465-45f8-a3a4-2d6f13b4063c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance">
+      <UniqueIdentifier>{e9b51dbb-29cb-4a5c-bfcb-304b2f0c7639}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -285,6 +291,12 @@
     <ClInclude Include="..\Public\Collision_Manager.h">
       <Filter>01. Utility\03. Components\09. Collider\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instance.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Rect_Instance.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -412,6 +424,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01. Utility\03. Components\09. Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instance.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Rect_Instance.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
