@@ -586,7 +586,7 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 void CPlayer::WallRunCameraReset(_double dTimeDelta)
 {
 	if (false == m_isWallRun &&
-		0.1f <= fabs(m_fWallRunAngle))
+		XMConvertToRadians(0.1f) <= fabs(m_fWallRunAngle))
 	{
 		if (!XMVectorGetX(XMVectorEqual(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)), XMVectorSet(0.f, 0.f, 1.f, 0.f))))
 		{

@@ -13,6 +13,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
 	FAILED_CHECK_RETURN(Ready_Layer_Props(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
 	
 	
 	// 디버깅용 카메라 및 객체.. 등등
@@ -164,6 +165,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props()
 #endif // _DEBUG
 
 	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Sky"), pLayerTag, TEXT("GameObject_Sky"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Sky)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 

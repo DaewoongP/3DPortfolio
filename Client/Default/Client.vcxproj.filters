@@ -70,6 +70,9 @@
     <Filter Include="02. GameObjects\04. Effects\Instancing\Blue_Snow">
       <UniqueIdentifier>{4143d185-239e-4e1a-a62d-5f4f0116b8b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. Sky">
+      <UniqueIdentifier>{cb1d7572-52eb-4e9f-8d88-6313ee1b6fcc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -137,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp">
       <Filter>97. ShaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sky.h">
+      <Filter>02. GameObjects\05. Sky</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Blue_Snow.cpp">
       <Filter>02. GameObjects\04. Effects\Instancing\Blue_Snow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sky.cpp">
+      <Filter>02. GameObjects\05. Sky</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

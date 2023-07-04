@@ -186,6 +186,7 @@
     <ClInclude Include="..\public\Part.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Prop.h" />
+    <ClInclude Include="..\public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\private\Part.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Prop.cpp" />
+    <ClCompile Include="..\private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Public\Client_Struct.h" />
     <ClCompile Include="Client.cpp" />

@@ -1,6 +1,7 @@
 #include "..\Public\Loader.h"
 #include "GameInstance.h"
 
+#include "Sky.h"
 #include "Player.h"
 #include "Katana.h"
 #include "ColProp.h"
@@ -187,6 +188,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 #endif // _DEBUG
+
+	/* For.Prototype_Component_Model_Sky */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sky"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");
+		return E_FAIL;
+	}
 	
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, -4.f, -0.5f);
 	/* For.Prototype_Component_Model_Player */
@@ -312,6 +321,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CKatana::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Katana)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Sky */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
+		CSky::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Sky)");
 		return E_FAIL;
 	}
 
