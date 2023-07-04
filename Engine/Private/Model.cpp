@@ -49,6 +49,11 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
+_float CModel::Get_CurrentFramePercent()
+{
+	return _float(m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationFrame()) / m_Animations[m_iCurrentAnimIndex]->Get_AnimationFrames();
+}
+
 const CBone* CModel::Get_Bone(const _tchar* pBoneName)
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)
@@ -124,7 +129,7 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying)
+void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying, _double dLerpDuration)
 {
 	if (0 < m_iNumAnimations && true == isPlaying)
 	{
@@ -132,7 +137,7 @@ void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying)
 		if (m_iPreviousAnimIndex != m_iCurrentAnimIndex)
 		{
 			// 이전 애니메이션 상태에서 현재 애니메이션 첫프레임으로 선형보간 처리.
-			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta);
+			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta, dLerpDuration);
 		}
 		else
 		{

@@ -174,10 +174,8 @@ HRESULT CAnimation::SetUp_AnimationNotifies(vector<NOTIFY> Notifies)
 	return S_OK;
 }
 
-ANIMATIONFLAG CAnimation::Lerp_TransformMatrix(CModel::BONES& Bones, CAnimation* pCurrentAnimation, _double TimeDelta)
+ANIMATIONFLAG CAnimation::Lerp_TransformMatrix(CModel::BONES& Bones, CAnimation* pCurrentAnimation, _double TimeDelta, _double dDuration)
 {
-	_double dDuration = 0.2;
-
 	m_dTimeAcc += TimeDelta;
 
 	if (m_dTimeAcc >= dDuration) // 선형보간 시간 대입

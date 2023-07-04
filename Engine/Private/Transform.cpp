@@ -284,14 +284,24 @@ void CTransform::LookAt(_fvector vTargetPosition)
 	Set_State(STATE::STATE_LOOK,	XMVector3Normalize(vLook) * vScale.z);
 }
 
-void CTransform::Rotation(_fvector vAxis, _float fRadian)
+void CTransform::Rotation(_fvector vAxis, _float fRadian, _bool bUseCurrentRotation)
 {
 	// 항등 상태에서 어떤 각도값으로 고정시키고 싶음.
 	_float3 vScale = Get_Scale();
 
-	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
-	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
-	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+	_vector vRight, vUp, vLook;
+	if (true == bUseCurrentRotation)
+	{
+		vRight = Get_State(STATE::STATE_RIGHT);
+		vUp = Get_State(STATE::STATE_UP);
+		vLook = Get_State(STATE::STATE_LOOK);
+	}
+	else
+	{
+		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+	}
 
 	_matrix RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
 

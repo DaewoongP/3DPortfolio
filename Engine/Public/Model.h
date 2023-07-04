@@ -14,6 +14,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	_float Get_CurrentFramePercent();
 	_float4x4 Get_PivotFloat4x4() const { return m_PivotMatrix; }
 	_matrix Get_PivotMatrix() { return XMLoadFloat4x4(&m_PivotMatrix); }
 	_uint Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
@@ -38,7 +39,7 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	void	Play_Animation(_double dTimeDelta, _bool isPlaying = true);
+	void	Play_Animation(_double dTimeDelta, _bool isPlaying = true, _double dLerpDuration = 0.2);
 	void	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 	HRESULT SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies);

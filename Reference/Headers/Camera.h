@@ -40,7 +40,7 @@ public:
 
 	void Turn(_fvector vAxis, _double dTimeDelta) { m_pTransform->Turn(vAxis, dTimeDelta); }
 	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta) { m_pTransform->Turn(vAxis, fRadian, dTimeDelta); }
-	void Rotation(_fvector vAxis, _float fRadian) { m_pTransform->Rotation(vAxis, fRadian); }
+	void Rotation(_fvector vAxis, _float fRadian, _bool bUseCurrentRotation = false) { m_pTransform->Rotation(vAxis, fRadian, bUseCurrentRotation); }
 	void Set_Position(_fvector vPosition) { m_pTransform->Set_State(CTransform::STATE_POSITION, vPosition); }
 
 protected:

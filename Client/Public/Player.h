@@ -66,6 +66,8 @@ private:
 	_float					m_fSpeed;
 	DASHDESC				m_Dash;
 
+	_double					m_dAnimationLerpDuration = { 0.2 };
+
 private: // WallRun
 	_float					m_fWallRunY = { 0.f };
 	_float					m_fWallRunAngle = { 0.f };
@@ -80,7 +82,7 @@ private:
 	_bool					m_isMouseFixed = { true };
 #endif // _DEBUG
 
-private:
+private: /* Tick */
 	HRESULT Add_Component();
 	HRESULT Add_Parts();
 	HRESULT SetUp_ShaderResources();
@@ -94,6 +96,9 @@ private:
 	void WallRunCameraReset(_double dTimeDelta);
 
 	_bool Check_Hook();
+
+private: /* Late_Tick */
+	void CameraOffset(_double dTimeDelta);
 
 private: /* Collisions */
 	void CollisionStayWall(COLLISIONDESC CollisionDesc);
@@ -117,7 +122,6 @@ END
 /*
 
 62 - Hook Pull
-63 - Hook Throw
 
 84 - Att R1
 85 - Att R2

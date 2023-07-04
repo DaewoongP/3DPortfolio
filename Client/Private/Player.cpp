@@ -77,6 +77,8 @@ void CPlayer::Tick(_double dTimeDelta)
 	WallRunCameraReset(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
+	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
+	CameraOffset(dTimeDelta);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
@@ -90,9 +92,6 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
 	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
-
-	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
-	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(&m_CameraMatrix) * m_pTransformCom->Get_WorldMatrix());
 
 	// 아래와 같은 형태로 처리가능.
 	//GAMEEVENT eGameEventFlag = __super::Late_Tick(dTimeDelta);
@@ -430,13 +429,10 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		m_isCrouch = false;
 	}
 	// Hook
-	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
+	if (STATE_HOOK != m_eCurState && pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
 	{
 		m_eCurState = STATE_HOOK;
-		if (true == Check_Hook())
-		{
-
-		}
+		Check_Hook();
 	}
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
@@ -451,12 +447,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		if (STATE_ATTACK == m_eCurState &&
 			ANIM_LERP != m_eCurrentAnimationFlag)
 		{
-			CAnimation* pAnimation = m_pModelCom->Get_Animation();
-			_float fCurrentFramePercent = (_float)pAnimation->Get_CurrentAnimationFrame() / pAnimation->Get_AnimationFrames();
-
 			// 실제 게임이랑 속도 맞춤.
 			// 0.35퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
-			if (fCurrentFramePercent >= 0.35f)
+			if (m_pModelCom->Get_CurrentFramePercent() >= 0.35f)
 			{
 				_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
 				// if Attack Right
@@ -539,7 +532,7 @@ void CPlayer::AnimationState(_double dTimeDelta)
 
 	Motion_Change(m_eCurrentAnimationFlag);
 
-	m_pModelCom->Play_Animation(dTimeDelta);
+	m_pModelCom->Play_Animation(dTimeDelta, true, m_dAnimationLerpDuration);
 }
 
 void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
@@ -571,7 +564,7 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			m_pModelCom->Set_AnimIndex(92);
 			break;
 		case STATE_HOOK:
-			m_pModelCom->Set_AnimIndex(63, false);
+			m_pModelCom->Set_AnimIndex(62, false);
 			break;
 		case STATE_CLIMB:
 			break;
@@ -586,22 +579,20 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 void CPlayer::WallRunCameraReset(_double dTimeDelta)
 {
 	if (false == m_isWallRun &&
-		XMConvertToRadians(0.1f) <= fabs(m_fWallRunAngle))
+		0.1f <= fabs(m_fWallRunAngle))
 	{
 		if (!XMVectorGetX(XMVectorEqual(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)), XMVectorSet(0.f, 0.f, 1.f, 0.f))))
 		{
-			if (m_fWallRunAngle > 0.1f)
+			if (m_fWallRunAngle > 1.f)
 				m_fWallRunAngle -= 60.f * (_float)dTimeDelta;
-			else if (m_fWallRunAngle < 0.1f)
+			else if (m_fWallRunAngle < -1.f)
 				m_fWallRunAngle += 60.f * (_float)dTimeDelta;
 			else
 				m_fWallRunAngle = 0.f;
 
 			m_eCurState = STATE_IDLE;
 
-			m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
-			if (m_isWallRotated)
-				m_pTransformCom->Set_WorldMatrix(XMMatrixRotationY(XMConvertToRadians(180.f)) * m_pTransformCom->Get_WorldMatrix());
+			m_pPlayerCameraCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle), true);
 		}
 	}
 }
@@ -632,7 +623,7 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		else
 			m_eCurState = STATE_RUNWALL_R;
 		// Turn
-		m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
+		m_pPlayerCameraCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle), true);
 	}
 	else
 	{
@@ -643,22 +634,14 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 			m_eCurState = STATE_RUNWALL_R;
 		else
 			m_eCurState = STATE_RUNWALL_L;
-		m_pTransformCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle));
+
+		m_pPlayerCameraCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle), true);
 	}
 
 	if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
-	{
-		m_isWallRotated = true;
-		m_pTransformCom->Set_WorldMatrix(XMMatrixRotationY(XMConvertToRadians(180.f)) * m_pTransformCom->Get_WorldMatrix());
-
 		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * 0.3f);
-	}
 	else
-	{
-		m_isWallRotated = false;
-
 		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * -0.3f);
-	}
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -670,11 +653,11 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		m_isWallRun = false;
 		if (0 > m_fWallRunAngle)
 		{
-			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 6.f, g_TimeDelta);
+			m_pTransformCom->Jump(-vWallLook + vLook * 0.7f + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 6.f, g_TimeDelta);
 		}
 		else
 		{
-			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 6.f, g_TimeDelta);
+			m_pTransformCom->Jump(vWallLook + vLook * 0.7f + XMVectorSet(0.f, 0.1f, 0.f, 0.f), 6.f, g_TimeDelta);
 		}
 	}
 
@@ -695,7 +678,7 @@ _bool CPlayer::Check_Hook()
 	Safe_Release(pGameInstance);
 	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Hook"));
 	// 거리별 컬링은 나중에 생각하고.
-	_float fDist = 50.f;
+	_float fDist = 100.f;
 
 	for (auto& pObject : pHookLayer->Get_AllGameObject())
 	{
@@ -705,9 +688,11 @@ _bool CPlayer::Check_Hook()
 
 		if (true == pCollider->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
 		{
-			m_pTransformCom->Jump(XMLoadFloat4(&vRayDir), fDist * 0.5f, g_TimeDelta);
-
-			return true;
+			if (100.f > fDist)
+			{
+				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 0.5f, g_TimeDelta);
+				return true;
+			}
 		}
 	}
 
@@ -717,6 +702,18 @@ _bool CPlayer::Check_Hook()
 void CPlayer::Tick_Skills(_double dTimeDelta)
 {
 	Dash(dTimeDelta);
+}
+
+void CPlayer::CameraOffset(_double dTimeDelta)
+{
+	_float4 vEye, vAt;
+
+	// 위치값은 고정
+	XMStoreFloat4(&vEye, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	XMStoreFloat4(&vAt, XMLoadFloat4(&vEye) + m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+
+	m_pPlayerCameraCom->Set_LookAtLH(vEye, vAt);
 }
 
 void CPlayer::Dash(_double dTimeDelta)
