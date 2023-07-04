@@ -29,9 +29,6 @@ HRESULT CEnemy::Initialize(void* pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	if (FAILED(Add_Parts()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -42,13 +39,8 @@ void CEnemy::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy::Late_Tick(_double dTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-
-	Safe_Release(pGameInstance);
 
 	__super::Late_Tick(dTimeDelta);
 
@@ -108,11 +100,6 @@ HRESULT CEnemy::Add_Component()
 		return E_FAIL;
 	}
 
-	return S_OK;
-}
-
-HRESULT CEnemy::Add_Parts()
-{
 	return S_OK;
 }
 

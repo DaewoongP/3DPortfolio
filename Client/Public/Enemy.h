@@ -11,6 +11,15 @@ BEGIN(Client)
 
 class CEnemy abstract : public CGameObject
 {
+public:
+	typedef struct tagEnemyDesc
+	{
+		_tchar pModelPrototypeTag[MAX_STR] = TEXT("");
+		_float3 vScale = _float3(0.f, 0.f, 0.f);
+		_float3 vRotation = _float3(0.f, 0.f, 0.f);
+		_float4 vPosition = _float4(0.f, 0.f, 0.f, 1.f);
+	}ENEMYDESC;
+
 protected:
 	explicit CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CEnemy(const CEnemy& rhs);
@@ -33,7 +42,6 @@ protected:
 
 private: /* Tick */
 	HRESULT Add_Component();
-	HRESULT Add_Parts();
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

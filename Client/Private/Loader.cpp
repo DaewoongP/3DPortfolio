@@ -7,6 +7,7 @@
 #include "ColProp.h"
 #include "Texture.h"
 #include "BackGround.h"
+#include "Enemy_Pistol.h"
 
 #ifdef _DEBUG
 #include "Terrain.h"
@@ -215,8 +216,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_Component_Model_Enemy_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Pistol"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Pistol.dat")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Pistol)");
+		return E_FAIL;
+	}
+
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
-	
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
 	
@@ -321,6 +329,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CKatana::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Katana)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Enemy_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Pistol"),
+		CEnemy_Pistol::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Pistol)");
 		return E_FAIL;
 	}
 

@@ -1,6 +1,7 @@
 #include "..\Public\Level_GamePlay.h"
 #include "GameInstance.h"
 #include "ColProp.h"
+#include "Enemy_Pistol.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -11,6 +12,7 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
 	FAILED_CHECK_RETURN(Ready_Layer_Props(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
@@ -50,6 +52,76 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	}
 
 	Safe_Release(pGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Test.AnimMap"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
+
+	_uint iSize = 0;
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		// Object Tag
+		_tchar wszName[MAX_PATH] = TEXT("");
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		ReadFile(hFile, wszName, dwStrByte, &dwByte, nullptr);
+		if (0 == dwByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+
+		// Model Prototype Tag
+		CEnemy::ENEMYDESC EnemyDesc;
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		ReadFile(hFile, EnemyDesc.pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
+		if (0 == dwByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+
+		// Object State
+		ReadFile(hFile, &(EnemyDesc.vScale), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(EnemyDesc.vRotation), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(EnemyDesc.vPosition), sizeof(_float4), &dwByte, nullptr);
+
+		// Enemy_Pistol
+		if (nullptr != wcswcs(EnemyDesc.pModelPrototypeTag, TEXT("Enemy_Pistol")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+				TEXT("Prototype_GameObject_Enemy_Pistol"), pLayerTag, wszName, &EnemyDesc)))
+			{
+				MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Enemy_Pistol)");
+				return E_FAIL;
+			}
+		}
+	}
+
+#ifdef _DEBUG
+	MSG_BOX("File Load Success");
+#endif // _DEBUG
+
+	CloseHandle(hFile);
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 
