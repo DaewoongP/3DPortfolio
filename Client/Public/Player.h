@@ -17,7 +17,6 @@ class CPlayer final : public CGameObject
 {
 public:
 	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, STATE_CROUCH, STATE_HOOK, STATE_CLIMB, STATE_DRONRIDE, STATE_END };
-	enum ONCOLLISION { ON_ENTER, ON_STAY, ON_EXIT, ON_END };
 
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -50,8 +49,7 @@ private: // 사실 이거 굳이 가지고 있을 필요는 없음. 이미 컴포넌트로 Tick을 돌고�
 	class CKatana*			m_pKatana = { nullptr };
 
 private:
-	// 채널의 인덱스 값을 가지고 있음.
-	_uint					m_iWeaponR = { 0 };
+
 	// 마우스 감도
 	_float					m_fMouseSensitivity = { 0.f };
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -86,7 +84,6 @@ private: /* Tick */
 	HRESULT Add_Component();
 	HRESULT Add_Parts();
 	HRESULT SetUp_ShaderResources();
-	HRESULT Find_BoneIndices();
 	HRESULT Initailize_Skills();
 
 	void Key_Input(_double dTimeDelta);

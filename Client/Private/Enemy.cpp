@@ -1,0 +1,125 @@
+#include "..\Public\Enemy.h"
+#include "GameInstance.h"
+
+CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject(pDevice, pContext)
+{
+}
+
+CEnemy::CEnemy(const CEnemy& rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CEnemy::Initialize_Prototype()
+{
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CEnemy::Initialize(void* pArg)
+{
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.f, XMConvertToRadians(3.f));
+
+	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
+		return E_FAIL;
+
+	if (FAILED(Add_Component()))
+		return E_FAIL;
+
+	if (FAILED(Add_Parts()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CEnemy::Tick(_double dTimeDelta)
+{
+	__super::Tick(dTimeDelta);
+}
+
+GAMEEVENT CEnemy::Late_Tick(_double dTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+	Safe_Release(pGameInstance);
+
+	__super::Late_Tick(dTimeDelta);
+
+	return GAME_NOEVENT;
+}
+
+void CEnemy::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+{
+}
+
+void CEnemy::OnCollisionStay(COLLISIONDESC CollisionDesc)
+{
+}
+
+void CEnemy::OnCollisionExit(COLLISIONDESC CollisionDesc)
+{
+}
+
+HRESULT CEnemy::Render()
+{
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
+#ifdef _DEBUG
+	m_pNavigationCom->Render();
+#endif // _DEBUG
+
+	return S_OK;
+}
+
+HRESULT CEnemy::Reset()
+{
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CEnemy::Add_Component()
+{
+	/* For.Com_Renderer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
+		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
+	{
+		MSG_BOX("Failed CEnemy Add_Component : (Com_Renderer)");
+		return E_FAIL;
+	}
+
+	CNavigation::NAVIGATIONDESC NavigationDesc;
+	NavigationDesc.iCurrentIndex = 0;
+
+	/* For.Com_Navigation */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
+	{
+		MSG_BOX("Failed CEnemy Add_Component : (Com_Navigation)");
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CEnemy::Add_Parts()
+{
+	return S_OK;
+}
+
+void CEnemy::Free()
+{
+	__super::Free();
+
+	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_pRendererCom);
+}

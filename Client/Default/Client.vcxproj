@@ -175,6 +175,7 @@
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\ColProp.h" />
+    <ClInclude Include="..\public\Enemy_Pistol.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
@@ -182,7 +183,7 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
-    <ClInclude Include="..\public\Monster.h" />
+    <ClInclude Include="..\public\Enemy.h" />
     <ClInclude Include="..\public\Part.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Prop.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="..\private\Blue_Snow.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\ColProp.cpp" />
+    <ClCompile Include="..\private\Enemy_Pistol.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />
@@ -205,7 +207,7 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
-    <ClCompile Include="..\private\Monster.cpp" />
+    <ClCompile Include="..\private\Enemy.cpp" />
     <ClCompile Include="..\private\Part.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Prop.cpp" />

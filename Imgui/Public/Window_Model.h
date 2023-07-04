@@ -76,6 +76,12 @@ private:
 	HRESULT MapLoadButton();
 	HRESULT MapRead_File(const _tchar* pFileName);
 
+	HRESULT AnimMapSaveLoad();
+	HRESULT AnimMapSaveButton();
+	HRESULT AnimMapWrite_File(const _tchar* pPath);
+	HRESULT AnimMapLoadButton();
+	HRESULT AnimMapRead_File(const _tchar* pFileName);
+
 public:
 	static CWindow_Model* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;

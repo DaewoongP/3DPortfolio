@@ -58,7 +58,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\ColliderTest.Map"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\NonAnim\\ColliderTest.Map"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;

@@ -55,9 +55,6 @@
     <Filter Include="02. GameObjects\03. Props\ColliderProps">
       <UniqueIdentifier>{4e7987a9-e9d4-415e-b840-5848fde1d18a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\01. Monster">
-      <UniqueIdentifier>{6f40b148-68c7-4d09-a50a-c0e8cac360fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\04. Effects">
       <UniqueIdentifier>{f03047c8-241f-4677-bcc2-9afe7e087e7f}</UniqueIdentifier>
     </Filter>
@@ -72,6 +69,12 @@
     </Filter>
     <Filter Include="02. GameObjects\99. Debug\ForkLift">
       <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy">
+      <UniqueIdentifier>{6f40b148-68c7-4d09-a50a-c0e8cac360fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Pistol">
+      <UniqueIdentifier>{e57b3ad5-1826-4aba-9aea-a270c9f27ca6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +135,6 @@
     <ClInclude Include="..\public\ColProp.h">
       <Filter>02. GameObjects\03. Props\ColliderProps</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Monster.h">
-      <Filter>02. GameObjects\01. Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Blue_Snow.h">
       <Filter>02. GameObjects\04. Effects\Instancing\Blue_Snow</Filter>
     </ClInclude>
@@ -143,6 +143,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Sky.h">
       <Filter>02. GameObjects\05. Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy.h">
+      <Filter>02. GameObjects\01. Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Pistol.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Pistol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,14 +213,17 @@
     <ClCompile Include="..\private\ColProp.cpp">
       <Filter>02. GameObjects\03. Props\ColliderProps</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Monster.cpp">
-      <Filter>02. GameObjects\01. Monster</Filter>
+    <ClCompile Include="..\private\Enemy.cpp">
+      <Filter>02. GameObjects\01. Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Blue_Snow.cpp">
       <Filter>02. GameObjects\04. Effects\Instancing\Blue_Snow</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02. GameObjects\05. Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Pistol.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Pistol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

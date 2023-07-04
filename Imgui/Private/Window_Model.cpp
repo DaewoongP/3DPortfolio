@@ -87,7 +87,13 @@ void CWindow_Model::Tick(_double dTimeDelta)
 
 	Setting_Transform();
 
+	ImGui::Separator();
+
 	MapSaveLoad();
+
+	ImGui::Separator();
+
+	AnimMapSaveLoad();
 
 	End();
 }
@@ -493,7 +499,7 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 		if (0 == dwByte)
 			break;
 		ReadFile(hFile, wszName, dwStrByte, &dwByte, nullptr);
-		if (0 == dwByte)
+		if (0 == dwStrByte)
 		{
 			MSG_BOX("Failed Read String Data");
 			return E_FAIL;
@@ -505,7 +511,7 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 		if (0 == dwByte)
 			break;
 		ReadFile(hFile, ObjectDesc.pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
-		if (0 == dwByte)
+		if (0 == dwStrByte)
 		{
 			MSG_BOX("Failed Read String Data");
 			return E_FAIL;
@@ -535,7 +541,6 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 		pDummy->Set_PreToolRotation(vRotation);
 		pDummy->Set_PreToolTransform(ObjectDesc.vPosition);
 		OBJECTWINDOW->Set_Object(CDummy::DUMMY_NONANIM, pObject);
-
 		
 		// Collider
 		_bool bUseCollider = { false };
@@ -580,6 +585,205 @@ HRESULT CWindow_Model::MapRead_File(const _tchar* pFileName)
 
 		pDummy->Set_ColliderInMap(bUseCollider);
 
+	}
+
+	MSG_BOX("File Load Success");
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::AnimMapSaveLoad()
+{
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(2 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(2 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(2 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("AnimMap Save"))
+	{
+		// Pick Disable
+		m_bPickMeshes = false;
+		NAVIGATIONWINDOW->Set_Picking(false);
+
+		IMFILE->OpenDialog("SaveAnimMapDialog", "Choose Folder", ".AnimMap", "AnimMap.AnimMap");
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	AnimMapSaveButton();
+
+	ImGui::SameLine();
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 1.0f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.7f, 1.0f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.8f, 1.0f, 0.8f));
+	if (ImGui::Button("AnimMap Load"))
+	{
+		m_bPickMeshes = false;
+		NAVIGATIONWINDOW->Set_Picking(false);
+
+		IMFILE->OpenDialog("LoadAnimMapDialog", "Choose File", ".AnimMap", ".");
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	AnimMapLoadButton();
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::AnimMapSaveButton()
+{
+	// display
+	if (IMFILE->Display("SaveAnimMapDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			string filePath = IMFILE->GetFilePathName();
+			_tchar wszPath[MAX_PATH] = TEXT("");
+			CharToWChar(filePath.c_str(), wszPath);
+			if (FAILED(AnimMapWrite_File(wszPath)))
+				MSG_BOX("Failed File Write");
+		}
+
+		// close
+		IMFILE->Close();
+	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::AnimMapWrite_File(const _tchar* pPath)
+{
+	HANDLE hFile = CreateFile(pPath, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
+	vector<class CGameObject*> Objects = OBJECTWINDOW->Get_Objects(CDummy::DUMMY_ANIM);
+
+	_uint iSize = (_uint)Objects.size();
+	WriteFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	for (auto& pObject : Objects)
+	{
+		// Object Tag
+		dwStrByte = sizeof(_tchar) * (lstrlen(pObject->Get_Tag()) + 1);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		WriteFile(hFile, pObject->Get_Tag(), dwStrByte, &dwByte, nullptr);
+
+		// Model Prototype Tag
+		CDummy* pDummy = static_cast<CDummy*>(pObject);
+		dwStrByte = sizeof(_tchar) * (lstrlen(pDummy->Get_ObjectDesc().pModelPrototypeTag) + 1);
+		WriteFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		WriteFile(hFile, pDummy->Get_ObjectDesc().pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
+
+		// Object State
+		_float3 vScale = pDummy->Get_PreToolScale();
+		_float3 vRotation = pDummy->Get_PreToolRotation();
+		_float4 vTransform = pDummy->Get_PreToolTransform();
+		WriteFile(hFile, &(vScale), sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
+		WriteFile(hFile, &(vTransform), sizeof(_float4), &dwByte, nullptr);
+	}
+
+	CloseHandle(hFile);
+
+	MSG_BOX("File Save Success");
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::AnimMapLoadButton()
+{
+	// display
+	if (IMFILE->Display("LoadAnimMapDialog"))
+	{
+		// action if OK
+		if (IMFILE->IsOk())
+		{
+			map<string, string> strMap = IMFILE->GetSelection();
+			string filePathName = IMFILE->GetFilePathName();
+			_tchar wszName[MAX_PATH] = TEXT("");
+			CharToWChar(filePathName.c_str(), wszName);
+			if (FAILED(AnimMapRead_File(wszName)))
+				MSG_BOX("Failed File Read");
+		}
+
+		// close
+		IMFILE->Close();
+	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_Model::AnimMapRead_File(const _tchar* pFileName)
+{
+	HANDLE hFile = CreateFile(pFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+	_ulong	dwStrByte = 0;
+
+	_uint iSize = 0;
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		// Object Tag
+		_tchar wszName[MAX_PATH] = TEXT("");
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		ReadFile(hFile, wszName, dwStrByte, &dwByte, nullptr);
+		if (0 == dwStrByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+
+		// Model Prototype Tag
+		CDummy::OBJECTDESC ObjectDesc;
+		ReadFile(hFile, &dwStrByte, sizeof(_ulong), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		ReadFile(hFile, ObjectDesc.pModelPrototypeTag, dwStrByte, &dwByte, nullptr);
+		if (0 == dwStrByte)
+		{
+			MSG_BOX("Failed Read String Data");
+			return E_FAIL;
+		}
+
+		_float3 vScale;
+		_float3 vRotation;
+		// Object State
+		ReadFile(hFile, &(vScale), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(vRotation), sizeof(_float3), &dwByte, nullptr);
+		ReadFile(hFile, &(ObjectDesc.vPosition), sizeof(_float4), &dwByte, nullptr);
+
+
+		if (FAILED(m_pGameInstance->Add_GameObject(LEVEL_TOOL,
+			TEXT("Prototype_GameObject_AnimModel"), TEXT("Layer_Tool"), wszName, &ObjectDesc)))
+		{
+			MSG_BOX("Failed Add GameObject AnimModel");
+			return E_FAIL;
+		}
+
+		CGameObject* pObject = m_pGameInstance->Get_LastGameObject();
+		CDummy* pDummy = static_cast<CDummy*>(pObject);
+		CTransform* pTransform = pDummy->Get_TransformCom();
+		pTransform->Set_Scale(vScale);
+		pTransform->Rotation(vRotation);
+		pDummy->Set_PreToolScale(vScale);
+		pDummy->Set_PreToolRotation(vRotation);
+		pDummy->Set_PreToolTransform(ObjectDesc.vPosition);
+		OBJECTWINDOW->Set_Object(CDummy::DUMMY_ANIM, pObject);
 	}
 
 	MSG_BOX("File Load Success");
