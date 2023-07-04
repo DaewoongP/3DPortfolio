@@ -28,9 +28,6 @@
     <Filter Include="97. ShaderFiles">
       <UniqueIdentifier>{c7122d60-1c37-4d7c-b690-fdfc286c14b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\ForkLift">
-      <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\00. Player">
       <UniqueIdentifier>{df0bf52c-230e-4ea0-8d0f-1028bddfee5c}</UniqueIdentifier>
     </Filter>
@@ -73,6 +70,9 @@
     <Filter Include="02. GameObjects\05. Sky">
       <UniqueIdentifier>{cb1d7572-52eb-4e9f-8d88-6313ee1b6fcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\99. Debug\ForkLift">
+      <UniqueIdentifier>{ef9665b2-633e-40e4-a284-294deb449a52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -112,7 +112,7 @@
       <Filter>02. GameObjects\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ForkLift.h">
-      <Filter>02. GameObjects\ForkLift</Filter>
+      <Filter>02. GameObjects\99. Debug\ForkLift</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Katana.h">
       <Filter>02. GameObjects\00. Player\Katana</Filter>
@@ -187,7 +187,7 @@
       <Filter>02. GameObjects\00. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ForkLift.cpp">
-      <Filter>02. GameObjects\ForkLift</Filter>
+      <Filter>02. GameObjects\99. Debug\ForkLift</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Katana.cpp">
       <Filter>02. GameObjects\00. Player\Katana</Filter>

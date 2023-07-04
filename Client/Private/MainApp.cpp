@@ -32,6 +32,9 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(Ready_Prototype_Component_For_Static()))
 		return E_FAIL;
+
+	if (FAILED(Ready_Fonts()))
+		return E_FAIL;
 	
 	if (FAILED(Open_Level(LEVEL_LOGO)))
 	{
@@ -117,6 +120,14 @@ HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_VIBuffer_Rect)");
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Fonts()
+{
+	if (FAILED(m_pGameInstance->Add_Fonts(m_pDevice, m_pContext, TEXT("Font_135"), TEXT("../Bin/Resources/Fonts/135ex.spritefont"))))
+		return E_FAIL;
 
 	return S_OK;
 }

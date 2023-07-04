@@ -1,6 +1,7 @@
 #include "..\Public\GameInstance.h"
 #include "Graphic_Device.h"
 #include "Level_Manager.h"
+#include "Font_Manager.h"
 #include "Object_Manager.h"
 #include "Timer_Manager.h"
 #include "Calculator.h"
@@ -17,7 +18,9 @@ CGameInstance::CGameInstance()
 	, m_pPipeLine{ CPipeLine::GetInstance() }
 	, m_pCalculator{ CCalculator::GetInstance() }
 	, m_pCollision_Manager{ CCollision_Manager::GetInstance() }
+	, m_pFont_Manager{ CFont_Manager::GetInstance() }
 {
+	Safe_AddRef(m_pFont_Manager);
 	Safe_AddRef(m_pCalculator);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pGraphic_Device);
@@ -327,6 +330,22 @@ HRESULT CGameInstance::Add_Collider(CCollision_Manager::COLTYPE eCollisionType, 
 	return m_pCollision_Manager->Add_Collider(eCollisionType, pCollider);
 }
 
+HRESULT CGameInstance::Add_Fonts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath)
+{
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
+	return m_pFont_Manager->Add_Fonts(pDevice, pContext, pFontTag, pFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Font(const _tchar* pFontTag, const _tchar* pText, const _float2& Position, _fvector vColor, _float fRotation, const _float2& vOrigin, _float fScale)
+{
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
+	return m_pFont_Manager->Render_Font(pFontTag, pText, Position, vColor, fRotation, vOrigin, fScale);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -343,6 +362,8 @@ void CGameInstance::Release_Engine()
 
 	CCalculator::GetInstance()->DestroyInstance();
 
+	CFont_Manager::GetInstance()->DestroyInstance();
+
 	CCollision_Manager::GetInstance()->DestroyInstance();
 
 	CInput_Device::GetInstance()->DestroyInstance();
@@ -352,6 +373,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pCalculator);
 	Safe_Release(m_pPipeLine);

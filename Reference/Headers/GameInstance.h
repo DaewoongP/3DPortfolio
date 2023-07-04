@@ -80,6 +80,10 @@ public: /* For. Calculator */
 public: /* For. Collision_Manager */
 	HRESULT Add_Collider(CCollision_Manager::COLTYPE eCollisionType, class CCollider* pCollider);
 
+public: /* For. Font_Manager */
+	HRESULT Add_Fonts(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pFontTag, const _tchar * pFontFilePath);
+	HRESULT Render_Font(const _tchar * pFontTag, const _tchar * pText, const _float2 & Position, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRotation = 0.f, const _float2 & vOrigin = _float2(0.f, 0.f), _float fScale = 1.f);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -90,6 +94,7 @@ private:
 	class CPipeLine*				m_pPipeLine = { nullptr };
 	class CCalculator*				m_pCalculator = { nullptr };
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
+	class CFont_Manager*			m_pFont_Manager = { nullptr };
 
 public:
 	static void Release_Engine();
