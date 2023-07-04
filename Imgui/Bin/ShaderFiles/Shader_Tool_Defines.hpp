@@ -30,6 +30,12 @@ RasterizerState RS_Cull_CW
 	FrontCounterClockwise = false;
 };
 
+RasterizerState RS_WireFrame
+{
+	FillMode = WireFrame;
+	CullMode = None;
+};
+
 /* Depth_Stencil State */
 
 DepthStencilState DSS_Default

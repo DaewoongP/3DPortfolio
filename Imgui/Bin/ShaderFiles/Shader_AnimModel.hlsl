@@ -1,3 +1,5 @@
+#include "Shader_Tool_Defines.hpp"
+
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_BoneMatrices[256];
 
@@ -11,15 +13,6 @@ texture2D g_DiffuseTexture;
 vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vMtrlEmissive;
-
-sampler LinearSampler = sampler_state
-{
-    filter = MIN_MAG_MIP_LINEAR;
-};
-
-RasterizerState rasterizer
-{
-};
 
 struct VS_IN
 {
@@ -105,7 +98,10 @@ technique11 DefaultTechnique
 {
     pass Mesh
     {
-        SetRasterizerState(rasterizer);
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

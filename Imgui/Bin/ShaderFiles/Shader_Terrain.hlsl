@@ -1,17 +1,6 @@
+#include "Shader_Tool_Defines.hpp"
+
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
-sampler LinearSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
-RasterizerState rasterizer
-{
-    cullmode = NONE;
-    fillmode = WIREFRAME;
-};
 
 struct VS_IN
 {
@@ -71,7 +60,10 @@ technique11 DefaultTechnique
 {
     pass Terrain_Phong
     {
-        SetRasterizerState(rasterizer);
+        SetRasterizerState(RS_WireFrame);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN_PHONG();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

@@ -180,6 +180,9 @@
     <ClInclude Include="..\public\AnimationNotify.h">
       <Filter>01. ImWindow\02. Object\OptionWindow\AnimationNotify</Filter>
     </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Tool_Defines.hpp">
+      <Filter>96. ShaderFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="98. Imgui">

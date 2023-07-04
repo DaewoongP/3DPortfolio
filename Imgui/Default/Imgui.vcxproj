@@ -198,6 +198,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Bin\ShaderFiles\Shader_Tool_Defines.hpp" />
     <ClInclude Include="..\public\AnimationNotify.h" />
     <ClInclude Include="..\public\Axis.h" />
     <ClInclude Include="..\public\Camera_Free.h" />

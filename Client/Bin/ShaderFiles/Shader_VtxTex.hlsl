@@ -1,10 +1,7 @@
+#include "Shader_Client_Defines.hpp"
+
 Texture2D g_Texture;
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-
-sampler LinearSampler = sampler_state
-{
-    filter = MIN_MAG_MIP_LINEAR;
-};
 
 struct VS_IN
 {
@@ -51,6 +48,10 @@ technique11 DefaultTechnique
 {
 	pass BackGround
 	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
 		VertexShader	= compile vs_5_0 VS_MAIN();
 		GeometryShader	= NULL /*compile gs_5_0 GS_MAIN()*/;
 		HullShader		= NULL /*compile hs_5_0 HS_MAIN()*/;
@@ -60,6 +61,10 @@ technique11 DefaultTechnique
 
 	pass UI
 	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
 		VertexShader	= compile vs_5_0 VS_MAIN();
 		GeometryShader	= NULL /*compile gs_5_0 GS_MAIN()*/;
 		HullShader		= NULL /*compile hs_5_0 HS_MAIN()*/;
@@ -69,6 +74,10 @@ technique11 DefaultTechnique
 
 	pass Effect
 	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
 		VertexShader	= compile vs_5_0 VS_MAIN();
 		GeometryShader	= NULL /*compile gs_5_0 GS_MAIN()*/;
 		HullShader		= NULL /*compile hs_5_0 HS_MAIN()*/;
