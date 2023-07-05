@@ -35,12 +35,10 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 
-private:
-	_bool					m_isAttacked = { false };
-
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
+	void Attack();
 
 public:
 	static CKatana* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -50,6 +50,9 @@ private: /* Tick */
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 
+private: /* Late_Tick */
+	GAMEEVENT PlayEvent(_double dTimeDelta);
+
 public:
 	static CEnemy_Pistol* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

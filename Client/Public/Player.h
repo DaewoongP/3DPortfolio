@@ -49,7 +49,6 @@ private: // 사실 이거 굳이 가지고 있을 필요는 없음. 이미 컴포넌트로 Tick을 돌고�
 	class CKatana*			m_pKatana = { nullptr };
 
 private:
-
 	// 마우스 감도
 	_float					m_fMouseSensitivity = { 0.f };
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -91,6 +90,7 @@ private: /* Tick */
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 	void WallRunCameraReset(_double dTimeDelta);
+	void Attack();
 
 	_bool Check_Hook();
 

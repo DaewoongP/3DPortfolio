@@ -17,7 +17,7 @@ public:
 
 public:
 	HRESULT		Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
-	HRESULT		Add_Part(const _tchar* pPrototypeTag, const _tchar* pObjectTag, _Inout_ class CGameObject** ppOut, void* pArg = nullptr);
+	HRESULT		Add_Part(const _tchar* pPrototypeTag, const _tchar* pLayerTag, const _tchar* pObjectTag, _Inout_ class CGameObject** ppOut, void* pArg = nullptr);
 	HRESULT		Delete_Component(const _tchar* pComponentTag);
 	CComponent* Find_Component(const _tchar* pComponentTag);
 

@@ -50,6 +50,7 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 		return;
 
 	m_pBounding->Tick(TransformMatrix);
+	DeadCollision();
 }
 
 #ifdef _DEBUG
@@ -88,6 +89,7 @@ void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider
 		CollisionDesc.ColDir = eCollisionDirection;
 		CollisionDesc.pOtherCollider = pOtherCollider;
 
+		m_isDead.push_back(false);
 		m_Collisions.push_back(CollisionDesc);
 
 		static_cast<CGameObject*>(m_pOwner)->OnCollisionEnter(CollisionDesc);
@@ -96,10 +98,15 @@ void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider
 
 _bool CCollider::IsCollision(CCollider* pOtherCollider)
 {
+	_uint iIndex = { 0 };
 	auto iter = find_if(m_Collisions.begin(), m_Collisions.end(), [&](COLLISIONDESC CollDesc)
 		{
 			if (CollDesc.pOtherCollider == pOtherCollider)
+			{
+				m_isDead[iIndex] = false;
 				return true;
+			}
+			++iIndex;
 			return false;
 		});
 
@@ -118,11 +125,14 @@ void CCollider::ExitCollision(CCollider* pOtherCollider)
 	// 충돌을 안했는데 안에 있었다면 Exit상태 처리.
 	if (nullptr == pOtherCollider)
 		return;
-
+	_uint iIndex = { 0 };
 	auto iter = find_if(m_Collisions.begin(), m_Collisions.end(), [&](COLLISIONDESC CollDesc) 
 		{
 			if (CollDesc.pOtherCollider == pOtherCollider)
+			{
+				m_isDead[iIndex] = false;
 				return true;
+			}
 			return false;
 		});
 
@@ -132,6 +142,29 @@ void CCollider::ExitCollision(CCollider* pOtherCollider)
 	static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(*iter);
 
 	m_Collisions.erase(iter);
+}
+
+void CCollider::DeadCollision()
+{
+	if (0 == m_Collisions.size())
+		return;
+
+	auto iter = m_Collisions.begin();
+	auto iter2 = m_isDead.begin();
+	for (_uint i = 0; i < m_Collisions.size(); ++i)
+	{
+		if (true == m_isDead[i])
+		{
+			static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(m_Collisions[i]);
+			m_Collisions.erase(iter + i);
+			m_isDead.erase(iter2 + i);
+		}	
+	}
+
+	for (auto isDead : m_isDead)
+	{
+		isDead = true;
+	}
 }
 
 CCollider* CCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType)

@@ -37,6 +37,7 @@ public:
 	void OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider* pOtherCollider);
 	_bool IsCollision(CCollider* pOtherCollider);
 	void ExitCollision(CCollider* pOtherCollider);
+	void DeadCollision();
 
 private:
 	class CBounding*			m_pBounding = { nullptr };
@@ -44,6 +45,7 @@ private:
 
 private:
 	vector<COLLISIONDESC>		m_Collisions;
+	vector<_bool>				m_isDead;
 
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType);

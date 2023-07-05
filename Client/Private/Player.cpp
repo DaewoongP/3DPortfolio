@@ -69,6 +69,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	Fix_Mouse();
 
 	AnimationState(dTimeDelta);
+	Attack();
 
 	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 2.f);
 
@@ -91,7 +92,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
-	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
+	//pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
 
 	// 아래와 같은 형태로 처리가능.
 	//GAMEEVENT eGameEventFlag = __super::Late_Tick(dTimeDelta);
@@ -112,6 +113,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	}
 
 	Safe_Release(pGameInstance);
+
 	return GAME_NOEVENT;
 }
 
@@ -228,6 +230,8 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/WallRun_L.Notify"))))
 		return E_FAIL;
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/WallRun_R.Notify"))))
+		return E_FAIL; 
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Hook_Pull.Notify"))))
 		return E_FAIL;
 
 	/* For.Com_Shader */
@@ -303,7 +307,7 @@ HRESULT CPlayer::Add_Parts()
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Katana"),
+	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Katana"), TEXT("Layer_PlayerWeapon"),
 		TEXT("Part_Katana"), reinterpret_cast<CGameObject**>(&m_pKatana), &ParentMatrixDesc)))
 		return E_FAIL;
 
@@ -436,8 +440,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			ANIM_LERP != m_eCurrentAnimationFlag)
 		{
 			// 실제 게임이랑 속도 맞춤.
-			// 0.35퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
-			if (m_pModelCom->Get_CurrentFramePercent() >= 0.35f)
+			// 40퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
+			if (0.4f <= m_pModelCom->Get_CurrentFramePercent())
 			{
 				_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
 				// if Attack Right
@@ -583,6 +587,15 @@ void CPlayer::WallRunCameraReset(_double dTimeDelta)
 			m_pPlayerCameraCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle), true);
 		}
 	}
+}
+
+void CPlayer::Attack()
+{
+	if (STATE_ATTACK != m_eCurState)
+		return;
+
+	if (0.15f <= m_pModelCom->Get_CurrentFramePercent() && 0.8 > m_pModelCom->Get_CurrentFramePercent())
+		m_pKatana->Attack();
 }
 
 void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)

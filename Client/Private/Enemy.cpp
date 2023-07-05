@@ -39,10 +39,16 @@ void CEnemy::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy::Late_Tick(_double dTimeDelta)
 {
-	if (nullptr != m_pRendererCom)
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (nullptr != m_pRendererCom &&
+		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 4.f))
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
 	__super::Late_Tick(dTimeDelta);
+
+	Safe_Release(pGameInstance);
 
 	return GAME_NOEVENT;
 }

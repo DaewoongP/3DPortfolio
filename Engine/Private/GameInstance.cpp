@@ -5,6 +5,7 @@
 #include "Object_Manager.h"
 #include "Timer_Manager.h"
 #include "Calculator.h"
+#include "Frustum.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -19,7 +20,9 @@ CGameInstance::CGameInstance()
 	, m_pCalculator{ CCalculator::GetInstance() }
 	, m_pCollision_Manager{ CCollision_Manager::GetInstance() }
 	, m_pFont_Manager{ CFont_Manager::GetInstance() }
+	, m_pFrustum{ CFrustum::GetInstance() }
 {
+	Safe_AddRef(m_pFrustum);
 	Safe_AddRef(m_pFont_Manager);
 	Safe_AddRef(m_pCalculator);
 	Safe_AddRef(m_pPipeLine);
@@ -43,6 +46,9 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 		return E_FAIL;
 
 	if (FAILED(m_pInput_Device->Ready_Input_Device(hInst, GraphicDesc.hWnd)))
+		return E_FAIL;
+
+	if (FAILED(m_pFrustum->Initialize()))
 		return E_FAIL;
 
 	return S_OK;
@@ -69,6 +75,7 @@ void CGameInstance::Tick_Engine(_double dTimeDelta)
 	m_pInput_Device->Tick();
 	m_pObject_Manager->Tick(dTimeDelta);
 	m_pPipeLine->Tick();
+	m_pFrustum->Tick();
 	m_pCollision_Manager->Tick();
 	m_pObject_Manager->Late_Tick(dTimeDelta);
 	m_pLevel_Manager->Tick(dTimeDelta);
@@ -346,6 +353,14 @@ HRESULT CGameInstance::Render_Font(const _tchar* pFontTag, const _tchar* pText, 
 	return m_pFont_Manager->Render_Font(pFontTag, pText, Position, vColor, fRotation, vOrigin, fScale);
 }
 
+_bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
+{
+	if (nullptr == m_pFrustum)
+		return false;
+
+	return m_pFrustum->isIn_WorldFrustum(vWorldPos, fRange);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -363,6 +378,8 @@ void CGameInstance::Release_Engine()
 	CCalculator::GetInstance()->DestroyInstance();
 
 	CFont_Manager::GetInstance()->DestroyInstance();
+	
+	CFrustum::GetInstance()->DestroyInstance();
 
 	CCollision_Manager::GetInstance()->DestroyInstance();
 
@@ -373,6 +390,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pFrustum);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pCalculator);

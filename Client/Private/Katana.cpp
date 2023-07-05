@@ -45,38 +45,16 @@ HRESULT CKatana::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 void CKatana::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+	
+	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+	_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
+	XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
+	AABBDesc.vExtents = _float3(3.f, 3.f, 3.f);
+	m_pColliderCom->Set_BoundingDesc(&AABBDesc);
 
-	if (CPlayer::STATE_ATTACK == static_cast<CPlayer*>(m_pOwner)->Get_CurrentState())
-	{
-		m_pModelCom->Set_AnimIndex(1, false);
-		m_pModelCom->Play_Animation(dTimeDelta);
-		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-		_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
-		XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
-		AABBDesc.vExtents = _float3(2.f, 2.f, 2.f);
-		m_pColliderCom->Set_BoundingDesc(&AABBDesc);
+	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
-		m_isAttacked = true;
-	}
-	else
-	{
-		m_isAttacked = false;
-		m_pModelCom->Play_Animation(dTimeDelta, false);
-	}
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (true == m_isAttacked)
-	{
-		// 충돌처리
-		m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
-		// 테스트용으로 다이나믹으로 처리함.
-		pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
-	}
-	else
-		pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_EXIT, m_pColliderCom);
-	Safe_Release(pGameInstance);
+	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
@@ -91,17 +69,17 @@ GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 
 void CKatana::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	//cout << "Katana Collision Enter" << endl;
+	cout << "Katana Collision Enter" << endl;
 }
 
 void CKatana::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
-	//cout << "Katana Collision Stay" << endl;
+	cout << "Katana Collision Stay" << endl;
 }
 
 void CKatana::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
-	//cout << "Katana Collision Exit" << endl;
+	cout << "Katana Collision Exit" << endl;
 }
 
 HRESULT CKatana::Render()
@@ -125,8 +103,7 @@ HRESULT CKatana::Render()
 	}
 
 #ifdef _DEBUG
-	if (m_isAttacked)
-		m_pColliderCom->Render();
+	m_pColliderCom->Render();
 #endif // _DEBUG
 
 	return S_OK;
@@ -192,6 +169,16 @@ HRESULT CKatana::SetUp_ShaderResources()
 	Safe_Release(pGameInstance);
 
 	return S_OK;
+}
+
+void CKatana::Attack()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_STATIC, m_pColliderCom);
+
+	Safe_Release(pGameInstance);
 }
 
 CKatana* CKatana::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -24,8 +24,6 @@ void CCollision_Manager::Tick()
 	Collision(COLTYPE_STATIC, COLTYPE_DYNAMIC);
 	Collision(COLTYPE_DYNAMIC, COLTYPE_DYNAMIC);
 
-	ExitCollision();
-
 	ClearColliders();
 }
 
@@ -43,12 +41,6 @@ void CCollision_Manager::Collision(COLTYPE eSourType, COLTYPE eDestType)
 			if (true == pSourCollider->Intersects(pDestCollider, &vCollisionBox))
 			{
 				Check_Direction(pSourCollider, pDestCollider, vCollisionBox);
-			}
-			// 충돌 중이 아니므로 콜라이더에 콜리전이 있을경우 Exit 호출 필요.
-			else
-			{
-				pSourCollider->ExitCollision(pDestCollider);
-				pDestCollider->ExitCollision(pSourCollider);
 			}
 		}
 	}
@@ -111,27 +103,6 @@ void CCollision_Manager::Check_Direction(class CCollider* pSourCollider, class C
 		{
 			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_FRONT, pDestCollider);
 			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_BACK, pSourCollider);
-		}
-	}
-}
-
-void CCollision_Manager::ExitCollision()
-{
-	if (0 == m_Colliders[COLTYPE_EXIT].size())
-		return;
-
-	for (_uint i = 0; i < COLTYPE_END; ++i)
-	{
-		for (auto& pCollider : m_Colliders[i])
-		{
-			for (auto& pColliderExit : m_Colliders[COLTYPE_EXIT])
-			{
-				if (pCollider == pColliderExit)
-					continue;
-
-				pCollider->ExitCollision(pColliderExit);
-				pColliderExit->ExitCollision(pCollider);
-			}
 		}
 	}
 }
