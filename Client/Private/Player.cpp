@@ -593,8 +593,8 @@ void CPlayer::Attack()
 {
 	if (STATE_ATTACK != m_eCurState)
 		return;
-
-	if (0.15f <= m_pModelCom->Get_CurrentFramePercent() && 0.8 > m_pModelCom->Get_CurrentFramePercent())
+	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
+	if (0.15f <= fAnimFramePercent && 0.4f > fAnimFramePercent)
 		m_pKatana->Attack();
 }
 

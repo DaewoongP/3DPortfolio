@@ -76,7 +76,7 @@ GAMEEVENT CLayer::Late_Tick(_double dTimeDelta)
 		}
 		else if (GAME_OBJECT_DEAD == eGameEventFlag)
 		{
-			Safe_Release(iter->second);
+			m_DeadObjects.emplace(*iter);
 			iter = m_GameObjects.erase(iter);
 		}
 		else
@@ -90,6 +90,11 @@ GAMEEVENT CLayer::Late_Tick(_double dTimeDelta)
 
 HRESULT CLayer::ResetStage()
 {
+	for (auto& pDeadGameObject : m_DeadObjects)
+	{
+		m_GameObjects.emplace(pDeadGameObject.first, pDeadGameObject.second);
+	}
+	
 	for (auto& pGameObject : m_GameObjects)
 	{
 		if (FAILED(pGameObject.second->Reset()))
@@ -110,5 +115,10 @@ void CLayer::Free()
 		Safe_Release(pGameObject.second);
 
 	m_GameObjects.clear();
+
+	for (auto& pDeadGameObject : m_DeadObjects)
+		Safe_Release(pDeadGameObject.second);
+
+	m_DeadObjects.clear();
 }
 

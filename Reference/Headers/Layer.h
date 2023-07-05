@@ -28,6 +28,7 @@ public:
 
 private:
 	unordered_map<const _tchar*, class CGameObject*>	m_GameObjects;
+	unordered_map<const _tchar*, class CGameObject*>	m_DeadObjects;
 
 public:
 	static CLayer* Create();

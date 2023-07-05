@@ -116,6 +116,10 @@ HRESULT CEnemy_Pistol::Render()
 
 HRESULT CEnemy_Pistol::Reset()
 {
+	m_pModelCom->Set_AnimIndex(54);
+	m_eCurState = STATE_IDLE;
+	m_eGameEvent = GAME_NOEVENT;
+
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
 

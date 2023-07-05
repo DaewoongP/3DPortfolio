@@ -49,7 +49,7 @@ void CKatana::Tick(_double dTimeDelta)
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 	_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
 	XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
-	AABBDesc.vExtents = _float3(3.f, 3.f, 3.f);
+	AABBDesc.vExtents = _float3(2.f, 2.f, 2.f);
 	m_pColliderCom->Set_BoundingDesc(&AABBDesc);
 
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
