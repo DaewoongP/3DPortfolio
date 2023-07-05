@@ -129,6 +129,19 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
+void CModel::Reset_Animation(_uint iAnimIndex)
+{
+	m_iCurrentAnimIndex = iAnimIndex;
+	m_iPreviousAnimIndex = m_iCurrentAnimIndex;
+	m_eAnimationFlag = ANIM_FINISHED;
+	m_Animations[m_iCurrentAnimIndex]->Reset();
+
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones);
+	}
+}
+
 void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying, _double dLerpDuration)
 {
 	if (0 < m_iNumAnimations && true == isPlaying)

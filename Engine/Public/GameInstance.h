@@ -78,7 +78,7 @@ public: /* For. Calculator */
 	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
 
 public: /* For. Collision_Manager */
-	HRESULT Add_Collider(CCollision_Manager::COLTYPE eCollisionType, class CCollider* pCollider);
+	HRESULT Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, class CCollider* pCollider);
 
 public: /* For. Font_Manager */
 	HRESULT Add_Fonts(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pFontTag, const _tchar * pFontFilePath);

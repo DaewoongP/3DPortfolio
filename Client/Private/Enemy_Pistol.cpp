@@ -1,5 +1,7 @@
 #include "..\Public\Enemy_Pistol.h"
 #include "GameInstance.h"
+#include "Pistol.h"
+
 CEnemy_Pistol::CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -37,11 +39,14 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	if (FAILED(Add_Component(EnemyDesc)))
 		return E_FAIL;
 
+	if (FAILED(Add_Parts()))
+		return E_FAIL;
+
 	m_pTransformCom->Set_Scale(EnemyDesc.vScale);
 	m_pTransformCom->Rotation(EnemyDesc.vRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&EnemyDesc.vPosition));
 
-	m_pModelCom->Set_AnimIndex(101 + rand() % 5);
+	m_pModelCom->Reset_Animation(54);
 
 	return S_OK;
 }
@@ -50,9 +55,16 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 {
 	AnimationState(dTimeDelta);
 
+	if (STATE_ATTACK == m_eCurState)
+	{
+		if (0.5f < m_pModelCom->Get_CurrentFramePercent())
+			m_pPistol->Fire(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+	}
+
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
 GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
@@ -60,7 +72,8 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
 	Safe_Release(pGameInstance);
 
@@ -74,15 +87,22 @@ void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
-	}
+	}	
 }
 
 void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
+	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
+	{
+		m_pTransformCom->LookAt(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		m_eCurState = STATE_ATTACK;
+	}
 }
 
 void CEnemy_Pistol::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
+	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
+		m_eCurState = STATE_IDLE;
 }
 
 HRESULT CEnemy_Pistol::Render()
@@ -109,6 +129,7 @@ HRESULT CEnemy_Pistol::Render()
 
 #ifdef _DEBUG
 	m_pColliderCom->Render();
+	m_pVisionColliderCom->Render(DirectX::Colors::Aquamarine);
 #endif // _DEBUG
 
 	return S_OK;
@@ -116,7 +137,7 @@ HRESULT CEnemy_Pistol::Render()
 
 HRESULT CEnemy_Pistol::Reset()
 {
-	m_pModelCom->Set_AnimIndex(54);
+	m_pModelCom->Reset_Animation(54);
 	m_eCurState = STATE_IDLE;
 	m_eGameEvent = GAME_NOEVENT;
 
@@ -157,11 +178,38 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		return E_FAIL;
 	}
 
+	CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
+
+	SphereDesc.fRadius = 20.f;
+	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
+	/* For.Com_VisionCollider */
+	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_VisionCollider)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
 HRESULT CEnemy_Pistol::Add_Parts()
 {
+	CPart::PARENTMATRIXDESC ParentMatrixDesc;
+	ZEROMEM(&ParentMatrixDesc);
+
+	const CBone* pBone = m_pModelCom->Get_Bone(TEXT("Gun_r"));
+
+	ParentMatrixDesc.PivotMatrix = m_pModelCom->Get_PivotFloat4x4();
+	ParentMatrixDesc.OffsetMatrix = pBone->Get_OffsetMatrix();
+	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
+	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Pistol"), TEXT("Layer_EnemyPart"),
+		TEXT("Part_Pistol"), reinterpret_cast<CGameObject**>(&m_pPistol), &ParentMatrixDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -212,7 +260,7 @@ void CEnemy_Pistol::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			m_pModelCom->Set_AnimIndex(54);
 			break;
 		case STATE_ATTACK:
-			m_pModelCom->Set_AnimIndex(97, false);
+			m_pModelCom->Set_AnimIndex(97);
 			break;
 		case STATE_RUN:
 			m_pModelCom->Set_AnimIndex(56);
@@ -269,7 +317,9 @@ void CEnemy_Pistol::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pPistol);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pVisionColliderCom);
 }

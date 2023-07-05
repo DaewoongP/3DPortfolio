@@ -62,7 +62,7 @@ public:
 	void Go_Left(_double dTimeDelta);
 	void Go_Right(_double dTimeDelta);
 	void Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
-	void LookAt(_fvector vTargetPosition);
+	void LookAt(_fvector vTargetPosition, _bool bDeleteY = false);
 	// 각도값 고정
 	// 축을 기반으로 한 로테이션
 	void Rotation(_fvector vAxis, _float fRadian, _bool bUseCurrentRotation = false);

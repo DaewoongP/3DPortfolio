@@ -1,4 +1,6 @@
 #include "..\Public\Bounding_OBB.h"
+#include "Bounding_AABB.h"
+#include "Bounding_Sphere.h"
 
 CBounding_OBB::CBounding_OBB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBounding(pDevice, pContext)
@@ -57,9 +59,19 @@ _bool CBounding_OBB::RayIntersects(_fvector vOrigin, _fvector vDirection, _float
 	return _bool();
 }
 
-_bool CBounding_OBB::Intersects(CBounding* pOtherBounding, _float3* pCollisionBox)
+_bool CBounding_OBB::Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox)
 {
-	return _bool();
+	switch (eColliderType)
+	{
+	case Engine::CCollider::TYPE_SPHERE:
+		return m_pOBB->Intersects(*static_cast<CBounding_Sphere*>(pOtherBounding)->Get_Bounding());
+	case Engine::CCollider::TYPE_AABB:
+		return m_pOBB->Intersects(*static_cast<CBounding_AABB*>(pOtherBounding)->Get_Bounding());
+	case Engine::CCollider::TYPE_OBB:
+		return m_pOBB->Intersects(*static_cast<CBounding_OBB*>(pOtherBounding)->Get_Bounding());
+	}
+
+	return false;
 }
 
 #ifdef _DEBUG

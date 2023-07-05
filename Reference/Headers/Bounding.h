@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+#include "Collider.h"
 
 #ifdef _DEBUG
 #include "DebugDraw.h"
@@ -31,7 +32,7 @@ public:
 
 public:
 	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) PURE;
-	virtual _bool Intersects(CBounding* pOtherBounding, _float3* pCollisionBox) PURE;
+	virtual _bool Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox) PURE;
 
 #ifdef _DEBUG
 public:

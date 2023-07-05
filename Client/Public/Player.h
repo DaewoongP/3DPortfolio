@@ -92,7 +92,7 @@ private: /* Tick */
 	void WallRunCameraReset(_double dTimeDelta);
 	void Attack();
 
-	_bool Check_Hook();
+	_bool Check_Hook(_double dTimeDelta);
 
 private: /* Late_Tick */
 	void CameraOffset(_double dTimeDelta);

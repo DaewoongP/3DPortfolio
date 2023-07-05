@@ -1,4 +1,6 @@
 #include "..\Public\Bounding_AABB.h"
+#include "Bounding_OBB.h"
+#include "Bounding_Sphere.h"
 
 CBounding_AABB::CBounding_AABB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBounding(pDevice, pContext)
@@ -52,21 +54,16 @@ _bool CBounding_AABB::RayIntersects(_fvector vOrigin, _fvector vDirection, _floa
 	return _bool();
 }
 
-_bool CBounding_AABB::Intersects(CBounding* pOtherBox, _float3* pCollisionBox)
+_bool CBounding_AABB::Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox)
 {
-	const DirectX::BoundingBox* otherAABB = static_cast<CBounding_AABB*>(pOtherBox)->m_pAABB;
-	_vector vCenterLine, vRadius;
-	ZEROMEM(&vCenterLine);
-
-	vCenterLine = XMVectorAbs(XMLoadFloat3(&m_pAABB->Center) - XMLoadFloat3(&otherAABB->Center));
-
-	vRadius = XMLoadFloat3(&m_pAABB->Extents) + XMLoadFloat3(&otherAABB->Extents);
-
-	if (true == XMVector3GreaterOrEqual(vRadius, vCenterLine))
+	switch (eColliderType)
 	{
-		XMStoreFloat3(pCollisionBox, (vRadius - vCenterLine) / vRadius);
-
-		return true;
+	case Engine::CCollider::TYPE_SPHERE:
+		return m_pAABB->Intersects(*static_cast<CBounding_Sphere*>(pOtherBounding)->Get_Bounding());
+	case Engine::CCollider::TYPE_AABB:
+		return IntersectAABB(pOtherBounding, pCollisionBox);
+	case Engine::CCollider::TYPE_OBB:
+		return m_pAABB->Intersects(*static_cast<CBounding_OBB*>(pOtherBounding)->Get_Bounding());
 	}
 
 	return false;
@@ -96,6 +93,26 @@ _matrix CBounding_AABB::Remove_Rotation(_fmatrix TransformMatrix)
 	ResultMatrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVectorGetX(XMVector3Length(TransformMatrix.r[2]));
 
 	return ResultMatrix;
+}
+
+_bool CBounding_AABB::IntersectAABB(CBounding* pOtherBounding, _float3* pCollisionBox)
+{
+	const DirectX::BoundingBox* otherAABB = static_cast<CBounding_AABB*>(pOtherBounding)->m_pAABB;
+	_vector vCenterLine, vRadius;
+	ZEROMEM(&vCenterLine);
+
+	vCenterLine = XMVectorAbs(XMLoadFloat3(&m_pAABB->Center) - XMLoadFloat3(&otherAABB->Center));
+
+	vRadius = XMLoadFloat3(&m_pAABB->Extents) + XMLoadFloat3(&otherAABB->Extents);
+
+	if (true == XMVector3GreaterOrEqual(vRadius, vCenterLine))
+	{
+		XMStoreFloat3(pCollisionBox, (vRadius - vCenterLine) / vRadius);
+
+		return true;
+	}
+
+	return false;
 }
 
 CBounding_AABB* CBounding_AABB::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

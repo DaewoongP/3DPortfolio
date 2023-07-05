@@ -49,7 +49,7 @@ void CColProp::Tick(_double TimeDelta)
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
-	pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_STATIC, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_STATIC, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
 }

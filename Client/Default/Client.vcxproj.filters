@@ -76,6 +76,12 @@
     <Filter Include="02. GameObjects\01. Enemy\Enemy_Pistol">
       <UniqueIdentifier>{e57b3ad5-1826-4aba-9aea-a270c9f27ca6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Bullet">
+      <UniqueIdentifier>{8b43ac0b-74d5-4914-ad46-c2a2a71a6638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Pistol\Pistol">
+      <UniqueIdentifier>{43d175a8-79b6-472c-91ed-2b51aea2409a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -149,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Enemy_Pistol.h">
       <Filter>02. GameObjects\01. Enemy\Enemy_Pistol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Pistol.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Pistol\Pistol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02. GameObjects\01. Enemy\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +236,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Enemy_Pistol.cpp">
       <Filter>02. GameObjects\01. Enemy\Enemy_Pistol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Pistol.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Pistol\Pistol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02. GameObjects\01. Enemy\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

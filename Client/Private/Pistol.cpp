@@ -1,18 +1,18 @@
-#include "..\Public\Katana.h"
+#include "..\Public\Pistol.h"
 #include "GameInstance.h"
-#include "Player.h"
+#include "Bullet.h"
 
-CKatana::CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPistol::CPistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPart(pDevice, pContext)
 {
 }
 
-CKatana::CKatana(const CKatana& rhs)
+CPistol::CPistol(const CPistol& rhs)
 	: CPart(rhs)
 {
 }
 
-HRESULT CKatana::Initialize_Prototype()
+HRESULT CPistol::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -20,7 +20,7 @@ HRESULT CKatana::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CKatana::Initialize(void* pArg)
+HRESULT CPistol::Initialize(void* pArg)
 {
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(&TransformDesc)))
@@ -35,29 +35,19 @@ HRESULT CKatana::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CKatana::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
+HRESULT CPistol::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 {
 	m_ParentMatrixDesc = ParentDesc;
-	
+
 	return S_OK;
 }
 
-void CKatana::Tick(_double dTimeDelta)
+void CPistol::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-	
-	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-	_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
-	XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
-	AABBDesc.vExtents = _float3(2.f, 2.f, 2.f);
-	m_pColliderCom->Set_BoundingDesc(&AABBDesc);
-
-	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
-
-	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
-GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
+GAMEEVENT CPistol::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
@@ -67,22 +57,7 @@ GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 	return GAME_NOEVENT;
 }
 
-void CKatana::OnCollisionEnter(COLLISIONDESC CollisionDesc)
-{
-	cout << "Katana Collision Enter" << endl;
-}
-
-void CKatana::OnCollisionStay(COLLISIONDESC CollisionDesc)
-{
-	cout << "Katana Collision Stay" << endl;
-}
-
-void CKatana::OnCollisionExit(COLLISIONDESC CollisionDesc)
-{
-	cout << "Katana Collision Exit" << endl;
-}
-
-HRESULT CKatana::Render()
+HRESULT CPistol::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -102,14 +77,10 @@ HRESULT CKatana::Render()
 		m_pModelCom->Render(i);
 	}
 
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-#endif // _DEBUG
-
 	return S_OK;
 }
 
-HRESULT CKatana::Add_Components()
+HRESULT CPistol::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -120,7 +91,7 @@ HRESULT CKatana::Add_Components()
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Weapon_Pistol"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
 		MSG_BOX("Failed CKatana Add_Component : (Com_Model)");
@@ -135,21 +106,10 @@ HRESULT CKatana::Add_Components()
 		return E_FAIL;
 	}
 
-	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-	AABBDesc.vExtents = _float3(5.f, 5.f, 5.f);
-	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
-	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
-HRESULT CKatana::SetUp_ShaderResources()
+HRESULT CPistol::SetUp_ShaderResources()
 {
 	// Part의 경우 월드행렬을 다 저장된거로 던져야함.
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
@@ -171,46 +131,61 @@ HRESULT CKatana::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CKatana::Attack()
+void CPistol::Fire(_vector vFirePosition, _vector vDirection)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	// 총알 생성
+	CGameObject* pGameObject = { nullptr };
+	_tchar szName[MAX_STR] = TEXT("GameObject_Bullet");
+	_tchar szIndex[MAX_STR] = TEXT("");
+	_itow_s(m_iBulletIndex, szIndex, 10);
+	++m_iBulletIndex;
+	
+	lstrcpy(szName, szIndex);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
+	// 누수남 지금
+	/*if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Bullet"), TEXT("Layer_Enemy"), szName, &pGameObject)))
+		return;
 
-	Safe_Release(pGameInstance);
+	m_Bullets.emplace(szName, pGameObject);
+
+	static_cast<CBullet*>(pGameObject)->Fire(vFirePosition, vDirection);*/
 }
 
-CKatana* CKatana::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPistol* CPistol::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CKatana* pInstance = new CKatana(pDevice, pContext);
+	CPistol* pInstance = new CPistol(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CKatana");
+		MSG_BOX("Failed to Created CPistol");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
-CGameObject* CKatana::Clone(void* pArg)
+CGameObject* CPistol::Clone(void* pArg)
 {
-	CKatana* pInstance = new CKatana(*this);
+	CPistol* pInstance = new CPistol(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CKatana");
+		MSG_BOX("Failed to Cloned CPistol");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
-void CKatana::Free()
+void CPistol::Free()
 {
 	__super::Free();
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pColliderCom);
+
+	for (auto& pBullet : m_Bullets)
+		Safe_Release(pBullet.second);
+	m_Bullets.clear();
 }

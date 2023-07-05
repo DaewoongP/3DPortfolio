@@ -3,6 +3,8 @@
 
 #include "Sky.h"
 #include "Player.h"
+#include "Pistol.h"
+#include "Bullet.h"
 #include "Katana.h"
 #include "ColProp.h"
 #include "Texture.h"
@@ -216,11 +218,21 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Pistol */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Pistol"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Pistol.dat")))))
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Pistol.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Pistol)");
+		return E_FAIL;
+	}
+
+	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	/* For.Prototype_Component_Model_Weapon_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Weapon_Pistol"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/Weapon_Enemy_Pistol.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Pistol)");
 		return E_FAIL;
 	}
 
@@ -337,6 +349,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CEnemy_Pistol::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Pistol)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Weapon_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Pistol"),
+		CPistol::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Pistol)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Weapon_Bullet */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Bullet"),
+		CBullet::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Bullet)");
 		return E_FAIL;
 	}
 

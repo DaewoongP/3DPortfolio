@@ -139,29 +139,26 @@
     <Filter Include="01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance">
       <UniqueIdentifier>{e9b51dbb-29cb-4a5c-bfcb-304b2f0c7639}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\05. PipeLine">
+    <Filter Include="01. Utility\04. PipeLine">
       <UniqueIdentifier>{e9197bc8-5ee0-4874-8977-ecb624f880e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\06. Calculator">
+    <Filter Include="01. Utility\05. Calculator">
       <UniqueIdentifier>{dcca13e2-9e6e-4aa8-af62-e61196f7519d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\07. Light">
+    <Filter Include="01. Utility\06. Light">
       <UniqueIdentifier>{734e1db2-cc4a-427a-9587-f697e8e335d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\07. Light\Manager">
+    <Filter Include="01. Utility\06. Light\Manager">
       <UniqueIdentifier>{7286bd9d-085e-4cfc-af50-cc773f3c2576}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\04. States">
-      <UniqueIdentifier>{f45f7695-c8a0-4978-892a-0c9ebc0f6610}</UniqueIdentifier>
+    <Filter Include="01. Utility\07. Frustum">
+      <UniqueIdentifier>{da4bba48-afe5-4f0e-b27b-7fbdb7778707}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\09. Font">
+    <Filter Include="01. Utility\08. Font">
       <UniqueIdentifier>{cd65c7a5-78dc-458b-9f32-79a26e21d603}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\09. Font\Manager">
+    <Filter Include="01. Utility\08. Font\Manager">
       <UniqueIdentifier>{ca8bc1ac-e09f-43e2-bd57-a31b1d3d1958}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\08. Frustum">
-      <UniqueIdentifier>{da4bba48-afe5-4f0e-b27b-7fbdb7778707}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -259,10 +256,10 @@
       <Filter>01. Utility\03. Components\04. Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PipeLine.h">
-      <Filter>01. Utility\05. PipeLine</Filter>
+      <Filter>01. Utility\04. PipeLine</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Calculator.h">
-      <Filter>01. Utility\06. Calculator</Filter>
+      <Filter>01. Utility\05. Calculator</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Converter.h">
       <Filter>99. Headers</Filter>
@@ -316,19 +313,19 @@
       <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Client\Public\Light.h">
-      <Filter>01. Utility\07. Light</Filter>
+      <Filter>01. Utility\06. Light</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Client\Public\Light_Manager.h">
-      <Filter>01. Utility\07. Light\Manager</Filter>
+      <Filter>01. Utility\06. Light\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CustomFont.h">
-      <Filter>01. Utility\09. Font</Filter>
+      <Filter>01. Utility\08. Font</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Font_Manager.h">
-      <Filter>01. Utility\09. Font\Manager</Filter>
+      <Filter>01. Utility\08. Font\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Frustum.h">
-      <Filter>01. Utility\08. Frustum</Filter>
+      <Filter>01. Utility\07. Frustum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -411,10 +408,10 @@
       <Filter>01. Utility\03. Components\04. Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp">
-      <Filter>01. Utility\05. PipeLine</Filter>
+      <Filter>01. Utility\04. PipeLine</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Calculator.cpp">
-      <Filter>01. Utility\06. Calculator</Filter>
+      <Filter>01. Utility\05. Calculator</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bone.cpp">
       <Filter>01. Utility\03. Components\04. Model\Bone</Filter>
@@ -465,19 +462,19 @@
       <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Client\Private\Light.cpp">
-      <Filter>01. Utility\07. Light</Filter>
+      <Filter>01. Utility\06. Light</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Client\Private\Light_Manager.cpp">
-      <Filter>01. Utility\07. Light\Manager</Filter>
+      <Filter>01. Utility\06. Light\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\CustomFont.cpp">
-      <Filter>01. Utility\09. Font</Filter>
+      <Filter>01. Utility\08. Font</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Font_Manager.cpp">
-      <Filter>01. Utility\09. Font\Manager</Filter>
+      <Filter>01. Utility\08. Font\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Frustum.cpp">
-      <Filter>01. Utility\08. Frustum</Filter>
+      <Filter>01. Utility\07. Frustum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

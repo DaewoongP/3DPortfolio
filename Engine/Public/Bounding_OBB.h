@@ -18,6 +18,9 @@ private:
 	virtual ~CBounding_OBB() = default;
 
 public:
+	const DirectX::BoundingOrientedBox* Get_Bounding() const {
+		return m_pOBB;
+	}
 	virtual _float3 Get_CenterPosition() const  override { return m_pOBB->Center; }
 	virtual void Set_BoundingDesc(void* pBoundingDesc) override;
 
@@ -28,7 +31,7 @@ public:
 
 public:
 	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist);
-	virtual _bool Intersects(CBounding* pOtherBounding, _float3* pCollisionBox);
+	virtual _bool Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox);
 
 #ifdef _DEBUG
 public:

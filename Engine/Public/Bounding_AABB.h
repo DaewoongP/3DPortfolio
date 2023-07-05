@@ -18,6 +18,9 @@ private:
 	virtual ~CBounding_AABB() = default;
 
 public:
+	const DirectX::BoundingBox* Get_Bounding() const {
+		return m_pAABB;
+	}
 	virtual _float3 Get_CenterPosition() const  override { return m_pAABB->Center; }
 	virtual void Set_BoundingDesc(void* pBoundingDesc) override;
 	void Set_AABB(BOUNDINGAABBDESC AABBDesc) {
@@ -32,7 +35,7 @@ public:
 
 public:
 	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) override;
-	virtual _bool Intersects(CBounding* pOtherBox, _float3* pCollisionBox) override;
+	virtual _bool Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox) override;
 
 #ifdef _DEBUG
 public:
@@ -41,6 +44,7 @@ public:
 
 private:
 	_matrix Remove_Rotation(_fmatrix TransformMatrix);
+	_bool IntersectAABB(CBounding* pOtherBounding, _float3* pCollisionBox);
 
 private:
 	// 행렬 변환이 중첩되어 처리될 수 있기 때문에 필요한 원본 객체.

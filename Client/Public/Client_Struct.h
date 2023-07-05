@@ -18,7 +18,7 @@ namespace Client
 
 	typedef struct tagDashSkill : public tagSkillDesc
 	{
-		float		fLimitVelocity = 35.f;
-		float		fSpeed = 100.f;
+		float		fLimitVelocity;
+		float		fSpeed;
 	}DASHDESC;
 }

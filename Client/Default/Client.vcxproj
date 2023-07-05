@@ -172,6 +172,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Blue_Snow.h" />
+    <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\ColProp.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\public\Enemy.h" />
     <ClInclude Include="..\public\Part.h" />
+    <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Prop.h" />
     <ClInclude Include="..\public\Sky.h" />
@@ -197,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Blue_Snow.cpp" />
+    <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\ColProp.cpp" />
     <ClCompile Include="..\private\Enemy_Pistol.cpp" />
@@ -209,6 +212,7 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />
     <ClCompile Include="..\private\Part.cpp" />
+    <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Prop.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />

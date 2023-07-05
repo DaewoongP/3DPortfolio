@@ -1,6 +1,7 @@
 #include "Terrain.h"
 #include "GameInstance.h"
 #include "Cell.h"
+#include "Bounding_Sphere.h"
 
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)

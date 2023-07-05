@@ -329,7 +329,7 @@ _bool CGameInstance::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
 	return m_pCalculator->IsMouseInClient(pContext, hWnd);
 }
 
-HRESULT CGameInstance::Add_Collider(CCollision_Manager::COLTYPE eCollisionType, CCollider* pCollider)
+HRESULT CGameInstance::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CCollider* pCollider)
 {
 	if (nullptr == m_pCollision_Manager)
 		return E_FAIL;

@@ -47,7 +47,16 @@ namespace Engine
 	typedef struct tagCollisionDesc
 	{
 		enum COLDIR { COLDIR_LEFT, COLDIR_RIGHT, COLDIR_UP, COLDIR_DOWN, COLDIR_FRONT, COLDIR_BACK, COLDIR_END };
-
+		enum COLTYPE
+		{
+			COLTYPE_PLAYER,
+			COLTYPE_ENEMY,
+			COLTYPE_ENEMYVISION,
+			COLTYPE_ENEMYWEAPON,
+			COLTYPE_STATIC,
+			COLTYPE_END
+		};
+		COLTYPE					ColType = { COLTYPE_END };
 		COLDIR					ColDir = { COLDIR_END };
 		class CCollider*		pOtherCollider = { nullptr };
 	}COLLISIONDESC;

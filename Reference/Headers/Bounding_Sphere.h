@@ -18,6 +18,9 @@ private:
 	virtual ~CBounding_Sphere() = default;
 
 public:
+	const DirectX::BoundingSphere* Get_Bounding() const {
+		return m_pSphere;
+	}
 	virtual _float3 Get_CenterPosition() const override { return m_pSphere->Center; }
 	virtual void Set_BoundingDesc(void* pBoundingDesc) override;
 
@@ -27,9 +30,8 @@ public:
 	virtual void Tick(_fmatrix WorldMatrix) override;
 
 public:
-	virtual _bool Intersects(CBounding* pOtherSphere, _float3* pCollisionBox);
+	virtual _bool Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox);
 	virtual _bool RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist) override;
-	_bool SphereIntersects(const CBounding_Sphere* pSphere);
 
 #ifdef _DEBUG
 public:

@@ -269,11 +269,14 @@ void CTransform::Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMin
 		Move_Direction(vDir, dTimeDelta);
 }
 
-void CTransform::LookAt(_fvector vTargetPosition)
+void CTransform::LookAt(_fvector vTargetPosition, _bool bDeleteY)
 {
 	_vector vPosition = Get_State(STATE::STATE_POSITION);
 	
 	_vector vLook = vTargetPosition - vPosition;
+	if (true == bDeleteY)
+		vLook.m128_f32[1] = 0.f;
+
 	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
 	_vector vUp = XMVector3Cross(vLook, vRight);
 

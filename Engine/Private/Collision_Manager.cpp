@@ -7,7 +7,7 @@ CCollision_Manager::CCollision_Manager()
 {
 }
 
-HRESULT CCollision_Manager::Add_Collider(COLTYPE eCollisionType, CCollider* pCollider)
+HRESULT CCollision_Manager::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CCollider* pCollider)
 {
 	if (nullptr == pCollider)
 		return E_FAIL;
@@ -21,13 +21,16 @@ HRESULT CCollision_Manager::Add_Collider(COLTYPE eCollisionType, CCollider* pCol
 
 void CCollision_Manager::Tick()
 {
-	Collision(COLTYPE_STATIC, COLTYPE_DYNAMIC);
-	Collision(COLTYPE_DYNAMIC, COLTYPE_DYNAMIC);
+	Collision(COLLISIONDESC::COLTYPE_PLAYER, COLLISIONDESC::COLTYPE_STATIC);
+	Collision(COLLISIONDESC::COLTYPE_PLAYER, COLLISIONDESC::COLTYPE_ENEMY);
+	Collision(COLLISIONDESC::COLTYPE_PLAYER, COLLISIONDESC::COLTYPE_ENEMYVISION);
+	Collision(COLLISIONDESC::COLTYPE_PLAYER, COLLISIONDESC::COLTYPE_ENEMYWEAPON);
+	//Collision(COLTYPE_ENEMY, COLTYPE_STATIC);
 
 	ClearColliders();
 }
 
-void CCollision_Manager::Collision(COLTYPE eSourType, COLTYPE eDestType)
+void CCollision_Manager::Collision(COLLISIONDESC::COLTYPE eSourType, COLLISIONDESC::COLTYPE eDestType)
 {
 	for (auto& pSourCollider : m_Colliders[eSourType])
 	{
@@ -36,17 +39,17 @@ void CCollision_Manager::Collision(COLTYPE eSourType, COLTYPE eDestType)
 			if (pSourCollider == pDestCollider)
 				continue;
 
-			_float3 vCollisionBox;
+			_float3 vCollisionBox = _float3(0.f, 0.f, 0.f);
 
 			if (true == pSourCollider->Intersects(pDestCollider, &vCollisionBox))
 			{
-				Check_Direction(pSourCollider, pDestCollider, vCollisionBox);
+				Check_Direction(eSourType, pSourCollider, eDestType, pDestCollider, vCollisionBox);
 			}
 		}
 	}
 }
 
-void CCollision_Manager::Check_Direction(class CCollider* pSourCollider, class CCollider* pDestCollider, _float3 vCollisionBox)
+void CCollision_Manager::Check_Direction(COLLISIONDESC::COLTYPE eSourType, class CCollider* pSourCollider, COLLISIONDESC::COLTYPE eDestType, class CCollider* pDestCollider, _float3 vCollisionBox)
 {
 	_float3 vSourCenterPos = pSourCollider->Get_BoundingCenterPosition();
 	_float3 vDestCenterPos = pDestCollider->Get_BoundingCenterPosition();
@@ -60,13 +63,13 @@ void CCollision_Manager::Check_Direction(class CCollider* pSourCollider, class C
 		// SourCenter X가 더 클경우
 		if (vSourCenterPos.x >= vDestCenterPos.x)
 		{
-			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_LEFT, pDestCollider);
-			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_RIGHT, pSourCollider);
+			pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_LEFT, pDestCollider);
+			pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_RIGHT, pSourCollider);
 		}
 		else // DestCenter X가 더 클경우.
 		{
-			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_RIGHT, pDestCollider);
-			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_LEFT, pSourCollider);
+			pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_RIGHT, pDestCollider);
+			pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_LEFT, pSourCollider);
 		}
 	}
 	// y <= z
@@ -78,13 +81,13 @@ void CCollision_Manager::Check_Direction(class CCollider* pSourCollider, class C
 		// SourCenter Y가 더 클경우
 		if (vSourCenterPos.y >= vDestCenterPos.y)
 		{
-			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_DOWN, pDestCollider);
-			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_UP, pSourCollider);
+			pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_DOWN, pDestCollider);
+			pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_UP, pSourCollider);
 		}
 		else // DestCenter Y가 더 클경우.
 		{
-			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_UP, pDestCollider);
-			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_DOWN, pSourCollider);
+			pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_UP, pDestCollider);
+			pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_DOWN, pSourCollider);
 		}
 	}
 	// z <= x
@@ -96,20 +99,26 @@ void CCollision_Manager::Check_Direction(class CCollider* pSourCollider, class C
 		// SourCenter Z가 더 클경우
 		if (vSourCenterPos.z >= vDestCenterPos.z)
 		{
-			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_BACK, pDestCollider);
-			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_FRONT, pSourCollider);
+			pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_BACK, pDestCollider);
+			pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_FRONT, pSourCollider);
 		}
 		else // DestCenter Z가 더 클경우.
 		{
-			pSourCollider->OnCollision(COLLISIONDESC::COLDIR_FRONT, pDestCollider);
-			pDestCollider->OnCollision(COLLISIONDESC::COLDIR_BACK, pSourCollider);
+			pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_FRONT, pDestCollider);
+			pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_BACK, pSourCollider);
 		}
+	}
+	// 박스 충돌이 아님.
+	else
+	{
+		pSourCollider->OnCollision(eDestType, COLLISIONDESC::COLDIR_END, pDestCollider);
+		pDestCollider->OnCollision(eSourType, COLLISIONDESC::COLDIR_END, pSourCollider);
 	}
 }
 
 void CCollision_Manager::ClearColliders()
 {
-	for (_uint i = 0; i < COLTYPE_END; ++i)
+	for (_uint i = 0; i < COLLISIONDESC::COLTYPE_END; ++i)
 	{
 		for (auto& pCollider : m_Colliders[i])
 		{

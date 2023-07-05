@@ -92,7 +92,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
-	//pGameInstance->Add_Collider(CCollision_Manager::COLTYPE_DYNAMIC, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
 
 	// 아래와 같은 형태로 처리가능.
 	//GAMEEVENT eGameEventFlag = __super::Late_Tick(dTimeDelta);
@@ -424,7 +424,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (STATE_HOOK != m_eCurState && pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
 	{
 		m_eCurState = STATE_HOOK;
-		Check_Hook();
+		Check_Hook(dTimeDelta);
 	}
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
@@ -665,8 +665,11 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 	Safe_Release(pGameInstance);
 }
 
-_bool CPlayer::Check_Hook()
+_bool CPlayer::Check_Hook(_double dTimeDelta)
 {
+	if (STATE_HOOK != m_eCurState)
+		return false;
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 	_float4 vRayPos, vRayDir;
@@ -679,7 +682,7 @@ _bool CPlayer::Check_Hook()
 	Safe_Release(pGameInstance);
 	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Hook"));
 	// 거리별 컬링은 나중에 생각하고.
-	_float fDist = 100.f;
+	_float fDist = 40.f;
 
 	for (auto& pObject : pHookLayer->Get_AllGameObject())
 	{
@@ -689,7 +692,7 @@ _bool CPlayer::Check_Hook()
 
 		if (true == pCollider->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
 		{
-			if (100.f > fDist)
+			if (40.f > fDist)
 			{
 				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 0.5f, g_TimeDelta);
 				return true;

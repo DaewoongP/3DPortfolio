@@ -1,4 +1,6 @@
 #include "..\Public\Bounding_Sphere.h"
+#include "Bounding_AABB.h"
+#include "Bounding_OBB.h"
 
 CBounding_Sphere::CBounding_Sphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBounding(pDevice, pContext)
@@ -47,19 +49,24 @@ void CBounding_Sphere::Tick(_fmatrix WorldMatrix)
 	m_pSphere_Original->Transform(*m_pSphere, WorldMatrix);
 }
 
-_bool CBounding_Sphere::Intersects(CBounding* pOtherSphere, _float3* pCollisionBox)
+_bool CBounding_Sphere::Intersects(CCollider::TYPE eColliderType, CBounding* pOtherBounding, _float3* pCollisionBox)
 {
-	return _bool();
+	switch (eColliderType)
+	{
+	case Engine::CCollider::TYPE_SPHERE:
+		return m_pSphere->Intersects(*static_cast<CBounding_Sphere*>(pOtherBounding)->Get_Bounding());
+	case Engine::CCollider::TYPE_AABB:
+		return m_pSphere->Intersects(*static_cast<CBounding_AABB*>(pOtherBounding)->Get_Bounding());
+	case Engine::CCollider::TYPE_OBB:
+		return m_pSphere->Intersects(*static_cast<CBounding_OBB*>(pOtherBounding)->Get_Bounding());
+	}
+
+	return false;
 }
 
 _bool CBounding_Sphere::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist)
 {
 	return m_pSphere->Intersects(vOrigin, vDirection, fDist);
-}
-
-_bool CBounding_Sphere::SphereIntersects(const CBounding_Sphere* pSphere)
-{
-	return m_pSphere->Intersects(*pSphere->m_pSphere);
 }
 
 #ifdef _DEBUG

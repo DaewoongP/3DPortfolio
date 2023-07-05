@@ -2,6 +2,9 @@
 #include "Composite.h"
 #include "GameObject.h"
 #include "Collision_Manager.h"
+#include "Bounding_Sphere.h"
+#include "Bounding_AABB.h"
+#include "Bounding_OBB.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -12,6 +15,16 @@ CCollider::CCollider(const CCollider& rhs)
 	: CComponent(rhs)
 	, m_eColliderType(rhs.m_eColliderType)
 {
+}
+
+_float3 CCollider::Get_BoundingCenterPosition() const
+{
+	return m_pBounding->Get_CenterPosition(); 
+}
+
+void CCollider::Set_BoundingDesc(void* pBoundingDesc)
+{
+	m_pBounding->Set_BoundingDesc(pBoundingDesc); 
 }
 
 HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
@@ -72,10 +85,10 @@ _bool CCollider::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _f
 
 _bool CCollider::Intersects(CCollider* pOtherCollider, _float3* pCollisionBox)
 {
-	return m_pBounding->Intersects(pOtherCollider->m_pBounding, pCollisionBox);
+	return m_pBounding->Intersects(pOtherCollider->m_eColliderType, pOtherCollider->m_pBounding, pCollisionBox);
 }
 
-void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider* pOtherCollider)
+void CCollider::OnCollision(COLLISIONDESC::COLTYPE eCollisionType, COLLISIONDESC::COLDIR eCollisionDirection, CCollider* pOtherCollider)
 {
 	if (nullptr == m_pOwner ||
 		nullptr == pOtherCollider)
@@ -88,6 +101,7 @@ void CCollider::OnCollision(COLLISIONDESC::COLDIR eCollisionDirection, CCollider
 	{
 		CollisionDesc.ColDir = eCollisionDirection;
 		CollisionDesc.pOtherCollider = pOtherCollider;
+		CollisionDesc.ColType = eCollisionType;
 
 		m_isDead.push_back(false);
 		m_Collisions.push_back(CollisionDesc);
@@ -123,8 +137,10 @@ _bool CCollider::IsCollision(CCollider* pOtherCollider)
 void CCollider::ExitCollision(CCollider* pOtherCollider)
 {
 	// 충돌을 안했는데 안에 있었다면 Exit상태 처리.
-	if (nullptr == pOtherCollider)
+	if (nullptr == pOtherCollider &&
+		nullptr == m_pOwner)
 		return;
+
 	_uint iIndex = { 0 };
 	auto iter = find_if(m_Collisions.begin(), m_Collisions.end(), [&](COLLISIONDESC CollDesc) 
 		{
@@ -199,7 +215,5 @@ void CCollider::Free()
 
 	Safe_Release(m_pBounding);
 
-	for (auto Collision : m_Collisions)
-		Collision.pOtherCollider->ExitCollision(this);
 	m_Collisions.clear();
 }

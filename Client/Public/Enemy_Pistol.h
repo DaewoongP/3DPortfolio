@@ -33,6 +33,12 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
+	CCollider*				m_pVisionColliderCom = { nullptr };
+
+private:
+	class CPistol*			m_pPistol = { nullptr };
+	_float					m_fVisionRange = { 0.f };
+
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
