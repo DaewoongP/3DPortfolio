@@ -45,6 +45,9 @@ HRESULT CPistol::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 void CPistol::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
+	for (auto& pair : m_Bullets)
+		pair.second->Tick(dTimeDelta);
 }
 
 GAMEEVENT CPistol::Late_Tick(_double dTimeDelta)
@@ -53,6 +56,8 @@ GAMEEVENT CPistol::Late_Tick(_double dTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+
+	Bullet_Late_Tick(dTimeDelta);
 
 	return GAME_NOEVENT;
 }
@@ -131,24 +136,38 @@ HRESULT CPistol::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CPistol::Fire(_vector vFirePosition, _vector vDirection)
+void CPistol::Fire(_vector vPosition, _vector vPlayerPos)
 {
-	// 총알 생성
-	CGameObject* pGameObject = { nullptr };
-	_tchar szName[MAX_STR] = TEXT("GameObject_Bullet");
-	_tchar szIndex[MAX_STR] = TEXT("");
-	_itow_s(m_iBulletIndex, szIndex, 10);
-	++m_iBulletIndex;
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Weapon_Bullet"), nullptr);
+
+	pGameObject->Set_Owner(nullptr);
+
+	pGameObject->Set_LayerTag(TEXT("Layer_EnemyWeapon"));
+
+	m_Bullets.emplace(TEXT("GameObject_Bullet"), pGameObject);
+
+	Safe_Release(pGameInstance);
 	
-	lstrcpy(szName, szIndex);
+	_vector vPistolOffset = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
 
-	// 누수남 지금
-	/*if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Bullet"), TEXT("Layer_Enemy"), szName, &pGameObject)))
-		return;
+	static_cast<CBullet*>(pGameObject)->Fire(vPistolOffset, vPlayerPos);
+}
 
-	m_Bullets.emplace(szName, pGameObject);
-
-	static_cast<CBullet*>(pGameObject)->Fire(vFirePosition, vDirection);*/
+void CPistol::Bullet_Late_Tick(_double dTimeDelta)
+{
+	for (auto pair = m_Bullets.begin(); pair != m_Bullets.end();)
+	{
+		if (GAME_OBJECT_DEAD == pair->second->Late_Tick(dTimeDelta))
+		{
+			Safe_Release(pair->second);
+			pair = m_Bullets.erase(pair);
+		}
+		else
+			++pair;
+	}
 }
 
 CPistol* CPistol::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

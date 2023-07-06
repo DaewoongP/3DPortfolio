@@ -38,6 +38,11 @@ private:
 private:
 	class CPistol*			m_pPistol = { nullptr };
 	_float					m_fVisionRange = { 0.f };
+	_float					m_fBulletAcc = { 0.f };
+	_float					m_fBulletTime = { 0.5f };
+
+private:
+	_float4					m_vPlayerPos;
 
 
 private:

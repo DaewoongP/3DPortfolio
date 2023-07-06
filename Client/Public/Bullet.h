@@ -31,6 +31,10 @@ private:
 	CRenderer*		m_pRendererCom = { nullptr };
 	CCollider*		m_pColliderCom = { nullptr };
 
+private:
+	_double			m_dDeleteTimeAcc = { 0.0 };
+	_double			m_dDeleteTime = { 5.0 };
+
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();

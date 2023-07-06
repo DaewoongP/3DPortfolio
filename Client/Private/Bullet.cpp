@@ -21,7 +21,7 @@ HRESULT CBullet::Initialize_Prototype()
 
 HRESULT CBullet::Initialize(void* pArg)
 {
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(5.0, XMConvertToRadians(0.0f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(30.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
@@ -53,6 +53,11 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 
 	__super::Late_Tick(dTimeDelta);
 
+	m_dDeleteTimeAcc += dTimeDelta;
+
+	if (m_dDeleteTimeAcc > m_dDeleteTime)
+		m_eGameEvent = GAME_OBJECT_DEAD;
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	
@@ -61,7 +66,6 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 
 void CBullet::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	m_eGameEvent = GAME_OBJECT_DEAD;
 }
 
 HRESULT CBullet::Render()
@@ -93,7 +97,7 @@ HRESULT CBullet::Add_Components()
 
 	CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
 
-	SphereDesc.fRadius = 3.f;
+	SphereDesc.fRadius = 0.3f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_Collider */
@@ -123,9 +127,10 @@ HRESULT CBullet::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CBullet::Fire(_vector vInitPosition, _vector vDirection)
+void CBullet::Fire(_vector vInitPosition, _vector vTargetPostion)
 {
-	m_pTransformCom->LookAt(vInitPosition + vDirection);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vInitPosition);
+	m_pTransformCom->LookAt(vTargetPostion);
 }
 
 CBullet* CBullet::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -31,13 +31,16 @@ private:
 	CRenderer*		m_pRendererCom = { nullptr };
 
 private:
-	unordered_map<const _tchar*, class CGameObject*> m_Bullets;
-	_int							m_iBulletIndex = { 0 };
+	multimap<const _tchar*, class CGameObject*>		m_Bullets;
+	_int											m_iBulletIndex = { 0 };
 
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
-	void Fire(_vector vFirePosition, _vector vDirection);
+	void Fire(_vector vPosition, _vector vPlayerPos);
+
+private:
+	void Bullet_Late_Tick(_double dTimeDelta);
 
 public:
 	static CPistol* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

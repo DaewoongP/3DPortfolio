@@ -57,8 +57,13 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 
 	if (STATE_ATTACK == m_eCurState)
 	{
-		if (0.5f < m_pModelCom->Get_CurrentFramePercent())
-			m_pPistol->Fire(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+		m_fBulletAcc += (_float)dTimeDelta;
+
+		if (m_fBulletAcc > m_fBulletTime)
+		{
+			m_pPistol->Fire(m_pTransformCom->Get_State(CTransform::STATE_POSITION), XMLoadFloat4(&m_vPlayerPos));
+			m_fBulletAcc = 0.f;
+		}
 	}
 
 	__super::Tick(dTimeDelta);
@@ -94,7 +99,9 @@ void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 	{
-		m_pTransformCom->LookAt(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		XMStoreFloat4(&m_vPlayerPos, static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		m_vPlayerPos.w = 1.f;
+		m_pTransformCom->LookAt(XMLoadFloat4(&m_vPlayerPos), true);
 		m_eCurState = STATE_ATTACK;
 	}
 }
