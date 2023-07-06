@@ -16,6 +16,9 @@ public:
 
 	}NAVIGATIONDESC;
 
+public:
+	_float	Get_CurrentCellY() const;
+
 private:
 	explicit CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CNavigation(const CNavigation& rhs);

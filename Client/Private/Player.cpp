@@ -80,29 +80,29 @@ void CPlayer::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	CameraOffset(dTimeDelta);
-	// 충돌처리
-	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	if (XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) < m_pNavigationCom->Get_CurrentCellY() - 10.f)
+	{
+		m_eGameEvent = GAME_OBJECT_DEAD;
+	}
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
-
-	Safe_Release(pGameInstance);
+	Add_Collisions();
 }
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
-	if (nullptr != m_pRendererCom)
+	if (GAME_OBJECT_DEAD != m_eGameEvent &&
+		GAME_STAGE_RESET != m_eGameEvent &&
+		nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
 	__super::Late_Tick(dTimeDelta);
 
-	// Y값이 특정 값 이하로 떨어지면 스테이지 초기화.
-	if (XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) < -10.f)
-	{
-		return GAME_STAGE_RESET;
-	}
+#ifdef _DEBUG
+	if (m_isInvisible)
+		m_eGameEvent = GAME_NOEVENT;
+#endif // _DEBUG
+
 
 	return m_eGameEvent;
 }
@@ -132,6 +132,12 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	else if (!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
 		m_eGameEvent = GAME_OBJECT_DEAD;
 
+	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+		!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_Enemy")))
+	{
+		m_InRangeEnemyColliders.push_back(CollisionDesc.pOtherCollider);
+	}
+	
 	Safe_Release(pGameInstance);
 }
 
@@ -153,11 +159,25 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
+	CGameObject* pCollisionObject = static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner());
 	if (m_fWallRunY > 4.f &&
-		!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_ColProps")))
+		!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_isWallRun = { false };
 		m_fWallRunY = 0.f;
+	}
+
+	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+		!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_Enemy")))
+	{
+		for (auto iter = m_InRangeEnemyColliders.begin(); iter != m_InRangeEnemyColliders.end(); ++iter)
+		{
+			if (*iter == CollisionDesc.pOtherCollider)
+			{
+				m_InRangeEnemyColliders.erase(iter);
+				break;
+			}
+		}
 	}
 }
 
@@ -185,6 +205,7 @@ HRESULT CPlayer::Render()
 
 #ifdef _DEBUG
 	m_pColliderCom->Render();
+	m_pVisionColliderCom->Render(DirectX::Colors::AntiqueWhite);
 	m_pNavigationCom->Render();
 #endif // _DEBUG
 
@@ -288,6 +309,17 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(SetUp_Collider(TEXT("../../Resources/GameData/Collider/Player.Col"))))
 		return E_FAIL;
 
+	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	AABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
+	/* For.Com_VisionCollider */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &AABBDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_VisionCollider)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -334,7 +366,7 @@ HRESULT CPlayer::Initailize_Skills()
 	m_Dash.dCurTime = 0.0;
 	m_Dash.dOriginCoolTime = 2.0;
 	m_Dash.dCoolTime = 0.0;
-	m_Dash.dDuration = 0.07;
+	m_Dash.dDuration = 0.05;
 	m_Dash.fLimitVelocity = 10.f;
 	m_Dash.fSpeed = 50.f;
 
@@ -393,7 +425,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// jump, SPACE
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
-		m_pTransformCom->Jump(6.f, dTimeDelta);
+		m_pTransformCom->Jump(8.f, dTimeDelta);
 		if (STATE_ATTACK != m_eCurState)
 			m_eCurState = STATE_IDLE;
 	}
@@ -425,6 +457,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
+		XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
 		if (STATE_ATTACK != m_eCurState &&
 			STATE_CLIMB != m_eCurState &&
 			STATE_DRONRIDE != m_eCurState)
@@ -460,6 +494,13 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	{
 		Safe_Release(pGameInstance);
 		return;
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_F2, CInput_Device::KEY_DOWN))
+	{
+		if (m_isInvisible)
+			m_isInvisible = false;
+		else
+			m_isInvisible = true;
 	}
 #endif // _DEBUG
 	// Mouse Move Horizontal
@@ -589,9 +630,27 @@ void CPlayer::Attack()
 {
 	if (STATE_ATTACK != m_eCurState)
 		return;
+
 	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
-	if (0.15f <= fAnimFramePercent && 0.4f > fAnimFramePercent)
+
+	if (0.15f <= fAnimFramePercent && 0.5f > fAnimFramePercent)
 		m_pKatana->Attack();
+}
+
+void CPlayer::Add_Collisions()
+{
+	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 20.f);
+	// 충돌처리
+	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+	m_pVisionColliderCom->Tick(VisionMatrix * m_pTransformCom->Get_WorldMatrix());
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pVisionColliderCom);
+
+	Safe_Release(pGameInstance);
+
 }
 
 void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
@@ -657,11 +716,11 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		m_isWallRun = false;
 		if (0 > m_fWallRunAngle)
 		{
-			m_pTransformCom->Jump(-vWallLook + vLook * 0.7f + XMVectorSet(0.f, 0.5f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(-vWallLook + vLook * 0.7f + XMVectorSet(0.f, 0.7f, 0.f, 0.f), 4.f, g_TimeDelta);
 		}
 		else
 		{
-			m_pTransformCom->Jump(vWallLook + vLook * 0.7f + XMVectorSet(0.f, 0.5f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(vWallLook + vLook * 0.7f + XMVectorSet(0.f, 0.7f, 0.f, 0.f), 4.f, g_TimeDelta);
 		}
 	}
 
@@ -685,7 +744,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 	Safe_Release(pGameInstance);
 	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Hook"));
 	// 거리별 컬링은 나중에 생각하고.
-	_float fDist = 40.f;
+	_float fDist = 70.f;
 
 	for (auto& pObject : pHookLayer->Get_AllGameObject())
 	{
@@ -695,9 +754,9 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 
 		if (true == pCollider->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
 		{
-			if (40.f > fDist)
+			if (70.f > fDist)
 			{
-				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 0.5f, g_TimeDelta);
+				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 1.f, g_TimeDelta);
 				return true;
 			}
 		}
@@ -873,5 +932,6 @@ void CPlayer::Free()
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pVisionColliderCom);
 	Safe_Release(m_pPlayerCameraCom);
 }

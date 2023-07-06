@@ -44,6 +44,11 @@ private:
 	vector<COLLISIONDESC>		m_Collisions;
 	vector<_bool>				m_isDead;
 
+#ifdef _DEBUG
+private:
+	_bool						m_isRendering = { true };
+#endif // _DEBUG
+
 public:
 	static CCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eColliderType);
 	virtual CComponent* Clone(void* pArg) override;

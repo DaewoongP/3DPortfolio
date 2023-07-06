@@ -6,6 +6,17 @@
 #include "PipeLine.h"
 #endif
 
+_float CNavigation::Get_CurrentCellY() const
+{
+	if (0 > m_NaviDesc.iCurrentIndex)
+		return 0.f;
+	_vector PointA = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_A);
+	_vector PointB = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_B);
+	_vector PointC = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_C);
+
+	return XMVectorGetY(PointA + PointB + PointC);
+}
+
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {

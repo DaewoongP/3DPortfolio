@@ -61,7 +61,7 @@ public:
 	void Go_Backward(_double dTimeDelta);
 	void Go_Left(_double dTimeDelta);
 	void Go_Right(_double dTimeDelta);
-	void Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
+	_bool Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance = 0.1f);
 	void LookAt(_fvector vTargetPosition, _bool bDeleteY = false);
 	// 각도값 고정
 	// 축을 기반으로 한 로테이션
@@ -76,7 +76,7 @@ public:
 	void Jump(_float fJumpForce, _double dTimeDelta);
 	void Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta);
 	// 리지드 바디 사용
-	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 7.f, _float fResistance = 30.f);
+	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 7.f, _float fResistance = 40.f);
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
 	void WallRun(_float fWallRunY, _fvector vWallRunDirection);
@@ -111,6 +111,7 @@ private: // 객체 변수값.
 	// Crouch 처리용 (Player)
 	_float			m_fGroundY = 0.f;
 	_bool			m_isJumping = { false };
+	
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

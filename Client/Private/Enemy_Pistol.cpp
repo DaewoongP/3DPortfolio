@@ -89,7 +89,8 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 
 void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
+	if (CollisionDesc.pMyCollider == m_pColliderCom && 
+		!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
 	}	

@@ -1,10 +1,7 @@
 #include "..\Public\Collider.h"
+#include "GameInstance.h"
 #include "Composite.h"
 #include "GameObject.h"
-#include "Collision_Manager.h"
-#include "Bounding_Sphere.h"
-#include "Bounding_AABB.h"
-#include "Bounding_OBB.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -72,8 +69,21 @@ HRESULT CCollider::Render(_fvector vColor)
 {
 	if (nullptr == m_pBounding)
 		return E_FAIL;
+	
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
-	m_pBounding->Render(vColor);
+	if (pGameInstance->Get_DIKeyState(DIK_F1, CInput_Device::KEY_DOWN))
+	{
+		if (m_isRendering)
+			m_isRendering = false;
+		else
+			m_isRendering = true;
+	}
+	if (m_isRendering)
+		m_pBounding->Render(vColor);
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }

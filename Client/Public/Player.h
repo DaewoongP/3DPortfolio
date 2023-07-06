@@ -47,6 +47,7 @@ private:
 
 private: // 사실 이거 굳이 가지고 있을 필요는 없음. 이미 컴포넌트로 Tick을 돌고있음,
 	class CKatana*			m_pKatana = { nullptr };
+	CCollider*				m_pVisionColliderCom = { nullptr };
 
 private:
 	// 마우스 감도
@@ -73,10 +74,15 @@ private: // WallRun
 	_bool					m_isWallRun = { false };
 
 private:
+	vector<CCollider*>		m_InRangeEnemyColliders;
+	_float3					m_vAttackPositon;
+
+private:
 	_float4x4				m_CameraMatrix;
 
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };
+	_bool					m_isInvisible = { false };
 #endif // _DEBUG
 
 private: /* Tick */
@@ -90,6 +96,7 @@ private: /* Tick */
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 	void WallRunCameraReset(_double dTimeDelta);
+	void Add_Collisions();
 	void Attack();
 
 	_bool Check_Hook(_double dTimeDelta);

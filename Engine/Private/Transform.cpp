@@ -260,13 +260,17 @@ void CTransform::Go_Right(_double dTimeDelta)
 	Move_Direction(vRight, dTimeDelta);
 }
 
-void CTransform::Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance)
+_bool CTransform::Chase(_fvector vTargetPosition, _double dTimeDelta, _float fMinDistance)
 {
 	_vector vPosition = Get_State(STATE::STATE_POSITION);
 	_vector vDir = vTargetPosition - vPosition;
 
 	if (fMinDistance <= XMVectorGetX(XMVector3Length(vDir)))
 		Move_Direction(vDir, dTimeDelta);
+	else
+		return false;
+
+	return true;
 }
 
 void CTransform::LookAt(_fvector vTargetPosition, _bool bDeleteY)
