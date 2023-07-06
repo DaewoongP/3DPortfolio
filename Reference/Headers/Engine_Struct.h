@@ -56,6 +56,7 @@ namespace Engine
 			COLTYPE_STATIC,
 			COLTYPE_END
 		};
+
 		COLTYPE					ColType = { COLTYPE_END };
 		COLDIR					ColDir = { COLDIR_END };
 		class CCollider*		pMyCollider = { nullptr };

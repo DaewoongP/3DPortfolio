@@ -82,39 +82,29 @@ void CPlayer::Tick(_double dTimeDelta)
 	CameraOffset(dTimeDelta);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
+
+	Safe_Release(pGameInstance);
 }
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
-
-	// 아래와 같은 형태로 처리가능.
-	//GAMEEVENT eGameEventFlag = __super::Late_Tick(dTimeDelta);
 	__super::Late_Tick(dTimeDelta);
 
 	// Y값이 특정 값 이하로 떨어지면 스테이지 초기화.
 	if (XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) < -10.f)
 	{
-		// 사망처리도 여기서하면 좋을듯.
-		Safe_Release(pGameInstance);
 		return GAME_STAGE_RESET;
 	}
 
-	if (pGameInstance->Get_DIKeyState(DIK_R))
-	{
-		Safe_Release(pGameInstance);
-		return GAME_STAGE_RESET;
-	}
-
-	Safe_Release(pGameInstance);
-
-	return GAME_NOEVENT;
+	return m_eGameEvent;
 }
 
 void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
@@ -122,8 +112,10 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	CGameObject* pCollisionObject = static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner());
+
 	// Wall Run
-	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_ColProps")))
+	if (!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_fWallRunY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -137,6 +129,8 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 			m_fWallRunY = 0.f;
 		}
 	}
+	else if (!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
+		m_eGameEvent = GAME_OBJECT_DEAD;
 
 	Safe_Release(pGameInstance);
 }
@@ -205,6 +199,7 @@ HRESULT CPlayer::Reset()
 	// 모델의 애니메이션 인덱스 설정
 	m_pModelCom->Set_AnimIndex(95);
 	m_eCurState = STATE_IDLE;
+	m_eGameEvent = GAME_NOEVENT;
 
 	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
 	if (FAILED(__super::Reset()))
@@ -620,10 +615,14 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		if (-15.f < m_fWallRunAngle)
 			m_fWallRunAngle -= 60.f * (_float)g_TimeDelta;
 		
-		if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
-			m_eCurState = STATE_RUNWALL_L;
-		else
-			m_eCurState = STATE_RUNWALL_R;
+		if (STATE_ATTACK != m_eCurState)
+		{
+			if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
+				m_eCurState = STATE_RUNWALL_L;
+			else
+				m_eCurState = STATE_RUNWALL_R;
+		}
+		
 		// Turn
 		m_pPlayerCameraCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle), true);
 	}
@@ -632,10 +631,13 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		if (15.f > m_fWallRunAngle)
 			m_fWallRunAngle += 60.f * (_float)g_TimeDelta;
 
-		if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
-			m_eCurState = STATE_RUNWALL_R;
-		else
-			m_eCurState = STATE_RUNWALL_L;
+		if (STATE_ATTACK != m_eCurState)
+		{
+			if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
+				m_eCurState = STATE_RUNWALL_R;
+			else
+				m_eCurState = STATE_RUNWALL_L;
+		}
 
 		m_pPlayerCameraCom->Rotation(XMLoadFloat3(&m_vWallDir), XMConvertToRadians(m_fWallRunAngle), true);
 	}

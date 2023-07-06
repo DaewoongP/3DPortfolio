@@ -30,9 +30,6 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double TimeDelta) override;
-	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
-	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
-	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
 
 public:

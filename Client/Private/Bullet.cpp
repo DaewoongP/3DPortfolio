@@ -40,17 +40,17 @@ void CBullet::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
-}
 
-GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
-{
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
+}
 
+GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
+{
 	__super::Late_Tick(dTimeDelta);
 
 	m_dDeleteTimeAcc += dTimeDelta;

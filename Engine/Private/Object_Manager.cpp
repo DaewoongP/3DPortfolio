@@ -1,6 +1,7 @@
 #include "..\Public\Object_Manager.h"
 #include "GameObject.h"
 #include "Layer.h"
+#include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CObject_Manager)
 
@@ -139,7 +140,13 @@ void CObject_Manager::Tick(_double dTimeDelta)
 void CObject_Manager::Late_Tick(_double dTimeDelta)
 {
 	GAMEEVENT eGameEvent;
-	// 이벤트 플래그를 받아서 상호작용 처리.
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_R))
+		Reset_Stage();
+
+	Safe_Release(pGameInstance);
 
 	for (_uint i = 0; i < m_iNumLevels; ++i)
 	{

@@ -61,22 +61,6 @@ GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
 	return m_eGameEvent;
 }
 
-void CColProp::OnCollisionEnter(COLLISIONDESC CollisionDesc)
-{
-	//cout << "Props Enter" << endl;
-	//m_eGameEvent = GAME_OBJECT_DEAD;
-}
-
-void CColProp::OnCollisionStay(COLLISIONDESC CollisionDesc)
-{
-	//cout << "Props Stay" << endl;
-}
-
-void CColProp::OnCollisionExit(COLLISIONDESC CollisionDesc)
-{
-	//cout << "Props Exit" << endl;
-}
-
 HRESULT CColProp::Render()
 {
 	__super::Render();

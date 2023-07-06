@@ -70,10 +70,7 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
-}
 
-GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
-{
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
@@ -81,7 +78,10 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
 	Safe_Release(pGameInstance);
+}
 
+GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
+{
 	__super::Late_Tick(dTimeDelta);
 
 	return PlayEvent(dTimeDelta);
