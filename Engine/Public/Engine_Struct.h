@@ -58,6 +58,7 @@ namespace Engine
 		};
 		COLTYPE					ColType = { COLTYPE_END };
 		COLDIR					ColDir = { COLDIR_END };
+		class CCollider*		pMyCollider = { nullptr };
 		class CCollider*		pOtherCollider = { nullptr };
 	}COLLISIONDESC;
 

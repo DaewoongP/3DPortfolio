@@ -146,7 +146,7 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (nullptr != pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Props")))
+	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		if (m_fWallRunY > 4.f)
 		{
@@ -159,7 +159,8 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
-	if (m_fWallRunY > 4.f)
+	if (m_fWallRunY > 4.f &&
+		!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_isWallRun = { false };
 		m_fWallRunY = 0.f;

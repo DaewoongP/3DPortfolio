@@ -21,8 +21,8 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual GAMEEVENT Tick(_double dTimeDelta);
-	virtual void Late_Tick(_double dTimeDelta);
+	virtual void Tick(_double dTimeDelta);
+	virtual GAMEEVENT Late_Tick(_double dTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Reset();
 
