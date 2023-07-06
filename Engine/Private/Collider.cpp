@@ -63,6 +63,7 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 		return;
 
 	m_pBounding->Tick(TransformMatrix);
+
 	DeadCollision();
 }
 
@@ -99,9 +100,10 @@ void CCollider::OnCollision(COLLISIONDESC::COLTYPE eCollisionType, COLLISIONDESC
 	// 이전에 충돌이 없었고, 방금 충돌함 (Enter)
 	if (false == IsCollision(pOtherCollider))
 	{
+		CollisionDesc.ColType = eCollisionType;
 		CollisionDesc.ColDir = eCollisionDirection;
 		CollisionDesc.pOtherCollider = pOtherCollider;
-		CollisionDesc.ColType = eCollisionType;
+		CollisionDesc.pMyCollider = this;
 
 		m_isDead.push_back(false);
 		m_Collisions.push_back(CollisionDesc);
@@ -167,13 +169,18 @@ void CCollider::DeadCollision()
 
 	auto iter = m_Collisions.begin();
 	auto iter2 = m_isDead.begin();
+
 	for (_uint i = 0; i < m_Collisions.size(); ++i)
 	{
 		if (true == m_isDead[i])
 		{
 			static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(m_Collisions[i]);
+
 			m_Collisions.erase(iter + i);
 			m_isDead.erase(iter2 + i);
+			if (0 == i)
+				break;
+			--i;
 		}	
 	}
 

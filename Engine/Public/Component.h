@@ -12,17 +12,17 @@ protected:
 
 public:
 	void Set_Owner(class CComposite* pOwner) { m_pOwner = pOwner; }
-	void Set_Tag(const _tchar * pTag) {
-		lstrcpy(m_pPrototypeTag, pTag);
+	void Set_PrototypeTag(const _tchar * pPrototypeTag) {
+		lstrcpy(m_pPrototypeTag, pPrototypeTag);
 	}
 	class CComposite* Get_Owner() { return m_pOwner; }
-	const _tchar* Get_Tag() const { return m_pPrototypeTag; }
+	const _tchar* Get_PrototypeTag() const { return m_pPrototypeTag; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-	virtual void Tick(_double dTimeDelta);
-	virtual GAMEEVENT Late_Tick(_double dTimeDelta);
+	virtual GAMEEVENT Tick(_double dTimeDelta);
+	virtual void Late_Tick(_double dTimeDelta);
 	virtual HRESULT Render();
 	virtual HRESULT Reset();
 
