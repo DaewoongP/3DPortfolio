@@ -97,8 +97,9 @@ HRESULT CTransform::Reset()
 	ZEROMEM(&m_vForce);
 	ZEROMEM(&m_vAccel);
 	ZEROMEM(&m_eCurrentCellFlag);
-	m_fGroundY = 4.f;
+	
 	m_fOriginGroundY = 4.f;
+	m_fGroundY = m_fOriginGroundY;
 	m_fLimitVelocity = 1.f;
 
 	return S_OK;
@@ -191,12 +192,20 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 
 void CTransform::Check_Cell()
 {
-	if (m_eCurrentCellFlag & CELL_FALL)
+	if (m_ePreviousCellFlag != m_eCurrentCellFlag)
 	{
-		m_fGroundY = -999.f;
+		switch (m_eCurrentCellFlag)
+		{
+		case Engine::CELL_MOVE:
+			m_fGroundY = m_fOriginGroundY;
+			break;
+		case Engine::CELL_FALL:
+			m_fGroundY = -999.f;
+			break;
+		}
+
+		m_ePreviousCellFlag = m_eCurrentCellFlag;
 	}
-	else
-		m_fGroundY = m_fOriginGroundY;
 }
 
 void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)
