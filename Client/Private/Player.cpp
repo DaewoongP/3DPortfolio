@@ -103,7 +103,6 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 		m_eGameEvent = GAME_NOEVENT;
 #endif // _DEBUG
 
-
 	return m_eGameEvent;
 }
 

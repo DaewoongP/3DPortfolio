@@ -100,6 +100,7 @@ private: // 공용적인 변수값
 	_float			m_fOriginGroundY = 0.f;
 	// 현재 셀 상태값
 	CELLFLAG		m_eCurrentCellFlag;
+	CELLFLAG		m_ePreviousCellFlag;
 
 private: // 객체 변수값.
 	// 최대속도 제한

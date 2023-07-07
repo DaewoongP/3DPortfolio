@@ -101,6 +101,7 @@ CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		MSG_BOX("Failed to Created CCamera");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -113,6 +114,7 @@ CComponent* CCamera::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CCamera");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

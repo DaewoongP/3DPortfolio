@@ -49,8 +49,6 @@ protected:
 	_float4				m_vEye, m_vAt, m_vUp;
 	_float				m_fFovy, m_fAspect, m_fNear, m_fFar;
 
-
-
 public:
 	static CCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(void* pArg);

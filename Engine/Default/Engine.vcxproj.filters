@@ -160,6 +160,24 @@
     <Filter Include="01. Utility\08. Font\Manager">
       <UniqueIdentifier>{ca8bc1ac-e09f-43e2-bd57-a31b1d3d1958}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree">
+      <UniqueIdentifier>{4a66a5aa-8920-469f-8e85-634018a6bbab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\BlackBoard">
+      <UniqueIdentifier>{ad1e6e16-18ca-4a80-aade-28555e7088b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior">
+      <UniqueIdentifier>{9dd8839f-7ef5-4dcf-84e0-615d8c7f7786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Selector">
+      <UniqueIdentifier>{080d3ef1-f52e-4208-9685-7a49c53c0ab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Task">
+      <UniqueIdentifier>{7a27bf74-d92e-4bf7-b569-c3e33eed143a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence">
+      <UniqueIdentifier>{1529b896-8f9f-473f-b4a0-86b7fefab982}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -327,6 +345,24 @@
     <ClInclude Include="..\public\Frustum.h">
       <Filter>01. Utility\07. Frustum</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BehaviorTree.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlackBoard.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\BlackBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Behavior.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Selector.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -475,6 +511,24 @@
     </ClCompile>
     <ClCompile Include="..\private\Frustum.cpp">
       <Filter>01. Utility\07. Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BehaviorTree.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlackBoard.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\BlackBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Behavior.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
