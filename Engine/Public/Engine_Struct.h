@@ -58,10 +58,13 @@ namespace Engine
 			COLTYPE_END
 		};
 
-		COLTYPE					ColType = { COLTYPE_END };
-		COLDIR					ColDir = { COLDIR_END };
-		class CCollider*		pMyCollider = { nullptr };
-		class CCollider*		pOtherCollider = { nullptr };
+		COLTYPE						ColType = { COLTYPE_END };
+		COLDIR						ColDir = { COLDIR_END };
+
+		const class CCollider*		pMyCollider = { nullptr };
+		const class CCollider*		pOtherCollider = { nullptr };
+		const class CGameObject*	pOtherOwner = { nullptr };
+		const class CTransform*		pOtherTransform = { nullptr };
 	}COLLISIONDESC;
 
 	typedef struct tagVertex_Position

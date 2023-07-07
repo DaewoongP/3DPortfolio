@@ -112,10 +112,8 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CGameObject* pCollisionObject = static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner());
-
 	// Wall Run
-	if (!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_ColProps")))
+	if (!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_fWallRunY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -129,11 +127,11 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 			m_fWallRunY = 0.f;
 		}
 	}
-	else if (!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
+	else if (!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
 		m_eGameEvent = GAME_OBJECT_DEAD;
 
 	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
-		!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_Enemy")))
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
 	{
 		m_InRangeEnemyColliders.push_back(CollisionDesc.pOtherCollider);
 	}
@@ -146,7 +144,7 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_ColProps")))
+	if (!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		if (m_fWallRunY > 4.f)
 		{
@@ -159,16 +157,15 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
-	CGameObject* pCollisionObject = static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner());
 	if (m_fWallRunY > 4.f &&
-		!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_ColProps")))
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_isWallRun = { false };
 		m_fWallRunY = 0.f;
 	}
 
 	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
-		!lstrcmp(pCollisionObject->Get_LayerTag(), TEXT("Layer_Enemy")))
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
 	{
 		for (auto iter = m_InRangeEnemyColliders.begin(); iter != m_InRangeEnemyColliders.end(); ++iter)
 		{
@@ -655,13 +652,11 @@ void CPlayer::Add_Collisions()
 
 void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 {
-	CGameObject* pWall = static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner());
-
-	_vector vWallPos = pWall->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+	_vector vWallPos = CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_POSITION);
 	// Right 기본이 -z
-	XMStoreFloat3(&m_vWallDir, XMVector3Normalize(pWall->Get_Transform()->Get_State(CTransform::STATE_RIGHT)));
+	XMStoreFloat3(&m_vWallDir, XMVector3Normalize(CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_RIGHT)));
 	// Look 기본이 +x
-	_vector vWallLook = XMVector3Normalize(pWall->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+	_vector vWallLook = XMVector3Normalize(CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_LOOK));
 	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	vPos.m128_f32[1] = 0.f;

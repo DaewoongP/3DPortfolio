@@ -90,7 +90,7 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
 	if (CollisionDesc.pMyCollider == m_pColliderCom && 
-		!lstrcmp(static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
 	}	
@@ -100,7 +100,7 @@ void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 	{
-		XMStoreFloat4(&m_vPlayerPos, static_cast<CGameObject*>(CollisionDesc.pOtherCollider->Get_Owner())->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		XMStoreFloat4(&m_vPlayerPos, CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_POSITION));
 		m_vPlayerPos.w = 1.f;
 		m_pTransformCom->LookAt(XMLoadFloat4(&m_vPlayerPos), true);
 		m_eCurState = STATE_ATTACK;

@@ -27,7 +27,7 @@ private:
 public:
 	_float3 Get_Velocity() const { return m_vVelocity; }
 	TRANSFORMDESC Get_Desc() const { return m_TransformDesc; }
-	_vector Get_State(STATE _eState) 
+	_vector Get_State(STATE _eState) const
 	{
 		return XMLoadFloat4x4(&m_WorldMatrix).r[static_cast<_uint>(_eState)];
 	}

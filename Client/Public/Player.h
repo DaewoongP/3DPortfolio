@@ -74,7 +74,7 @@ private: // WallRun
 	_bool					m_isWallRun = { false };
 
 private:
-	vector<CCollider*>		m_InRangeEnemyColliders;
+	vector<const CCollider*>	m_InRangeEnemyColliders;
 	_float3					m_vAttackPositon;
 
 private:

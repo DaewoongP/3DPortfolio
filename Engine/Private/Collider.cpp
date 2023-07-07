@@ -114,6 +114,8 @@ void CCollider::OnCollision(COLLISIONDESC::COLTYPE eCollisionType, COLLISIONDESC
 		CollisionDesc.ColDir = eCollisionDirection;
 		CollisionDesc.pOtherCollider = pOtherCollider;
 		CollisionDesc.pMyCollider = this;
+		CollisionDesc.pOtherOwner = static_cast<CGameObject*>(pOtherCollider->Get_Owner());
+		CollisionDesc.pOtherTransform = CollisionDesc.pOtherOwner->Get_Transform();
 
 		m_isDead.push_back(false);
 		m_Collisions.push_back(CollisionDesc);
@@ -188,6 +190,7 @@ void CCollider::DeadCollision()
 
 			m_Collisions.erase(iter + i);
 			m_isDead.erase(iter2 + i);
+
 			if (0 == i)
 				break;
 			--i;
