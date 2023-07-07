@@ -26,6 +26,7 @@ HRESULT CGameObject::Initialize(void* pArg, CTransform::TRANSFORMDESC* pTransfor
 	if (nullptr != pTransformDesc)
 	{
 		m_pTransformCom->Set_Desc(*pTransformDesc);
+		m_pTransformCom->Set_Owner(this);
 
 		m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
 

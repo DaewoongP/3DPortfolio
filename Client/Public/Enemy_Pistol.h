@@ -5,6 +5,7 @@ BEGIN(Engine)
 class CModel;
 class CShader;
 class CCollider;
+class CBehaviorTree;
 END
 
 BEGIN(Client)
@@ -34,16 +35,17 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
+	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
 
 private:
 	class CPistol*			m_pPistol = { nullptr };
 	_float					m_fVisionRange = { 0.f };
 	_float					m_fBulletAcc = { 0.f };
 	_float					m_fBulletTime = { 0.5f };
+	_bool					m_isAttack = { false };
 
 private:
 	_float4					m_vPlayerPos;
-
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.

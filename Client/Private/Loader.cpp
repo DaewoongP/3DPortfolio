@@ -300,6 +300,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	lstrcpy(m_szLoading, TEXT("AI 로딩 중."));
+
+	/* For.Prototype_Component_BehaviorTree */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
+		CBehaviorTree::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_BehaviorTree)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("충돌체 로딩 중."));
 
 	/* For.Prototype_Component_Collider_Sphere */

@@ -10,8 +10,8 @@ protected:
 	virtual ~CTask() = default;
 
 public:
-	virtual HRESULT Initialize() PURE;
-	virtual CBehavior::STATE Tick(class CBlackBoard* pBlackBoard, _double dTimeDelta) PURE;
+	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
+	virtual CBehavior::STATE Tick(_double dTimeDelta) PURE;
 
 public:
 	virtual void Free() override;

@@ -163,11 +163,14 @@
     <Filter Include="01. Utility\03. Components\11. BehaviorTree">
       <UniqueIdentifier>{4a66a5aa-8920-469f-8e85-634018a6bbab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior">
+      <UniqueIdentifier>{9dd8839f-7ef5-4dcf-84e0-615d8c7f7786}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\BlackBoard">
       <UniqueIdentifier>{ad1e6e16-18ca-4a80-aade-28555e7088b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior">
-      <UniqueIdentifier>{9dd8839f-7ef5-4dcf-84e0-615d8c7f7786}</UniqueIdentifier>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence">
+      <UniqueIdentifier>{1529b896-8f9f-473f-b4a0-86b7fefab982}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Selector">
       <UniqueIdentifier>{080d3ef1-f52e-4208-9685-7a49c53c0ab9}</UniqueIdentifier>
@@ -175,8 +178,11 @@
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Task">
       <UniqueIdentifier>{7a27bf74-d92e-4bf7-b569-c3e33eed143a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence">
-      <UniqueIdentifier>{1529b896-8f9f-473f-b4a0-86b7fefab982}</UniqueIdentifier>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Task\00. Move">
+      <UniqueIdentifier>{798958a4-4266-4b7a-ae24-7a78bd5eeb15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol">
+      <UniqueIdentifier>{dfb02be8-a010-44f6-bf40-b5d39d7e581b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -363,6 +369,12 @@
     <ClInclude Include="..\public\Task.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Task_MoveForward.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task\00. Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_Patrol.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -529,6 +541,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Task.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_MoveForward.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task\00. Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_Patrol.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

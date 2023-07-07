@@ -10,8 +10,8 @@ protected:
 	virtual ~CSequence() = default;
 
 public:
-	virtual HRESULT Initialize() PURE;
-	virtual CBehavior::STATE Tick(class CBlackBoard* pBlackBoard, _double dTimeDelta) override;
+	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
+	virtual CBehavior::STATE Tick(_double dTimeDelta) override;
 
 public:
 	virtual void Free() override;

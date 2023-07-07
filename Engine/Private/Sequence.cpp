@@ -4,13 +4,21 @@ CSequence::CSequence()
 {
 }
 
-CBehavior::STATE CSequence::Tick(class CBlackBoard* pBlackBoard, _double dTimeDelta)
+HRESULT CSequence::Initialize(CBlackBoard* pBlackBoard)
+{
+	if (FAILED(__super::Initialize(pBlackBoard)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+CBehavior::STATE CSequence::Tick(_double dTimeDelta)
 {
 	CBehavior::STATE eState;
 
 	for (auto& pChild : m_Childs)
 	{
-		eState = pChild->Tick(pBlackBoard, dTimeDelta);
+		eState = pChild->Tick(dTimeDelta);
 
 		if (STATE_FAILED == eState)
 			return STATE_FAILED;

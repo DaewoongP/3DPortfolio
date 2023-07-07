@@ -4,13 +4,21 @@ CSelector::CSelector()
 {
 }
 
-CBehavior::STATE CSelector::Tick(class CBlackBoard* pBlackBoard, _double dTimeDelta)
+HRESULT CSelector::Initialize(CBlackBoard* pBlackBoard)
+{
+	if (FAILED(__super::Initialize(pBlackBoard)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+CBehavior::STATE CSelector::Tick(_double dTimeDelta)
 {
 	CBehavior::STATE eState;
 
 	for (auto& pChild : m_Childs)
 	{
-		eState = pChild->Tick(pBlackBoard, dTimeDelta);
+		eState = pChild->Tick(dTimeDelta);
 
 		if (STATE_SUCCESS == eState)
 			return STATE_SUCCESS;

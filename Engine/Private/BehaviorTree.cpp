@@ -18,21 +18,17 @@ HRESULT CBehaviorTree::Initialize_Prototype()
 
 HRESULT CBehaviorTree::Initialize(void* pArg)
 {
-	if (pArg == nullptr)
-	{
-		MSG_BOX("Failed Behavior Tree Argument is null");
+	if (nullptr == pArg)
 		return E_FAIL;
-	}
 
-	m_pRootNode = static_cast<BEHAVIORDESC*>(pArg)->pRootBehavior;
-	m_pBlackBoard = static_cast<BEHAVIORDESC*>(pArg)->pBlackBoard;
-		
+	m_pRootNode = static_cast<CBehavior*>(pArg);
+
     return S_OK;
 }
 
 void CBehaviorTree::Tick(_double dTimeDelta)
 {
-	m_pRootNode->Tick(m_pBlackBoard, dTimeDelta);
+	m_pRootNode->Tick(dTimeDelta);
 }
 
 CBehaviorTree* CBehaviorTree::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -64,4 +60,6 @@ CComponent* CBehaviorTree::Clone(void* pArg)
 void CBehaviorTree::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pRootNode);
 }

@@ -35,6 +35,7 @@
 #include <string>
 #include <algorithm>
 #include <any>
+#include <cstdarg>
 
 // file system - c++ 17
 #include <filesystem>

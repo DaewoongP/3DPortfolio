@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+#include "BlackBoard.h"
 
 BEGIN(Engine)
 
@@ -14,10 +15,11 @@ protected:
 
 public:
 	virtual HRESULT Add_Child(CBehavior* pChild);
-	virtual HRESULT Initialize() PURE;
-	virtual STATE Tick(class CBlackBoard* pBlackBoard, _double dTimeDelta) PURE;
+	virtual HRESULT Initialize(CBlackBoard* pBlackBoard);
+	virtual STATE Tick(_double dTimeDelta) PURE;
 
 protected:
+	CBlackBoard*			m_pBlackBoard;
 	list<CBehavior*>		m_Childs;
 
 public:

@@ -1,5 +1,6 @@
 #include "..\Public\Enemy_Pistol.h"
 #include "GameInstance.h"
+#include "Sequence_Patrol.h"
 #include "Pistol.h"
 
 CEnemy_Pistol::CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -199,6 +200,19 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		return E_FAIL;
 	}
 
+
+	CBlackBoard* pBlackBoard = CBlackBoard::Create();
+	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
+
+	/* For. Com_BehaviorTree */
+	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
+		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
+		CSequence_Patrol::Create(pBlackBoard))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -330,4 +344,5 @@ void CEnemy_Pistol::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pVisionColliderCom);
+	Safe_Release(m_pBehaviorTreeCom);
 }

@@ -5,13 +5,6 @@ BEGIN(Engine)
 
 class ENGINE_DLL CBehaviorTree final : public CComponent
 {
-public:
-	typedef struct tagBehaviorTree
-	{
-		class CBehavior*	pRootBehavior = { nullptr };
-		class CBlackBoard*	pBlackBoard = { nullptr };
-	}BEHAVIORDESC;
-
 private:
 	explicit CBehaviorTree(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CBehaviorTree(const CBehaviorTree& rhs);
@@ -24,7 +17,6 @@ public:
 
 private:
 	class CBehavior*		m_pRootNode = { nullptr };
-	class CBlackBoard*		m_pBlackBoard = { nullptr };
 
 public:
 	static CBehaviorTree* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

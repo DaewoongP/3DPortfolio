@@ -10,6 +10,7 @@
 #include "Animation.h"
 #include "Transform.h"
 #include "Navigation.h"
+#include "BehaviorTree.h"
 #include "Bounding_OBB.h"
 #include "Bounding_AABB.h"
 #include "Bounding_Sphere.h"
