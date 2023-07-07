@@ -81,7 +81,7 @@ CComponent* CComponent_Manager::Find_Prototype(_uint iLevelIndex, const _tchar* 
 
 	if (iter == m_pPrototypes[iLevelIndex].end())
 		return nullptr;
-
+		 
 	return iter->second;
 }
 
