@@ -182,13 +182,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_Component_Model_Fiona */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat")))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Fiona)");
-		return E_FAIL;
-	}
+	
 
 #endif // _DEBUG
 
