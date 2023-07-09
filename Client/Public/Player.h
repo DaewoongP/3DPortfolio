@@ -64,8 +64,6 @@ private:
 	_float					m_fSpeed;
 	DASHDESC				m_Dash;
 
-	_double					m_dAnimationLerpDuration = { 0.2 };
-
 private: // WallRun
 	_float					m_fWallRunY = { 0.f };
 	_float					m_fWallRunAngle = { 0.f };

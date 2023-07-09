@@ -13,7 +13,8 @@ BEGIN(Client)
 class CEnemy_Pistol final : public CEnemy
 {
 public:
-	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RELOAD, STATE_DEAD, STATE_END };
+	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_WALK, STATE_RELOAD, STATE_DEAD, STATE_END };
+
 private:
 	explicit CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CEnemy_Pistol(const CEnemy_Pistol& rhs);
@@ -40,12 +41,18 @@ private:
 private:
 	class CPistol*			m_pPistol = { nullptr };
 	_float					m_fVisionRange = { 0.f };
-	_float					m_fBulletAcc = { 0.f };
-	_float					m_fBulletTime = { 0.5f };
-	_bool					m_isAttack = { false };
+	
 
-private:
+private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
+	_double						m_dTurnTime = { 0.9 };
+	_bool						m_isWalk = { false };
+	_bool						m_isTurn = { false };
+	_bool						m_isTurnLeft = { false };
+	_bool						m_isAttack = { false };
+	_double						m_dBulletCoolTime = { 0.5 };
+	_double						m_dPatrolWaitTime = { 1.0 };
+	_bool						m_isWait = { false };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -80,10 +87,10 @@ END
 54 - Idle -> 일단이거로 통일함.
 98 - Idle
 
-55 - jog Backward
-56 - jog Forward
-57 - jog Left
-58 - jog Right
+61 - walk Backward
+62 - walk Forward
+63 - walk Left
+64 - walk Right
 59 - Reload
 
 93 - turn 180 L

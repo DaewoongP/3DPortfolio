@@ -33,6 +33,7 @@ protected:
 	_tchar		m_pTag[MAX_STR] = TEXT("");
 	_tchar		m_pLayerTag[MAX_STR] = TEXT("");
 	GAMEEVENT	m_eGameEvent = { GAME_END };
+	_bool		m_isDead = { false };
 
 protected:
 	class CTransform*			m_pTransformCom = { nullptr };

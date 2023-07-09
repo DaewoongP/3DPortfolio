@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CSequence_Patrol final : public CSequence
+class CSequence_Patrol final : public CSequence
 {
 private:
 	explicit CSequence_Patrol() = default;

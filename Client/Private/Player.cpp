@@ -216,7 +216,6 @@ HRESULT CPlayer::Reset()
 	// 모델의 애니메이션 인덱스 설정
 	m_pModelCom->Set_AnimIndex(95);
 	m_eCurState = STATE_IDLE;
-	m_eGameEvent = GAME_NOEVENT;
 
 	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
 	if (FAILED(__super::Reset()))
@@ -557,7 +556,7 @@ void CPlayer::AnimationState(_double dTimeDelta)
 
 	Motion_Change(m_eCurrentAnimationFlag);
 
-	m_pModelCom->Play_Animation(dTimeDelta, true, m_dAnimationLerpDuration);
+	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)

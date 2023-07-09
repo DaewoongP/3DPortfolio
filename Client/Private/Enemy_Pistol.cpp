@@ -1,6 +1,6 @@
 #include "..\Public\Enemy_Pistol.h"
 #include "GameInstance.h"
-#include "Sequence_Patrol.h"
+#include "Selector_FindTarget.h"
 #include "Pistol.h"
 
 CEnemy_Pistol::CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -47,8 +47,7 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	m_pTransformCom->Rotation(EnemyDesc.vRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&EnemyDesc.vPosition));
 
-
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(5.f, XMConvertToRadians(90.f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
 	m_pModelCom->Reset_Animation(54);
@@ -58,20 +57,8 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 
 void CEnemy_Pistol::Tick(_double dTimeDelta)
 {
-	AnimationState(dTimeDelta);
-
-	/*if (STATE_ATTACK == m_eCurState)
-	{
-		m_fBulletAcc += (_float)dTimeDelta;
-
-		if (m_fBulletAcc > m_fBulletTime)
-		{
-			m_pPistol->Fire(m_pTransformCom->Get_State(CTransform::STATE_POSITION), XMLoadFloat4(&m_vPlayerPos));
-			m_fBulletAcc = 0.f;
-		}
-	}*/
-
 	__super::Tick(dTimeDelta);
+
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -87,6 +74,8 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 {
+	AnimationState(dTimeDelta);
+
 	__super::Late_Tick(dTimeDelta);
 
 	return PlayEvent(dTimeDelta);
@@ -104,18 +93,13 @@ void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
-	{
 		m_pTargetPlayer = CollisionDesc.pOtherOwner;
-		//m_pTransformCom->LookAt(XMLoadFloat4(&m_vPlayerPos), true);
-		//m_eCurState = STATE_ATTACK;
-	}
 }
 
 void CEnemy_Pistol::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = nullptr;
-	
 }
 
 HRESULT CEnemy_Pistol::Render()
@@ -152,7 +136,6 @@ HRESULT CEnemy_Pistol::Reset()
 {
 	m_pModelCom->Reset_Animation(54);
 	m_eCurState = STATE_IDLE;
-	m_eGameEvent = GAME_NOEVENT;
 
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
@@ -195,7 +178,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 
 	SphereDesc.fRadius = 20.f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
+	
 	/* For.Com_VisionCollider */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
@@ -207,21 +190,18 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
 	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
-
-	CDecorator* pDecorator = CDecorator::Create([&](CBlackBoard* pDecoBlackBoard)->_bool 
-		{
-			void* pTarget = pDecoBlackBoard->Find_Value(TEXT("Value_Target"));
-
-			if (nullptr != *reinterpret_cast<CGameObject**>(pTarget))
-				return false;
-
-			return true;
-		});
-
+	pBlackBoard->Add_Value(TEXT("Value_TurnTime"), &m_dTurnTime);
+	pBlackBoard->Add_Value(TEXT("Value_isWalk"), &m_isWalk);
+	pBlackBoard->Add_Value(TEXT("Value_isTurn"), &m_isTurn);
+	pBlackBoard->Add_Value(TEXT("Value_isTurnLeft"), &m_isTurnLeft);
+	pBlackBoard->Add_Value(TEXT("Value_isDead"), &m_isDead);
+	pBlackBoard->Add_Value(TEXT("Value_AttackCoolTime"), &m_dBulletCoolTime);
+	pBlackBoard->Add_Value(TEXT("Value_WaitTime"), &m_dPatrolWaitTime);
+	pBlackBoard->Add_Value(TEXT("Value_isWait"), &m_isWait);
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
-		CSequence_Patrol::Create(pBlackBoard, pDecorator))))
+		CSelector_FindTarget::Create(pBlackBoard))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
 		return E_FAIL;
@@ -277,8 +257,16 @@ void CEnemy_Pistol::AnimationState(_double dTimeDelta)
 		m_eCurState = STATE_IDLE;
 	}
 
-	Motion_Change(m_eCurrentAnimationFlag);
+	if (STATE_DEAD != m_eCurState)
+	{
+		if (true == m_isWait)
+			m_eCurState = STATE_IDLE;
+		if (true == m_isWalk)
+			m_eCurState = STATE_WALK;
+	}
 
+	Motion_Change(m_eCurrentAnimationFlag);
+	
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
@@ -298,8 +286,8 @@ void CEnemy_Pistol::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		case STATE_ATTACK:
 			m_pModelCom->Set_AnimIndex(97);
 			break;
-		case STATE_RUN:
-			m_pModelCom->Set_AnimIndex(56);
+		case STATE_WALK:
+			m_pModelCom->Set_AnimIndex(62);
 			break;
 		case STATE_DEAD:
 			m_pModelCom->Set_AnimIndex(51 + rand() % 3, false);
@@ -315,6 +303,7 @@ GAMEEVENT CEnemy_Pistol::PlayEvent(_double dTimeDelta)
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
 		m_eCurState = STATE_DEAD;
+		m_isDead = true;
 
 		if (ANIM_FINISHED == m_eCurrentAnimationFlag)
 			return GAME_OBJECT_DEAD;

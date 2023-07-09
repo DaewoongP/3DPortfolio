@@ -82,6 +82,27 @@
     <Filter Include="02. GameObjects\01. Enemy\Enemy_Pistol\Pistol">
       <UniqueIdentifier>{43d175a8-79b6-472c-91ed-2b51aea2409a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Behaviors">
+      <UniqueIdentifier>{48b0d62d-e1cd-403c-85f2-29f870d00d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\00. Selector">
+      <UniqueIdentifier>{42d5d73c-b8da-49fe-bb23-30302d28c9aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\01. Sequence">
+      <UniqueIdentifier>{ecf30882-7033-44dc-a068-1f809a59d7a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\02. Task">
+      <UniqueIdentifier>{5dd089ce-bab7-497f-bc3d-69dbd5f11e9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\02. Task\00. Transform">
+      <UniqueIdentifier>{719678ed-d0f0-40e3-88c1-6684ef17ac2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\02. Task\99. Stop">
+      <UniqueIdentifier>{a9389dfd-a66c-4dd4-a4a4-74ec9c484d4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\02. Task\01. Attack">
+      <UniqueIdentifier>{f90f7978-06be-4e1d-97ae-4bcfc758eab3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -161,6 +182,30 @@
     </ClInclude>
     <ClInclude Include="..\public\Bullet.h">
       <Filter>02. GameObjects\01. Enemy\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sequence_Patrol.h">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Task_MoveForward.h">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Task_RandomTurn.h">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Stop.h">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Selector_FindTarget.h">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Task_Attack.h">
+      <Filter>03. Behaviors\02. Task\01. Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Wait.h">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_TurnIdle.h">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +287,30 @@
     </ClCompile>
     <ClCompile Include="..\private\Bullet.cpp">
       <Filter>02. GameObjects\01. Enemy\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sequence_Patrol.cpp">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Task_MoveForward.cpp">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Task_RandomTurn.cpp">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Stop.cpp">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector_FindTarget.cpp">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Task_Attack.cpp">
+      <Filter>03. Behaviors\02. Task\01. Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Wait.cpp">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_TurnIdle.cpp">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

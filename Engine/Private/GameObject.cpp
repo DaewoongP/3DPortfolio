@@ -59,6 +59,9 @@ HRESULT CGameObject::Reset()
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
 
+	m_eGameEvent = GAME_NOEVENT;
+	m_isDead = false;
+
 	return S_OK;
 }
 

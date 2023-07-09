@@ -15,7 +15,7 @@ HRESULT CBehavior::Add_Child(const _tchar* pChildTag, CBehavior* pChild)
 		return E_FAIL;
 	}
 	
-	m_Childs.emplace(pChildTag, pChild);
+	m_Childs.push_back({ pChildTag, pChild });
 
 	return S_OK;
 }
@@ -36,6 +36,14 @@ HRESULT CBehavior::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 
 	if (nullptr != pDecorator)
 		m_Decorators.push_back(pDecorator);
+
+	return S_OK;
+}
+
+HRESULT CBehavior::Reset()
+{
+	m_iPreRunningChildIndex = -1;
+	m_dRunningAcc = 0.0;
 
 	return S_OK;
 }

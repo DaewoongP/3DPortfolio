@@ -22,17 +22,18 @@ public:
 	HRESULT Add_Decorator(CDecorator* pDecorator);
 	virtual HRESULT Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator);
 	virtual STATE Tick(_double dTimeDelta) PURE;
+	virtual HRESULT Reset();
 
 public:
 	CBehavior* Find_Child(const _tchar* pChildTag);
 
 protected:
-	CBlackBoard*								m_pBlackBoard;
-	unordered_map<const _tchar*, CBehavior*>	m_Childs;
+	CBlackBoard*								m_pBlackBoard = { nullptr };
+	vector<pair<const _tchar*, CBehavior*>>		m_Childs;
 	list<CDecorator*>							m_Decorators;
 	_bool										m_isRoot = { false };
 	_int										m_iPreRunningChildIndex = { -1 };
-	_double										m_dRunningAcc = 0.0;
+	_double										m_dRunningAcc = { 0.0 };
 
 public:
 	virtual void Free() override;

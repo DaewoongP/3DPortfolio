@@ -178,12 +178,6 @@
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Task">
       <UniqueIdentifier>{7a27bf74-d92e-4bf7-b569-c3e33eed143a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Task\00. Move">
-      <UniqueIdentifier>{798958a4-4266-4b7a-ae24-7a78bd5eeb15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol">
-      <UniqueIdentifier>{dfb02be8-a010-44f6-bf40-b5d39d7e581b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Decorator">
       <UniqueIdentifier>{406442fc-0eb7-4291-b127-eea5b35459a2}</UniqueIdentifier>
     </Filter>
@@ -372,16 +366,9 @@
     <ClInclude Include="..\public\Task.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Task_MoveForward.h">
-      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task\00. Move</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Sequence_Patrol.h">
-      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Decorator.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Task_RandomTurn.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -549,16 +536,9 @@
     <ClCompile Include="..\private\Task.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Task_MoveForward.cpp">
-      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Task\00. Move</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Sequence_Patrol.cpp">
-      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Decorator.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Task_RandomTurn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl">

@@ -142,15 +142,16 @@ void CModel::Reset_Animation(_uint iAnimIndex)
 	}
 }
 
-void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying, _double dLerpDuration)
+void CModel::Play_Animation(_double dTimeDelta, _bool bPassLerp)
 {
-	if (0 < m_iNumAnimations && true == isPlaying)
+	if (0 < m_iNumAnimations)
 	{
 		// 이전 애니메이션과 현재 애니메이션이 다르면
-		if (m_iPreviousAnimIndex != m_iCurrentAnimIndex)
+		if (m_iPreviousAnimIndex != m_iCurrentAnimIndex &&
+			false == bPassLerp)
 		{
 			// 이전 애니메이션 상태에서 현재 애니메이션 첫프레임으로 선형보간 처리.
-			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta, dLerpDuration);
+			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta, 0.2);
 		}
 		else
 		{
@@ -159,7 +160,7 @@ void CModel::Play_Animation(_double dTimeDelta, _bool isPlaying, _double dLerpDu
 	}
 	
 	// 선형보간 완료시 처리
-	if (ANIM_LERP_FINISHED == m_eAnimationFlag && true == isPlaying)
+	if (ANIM_LERP_FINISHED == m_eAnimationFlag)
 	{
 		m_iPreviousAnimIndex = m_iCurrentAnimIndex;
 

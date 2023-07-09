@@ -18,6 +18,9 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 
+public:
+	virtual HRESULT Reset() override;
+
 private:
 	class CBehavior*		m_pRootNode = { nullptr };
 

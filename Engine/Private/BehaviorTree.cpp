@@ -32,6 +32,14 @@ void CBehaviorTree::Tick(_double dTimeDelta)
 	m_pRootNode->Tick(dTimeDelta);
 }
 
+HRESULT CBehaviorTree::Reset()
+{
+	if (FAILED(m_pRootNode->Reset()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CBehaviorTree* CBehaviorTree::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBehaviorTree* pInstance = new CBehaviorTree(pDevice, pContext);
