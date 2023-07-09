@@ -21,7 +21,7 @@ HRESULT CEnemy::Initialize_Prototype()
 
 HRESULT CEnemy::Initialize(void* pArg)
 {
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(1.f, XMConvertToRadians(3.f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.f, XMConvertToRadians(3.f));
 
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;

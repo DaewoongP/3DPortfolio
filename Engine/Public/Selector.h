@@ -12,6 +12,7 @@ protected:
 public:
 	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
 	virtual CBehavior::STATE Tick(_double dTimeDelta) override;
+
 public:
 	virtual void Free() override;
 };

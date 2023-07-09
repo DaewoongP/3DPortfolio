@@ -47,6 +47,10 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	m_pTransformCom->Rotation(EnemyDesc.vRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&EnemyDesc.vPosition));
 
+
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(1.f, XMConvertToRadians(3.f));
+	m_pTransformCom->Set_Desc(TransformDesc);
+
 	m_pModelCom->Reset_Animation(54);
 
 	return S_OK;
@@ -212,7 +216,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
 		return E_FAIL;
 	}
-
+	
 	return S_OK;
 }
 

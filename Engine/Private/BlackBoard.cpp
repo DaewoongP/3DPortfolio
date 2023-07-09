@@ -19,7 +19,6 @@ HRESULT CBlackBoard::Add_Value(const _tchar* pValueTag, any pValue)
 
 any CBlackBoard::Find_Value(const _tchar* pValueTag)
 {
-	//return m_Values[pValueTag];
 	auto iter = find_if(m_Values.begin(), m_Values.end(), CTag_Finder(pValueTag));
 
 	if (iter == m_Values.end())

@@ -184,6 +184,9 @@
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol">
       <UniqueIdentifier>{dfb02be8-a010-44f6-bf40-b5d39d7e581b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Decorator">
+      <UniqueIdentifier>{406442fc-0eb7-4291-b127-eea5b35459a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -375,6 +378,9 @@
     <ClInclude Include="..\public\Sequence_Patrol.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Decorator.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -547,6 +553,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Sequence_Patrol.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Sequence\00. Patrol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Decorator.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

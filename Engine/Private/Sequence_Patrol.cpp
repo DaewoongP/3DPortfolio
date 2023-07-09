@@ -6,7 +6,7 @@ HRESULT CSequence_Patrol::Initialize(CBlackBoard* pBlackBoard)
 	if (FAILED(__super::Initialize(pBlackBoard)))
 		return E_FAIL;
 
-	if (FAILED(Add_Child(CTask_MoveForward::Create(pBlackBoard))))
+	if (FAILED(Add_Child(TEXT("Task_MoveForward"), CTask_MoveForward::Create(pBlackBoard))))
 		return E_FAIL;
 
 	return S_OK;

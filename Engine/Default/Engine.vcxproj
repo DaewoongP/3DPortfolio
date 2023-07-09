@@ -42,6 +42,7 @@
     <ClInclude Include="..\public\Composite.h" />
     <ClInclude Include="..\public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\public\Decorator.h" />
     <ClInclude Include="..\Public\Engine_Converter.h" />
     <ClInclude Include="..\public\Font_Manager.h" />
     <ClInclude Include="..\public\Frustum.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="..\private\Composite.cpp" />
     <ClCompile Include="..\private\CustomFont.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\private\Decorator.cpp" />
     <ClCompile Include="..\private\Font_Manager.cpp" />
     <ClCompile Include="..\private\Frustum.cpp" />
     <ClCompile Include="..\Private\Input_Device.cpp" />

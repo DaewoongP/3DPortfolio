@@ -22,6 +22,7 @@ HRESULT CBehaviorTree::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pRootNode = static_cast<CBehavior*>(pArg);
+	m_pRootNode->Set_Root(true);
 
     return S_OK;
 }
