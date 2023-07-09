@@ -381,6 +381,7 @@
     <ClInclude Include="..\public\Decorator.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Task_RandomTurn.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -557,6 +558,7 @@
     <ClCompile Include="..\private\Decorator.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Task_RandomTurn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl">

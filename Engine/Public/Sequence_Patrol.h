@@ -10,10 +10,10 @@ private:
 	virtual ~CSequence_Patrol() = default;
 
 public:
-	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
+	virtual HRESULT Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator) override;
 
 public:
-	static CSequence_Patrol* Create(CBlackBoard* pBlackBoard);
+	static CSequence_Patrol* Create(CBlackBoard* pBlackBoard, CDecorator* pDecorator = nullptr);
 	virtual void Free() override;
 };
 

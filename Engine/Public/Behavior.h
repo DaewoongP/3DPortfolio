@@ -20,7 +20,7 @@ public:
 public:
 	HRESULT Add_Child(const _tchar* pChildTag, CBehavior* pChild);
 	HRESULT Add_Decorator(CDecorator* pDecorator);
-	virtual HRESULT Initialize(CBlackBoard* pBlackBoard);
+	virtual HRESULT Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator);
 	virtual STATE Tick(_double dTimeDelta) PURE;
 
 public:
@@ -32,6 +32,7 @@ protected:
 	list<CDecorator*>							m_Decorators;
 	_bool										m_isRoot = { false };
 	_int										m_iPreRunningChildIndex = { -1 };
+	_double										m_dRunningAcc = 0.0;
 
 public:
 	virtual void Free() override;

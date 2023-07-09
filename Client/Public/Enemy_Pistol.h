@@ -45,7 +45,7 @@ private:
 	_bool					m_isAttack = { false };
 
 private:
-	_float4					m_vPlayerPos;
+	const class CGameObject*	m_pTargetPlayer = { nullptr };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.

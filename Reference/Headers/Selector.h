@@ -10,7 +10,7 @@ protected:
 	virtual ~CSelector() = default;
 
 public:
-	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
+	virtual HRESULT Initialize(CBlackBoard* pBlackBoard, CDecorator * pDecorator) override;
 	virtual CBehavior::STATE Tick(_double dTimeDelta) override;
 
 public:

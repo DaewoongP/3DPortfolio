@@ -18,6 +18,19 @@ _bool CDecorator::Check_Decorator(class CBlackBoard* pBlackboard)
 	return true;
 }
 
+CDecorator* CDecorator::Create(function<_bool(class CBlackBoard*)> func)
+{
+	CDecorator* pInstance = new CDecorator();
+
+	if (FAILED(pInstance->Add_Decorator(func)))
+	{
+		MSG_BOX("Failed to Created CDecorator");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 void CDecorator::Free()
 {
 }

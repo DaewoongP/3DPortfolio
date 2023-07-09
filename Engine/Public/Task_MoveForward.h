@@ -13,6 +13,9 @@ public:
 	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
 	virtual CBehavior::STATE Tick(_double dTimeDelta) override;
 
+private:
+	class CTransform*	m_pOwnerTransformCom = { nullptr };
+
 public:
 	static CTask_MoveForward* Create(class CBlackBoard* pBlackBoard);
 	virtual void Free() override;

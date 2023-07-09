@@ -17,6 +17,7 @@ private:
 	list<function<_bool(class CBlackBoard*)>> m_Decorators;
 
 public:
+	static CDecorator* Create(function<_bool(class CBlackBoard*)> func);
 	virtual void Free() override;
 };
 

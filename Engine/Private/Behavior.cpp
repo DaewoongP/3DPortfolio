@@ -30,9 +30,12 @@ HRESULT CBehavior::Add_Decorator(CDecorator* pDecorator)
 	return S_OK;
 }
 
-HRESULT CBehavior::Initialize(CBlackBoard* pBlackBoard)
+HRESULT CBehavior::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
 	m_pBlackBoard = pBlackBoard;
+
+	if (nullptr != pDecorator)
+		m_Decorators.push_back(pDecorator);
 
 	return S_OK;
 }
@@ -51,8 +54,11 @@ void CBehavior::Free()
 {
 	for (auto& pChild : m_Childs)
 		Safe_Release(pChild.second);
-
 	m_Childs.clear();
+
+	for (auto& pDecorator : m_Decorators)
+		Safe_Release(pDecorator);
+	m_Decorators.clear();
 
 	Safe_Release(m_pBlackBoard);
 }

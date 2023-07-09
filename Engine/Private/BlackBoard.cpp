@@ -10,14 +10,14 @@ HRESULT CBlackBoard::Initialize()
 	return S_OK;
 }
 
-HRESULT CBlackBoard::Add_Value(const _tchar* pValueTag, any pValue)
+HRESULT CBlackBoard::Add_Value(const _tchar* pValueTag, void* pValue)
 {
 	m_Values.emplace(pValueTag, pValue);
 
 	return S_OK;
 }
 
-any CBlackBoard::Find_Value(const _tchar* pValueTag)
+void* CBlackBoard::Find_Value(const _tchar* pValueTag)
 {
 	auto iter = find_if(m_Values.begin(), m_Values.end(), CTag_Finder(pValueTag));
 

@@ -4,9 +4,9 @@ CSequence::CSequence()
 {
 }
 
-HRESULT CSequence::Initialize(CBlackBoard* pBlackBoard)
+HRESULT CSequence::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
-	if (FAILED(__super::Initialize(pBlackBoard)))
+	if (FAILED(__super::Initialize(pBlackBoard, pDecorator)))
 		return E_FAIL;
 
 	return S_OK;
@@ -46,9 +46,10 @@ CBehavior::STATE CSequence::Tick(_double dTimeDelta)
 			m_iPreRunningChildIndex = iIndex;
 			return STATE_RUNNING;
 		}
+		else
+			m_iPreRunningChildIndex = -1;
 	}
 
-	m_iPreRunningChildIndex = -1;
 	return STATE_SUCCESS;
 }
 

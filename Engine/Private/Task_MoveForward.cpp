@@ -1,20 +1,27 @@
 #include "..\Public\Task_MoveForward.h"
-#include "GameInstance.h"
+#include "Transform.h"
 
 HRESULT CTask_MoveForward::Initialize(CBlackBoard* pBlackBoard)
 {
 	if (FAILED(__super::Initialize(pBlackBoard)))
 		return E_FAIL;
 
+	m_pOwnerTransformCom = static_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
+
 	return S_OK;
 }
 
 CBehavior::STATE CTask_MoveForward::Tick(_double dTimeDelta)
 {
-	CTransform* pTransform = any_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
+	m_pOwnerTransformCom->Go_Straight(dTimeDelta);
 
-	pTransform->Go_Straight(dTimeDelta);
-	
+	m_dRunningAcc += dTimeDelta;
+
+	if (m_dRunningAcc < 3.0)
+		return STATE_RUNNING;
+
+	m_dRunningAcc = 0.0;
+
 	return STATE_SUCCESS;
 }
 

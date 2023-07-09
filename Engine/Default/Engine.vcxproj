@@ -71,6 +71,7 @@
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\public\Task.h" />
     <ClInclude Include="..\public\Task_MoveForward.h" />
+    <ClInclude Include="..\public\Task_RandomTurn.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\public\Transform.h" />
     <ClInclude Include="..\public\VIBuffer_Cell.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\private\Task.cpp" />
     <ClCompile Include="..\private\Task_MoveForward.cpp" />
+    <ClCompile Include="..\private\Task_RandomTurn.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cell.cpp" />

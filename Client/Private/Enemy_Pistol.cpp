@@ -48,7 +48,7 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&EnemyDesc.vPosition));
 
 
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(1.f, XMConvertToRadians(3.f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(5.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
 	m_pModelCom->Reset_Animation(54);
@@ -60,7 +60,7 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 {
 	AnimationState(dTimeDelta);
 
-	if (STATE_ATTACK == m_eCurState)
+	/*if (STATE_ATTACK == m_eCurState)
 	{
 		m_fBulletAcc += (_float)dTimeDelta;
 
@@ -69,7 +69,7 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 			m_pPistol->Fire(m_pTransformCom->Get_State(CTransform::STATE_POSITION), XMLoadFloat4(&m_vPlayerPos));
 			m_fBulletAcc = 0.f;
 		}
-	}
+	}*/
 
 	__super::Tick(dTimeDelta);
 
@@ -105,17 +105,17 @@ void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 	{
-		XMStoreFloat4(&m_vPlayerPos, CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_POSITION));
-		m_vPlayerPos.w = 1.f;
-		m_pTransformCom->LookAt(XMLoadFloat4(&m_vPlayerPos), true);
-		m_eCurState = STATE_ATTACK;
+		m_pTargetPlayer = CollisionDesc.pOtherOwner;
+		//m_pTransformCom->LookAt(XMLoadFloat4(&m_vPlayerPos), true);
+		//m_eCurState = STATE_ATTACK;
 	}
 }
 
 void CEnemy_Pistol::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
-		m_eCurState = STATE_IDLE;
+		m_pTargetPlayer = nullptr;
+	
 }
 
 HRESULT CEnemy_Pistol::Render()
@@ -204,19 +204,29 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		return E_FAIL;
 	}
 
-
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
+	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
+
+	CDecorator* pDecorator = CDecorator::Create([&](CBlackBoard* pDecoBlackBoard)->_bool 
+		{
+			void* pTarget = pDecoBlackBoard->Find_Value(TEXT("Value_Target"));
+
+			if (nullptr != *reinterpret_cast<CGameObject**>(pTarget))
+				return false;
+
+			return true;
+		});
 
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
-		CSequence_Patrol::Create(pBlackBoard))))
+		CSequence_Patrol::Create(pBlackBoard, pDecorator))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
 		return E_FAIL;
 	}
-	
+
 	return S_OK;
 }
 

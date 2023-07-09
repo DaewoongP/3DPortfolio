@@ -11,11 +11,11 @@ private:
 
 public:
 	HRESULT Initialize();
-	HRESULT Add_Value(const _tchar* pValueTag, any pValue);
-	any Find_Value(const _tchar* pValueTag);
+	HRESULT Add_Value(const _tchar* pValueTag, void* pValue);
+	void* Find_Value(const _tchar* pValueTag);
 
 private:
-	unordered_map<const _tchar*, any>	m_Values;
+	unordered_map<const _tchar*, void*>	m_Values;
 
 public:
 	static CBlackBoard* Create();
