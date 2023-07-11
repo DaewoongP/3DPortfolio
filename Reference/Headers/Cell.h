@@ -14,6 +14,7 @@ private:
 	virtual ~CCell() = default;
 
 public:
+	const _int Get_CellIndex() const { return m_iIndex; }
 	CELLFLAG Get_CellFlag() const { return m_eCellFlag; }
 	_vector Get_Point(POINT ePoint) { return XMLoadFloat3(&m_vPoints[ePoint]); }
 	void SetUp_Neighbor(NEIGHBOR eNeighbor, CCell* pNeighbor) {

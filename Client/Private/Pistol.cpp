@@ -136,7 +136,7 @@ HRESULT CPistol::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CPistol::Fire(_vector vPosition, _vector vPlayerPos)
+void CPistol::Attack(_vector vPosition, _vector vTargetPos)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -153,7 +153,7 @@ void CPistol::Fire(_vector vPosition, _vector vPlayerPos)
 	
 	_vector vPistolOffset = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
 
-	static_cast<CBullet*>(pGameObject)->Fire(vPistolOffset, vPlayerPos);
+	static_cast<CBullet*>(pGameObject)->Fire(vPistolOffset, vTargetPos);
 }
 
 void CPistol::Bullet_Late_Tick(_double dTimeDelta)

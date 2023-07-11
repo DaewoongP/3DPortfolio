@@ -161,6 +161,7 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 	// 움직일수 있는지 체크
 	// X,Z로만 체크.
 	isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal, &m_eCurrentCellFlag);
+
 	_uint iExcept = { 0 };
 
 	while (false == isMove)

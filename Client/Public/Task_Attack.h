@@ -16,7 +16,9 @@ public:
 	virtual HRESULT Reset() override;
 
 private:
-	_double*				m_dAttackCooltime = { nullptr };
+	_double*				m_dAttackCoolTime = { nullptr };
+	_bool*					m_isAttack = { nullptr };
+	class CPart*			m_pWeapon = { nullptr };
 
 public:
 	static CTask_Attack* Create(class CBlackBoard* pBlackBoard);

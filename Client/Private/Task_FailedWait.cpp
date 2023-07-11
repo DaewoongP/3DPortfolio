@@ -1,6 +1,6 @@
-#include "Task_Wait.h"
+#include "..\Public\Task_FailedWait.h"
 
-HRESULT CTask_Wait::Initialize(CBlackBoard* pBlackBoard)
+HRESULT CTask_FailedWait::Initialize(CBlackBoard* pBlackBoard)
 {
 	if (FAILED(__super::Initialize(pBlackBoard)))
 		return E_FAIL;
@@ -11,7 +11,7 @@ HRESULT CTask_Wait::Initialize(CBlackBoard* pBlackBoard)
 	return S_OK;
 }
 
-CBehavior::STATE CTask_Wait::Tick(_double dTimeDelta)
+CBehavior::STATE CTask_FailedWait::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_dWaitTime ||
 		nullptr == m_isWait)
@@ -22,7 +22,7 @@ CBehavior::STATE CTask_Wait::Tick(_double dTimeDelta)
 	if (m_dRunningAcc < *m_dWaitTime)
 	{
 		*m_isWait = true;
-		return STATE_RUNNING;
+		return STATE_FAILED;
 	}
 
 	*m_isWait = false;
@@ -31,25 +31,25 @@ CBehavior::STATE CTask_Wait::Tick(_double dTimeDelta)
 	return STATE_SUCCESS;
 }
 
-HRESULT CTask_Wait::Reset()
+HRESULT CTask_FailedWait::Reset()
 {
 	return S_OK;
 }
 
-CTask_Wait* CTask_Wait::Create(CBlackBoard* pBlackBoard)
+CTask_FailedWait* CTask_FailedWait::Create(CBlackBoard* pBlackBoard)
 {
-	CTask_Wait* pInstance = new CTask_Wait();
+	CTask_FailedWait* pInstance = new CTask_FailedWait();
 
 	if (FAILED(pInstance->Initialize(pBlackBoard)))
 	{
-		MSG_BOX("Failed to Created CTask_Wait");
+		MSG_BOX("Failed to Created CTask_FailedWait");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CTask_Wait::Free()
+void CTask_FailedWait::Free()
 {
 	__super::Free();
 }

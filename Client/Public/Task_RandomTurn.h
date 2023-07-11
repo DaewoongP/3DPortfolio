@@ -21,13 +21,13 @@ public:
 
 private:
 	CTransform*			m_pTransformCom = { nullptr };
-	_double*			m_dTurnTime = { nullptr };
-	_bool*				m_isTurn = { nullptr };
-	_bool*				m_isTurnLeft = { nullptr };
+	_bool*				m_isWalk = { nullptr };
 
 private:
+	_bool				m_isTurnLeft = { false };
 	_bool				m_bRand = { false };
 	_float				m_fRandRad = { 0.f };
+	_double				m_dRandRotAcc = { 0.0 };
 
 public:
 	static CTask_RandomTurn* Create(class CBlackBoard* pBlackBoard);

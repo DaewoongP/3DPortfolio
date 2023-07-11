@@ -4,16 +4,15 @@
 
 BEGIN(Engine)
 class CTransform;
-class CNavigation;
 END
 
 BEGIN(Client)
 
-class CTask_MoveForward final : public CTask
+class CTask_LookAt final : public CTask
 {
 private:
-	explicit CTask_MoveForward() = default;
-	virtual ~CTask_MoveForward() = default;
+	explicit CTask_LookAt() = default;
+	virtual ~CTask_LookAt() = default;
 
 public:
 	virtual HRESULT Initialize(CBlackBoard* pBlackBoard) override;
@@ -22,11 +21,9 @@ public:
 
 private:
 	CTransform*			m_pTransformCom = { nullptr };
-	CNavigation*		m_pNavigationCom = { nullptr };
-	_bool*				m_isWalk = { nullptr };
 
 public:
-	static CTask_MoveForward* Create(class CBlackBoard* pBlackBoard);
+	static CTask_LookAt* Create(class CBlackBoard* pBlackBoard);
 	virtual void Free() override;
 };
 

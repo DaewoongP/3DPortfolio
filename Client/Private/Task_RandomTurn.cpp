@@ -7,19 +7,26 @@ HRESULT CTask_RandomTurn::Initialize(CBlackBoard* pBlackBoard)
 		return E_FAIL;
 
 	m_pTransformCom = static_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
-	m_dTurnTime = static_cast<_double*>(m_pBlackBoard->Find_Value(TEXT("Value_TurnTime")));
-	m_isTurn = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isTurn")));
-	m_isTurnLeft = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isTurnLeft")));
+	m_isWalk = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isWalk")));
 
 	if (rand() % 2)
 	{
-		*m_isTurnLeft = false;
+		m_isTurnLeft = false;
 		m_fRandRad = XMConvertToRadians(90.f);
 	}
 	else
 	{
-		*m_isTurnLeft = true;
+		m_isTurnLeft = true;
 		m_fRandRad = XMConvertToRadians(90.f) * -1.f;
+	}
+
+	if (rand() % 2)
+	{
+		m_dRandRotAcc = 0.5;
+	}
+	else
+	{
+		m_dRandRotAcc = 1.0;
 	}
 
 	return S_OK;
@@ -27,22 +34,22 @@ HRESULT CTask_RandomTurn::Initialize(CBlackBoard* pBlackBoard)
 
 CBehavior::STATE CTask_RandomTurn::Tick(_double dTimeDelta)
 {
-	if (nullptr == m_pTransformCom ||
-		nullptr == m_dTurnTime)
+	if (nullptr == m_pTransformCom)
 	{
-		*m_isTurn = false;
 		return STATE_FAILED;
 	}
+	
+	*m_isWalk = true;
 
 	m_dRunningAcc += dTimeDelta;
 
-	if (m_dRunningAcc < *m_dTurnTime)
+	if (m_dRunningAcc < m_dRandRotAcc)
 	{
-		*m_isTurn = true;
-		if (true == *m_isTurnLeft)
+		if (true == m_isTurnLeft)
 			m_pTransformCom->Go_Left(dTimeDelta);
 		else
 			m_pTransformCom->Go_Right(dTimeDelta);
+
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fRandRad, dTimeDelta);
 
 		return STATE_RUNNING;
@@ -51,18 +58,27 @@ CBehavior::STATE CTask_RandomTurn::Tick(_double dTimeDelta)
 	// 다음로테이션 랜덤화
 	if (rand() % 2)
 	{
-		*m_isTurnLeft = false;
+		m_isTurnLeft = false;
 		m_fRandRad = XMConvertToRadians(90.f);
 	}
 	else
 	{
-		*m_isTurnLeft = true;
+		m_isTurnLeft = true;
 		m_fRandRad = XMConvertToRadians(90.f) * -1.f;
 	}
 
-	m_dRunningAcc = 0.0;
+	if (rand() % 2)
+	{
+		m_dRandRotAcc = 0.5;
+	}
+	else
+	{
+		m_dRandRotAcc = 1.0;
+	}
 
-	*m_isTurn = false;
+	*m_isWalk = false;
+
+	m_dRunningAcc = 0.0;
 
 	return STATE_SUCCESS;
 }

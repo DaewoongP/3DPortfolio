@@ -127,10 +127,10 @@ HRESULT CBullet::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CBullet::Fire(_vector vInitPosition, _vector vTargetPostion)
+void CBullet::Fire(_vector vInitPosition, _vector vTargetPosition)
 {
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vInitPosition);
-	m_pTransformCom->LookAt(vTargetPostion);
+	m_pTransformCom->LookAt(vTargetPosition);
 }
 
 CBullet* CBullet::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

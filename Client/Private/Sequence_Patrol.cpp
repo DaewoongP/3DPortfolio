@@ -1,9 +1,7 @@
 #include "..\Public\Sequence_Patrol.h"
 #include "Task_MoveForward.h"
 #include "Task_RandomTurn.h"
-#include "Task_Wait.h"
-#include "Task_Stop.h"
-#include "Task_TurnIdle.h"
+#include "Task_RandomWait.h"
 #include "GameObject.h"
 
 HRESULT CSequence_Patrol::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
@@ -11,11 +9,11 @@ HRESULT CSequence_Patrol::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDeco
 	if (FAILED(__super::Initialize(pBlackBoard, pDecorator)))
 		return E_FAIL;
 
-	if (FAILED(Add_Child(TEXT("Task_MoveForward"), CTask_MoveForward::Create(pBlackBoard))))
-		return E_FAIL;
 	if (FAILED(Add_Child(TEXT("Task_RandomTurn"), CTask_RandomTurn::Create(pBlackBoard))))
 		return E_FAIL;
-	if (FAILED(Add_Child(TEXT("Task_Wait"), CTask_Wait::Create(pBlackBoard))))
+	if (FAILED(Add_Child(TEXT("Task_MoveForward"), CTask_MoveForward::Create(pBlackBoard))))
+		return E_FAIL;
+	if (FAILED(Add_Child(TEXT("Task_RandomWait"), CTask_RandomWait::Create(pBlackBoard))))
 		return E_FAIL;
 
 	m_Decorators.push_back(

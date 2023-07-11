@@ -7,20 +7,43 @@ HRESULT CTask_MoveForward::Initialize(CBlackBoard* pBlackBoard)
 		return E_FAIL;
 
 	m_pTransformCom = static_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
+	m_pNavigationCom = static_cast<CNavigation*>(m_pBlackBoard->Find_Value(TEXT("Value_Navigation")));
 	m_isWalk = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isWalk")));
+	
+	CELLFLAG CellFlag = CELL_MOVE;
+	m_pNavigationCom->Is_Move(m_pTransformCom->Get_State(CTransform::STATE_POSITION), nullptr, &CellFlag);
 
 	return S_OK;
 }
 
 CBehavior::STATE CTask_MoveForward::Tick(_double dTimeDelta)
 {
-	if (nullptr == m_pTransformCom)
+	if (nullptr == m_pTransformCom ||
+		nullptr == m_pNavigationCom)
 	{
 		*m_isWalk = false;
 		return STATE_FAILED;
 	}
 
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
 	m_pTransformCom->Go_Straight(dTimeDelta);
+
+	CELLFLAG CellFlag = CELL_STATIC;
+
+	if (false == m_pNavigationCom->Is_Move(m_pTransformCom->Get_State(CTransform::STATE_POSITION), nullptr, &CellFlag))
+	{
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		return STATE_FAILED;
+	}
+	else
+	{
+		if (CELL_MOVE != CellFlag)
+		{
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			return STATE_FAILED;
+		}
+	}
 
 	m_dRunningAcc += dTimeDelta;
 

@@ -195,17 +195,29 @@
     <ClInclude Include="..\public\Task_Stop.h">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Selector_FindTarget.h">
+    <ClInclude Include="..\public\Selector_FindTargetToAttack.h">
       <Filter>03. Behaviors\00. Selector</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Task_Attack.h">
       <Filter>03. Behaviors\02. Task\01. Attack</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Task_Wait.h">
+    <ClInclude Include="..\public\Task_RandomWait.h">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Task_TurnIdle.h">
       <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_LookAt.h">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_LookAttack.h">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Wait.h">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_FailedWait.h">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -300,17 +312,29 @@
     <ClCompile Include="..\private\Task_Stop.cpp">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Selector_FindTarget.cpp">
+    <ClCompile Include="..\private\Selector_FindTargetToAttack.cpp">
       <Filter>03. Behaviors\00. Selector</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Task_Attack.cpp">
       <Filter>03. Behaviors\02. Task\01. Attack</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Task_Wait.cpp">
+    <ClCompile Include="..\private\Task_RandomWait.cpp">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Task_TurnIdle.cpp">
       <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_LookAt.cpp">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_LookAttack.cpp">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Wait.cpp">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_FailedWait.cpp">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

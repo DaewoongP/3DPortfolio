@@ -15,6 +15,9 @@ public:
 		const _float4x4*	pParentWorldMatrix;
 	}PARENTMATRIXDESC;
 
+public:
+	const _float4x4 Get_CombinedWorldMatrix() const { return m_CombinedWorldMatrix; }
+
 protected:
 	explicit CPart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	explicit CPart(const CGameObject& rhs);
@@ -30,6 +33,9 @@ public:
 	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
 	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
+
+public:
+	virtual void Attack(_vector vPosition, _vector vTargetPos) {};
 
 protected:
 	PARENTMATRIXDESC		m_ParentMatrixDesc;

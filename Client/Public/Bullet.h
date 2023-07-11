@@ -38,7 +38,7 @@ private:
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
-	void Fire(_vector vInitPosition, _vector vDirection);
+	void Fire(_vector vInitPosition, _vector vTargetPosition);
 
 public:
 	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -72,34 +72,11 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 
 	if (true == m_bPickNavigation)
 	{
-		m_isMoveCell = CELL_MOVE & m_eCurrentCellFlag;
-		m_isFallCell = CELL_FALL & m_eCurrentCellFlag;
-
-		if (ImGui::Checkbox("Move", &m_isMoveCell))
-		{
-			// true면 추가 false면 해제
-			if (m_isMoveCell)
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_MOVE);
-			}
-			else
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_MOVE);
-			}
-		}
-
+		ImGui::RadioButton("Move", (_int*)(&m_eCurrentCellFlag), (_int)CELL_MOVE);
 		SameLine();
-		if (ImGui::Checkbox("Fall", &m_isFallCell))
-		{
-			if (m_isFallCell)
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag | CELL_FALL);
-			}
-			else
-			{
-				m_eCurrentCellFlag = CELLFLAG(m_eCurrentCellFlag ^ CELL_FALL);
-			}
-		}
+		ImGui::RadioButton("Fall", (_int*)(&m_eCurrentCellFlag), (_int)CELL_FALL);
+		SameLine();
+		ImGui::RadioButton("Static", (_int*)(&m_eCurrentCellFlag), (_int)CELL_STATIC);
 	}
 
 	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) &&

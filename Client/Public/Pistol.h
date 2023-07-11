@@ -37,7 +37,7 @@ private:
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
-	void Fire(_vector vPosition, _vector vPlayerPos);
+	void Attack(_vector vPosition, _vector vTargetPos);
 
 private:
 	void Bullet_Late_Tick(_double dTimeDelta);

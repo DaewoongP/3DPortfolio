@@ -45,13 +45,11 @@ private:
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
-	_double						m_dTurnTime = { 0.9 };
 	_bool						m_isWalk = { false };
-	_bool						m_isTurn = { false };
-	_bool						m_isTurnLeft = { false };
 	_bool						m_isAttack = { false };
-	_double						m_dBulletCoolTime = { 0.5 };
-	_double						m_dPatrolWaitTime = { 1.0 };
+	_double						m_dAttackCoolTime = { 0.0 };
+	_double						m_dPatrolWaitTime = { 0.0 };
+	_double						m_dAttackWaitTime = { 0.0 };
 	_bool						m_isWait = { false };
 
 private:
@@ -65,6 +63,7 @@ private:
 private: /* Tick */
 	HRESULT Add_Component(ENEMYDESC& EnemyDesc);
 	HRESULT Add_Parts();
+	HRESULT SetUp_BehaviorTree();
 	HRESULT SetUp_ShaderResources();
 
 	void AnimationState(_double dTimeDelta);

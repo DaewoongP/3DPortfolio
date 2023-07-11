@@ -98,8 +98,9 @@ HRESULT CNavigation::Reset()
 _bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ CELLFLAG* pFlag)
 {
 	_int		iNeighborIndex = -1;
+	_vector vXZPosition = XMVectorSet(XMVectorGetX(vPosition), 0.f, XMVectorGetZ(vPosition), 1.f);
 
-	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vPosition, pNormal, &iNeighborIndex, pFlag))
+	if (true == m_Cells[m_NaviDesc.iCurrentIndex]->Is_In(vXZPosition, pNormal, &iNeighborIndex, pFlag))
 	{
 		return true;
 	}
@@ -112,7 +113,7 @@ _bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_
 				if (-1 == iNeighborIndex)
 					return false;
 
-				if (true == m_Cells[iNeighborIndex]->Is_In(vPosition, pNormal, &iNeighborIndex, pFlag))
+				if (true == m_Cells[iNeighborIndex]->Is_In(vXZPosition, pNormal, &iNeighborIndex, pFlag))
 					break;
 			}
 
@@ -125,6 +126,17 @@ _bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_
 	}
 
 	return false;
+}
+
+HRESULT CNavigation::Find_MyCell(_vector vPosition)
+{
+	for (auto& pCell : m_Cells)
+	{
+		if (true == pCell->Is_In(vPosition, nullptr, nullptr, nullptr))
+			m_iInitialIndex = m_NaviDesc.iCurrentIndex = pCell->Get_CellIndex();
+	}
+
+	return S_OK;
 }
 
 #ifdef _DEBUG

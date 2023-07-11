@@ -55,18 +55,24 @@ _bool CCell::Is_In(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ _int* p
 
 		if (0 < XMVectorGetX(XMVector3Dot(vDir, vNormal)))
 		{
-			*pNeighborIndex = m_iNeighborIndices[i];
+			if (nullptr != pNeighborIndex)
+				*pNeighborIndex = m_iNeighborIndices[i];
 
-			if (-1 == m_iNeighborIndices[i])
-				XMStoreFloat3(pNormal, vNormal);
+			if (nullptr != pNormal &&
+				nullptr != pFlag)
+			{
+				if (-1 == m_iNeighborIndices[i])
+					XMStoreFloat3(pNormal, vNormal);
 
-			*pFlag = m_eCellFlag;
-
+				*pFlag = m_eCellFlag;
+			}
+			
 			return false;
 		}
 	}
 
-	*pFlag = m_eCellFlag;
+	if (nullptr != pFlag)
+		*pFlag = m_eCellFlag;
 
 	return true;
 }
