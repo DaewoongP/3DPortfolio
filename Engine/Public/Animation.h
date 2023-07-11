@@ -45,6 +45,7 @@ public:
 		m_dTimeAcc = 0.0;
 	}
 	void TimeAccReset() { m_dTimeAcc = 0.0; }
+	void Delete_Translation();
 
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);

@@ -16,7 +16,12 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_RUN, STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, STATE_CROUCH, STATE_HOOK, STATE_CLIMB, STATE_DRONRIDE, STATE_DEAD, STATE_END };
+	enum STATE { 
+		STATE_IDLE, STATE_ATTACK, STATE_RUN, 
+		STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, 
+		STATE_CROUCH, STATE_HOOK, STATE_CLIMB,
+		STATE_DRONRIDE, STATE_BLOCK, STATE_DEAD, 
+		STATE_END };
 
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -71,8 +76,12 @@ private: // WallRun
 	_float3					m_vWallDir;
 	_bool					m_isWallRun = { false };
 
+private: // Block
+	_bool					m_isBlocked = { false };
+
 private:
 	vector<const CCollider*>	m_InRangeEnemyColliders;
+	vector<const CGameObject*>	m_BlockEnemyWeapons;
 	_float3					m_vAttackPositon;
 
 private:
@@ -96,6 +105,7 @@ private: /* Tick */
 	void WallRunCameraReset(_double dTimeDelta);
 	void Add_Collisions();
 	void Attack(_double dTimeDelta);
+	void Block(_double dTimeDelta);
 
 	_bool Check_Hook(_double dTimeDelta);
 
@@ -124,6 +134,10 @@ END
 /*
 
 62 - Hook Pull
+
+80 - Block
+81 - Block2
+82 - Block3
 
 84 - Att R1
 85 - Att R2

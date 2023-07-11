@@ -1,18 +1,18 @@
-#include "..\Public\Katana.h"
+#include "..\Public\Sword.h"
 #include "GameInstance.h"
 #include "Player.h"
 
-CKatana::CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSword::CSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPart(pDevice, pContext)
 {
 }
 
-CKatana::CKatana(const CKatana& rhs)
+CSword::CSword(const CSword& rhs)
 	: CPart(rhs)
 {
 }
 
-HRESULT CKatana::Initialize_Prototype()
+HRESULT CSword::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -20,7 +20,7 @@ HRESULT CKatana::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CKatana::Initialize(void* pArg)
+HRESULT CSword::Initialize(void* pArg)
 {
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(&TransformDesc)))
@@ -35,17 +35,17 @@ HRESULT CKatana::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CKatana::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
+HRESULT CSword::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 {
 	m_ParentMatrixDesc = ParentDesc;
-	
+
 	return S_OK;
 }
 
-void CKatana::Tick(_double dTimeDelta)
+void CSword::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-	
+
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 	_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
 	XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
@@ -57,7 +57,7 @@ void CKatana::Tick(_double dTimeDelta)
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
-GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
+GAMEEVENT CSword::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
@@ -67,7 +67,7 @@ GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 	return GAME_NOEVENT;
 }
 
-HRESULT CKatana::Render()
+HRESULT CSword::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -94,13 +94,13 @@ HRESULT CKatana::Render()
 	return S_OK;
 }
 
-HRESULT CKatana::Add_Components()
+HRESULT CSword::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 	{
-		MSG_BOX("Failed CKatana Add_Component : (Com_Renderer)");
+		MSG_BOX("Failed CSword Add_Component : (Com_Renderer)");
 		return E_FAIL;
 	}
 
@@ -108,7 +108,7 @@ HRESULT CKatana::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
-		MSG_BOX("Failed CKatana Add_Component : (Com_Model)");
+		MSG_BOX("Failed CSword Add_Component : (Com_Model)");
 		return E_FAIL;
 	}
 
@@ -116,7 +116,7 @@ HRESULT CKatana::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
-		MSG_BOX("Failed CKatana Add_Component : (Com_Shader)");
+		MSG_BOX("Failed CSword Add_Component : (Com_Shader)");
 		return E_FAIL;
 	}
 
@@ -134,7 +134,7 @@ HRESULT CKatana::Add_Components()
 	return S_OK;
 }
 
-HRESULT CKatana::SetUp_ShaderResources()
+HRESULT CSword::SetUp_ShaderResources()
 {
 	// Part의 경우 월드행렬을 다 저장된거로 던져야함.
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
@@ -156,41 +156,35 @@ HRESULT CKatana::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CKatana::Attack()
+void CSword::Attack(_vector vPosition, _vector vTargetPos)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
-
-	Safe_Release(pGameInstance);
 }
 
-CKatana* CKatana::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSword* CSword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CKatana* pInstance = new CKatana(pDevice, pContext);
+	CSword* pInstance = new CSword(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CKatana");
+		MSG_BOX("Failed to Created CSword");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CKatana::Clone(void* pArg)
+CGameObject* CSword::Clone(void* pArg)
 {
-	CKatana* pInstance = new CKatana(*this);
+	CSword* pInstance = new CSword(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CKatana");
+		MSG_BOX("Failed to Cloned CSword");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CKatana::Free()
+void CSword::Free()
 {
 	__super::Free();
 

@@ -10,15 +10,15 @@ END
 
 BEGIN(Client)
 
-class CEnemy_Pistol final : public CEnemy
+class CEnemy_Sword final : public CEnemy
 {
 public:
-	enum STATE { STATE_IDLE, STATE_ATTACK, STATE_WALK, STATE_RELOAD, STATE_DEAD, STATE_END };
+	enum STATE { STATE_IDLE, STATE_READY, STATE_DASH, STATE_ATTACK, STATE_WALK, STATE_DEAD, STATE_END };
 
 private:
-	explicit CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CEnemy_Pistol(const CEnemy_Pistol& rhs);
-	virtual ~CEnemy_Pistol() = default;
+	explicit CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CEnemy_Sword(const CEnemy_Sword& rhs);
+	virtual ~CEnemy_Sword() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,16 +32,16 @@ public:
 	virtual HRESULT Reset() override;
 
 private:
-	CModel*					m_pModelCom = { nullptr };
-	CShader*				m_pShaderCom = { nullptr };
-	CCollider*				m_pColliderCom = { nullptr };
-	CCollider*				m_pVisionColliderCom = { nullptr };
-	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
+	CCollider*			m_pColliderCom = { nullptr };
+	CCollider*			m_pVisionColliderCom = { nullptr };
+	CBehaviorTree*		m_pBehaviorTreeCom = { nullptr };
 
 private:
-	class CPistol*			m_pPistol = { nullptr };
+	class CSword*			m_pSword = { nullptr };
 	_float					m_fVisionRange = { 0.f };
-	
+
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
@@ -72,34 +72,28 @@ private: /* Late_Tick */
 	GAMEEVENT PlayEvent(_double dTimeDelta);
 
 public:
-	static CEnemy_Pistol* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnemy_Sword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 
 END
 
+
 /*
 
-거의 동일한거같은데 잘모르겠음. 둘중하나 사용
-54 - Idle -> 일단이거로 통일함.
-98 - Idle
+1 - Idle
 
-61 - walk Backward
-62 - walk Forward
-63 - walk Left
-64 - walk Right
-59 - Reload
+5 - walk Forward (로컬 움직임)
 
-93 - turn 180 L
-94 - turn 180 R
-95 - turn 90 L
-96 - turn 90 R
+13 - death1
+14 - death2
+15 - death3
 
-97 - Attack
+19 - ready dash attack
+20 - dash loop
+21 - dash attack
 
-51 - death1
-52 - death2
-53 - death3
+23 - Blocked
 
 */

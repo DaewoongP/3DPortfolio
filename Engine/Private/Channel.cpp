@@ -5,6 +5,14 @@ CChannel::CChannel()
 {
 }
 
+void CChannel::Delete_Translation()
+{
+	_float3 vInitPos = m_KeyFrames[0].vTranslation;
+
+	for (auto& KeyFrame : m_KeyFrames)
+		KeyFrame.vTranslation = vInitPos;
+}
+
 HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
 	lstrcpy(m_szName, Channel.Name);

@@ -146,6 +146,7 @@ void CPistol::Attack(_vector vPosition, _vector vTargetPos)
 	pGameObject->Set_Owner(nullptr);
 
 	pGameObject->Set_LayerTag(TEXT("Layer_EnemyWeapon"));
+	pGameObject->Set_Tag(TEXT("GameObject_Bullet"));
 
 	m_Bullets.emplace(TEXT("GameObject_Bullet"), pGameObject);
 

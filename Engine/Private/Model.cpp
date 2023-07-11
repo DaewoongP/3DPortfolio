@@ -94,6 +94,11 @@ void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
 	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrameIndex(m_Bones, iKeyFrameIndex);
 }
 
+void CModel::Delete_AnimationTranslation(_uint iAnimationIndex)
+{
+	m_Animations[iAnimationIndex]->Delete_Translation();
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
 {
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);

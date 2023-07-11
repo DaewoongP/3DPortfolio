@@ -1,19 +1,19 @@
-#include "..\Public\Enemy_Pistol.h"
+#include "..\Public\Enemy_Sword.h"
 #include "GameInstance.h"
 #include "Selector_FindTargetToAttack.h"
-#include "Pistol.h"
+#include "Sword.h"
 
-CEnemy_Pistol::CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEnemy_Sword::CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
 }
 
-CEnemy_Pistol::CEnemy_Pistol(const CEnemy_Pistol& rhs)
+CEnemy_Sword::CEnemy_Sword(const CEnemy_Sword& rhs)
 	: CEnemy(rhs)
 {
 }
 
-HRESULT CEnemy_Pistol::Initialize_Prototype()
+HRESULT CEnemy_Sword::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,7 +21,7 @@ HRESULT CEnemy_Pistol::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::Initialize(void* pArg)
+HRESULT CEnemy_Sword::Initialize(void* pArg)
 {
 	ENEMYDESC EnemyDesc;
 	ZEROMEM(&EnemyDesc);
@@ -55,12 +55,13 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	// 네비게이션 초기위치 찾기.
 	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
-	m_pModelCom->Reset_Animation(54);
+	m_pModelCom->Reset_Animation(1);
+	m_pModelCom->Delete_AnimationTranslation(5);
 
 	return S_OK;
 }
 
-void CEnemy_Pistol::Tick(_double dTimeDelta)
+void CEnemy_Sword::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
@@ -76,7 +77,7 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 	Safe_Release(pGameInstance);
 }
 
-GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
+GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 {
 	AnimationState(dTimeDelta);
 
@@ -85,28 +86,28 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 	return PlayEvent(dTimeDelta);
 }
 
-void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+void CEnemy_Sword::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	if (CollisionDesc.pMyCollider == m_pColliderCom && 
+	if (CollisionDesc.pMyCollider == m_pColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
-	}	
+	}
 }
 
-void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
+void CEnemy_Sword::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = CollisionDesc.pOtherOwner;
 }
 
-void CEnemy_Pistol::OnCollisionExit(COLLISIONDESC CollisionDesc)
+void CEnemy_Sword::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = nullptr;
 }
 
-HRESULT CEnemy_Pistol::Render()
+HRESULT CEnemy_Sword::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -136,9 +137,9 @@ HRESULT CEnemy_Pistol::Render()
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::Reset()
+HRESULT CEnemy_Sword::Reset()
 {
-	m_pModelCom->Reset_Animation(54);
+	m_pModelCom->Reset_Animation(1);
 	m_eCurState = STATE_IDLE;
 
 	if (FAILED(__super::Reset()))
@@ -147,10 +148,10 @@ HRESULT CEnemy_Pistol::Reset()
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
+HRESULT CEnemy_Sword::Add_Component(ENEMYDESC& EnemyDesc)
 {
 	/* For.Com_Model */
-	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Pistol"),
+	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Sword"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Model)");
@@ -182,7 +183,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 
 	SphereDesc.fRadius = 20.f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	
+
 	/* For.Com_VisionCollider */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
@@ -194,7 +195,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::Add_Parts()
+HRESULT CEnemy_Sword::Add_Parts()
 {
 	CPart::PARENTMATRIXDESC ParentMatrixDesc;
 	ZEROMEM(&ParentMatrixDesc);
@@ -206,14 +207,14 @@ HRESULT CEnemy_Pistol::Add_Parts()
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Pistol"), TEXT("Layer_EnemyPart"),
-		TEXT("Part_Pistol"), reinterpret_cast<CGameObject**>(&m_pPistol), &ParentMatrixDesc)))
+	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Sword"), TEXT("Layer_EnemyPart"),
+		TEXT("Part_Sword"), reinterpret_cast<CGameObject**>(&m_pSword), &ParentMatrixDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
+HRESULT CEnemy_Sword::SetUp_BehaviorTree()
 {
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
@@ -229,7 +230,7 @@ HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
 	m_dAttackCoolTime = 1.5;
 	pBlackBoard->Add_Value(TEXT("Value_AttackCoolTime"), &m_dAttackCoolTime);
 	pBlackBoard->Add_Value(TEXT("Value_isAttack"), &m_isAttack);
-	pBlackBoard->Add_Value(TEXT("Value_Weapon"), m_pPistol);
+	pBlackBoard->Add_Value(TEXT("Value_Weapon"), m_pSword);
 
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
@@ -243,7 +244,7 @@ HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::SetUp_ShaderResources()
+HRESULT CEnemy_Sword::SetUp_ShaderResources()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -260,7 +261,7 @@ HRESULT CEnemy_Pistol::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CEnemy_Pistol::AnimationState(_double dTimeDelta)
+void CEnemy_Sword::AnimationState(_double dTimeDelta)
 {
 	m_eCurrentAnimationFlag = m_pModelCom->Get_AnimationState();
 
@@ -280,17 +281,16 @@ void CEnemy_Pistol::AnimationState(_double dTimeDelta)
 		if (true == m_isWalk)
 			m_eCurState = STATE_WALK;
 		if (true == m_isAttack)
-			m_eCurState = STATE_ATTACK;
+			m_eCurState = STATE_READY;
 	}
 
 	Motion_Change(m_eCurrentAnimationFlag);
-	
+
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
-void CEnemy_Pistol::Motion_Change(ANIMATIONFLAG eAnimationFlag)
+void CEnemy_Sword::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 {
-	// 모션 변경 처리 전 예외처리.
 	if (false == (ANIM_PLAYING == eAnimationFlag || ANIM_FINISHED == eAnimationFlag))
 		return;
 
@@ -299,16 +299,22 @@ void CEnemy_Pistol::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		switch (m_eCurState)
 		{
 		case STATE_IDLE:
-			m_pModelCom->Set_AnimIndex(54);
+			m_pModelCom->Set_AnimIndex(1);
+			break;
+		case STATE_READY:
+			m_pModelCom->Set_AnimIndex(19, false);
+			break;
+		case STATE_DASH:
+			m_pModelCom->Set_AnimIndex(20, false);
 			break;
 		case STATE_ATTACK:
-			m_pModelCom->Set_AnimIndex(97, false);
+			m_pModelCom->Set_AnimIndex(21, false);
 			break;
 		case STATE_WALK:
-			m_pModelCom->Set_AnimIndex(62);
+			m_pModelCom->Set_AnimIndex(5);
 			break;
 		case STATE_DEAD:
-			m_pModelCom->Set_AnimIndex(51 + rand() % 3, false);
+			m_pModelCom->Set_AnimIndex(13 + rand() % 3, false);
 			break;
 		}
 
@@ -316,7 +322,7 @@ void CEnemy_Pistol::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 	}
 }
 
-GAMEEVENT CEnemy_Pistol::PlayEvent(_double dTimeDelta)
+GAMEEVENT CEnemy_Sword::PlayEvent(_double dTimeDelta)
 {
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
@@ -330,37 +336,37 @@ GAMEEVENT CEnemy_Pistol::PlayEvent(_double dTimeDelta)
 	return GAME_NOEVENT;
 }
 
-CEnemy_Pistol* CEnemy_Pistol::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEnemy_Sword* CEnemy_Sword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CEnemy_Pistol* pInstance = new CEnemy_Pistol(pDevice, pContext);
+	CEnemy_Sword* pInstance = new CEnemy_Sword(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CEnemy_Pistol");
+		MSG_BOX("Failed to Created CEnemy_Sword");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CEnemy_Pistol::Clone(void* pArg)
+CGameObject* CEnemy_Sword::Clone(void* pArg)
 {
-	CEnemy_Pistol* pInstance = new CEnemy_Pistol(*this);
+	CEnemy_Sword* pInstance = new CEnemy_Sword(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CEnemy_Pistol");
+		MSG_BOX("Failed to Cloned CEnemy_Sword");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CEnemy_Pistol::Free()
+void CEnemy_Sword::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pPistol);
+	Safe_Release(m_pSword);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);

@@ -21,6 +21,8 @@ public:
 
 private:
 	CTransform*			m_pTransformCom = { nullptr };
+	_bool*				m_isWait = { nullptr };
+	_bool*				m_isWalk = { nullptr };
 
 public:
 	static CTask_LookAt* Create(class CBlackBoard* pBlackBoard);

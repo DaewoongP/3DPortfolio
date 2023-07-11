@@ -35,7 +35,8 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	virtual void Attack(_vector vPosition, _vector vTargetPos) {};
+	virtual void Attack(_vector vPosition, _vector vTargetPos) {}
+	virtual void Block() {}
 
 protected:
 	PARENTMATRIXDESC		m_ParentMatrixDesc;

@@ -3,6 +3,7 @@
 #include "Part.h"
 #include "Layer.h"
 #include "Katana.h"
+#include "Bullet.h"
 #include "ColProp.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -70,6 +71,7 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 	Attack(dTimeDelta);
+	Block(dTimeDelta);
 
 	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 2.f);
 
@@ -102,7 +104,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	if (m_isInvisible)
 		m_eGameEvent = GAME_NOEVENT;
 
-	cout << "현재 적 개체수 : " << m_InRangeEnemyColliders.size() << endl;
+	cout << "현재 적 무기수 : " << m_BlockEnemyWeapons.size() << endl;
 #endif // _DEBUG
 
 	return m_eGameEvent;
@@ -112,9 +114,10 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-
+	/* Player Collider */
 	// Wall Run
-	if (!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_ColProps")))
+	if (CollisionDesc.pMyCollider == m_pColliderCom &&
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_fWallRunY = XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
@@ -128,13 +131,25 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 			m_fWallRunY = 0.f;
 		}
 	}
-	else if (!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
+
+	if (CollisionDesc.pMyCollider == m_pColliderCom &&
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
+	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
+	}
+
+	/* Player Vision Collider */
 
 	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
 	{
 		m_InRangeEnemyColliders.push_back(CollisionDesc.pOtherCollider);
+	}
+
+	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
+	{
+		m_BlockEnemyWeapons.push_back(CollisionDesc.pOtherOwner);
 	}
 	
 	Safe_Release(pGameInstance);
@@ -158,12 +173,16 @@ void CPlayer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 
 void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
+	/* Player Collider */
+
 	if (m_fWallRunY > 4.f &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_ColProps")))
 	{
 		m_isWallRun = { false };
 		m_fWallRunY = 0.f;
 	}
+
+	/* Player Vision Collider */
 
 	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
@@ -173,6 +192,19 @@ void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 			if (*iter == CollisionDesc.pOtherCollider)
 			{
 				m_InRangeEnemyColliders.erase(iter);
+				break;
+			}
+		}
+	}
+
+	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
+	{
+		for (auto iter = m_BlockEnemyWeapons.begin(); iter != m_BlockEnemyWeapons.end(); ++iter)
+		{
+			if (*iter == CollisionDesc.pOtherOwner)
+			{
+				m_BlockEnemyWeapons.erase(iter);
 				break;
 			}
 		}
@@ -308,7 +340,7 @@ HRESULT CPlayer::Add_Component()
 
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	AABBDesc.vExtents = _float3(20.f, 10.f, 20.f);
+	AABBDesc.vExtents = _float3(10.f, 5.f, 10.f);
 	/* For.Com_VisionCollider */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &AABBDesc)))
@@ -454,32 +486,40 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
-		XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-		if (STATE_ATTACK != m_eCurState &&
-			STATE_CLIMB != m_eCurState &&
-			STATE_DRONRIDE != m_eCurState)
+		if (0 < m_BlockEnemyWeapons.size())
 		{
-			m_eCurState = STATE_ATTACK;
+			m_isBlocked = true;
+			m_eCurState = STATE_BLOCK;
 		}
-
-		if (STATE_ATTACK == m_eCurState &&
-			ANIM_LERP != m_eCurrentAnimationFlag)
+		else
 		{
-			// 실제 게임이랑 속도 맞춤.
-			// 40퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
-			if (0.4f <= m_pModelCom->Get_CurrentFramePercent())
+			XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+			if (STATE_ATTACK != m_eCurState &&
+				STATE_CLIMB != m_eCurState &&
+				STATE_DRONRIDE != m_eCurState)
 			{
-				_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
-				// if Attack Right
-				if (84 == iCurrnetAnimIndex || 
-					85 == iCurrnetAnimIndex || 
-					86 == iCurrnetAnimIndex)
-					m_pModelCom->Set_AnimIndex(87 + rand() % 3, false);
-				else if (87 == iCurrnetAnimIndex ||
-					88 == iCurrnetAnimIndex ||
-					89 == iCurrnetAnimIndex)
-					m_pModelCom->Set_AnimIndex(84 + rand() % 3, false);
+				m_eCurState = STATE_ATTACK;
+			}
+
+			if (STATE_ATTACK == m_eCurState &&
+				ANIM_LERP != m_eCurrentAnimationFlag)
+			{
+				// 실제 게임이랑 속도 맞춤.
+				// 40퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
+				if (0.4f <= m_pModelCom->Get_CurrentFramePercent())
+				{
+					_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
+					// if Attack Right
+					if (84 == iCurrnetAnimIndex ||
+						85 == iCurrnetAnimIndex ||
+						86 == iCurrnetAnimIndex)
+						m_pModelCom->Set_AnimIndex(87 + rand() % 3, false);
+					else if (87 == iCurrnetAnimIndex ||
+						88 == iCurrnetAnimIndex ||
+						89 == iCurrnetAnimIndex)
+						m_pModelCom->Set_AnimIndex(84 + rand() % 3, false);
+				}
 			}
 		}
 	}
@@ -605,6 +645,9 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		case STATE_HOOK:
 			m_pModelCom->Set_AnimIndex(62, false);
 			break;
+		case STATE_BLOCK:
+			m_pModelCom->Set_AnimIndex(80, false);
+			break;
 		case STATE_CLIMB:
 			break;
 		case STATE_DRONRIDE:
@@ -682,9 +725,23 @@ void CPlayer::Attack(_double dTimeDelta)
 		m_pKatana->Attack();
 }
 
+void CPlayer::Block(_double dTimeDelta)
+{
+	if (STATE_BLOCK != m_eCurState ||
+		 0 == m_BlockEnemyWeapons.size())
+		return;
+
+	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
+
+	if (0.5f > fAnimFramePercent)
+	{
+		
+	}
+}
+
 void CPlayer::Add_Collisions()
 {
-	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 5.f);
+	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 10.f);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(VisionMatrix * m_pTransformCom->Get_WorldMatrix());

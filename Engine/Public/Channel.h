@@ -15,6 +15,7 @@ public:
 	_double Get_CurrentKeyFrameTime(_uint iCurrentIndex) const { return m_KeyFrames[iCurrentIndex].dTime; }
 	// 채널 키프레임 중 가장 큰값 반환
 	_uint	Get_NumKeyFrames() const { return m_iNumKeyFrames; }
+	void Delete_Translation();
 
 public:
 	HRESULT Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones);

@@ -103,6 +103,12 @@
     <Filter Include="03. Behaviors\02. Task\01. Attack">
       <UniqueIdentifier>{f90f7978-06be-4e1d-97ae-4bcfc758eab3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Sword">
+      <UniqueIdentifier>{9106f328-fd6c-4984-a333-1cdc95245e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Sword\Sword">
+      <UniqueIdentifier>{bf2ea7a3-259d-4093-83b0-031ff43aa1fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -218,6 +224,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Task_FailedWait.h">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Sword.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sword.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sword\Sword</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -335,6 +347,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Task_FailedWait.cpp">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Sword.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sword.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sword\Sword</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

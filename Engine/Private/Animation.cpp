@@ -46,6 +46,14 @@ void CAnimation::Set_CurrentKeyFrameIndex(CModel::BONES& Bones, _uint iKeyFrameI
 	}
 }
 
+void CAnimation::Delete_Translation()
+{
+	for (auto& pChannel : m_Channels)
+	{
+		pChannel->Delete_Translation();
+	}
+}
+
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
 	m_isLoop = true;

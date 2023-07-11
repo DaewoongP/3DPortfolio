@@ -11,12 +11,12 @@ END
 
 BEGIN(Client)
 
-class CKatana final : public CPart
+class CSword final : public CPart
 {
 private:
-	explicit CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CKatana(const CKatana& rhs);
-	virtual ~CKatana() = default;
+	explicit CSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CSword(const CSword& rhs);
+	virtual ~CSword() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -35,10 +35,10 @@ private:
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
-	void Attack();
+	virtual void Attack(_vector vPosition, _vector vTargetPos) override;
 
 public:
-	static CKatana* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

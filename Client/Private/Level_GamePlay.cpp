@@ -112,6 +112,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
 				return E_FAIL;
 			}
 		}
+
+		// Enemy_Sword_Elite
+		if (nullptr != wcswcs(EnemyDesc.pModelPrototypeTag, TEXT("Sword_Elite")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+				TEXT("Prototype_GameObject_Enemy_Sword"), pLayerTag, wszName, &EnemyDesc)))
+			{
+				MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Enemy_Sword)");
+				return E_FAIL;
+			}
+		}
 	}
 
 #ifdef _DEBUG
