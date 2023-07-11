@@ -15,7 +15,7 @@ public:
 	void Set_PrototypeTag(const _tchar * pPrototypeTag) {
 		lstrcpy(m_pPrototypeTag, pPrototypeTag);
 	}
-	class CComposite* Get_Owner() { return m_pOwner; }
+	class CComposite* Get_Owner() const { return m_pOwner; }
 	const _tchar* Get_PrototypeTag() const { return m_pPrototypeTag; }
 
 public:

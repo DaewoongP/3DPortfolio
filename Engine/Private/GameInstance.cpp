@@ -146,6 +146,13 @@ _double CGameInstance::Get_TimeDelta(const _tchar* pTimerTag)
 	return m_pTimer_Manager->Get_TimeDelta(pTimerTag);
 }
 
+void CGameInstance::Set_SlowedTime(const _tchar* pTimerTag, _double dTime)
+{
+	NULL_CHECK_RETURN_MSG(m_pTimer_Manager, , TEXT("Timer_Manager NULL"));
+
+	return m_pTimer_Manager->Set_SlowedTime(pTimerTag, dTime);
+}
+
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 {
 	NULL_CHECK_RETURN_MSG(m_pLevel_Manager, E_FAIL, TEXT("Level_Manager NULL"));

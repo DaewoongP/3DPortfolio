@@ -391,7 +391,8 @@ void CTransform::Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta)
 void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize)
 {
 	// 점프상태일경우 리턴
-	if (true == m_isJumping)
+	if (true == m_isJumping ||
+		CELL_FALL == m_eCurrentCellFlag)
 		return;
 
 	// 앉기를 눌러서 천천히 내려앉음.

@@ -69,7 +69,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	Fix_Mouse();
 
 	AnimationState(dTimeDelta);
-	Attack();
+	Attack(dTimeDelta);
 
 	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 2.f);
 
@@ -101,6 +101,8 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 #ifdef _DEBUG
 	if (m_isInvisible)
 		m_eGameEvent = GAME_NOEVENT;
+
+	cout << "현재 적 개체수 : " << m_InRangeEnemyColliders.size() << endl;
 #endif // _DEBUG
 
 	return m_eGameEvent;
@@ -306,7 +308,7 @@ HRESULT CPlayer::Add_Component()
 
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	AABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
+	AABBDesc.vExtents = _float3(20.f, 10.f, 20.f);
 	/* For.Com_VisionCollider */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &AABBDesc)))
@@ -514,6 +516,19 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		m_pTransformCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
 
+	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_DOWN))
+	{
+		m_pTransformCom->ZeroVelocity();
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_Z))
+	{
+		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_UP))
+	{
+		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
+	}
+
 	Safe_Release(pGameInstance);
 }
 
@@ -621,12 +636,47 @@ void CPlayer::WallRunCameraReset(_double dTimeDelta)
 	}
 }
 
-void CPlayer::Attack()
+void CPlayer::Attack(_double dTimeDelta)
 {
 	if (STATE_ATTACK != m_eCurState)
 		return;
 
 	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
+
+	if (0.15f > fAnimFramePercent)
+	{
+		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+
+		_float fDist = 30.f;
+		_bool isChecked = false;
+
+		_vector vClosedEnemyPos;
+
+		_vector vPointLook = vLook * fDist;
+
+		for (auto& pEnemy : m_InRangeEnemyColliders)
+		{
+			CComposite* pEnemyCollOwner = pEnemy->Get_Owner();
+			if (static_cast<CGameObject*>(pEnemyCollOwner)->Is_Dead())
+				continue;
+			_float3 vEnemyPos = pEnemy->Get_BoundingCenterPosition();
+			_float fPointDist = XMVectorGetX(XMVector3LinePointDistance(vPos, vPos + vPointLook, XMLoadFloat3(&vEnemyPos)));
+
+			if (fDist >= fPointDist)
+			{
+				vClosedEnemyPos = XMLoadFloat3(&vEnemyPos);
+				fDist = fPointDist;
+				isChecked = true;
+			}
+		}
+
+		if (true == isChecked)
+		{
+			if (false == m_pTransformCom->Chase(vClosedEnemyPos - vLook * 3.f, dTimeDelta * 3.0, 3.f))
+				m_pTransformCom->ZeroVelocity();
+		}
+	}
 
 	if (0.15f <= fAnimFramePercent && 0.5f > fAnimFramePercent)
 		m_pKatana->Attack();
@@ -634,7 +684,7 @@ void CPlayer::Attack()
 
 void CPlayer::Add_Collisions()
 {
-	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 20.f);
+	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 5.f);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(VisionMatrix * m_pTransformCom->Get_WorldMatrix());
@@ -749,7 +799,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 		{
 			if (70.f > fDist)
 			{
-				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 1.f, g_TimeDelta);
+				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 0.7f, dTimeDelta);
 				return true;
 			}
 		}

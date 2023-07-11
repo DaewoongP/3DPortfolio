@@ -95,7 +95,7 @@ private: /* Tick */
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 	void WallRunCameraReset(_double dTimeDelta);
 	void Add_Collisions();
-	void Attack();
+	void Attack(_double dTimeDelta);
 
 	_bool Check_Hook(_double dTimeDelta);
 

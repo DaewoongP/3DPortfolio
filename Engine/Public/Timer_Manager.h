@@ -15,6 +15,7 @@ private:
 public:
 	// 현재의 TimeDelta 반환
 	_double		Get_TimeDelta(const _tchar* pTimerTag);
+	void		Set_SlowedTime(const _tchar* pTimerTag, _double dTime);
 
 public:
 	// 타이머 태그로 타이머 생성
@@ -27,7 +28,7 @@ private:
 
 private:
 	unordered_map<const _tchar*, class CTimer*>		m_umapTimers;
-	
+
 public:
 	virtual	void Free() override;
 };

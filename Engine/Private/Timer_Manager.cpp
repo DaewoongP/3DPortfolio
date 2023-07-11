@@ -17,6 +17,16 @@ _double Engine::CTimer_Manager::Get_TimeDelta(const _tchar* pTimerTag)
 	return pTimer->Get_TimeDelta();
 }
 
+void CTimer_Manager::Set_SlowedTime(const _tchar* pTimerTag, _double dTime)
+{
+	CTimer* pTimer = Find_Timer(pTimerTag);
+
+	if (nullptr == pTimer)
+		return;
+
+	pTimer->Set_SlowedTime(dTime);
+}
+
 HRESULT Engine::CTimer_Manager::Add_Timer(const _tchar* pTimerTag)
 {
 	CTimer* pTimer = Find_Timer(pTimerTag);

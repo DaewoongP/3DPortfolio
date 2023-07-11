@@ -35,8 +35,8 @@ public: /* For. Graphic_Device */
 public: /* For.Timer_Manager */
 	HRESULT		Add_Timer(const _tchar * pTimerTag);
 	void		Tick_Timer(const _tchar * pTimerTag);
-
 	_double		Get_TimeDelta(const _tchar * pTimerTag);
+	void		Set_SlowedTime(const _tchar * pTimerTag, _double dTime);
 
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel * pNewLevel);

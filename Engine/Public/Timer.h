@@ -11,6 +11,7 @@ private:
 
 public:
 	_double		Get_TimeDelta(void) { return m_TimeDelta; }
+	void		Set_SlowedTime(_double dTime) { m_dSlowedTime = dTime; }
 
 public:
 	HRESULT		Initialize(void);
@@ -23,6 +24,8 @@ private:
 	LARGE_INTEGER			m_CpuTick;
 
 	_double					m_TimeDelta;
+
+	_double					m_dSlowedTime = { 1.0 };
 
 public:
 	static CTimer*		Create(void);
