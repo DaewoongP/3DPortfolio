@@ -49,6 +49,7 @@ void CMainApp::Tick(_double dTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
 		return;
+
 	// 엔진의 Tick 호출
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
@@ -68,6 +69,9 @@ HRESULT CMainApp::Render()
 		return E_FAIL;
 	if (FAILED(m_pRenderer->Draw_RenderGroup()))
 		return E_FAIL;
+#ifdef _DEBUG
+	m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(10.f, 10.f));
+#endif // _DEBUG
 	if (FAILED(m_pGameInstance->Present()))
 		return E_FAIL;
 
@@ -148,7 +152,6 @@ void CMainApp::Render_FPS(_double dTimeDelta)
 	if (1.0 <= m_dFpsTime)
 	{
 		swprintf_s(m_szFPS, L"FPS: %d", m_iFps);
-		m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(10.f, 10.f));
 		m_iFps = 0;
 		m_dFpsTime = 0.0;
 	}
