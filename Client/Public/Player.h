@@ -109,6 +109,8 @@ private: /* Tick */
 
 	_bool Check_Hook(_double dTimeDelta);
 
+	void CameraMove(_double dTimeDelta);
+
 private: /* Late_Tick */
 	void CameraOffset(_double dTimeDelta);
 

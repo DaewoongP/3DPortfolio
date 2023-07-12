@@ -181,6 +181,12 @@
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Decorator">
       <UniqueIdentifier>{406442fc-0eb7-4291-b127-eea5b35459a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\09. RenderTarget">
+      <UniqueIdentifier>{331f3eda-a0cc-4586-8900-e3b273710c86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\09. RenderTarget\Manager">
+      <UniqueIdentifier>{454296c3-5155-4de0-a9ec-550b8186efc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -369,6 +375,12 @@
     <ClInclude Include="..\public\Decorator.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\RenderTarget.h">
+      <Filter>01. Utility\09. RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RenderTarget_Manager.h">
+      <Filter>01. Utility\09. RenderTarget\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -538,6 +550,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Decorator.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Decorator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RenderTarget.cpp">
+      <Filter>01. Utility\09. RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RenderTarget_Manager.cpp">
+      <Filter>01. Utility\09. RenderTarget\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

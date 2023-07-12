@@ -65,6 +65,8 @@
     <ClInclude Include="..\Public\Object_Manager.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\public\RenderTarget.h" />
+    <ClInclude Include="..\public\RenderTarget_Manager.h" />
     <ClInclude Include="..\public\Selector.h" />
     <ClInclude Include="..\public\Sequence.h" />
     <ClInclude Include="..\Public\Shader.h" />
@@ -123,6 +125,8 @@
     <ClCompile Include="..\Private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\private\RenderTarget.cpp" />
+    <ClCompile Include="..\private\RenderTarget_Manager.cpp" />
     <ClCompile Include="..\private\Selector.cpp" />
     <ClCompile Include="..\private\Sequence.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />

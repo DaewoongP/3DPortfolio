@@ -81,13 +81,13 @@ void CPlayer::Tick(_double dTimeDelta)
 	WallRunCameraReset(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
+
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	CameraOffset(dTimeDelta);
+	//CameraMove(dTimeDelta);
 
 	if (XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)) < m_pNavigationCom->Get_CurrentCellY() - 10.f)
-	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
-	}
 
 	Add_Collisions();
 }
@@ -896,6 +896,47 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 void CPlayer::Tick_Skills(_double dTimeDelta)
 {
 	Dash(dTimeDelta);
+}
+
+void CPlayer::CameraMove(_double dTimeDelta)
+{
+	if (STATE_ATTACK != m_eCurState)
+		return;
+	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
+	if (0.1f < fCurrentFramePercent)
+		return;
+
+	/*
+	84 - Att R1
+	85 - Att R2
+	86 - Att R3
+	87 - Att L1
+	88 - Att L2
+	89 - Att L3
+	*/
+
+	_float fVerticalMove = 0.f;
+	_float fHorizentalMove = 0.f;
+
+	_uint iCurrentAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
+	
+	if (84 == iCurrentAnimIndex)
+	{
+		fVerticalMove = 10.f;
+		fHorizentalMove = -10.f; 
+	}
+
+	_vector	vCamRight = XMVector3Normalize(m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT));
+	m_pTransformCom->Turn(vCamRight, fVerticalMove * m_fMouseSensitivity, dTimeDelta);
+	_vector vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+
+	if (XMConvertToRadians(30.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
+	{
+		m_pTransformCom->Turn(vCamRight, -1.f * fVerticalMove * m_fMouseSensitivity, dTimeDelta);
+	}
+
+	_vector	vAxisUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	m_pTransformCom->Turn(vAxisUp, fHorizentalMove * m_fMouseSensitivity, dTimeDelta);
 }
 
 void CPlayer::CameraOffset(_double dTimeDelta)

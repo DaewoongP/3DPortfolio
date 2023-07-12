@@ -162,7 +162,7 @@ void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransfor
 
 	_matrix InvalidateMatrix = 
 		XMMatrixInverse(nullptr, 
-			XMMatrixLookAtLH(vCamPos + XMLoadFloat4(&Notify.vEye), vCamPos + XMLoadFloat4(&Notify.vAt) + XMVector3Normalize(vCamDir + vNotifyDir), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+			XMMatrixLookAtLH(vCamPos, vCamPos +XMVector3Normalize(vCamDir + vNotifyDir), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
 }
