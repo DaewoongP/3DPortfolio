@@ -154,6 +154,7 @@ void CPistol::Attack(_vector vPosition, _vector vTargetPos)
 	
 	_vector vPistolOffset = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
 
+	static_cast<CBullet*>(pGameObject)->Set_Type(COLLISIONDESC::COLTYPE_ENEMYWEAPON);
 	static_cast<CBullet*>(pGameObject)->Fire(vPistolOffset, vTargetPos);
 }
 

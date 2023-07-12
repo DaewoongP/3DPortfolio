@@ -231,6 +231,18 @@
     <ClInclude Include="..\public\Sword.h">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sword\Sword</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Selector_FindTargetToDashAttack.h">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Dash.h">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_DashAttack.h">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Ready.h">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -353,6 +365,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Sword.cpp">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sword\Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector_FindTargetToDashAttack.cpp">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Dash.cpp">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_DashAttack.cpp">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Ready.cpp">
+      <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

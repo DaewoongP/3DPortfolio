@@ -18,6 +18,11 @@ private:
 	virtual ~CBullet() = default;
 
 public:
+	void Set_Type(COLLISIONDESC::COLTYPE eType) {
+		m_eColType = eType;
+	}
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
@@ -34,6 +39,9 @@ private:
 private:
 	_double			m_dDeleteTimeAcc = { 0.0 };
 	_double			m_dDeleteTime = { 5.0 };
+
+private:
+	COLLISIONDESC::COLTYPE	m_eColType = { COLLISIONDESC::COLTYPE_END };
 
 public:
 	HRESULT Add_Components();

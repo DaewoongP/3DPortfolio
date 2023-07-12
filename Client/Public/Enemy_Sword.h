@@ -13,7 +13,7 @@ BEGIN(Client)
 class CEnemy_Sword final : public CEnemy
 {
 public:
-	enum STATE { STATE_IDLE, STATE_READY, STATE_DASH, STATE_ATTACK, STATE_WALK, STATE_DEAD, STATE_END };
+	enum STATE { STATE_IDLE, STATE_READY, STATE_DASH, STATE_WALK, STATE_BLOCK, STATE_DEAD, STATE_END };
 
 private:
 	explicit CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -40,16 +40,19 @@ private:
 
 private:
 	class CSword*			m_pSword = { nullptr };
-	_float					m_fVisionRange = { 0.f };
-
+	_float					m_fVisionRange = { 0.f };	
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
 	_bool						m_isWalk = { false };
-	_bool						m_isAttack = { false };
 	_double						m_dAttackCoolTime = { 0.0 };
 	_double						m_dPatrolWaitTime = { 0.0 };
 	_bool						m_isWait = { false };
+	_bool						m_isDash = { false };
+	_double						m_dDashTime = { 0.0 };
+	_double						m_dDashSpeed = { 0.0 };
+	_bool						m_isReady = { false };
+	_double						m_dReadyTime = { 0.0 };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -58,6 +61,8 @@ private:
 	// 현재와 이전 상태를 비교해서 애니메이션 변경처리
 	STATE					m_ePreState = { STATE_END };
 	STATE					m_eCurState = { STATE_IDLE };
+
+	_bool					m_isBlocked = { false };
 
 private: /* Tick */
 	HRESULT Add_Component(ENEMYDESC& EnemyDesc);
@@ -68,8 +73,13 @@ private: /* Tick */
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 
+	void Attack();
+
 private: /* Late_Tick */
 	GAMEEVENT PlayEvent(_double dTimeDelta);
+
+public:
+	void Blocked();
 
 public:
 	static CEnemy_Sword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

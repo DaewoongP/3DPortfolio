@@ -3,6 +3,7 @@
 #include "Part.h"
 #include "Layer.h"
 #include "Katana.h"
+#include "Sword.h"
 #include "Bullet.h"
 #include "ColProp.h"
 
@@ -103,8 +104,6 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 #ifdef _DEBUG
 	if (m_isInvisible)
 		m_eGameEvent = GAME_NOEVENT;
-
-	cout << "현재 적 무기수 : " << m_BlockEnemyWeapons.size() << endl;
 #endif // _DEBUG
 
 	return m_eGameEvent;
@@ -745,11 +744,27 @@ void CPlayer::Block(_double dTimeDelta)
 		 0 == m_BlockEnemyWeapons.size())
 		return;
 
-	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
-
-	if (0.5f > fAnimFramePercent)
+	for (auto iter = m_BlockEnemyWeapons.begin(); iter != m_BlockEnemyWeapons.end();)
 	{
-		
+		if (wcswcs((*iter)->Get_Tag(), TEXT("Bullet")))
+		{
+			CBullet* pBullet = static_cast<CBullet*>((const_cast<CGameObject*>(*iter)));
+			pBullet->Set_Type(COLLISIONDESC::COLTYPE_PLAYERWEAPON);
+			pBullet->Set_LayerTag(TEXT("Layer_PlayerWeapon"));
+			_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+			pBullet->Fire(vPos, vPos + vLook);
+
+			iter = m_BlockEnemyWeapons.erase(iter);
+		}
+		else if (wcswcs((*iter)->Get_Tag(), TEXT("Sword")))
+		{
+			CSword* pSword = static_cast<CSword*>((const_cast<CGameObject*>(*iter)));
+			pSword->Blocked();
+			iter = m_BlockEnemyWeapons.erase(iter);
+		}
+		else
+			++iter;
 	}
 }
 
@@ -766,7 +781,6 @@ void CPlayer::Add_Collisions()
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pVisionColliderCom);
 
 	Safe_Release(pGameInstance);
-
 }
 
 void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)

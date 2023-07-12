@@ -23,11 +23,8 @@ HRESULT CEnemy_Pistol::Initialize_Prototype()
 
 HRESULT CEnemy_Pistol::Initialize(void* pArg)
 {
-	ENEMYDESC EnemyDesc;
-	ZEROMEM(&EnemyDesc);
-
 	if (nullptr != pArg)
-		EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
+		m_EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
 	else
 	{
 		MSG_BOX("Failed Read EnemyDesc");
@@ -37,7 +34,7 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Add_Component(EnemyDesc)))
+	if (FAILED(Add_Component(m_EnemyDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Parts()))
@@ -46,9 +43,9 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	if (FAILED(SetUp_BehaviorTree()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(EnemyDesc.vScale);
-	m_pTransformCom->Rotation(EnemyDesc.vRotation);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&EnemyDesc.vPosition));
+	m_pTransformCom->Set_Scale(m_EnemyDesc.vScale);
+	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_EnemyDesc.vPosition));
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
@@ -87,8 +84,8 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 
 void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
-	if (CollisionDesc.pMyCollider == m_pColliderCom && 
-		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
+	if (CollisionDesc.pMyCollider == m_pColliderCom &&
+		COLLISIONDESC::COLTYPE_PLAYERWEAPON == CollisionDesc.ColType)
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
 	}	
@@ -140,6 +137,11 @@ HRESULT CEnemy_Pistol::Reset()
 {
 	m_pModelCom->Reset_Animation(54);
 	m_eCurState = STATE_IDLE;
+
+	m_pTargetPlayer = nullptr;
+	m_isWait = false;
+	m_isAttack = false;
+	m_isWalk = false;
 
 	if (FAILED(__super::Reset()))
 		return E_FAIL;

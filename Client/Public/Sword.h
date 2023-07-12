@@ -35,7 +35,8 @@ private:
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
-	virtual void Attack(_vector vPosition, _vector vTargetPos) override;
+	void Attack();
+	void Blocked();
 
 public:
 	static CSword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

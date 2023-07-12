@@ -44,7 +44,7 @@ void CBullet::Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
+	pGameInstance->Add_Collider(m_eColType, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
 }
@@ -55,7 +55,8 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 
 	m_dDeleteTimeAcc += dTimeDelta;
 
-	if (m_dDeleteTimeAcc > m_dDeleteTime)
+	if (true == m_isDead ||
+		m_dDeleteTimeAcc > m_dDeleteTime)
 		m_eGameEvent = GAME_OBJECT_DEAD;
 
 	if (nullptr != m_pRendererCom)
@@ -66,6 +67,9 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 
 void CBullet::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
+	if (COLLISIONDESC::COLTYPE_ENEMY == CollisionDesc.ColType ||
+		COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
+		m_isDead = true;
 }
 
 HRESULT CBullet::Render()

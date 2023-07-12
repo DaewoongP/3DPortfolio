@@ -54,7 +54,7 @@ void CMainApp::Tick(_double dTimeDelta)
 	m_pGameInstance->Tick_Engine(dTimeDelta);
 
 #ifdef _DEBUG
-	Render_FPS(dTimeDelta);
+	Tick_FPS(dTimeDelta);
 #endif // _DEBUG
 }
 
@@ -70,7 +70,8 @@ HRESULT CMainApp::Render()
 	if (FAILED(m_pRenderer->Draw_RenderGroup()))
 		return E_FAIL;
 #ifdef _DEBUG
-	m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(10.f, 10.f));
+	if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(10.f, 10.f))))
+		return E_FAIL;
 #endif // _DEBUG
 	if (FAILED(m_pGameInstance->Present()))
 		return E_FAIL;
@@ -145,10 +146,12 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelIndex)
 }
 
 #ifdef _DEBUG
-void CMainApp::Render_FPS(_double dTimeDelta)
+void CMainApp::Tick_FPS(_double dTimeDelta)
 {
 	m_dFpsTime += dTimeDelta;
+
 	++m_iFps;
+
 	if (1.0 <= m_dFpsTime)
 	{
 		swprintf_s(m_szFPS, L"FPS: %d", m_iFps);

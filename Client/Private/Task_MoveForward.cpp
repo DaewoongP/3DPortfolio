@@ -36,14 +36,6 @@ CBehavior::STATE CTask_MoveForward::Tick(_double dTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		return STATE_FAILED;
 	}
-	else
-	{
-		if (CELL_MOVE != CellFlag)
-		{
-			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
-			return STATE_FAILED;
-		}
-	}
 
 	m_dRunningAcc += dTimeDelta;
 

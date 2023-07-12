@@ -1,6 +1,6 @@
 #include "..\Public\Enemy_Sword.h"
 #include "GameInstance.h"
-#include "Selector_FindTargetToAttack.h"
+#include "Selector_FindTargetToDashAttack.h"
 #include "Sword.h"
 
 CEnemy_Sword::CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -23,11 +23,8 @@ HRESULT CEnemy_Sword::Initialize_Prototype()
 
 HRESULT CEnemy_Sword::Initialize(void* pArg)
 {
-	ENEMYDESC EnemyDesc;
-	ZEROMEM(&EnemyDesc);
-
 	if (nullptr != pArg)
-		EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
+		m_EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
 	else
 	{
 		MSG_BOX("Failed Read EnemyDesc");
@@ -37,7 +34,7 @@ HRESULT CEnemy_Sword::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Add_Component(EnemyDesc)))
+	if (FAILED(Add_Component(m_EnemyDesc)))
 		return E_FAIL;
 
 	if (FAILED(Add_Parts()))
@@ -46,9 +43,9 @@ HRESULT CEnemy_Sword::Initialize(void* pArg)
 	if (FAILED(SetUp_BehaviorTree()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(EnemyDesc.vScale);
-	m_pTransformCom->Rotation(EnemyDesc.vRotation);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&EnemyDesc.vPosition));
+	m_pTransformCom->Set_Scale(m_EnemyDesc.vScale);
+	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_EnemyDesc.vPosition));
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
@@ -64,6 +61,8 @@ HRESULT CEnemy_Sword::Initialize(void* pArg)
 void CEnemy_Sword::Tick(_double dTimeDelta)
 {
 	AnimationState(dTimeDelta);
+
+	Attack();
 
 	__super::Tick(dTimeDelta);
 
@@ -89,9 +88,16 @@ GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 void CEnemy_Sword::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
 	if (CollisionDesc.pMyCollider == m_pColliderCom &&
-		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_PlayerWeapon")))
+		COLLISIONDESC::COLTYPE_PLAYERWEAPON == CollisionDesc.ColType)
 	{
-		m_eGameEvent = GAME_OBJECT_DEAD;
+		if (STATE_DASH == m_eCurState)
+		{
+			m_isBlocked = true;
+		}
+		else
+		{
+			m_eGameEvent = GAME_OBJECT_DEAD;
+		}
 	}
 }
 
@@ -141,6 +147,11 @@ HRESULT CEnemy_Sword::Reset()
 {
 	m_pModelCom->Reset_Animation(1);
 	m_eCurState = STATE_IDLE;
+	m_isWalk = false;
+	m_isWait = false;
+	m_isDash = false;
+	m_isReady = false;
+	m_pTargetPlayer = nullptr;
 
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
@@ -207,7 +218,7 @@ HRESULT CEnemy_Sword::Add_Parts()
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Sword"), TEXT("Layer_EnemyPart"),
+	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Sword"), TEXT("Layer_EnemyWeapon"),
 		TEXT("Part_Sword"), reinterpret_cast<CGameObject**>(&m_pSword), &ParentMatrixDesc)))
 		return E_FAIL;
 
@@ -227,15 +238,25 @@ HRESULT CEnemy_Sword::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_MaxWaitTime"), &m_dPatrolWaitTime);
 	pBlackBoard->Add_Value(TEXT("Value_isWait"), &m_isWait);
 
-	m_dAttackCoolTime = 1.5;
-	pBlackBoard->Add_Value(TEXT("Value_AttackCoolTime"), &m_dAttackCoolTime);
-	pBlackBoard->Add_Value(TEXT("Value_isAttack"), &m_isAttack);
-	pBlackBoard->Add_Value(TEXT("Value_Weapon"), m_pSword);
+	m_dDashTime = 1.0;
+	m_dDashSpeed = 10.0;
+	pBlackBoard->Add_Value(TEXT("Value_isDash"), &m_isDash);
+	pBlackBoard->Add_Value(TEXT("Value_DashTime"), &m_dDashTime);
+	pBlackBoard->Add_Value(TEXT("Value_DashSpeed"), &m_dDashSpeed);
+
+	m_dAttackCoolTime = 3.0;
+	pBlackBoard->Add_Value(TEXT("Value_WaitTime"), &m_dAttackCoolTime);
+
+	m_dReadyTime = 1.0;
+	pBlackBoard->Add_Value(TEXT("Value_isReady"), &m_isReady);
+	pBlackBoard->Add_Value(TEXT("Value_ReadyTime"), &m_dReadyTime);
+
+	pBlackBoard->Add_Value(TEXT("Value_isBlocked"), &m_isBlocked);
 
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
-		CSelector_FindTargetToAttack::Create(pBlackBoard))))
+		CSelector_FindTargetToDashAttack::Create(pBlackBoard))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
 		return E_FAIL;
@@ -269,8 +290,8 @@ void CEnemy_Sword::AnimationState(_double dTimeDelta)
 	if (ANIM_FINISHED == m_eCurrentAnimationFlag &&
 		m_ePreState == m_eCurState)
 	{
-		m_isAttack = false;
-
+		m_isDash = false;
+		m_isBlocked = false;
 		m_eCurState = STATE_IDLE;
 	}
 
@@ -280,8 +301,13 @@ void CEnemy_Sword::AnimationState(_double dTimeDelta)
 			m_eCurState = STATE_IDLE;
 		if (true == m_isWalk)
 			m_eCurState = STATE_WALK;
-		if (true == m_isAttack)
+		if (true == m_isReady)
 			m_eCurState = STATE_READY;
+		if (true == m_isDash)
+			m_eCurState = STATE_DASH;
+
+		if (true == m_isBlocked)
+			m_eCurState = STATE_BLOCK;
 	}
 
 	Motion_Change(m_eCurrentAnimationFlag);
@@ -307,11 +333,11 @@ void CEnemy_Sword::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		case STATE_DASH:
 			m_pModelCom->Set_AnimIndex(20, false);
 			break;
-		case STATE_ATTACK:
-			m_pModelCom->Set_AnimIndex(21, false);
-			break;
 		case STATE_WALK:
 			m_pModelCom->Set_AnimIndex(5);
+			break;
+		case STATE_BLOCK:
+			m_pModelCom->Set_AnimIndex(23, false);
 			break;
 		case STATE_DEAD:
 			m_pModelCom->Set_AnimIndex(13 + rand() % 3, false);
@@ -320,6 +346,12 @@ void CEnemy_Sword::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 
 		m_ePreState = m_eCurState;
 	}
+}
+
+void CEnemy_Sword::Attack()
+{
+	if (STATE_DASH == m_eCurState)
+		m_pSword->Attack();
 }
 
 GAMEEVENT CEnemy_Sword::PlayEvent(_double dTimeDelta)
@@ -334,6 +366,17 @@ GAMEEVENT CEnemy_Sword::PlayEvent(_double dTimeDelta)
 	}
 
 	return GAME_NOEVENT;
+}
+
+void CEnemy_Sword::Blocked()
+{
+	m_dAttackCoolTime = 5.0;
+	m_eCurState = STATE_BLOCK;
+	m_isWalk = false;
+	m_isWait = false;
+	m_isDash = false;
+	m_isReady = false;
+	m_isBlocked = true;
 }
 
 CEnemy_Sword* CEnemy_Sword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

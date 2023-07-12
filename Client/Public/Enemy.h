@@ -40,6 +40,9 @@ protected:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
 
+protected:
+	ENEMYDESC				m_EnemyDesc;
+
 private: /* Tick */
 	HRESULT Add_Component();
 

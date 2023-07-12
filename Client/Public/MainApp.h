@@ -28,7 +28,7 @@ public:
 
 #ifdef _DEBUG
 private:
-	void Render_FPS(_double dTimeDelta);
+	void Tick_FPS(_double dTimeDelta);
 #endif // _DEBUG
 
 private:
@@ -41,9 +41,9 @@ private:
 
 #ifdef _DEBUG
 private: /* For. Frame Per Second*/
-	TCHAR						m_szFPS[MAX_STR];
-	_int						m_iFps = { 0 };
-	_double						m_dFpsTime = { 0.0 };
+	TCHAR					m_szFPS[MAX_STR];
+	_int					m_iFps = { 0 };
+	_double					m_dFpsTime = { 0.0 };
 #endif // _DEBUG
 
 public:

@@ -1,5 +1,6 @@
 #include "..\Public\Sword.h"
 #include "GameInstance.h"
+#include "Enemy_Sword.h"
 #include "Player.h"
 
 CSword::CSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -156,8 +157,19 @@ HRESULT CSword::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CSword::Attack(_vector vPosition, _vector vTargetPos)
+void CSword::Attack()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
+
+	Safe_Release(pGameInstance);
+}
+
+void CSword::Blocked()
+{
+	static_cast<CEnemy_Sword*>(m_pOwner)->Blocked();
 }
 
 CSword* CSword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
