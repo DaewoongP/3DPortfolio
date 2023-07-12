@@ -175,6 +175,7 @@ CKatana* CKatana::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		MSG_BOX("Failed to Created CKatana");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -187,6 +188,7 @@ CGameObject* CKatana::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CKatana");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

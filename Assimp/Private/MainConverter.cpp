@@ -7,7 +7,7 @@ CMainConverter::CMainConverter()
 HRESULT CMainConverter::Convert()
 {
 	//ReadFileInDirectory(CModelConverter::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations\\Game"));
-	ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Game\\Visual\\Characters\\Weapon_Enemy_Pistol_01\\FBX"));
+	ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations\\Game\\Visual\\Characters\\Hero_Swords\\Shuriken"));
 	return S_OK;
 }
 

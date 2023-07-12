@@ -74,7 +74,7 @@ HRESULT CComposite::Add_Part(const _tchar* pPrototypeTag, const _tchar* pLayerTa
 
 	pGameObject->Set_Tag(pObjectTag);
 	
-	m_Components.emplace(pObjectTag , pGameObject);
+	m_Components.emplace(pObjectTag, pGameObject);
 
 	*ppOut = pGameObject;
 

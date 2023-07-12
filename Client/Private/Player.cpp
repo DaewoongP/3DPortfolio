@@ -3,6 +3,7 @@
 #include "Part.h"
 #include "Layer.h"
 #include "Katana.h"
+#include "Shuriken.h"
 #include "Sword.h"
 #include "Bullet.h"
 #include "ColProp.h"
@@ -61,6 +62,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_CameraMatrix, XMMatrixIdentity());
 
+	m_eCurWeapon = WEAPON_KATANA;
+
 	return S_OK;
 }
 
@@ -69,6 +72,8 @@ void CPlayer::Tick(_double dTimeDelta)
 {
 	Key_Input(dTimeDelta);
 	Fix_Mouse();
+
+	SwapWeapon();
 
 	AnimationState(dTimeDelta);
 	Attack(dTimeDelta);
@@ -139,9 +144,11 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 
 	/* Player Vision Collider */
 
-	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+	if (WEAPON_KATANA == m_eCurWeapon &&
+		CollisionDesc.pMyCollider == m_pVisionColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
 	{
+		// 이동공격용 벡터
 		m_InRangeEnemyColliders.push_back(CollisionDesc.pOtherCollider);
 	}
 
@@ -249,6 +256,18 @@ HRESULT CPlayer::Reset()
 	// 모델의 애니메이션 인덱스 설정
 	m_pModelCom->Set_AnimIndex(95);
 	m_eCurState = STATE_IDLE;
+
+	// 표창 -> 검
+	if (WEAPON_SHURIKEN == m_eCurWeapon)
+	{
+		if (FAILED(__super::Delete_Component(TEXT("Part_Shuriken"))))
+			return E_FAIL;
+
+		m_Components.emplace(TEXT("Part_Katana"), m_pKatana);
+		Safe_AddRef(m_pKatana);
+
+		m_eCurWeapon = WEAPON_KATANA;
+	}
 
 	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
 	if (FAILED(__super::Reset()))
@@ -367,6 +386,13 @@ HRESULT CPlayer::Add_Parts()
 		TEXT("Part_Katana"), reinterpret_cast<CGameObject**>(&m_pKatana), &ParentMatrixDesc)))
 		return E_FAIL;
 
+	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Shuriken"), TEXT("Layer_PlayerWeapon"),
+		TEXT("Part_Shuriken"), reinterpret_cast<CGameObject**>(&m_pShuriken), &ParentMatrixDesc)))
+		return E_FAIL;
+
+	if (FAILED(__super::Delete_Component(TEXT("Part_Shuriken"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -405,6 +431,26 @@ void CPlayer::Key_Input(_double dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
+	// Weapons
+	if (pGameInstance->Get_DIKeyState(DIK_1, CInput_Device::KEY_DOWN))
+	{
+		if (WEAPON_KATANA != m_eCurWeapon)
+		{
+			m_bSwapWeapon = true;
+			m_eCurWeapon = WEAPON_KATANA;
+			m_eCurState = STATE_WEAPON;
+		}
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_2, CInput_Device::KEY_DOWN))
+	{
+		if (WEAPON_SHURIKEN != m_eCurWeapon)
+		{
+			m_bSwapWeapon = true;
+			m_eCurWeapon = WEAPON_SHURIKEN;
+			m_eCurState = STATE_WEAPON;
+		}
+	}
 
 	// straight
 	if (pGameInstance->Get_DIKeyState(DIK_W))
@@ -495,6 +541,10 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		// 막기가 안나갔을 경우 일반 공격판정.
 		else
 		{
+			// 표창던지기 문제 많음,,
+			/*if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pShuriken->Attack(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)));*/
+
 			XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 			if (STATE_ATTACK != m_eCurState &&
@@ -638,28 +688,55 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		switch (m_eCurState)
 		{
 		case STATE_IDLE:
-			m_pModelCom->Set_AnimIndex(95);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(95);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(142);
 			break;
 		case STATE_ATTACK:
-			m_pModelCom->Set_AnimIndex(84 + rand() % 6, false);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(84 + rand() % 6, false);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(129, false);
 			break;
 		case STATE_RUN:
-			m_pModelCom->Set_AnimIndex(102);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(102);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(132);
 			break;
 		case STATE_RUNWALL_L:
-			m_pModelCom->Set_AnimIndex(103);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(103);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(145);
 			break;
 		case STATE_RUNWALL_R:
-			m_pModelCom->Set_AnimIndex(104);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(104);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(146);
 			break;
 		case STATE_CROUCH:
-			m_pModelCom->Set_AnimIndex(92);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(92);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(131);
 			break;
 		case STATE_HOOK:
 			m_pModelCom->Set_AnimIndex(62, false);
 			break;
 		case STATE_BLOCK:
-			m_pModelCom->Set_AnimIndex(80, false);
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(80, false);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(130, false);
+			break;
+		case STATE_WEAPON:
+			if (WEAPON_KATANA == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(148, false);
+			else if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pModelCom->Set_AnimIndex(147, false);
 			break;
 		case STATE_CLIMB:
 			break;
@@ -1021,6 +1098,37 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 	return S_OK;
 }
 
+void CPlayer::SwapWeapon()
+{
+	if (STATE_WEAPON != m_eCurState)
+		return;
+
+	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
+
+	if (0.5f > fCurrentFramePercent)
+		return;
+
+	if (WEAPON_KATANA == m_eCurWeapon)
+	{
+		if (FAILED(__super::Delete_Component(TEXT("Part_Shuriken"))))
+			return;
+
+		m_Components.emplace(TEXT("Part_Katana"), m_pKatana);
+		Safe_AddRef(m_pKatana);
+	}
+
+	if (WEAPON_SHURIKEN == m_eCurWeapon)
+	{
+		if (FAILED(__super::Delete_Component(TEXT("Part_Katana"))))
+			return;
+
+		m_Components.emplace(TEXT("Part_Shuriken"), m_pShuriken);
+		Safe_AddRef(m_pShuriken);
+	}
+
+	m_bSwapWeapon = false;
+}
+
 HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)
 {
 	HANDLE hFile = CreateFile(pColliderFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
@@ -1095,6 +1203,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pShuriken);
 	Safe_Release(m_pKatana);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

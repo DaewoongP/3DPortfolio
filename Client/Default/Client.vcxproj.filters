@@ -109,6 +109,9 @@
     <Filter Include="02. GameObjects\01. Enemy\Enemy_Sword\Sword">
       <UniqueIdentifier>{bf2ea7a3-259d-4093-83b0-031ff43aa1fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\00. Player\Shuriken">
+      <UniqueIdentifier>{1d72be87-f290-4a37-8a3d-0a89226255e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -242,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Task_Ready.h">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Shuriken.h">
+      <Filter>02. GameObjects\00. Player\Shuriken</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -377,6 +383,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Task_Ready.cpp">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Shuriken.cpp">
+      <Filter>02. GameObjects\00. Player\Shuriken</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

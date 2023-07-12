@@ -21,7 +21,15 @@ public:
 		STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, 
 		STATE_CROUCH, STATE_HOOK, STATE_CLIMB,
 		STATE_DRONRIDE, STATE_BLOCK, STATE_DEAD, 
-		STATE_END };
+		STATE_WEAPON,
+		STATE_END 
+	};
+
+	enum WEAPON {
+		WEAPON_KATANA,
+		WEAPON_SHURIKEN,
+		WEAPON_END
+	};
 
 private:
 	explicit CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -43,6 +51,10 @@ public:
 	virtual HRESULT Reset() override;
 
 private:
+	WEAPON					m_eCurWeapon = { WEAPON_END };
+	_bool					m_bSwapWeapon = { false };
+
+private:
 	CModel*					m_pModelCom = { nullptr };
 	CCamera*				m_pPlayerCameraCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
@@ -52,6 +64,7 @@ private:
 
 private: // 사실 이거 굳이 가지고 있을 필요는 없음. 이미 컴포넌트로 Tick을 돌고있음,
 	class CKatana*			m_pKatana = { nullptr };
+	class CShuriken*		m_pShuriken = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
 
 private:
@@ -87,6 +100,9 @@ private:
 private:
 	_float4x4				m_CameraMatrix;
 
+private:
+	vector<class CGameObject*>	m_Shurikens;
+
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };
 	_bool					m_isInvisible = { false };
@@ -110,6 +126,8 @@ private: /* Tick */
 	_bool Check_Hook(_double dTimeDelta);
 
 	void CameraMove(_double dTimeDelta);
+
+	void SwapWeapon();
 
 private: /* Late_Tick */
 	void CameraOffset(_double dTimeDelta);
@@ -164,5 +182,20 @@ END
 233 - drone ride end
 237 - drone ride loop
 239 - drone ride start
+
+*/
+
+/*
+
+142 - SH IDLE
+129 - SH ATTACK
+130 - SH BLOCK
+131 - SH CROUCH
+132 - SH RUN
+145 - SH RUN WALL L
+146 - SH RUN WALL R
+
+147 - KAT To SH
+148 - SH To KAT
 
 */
