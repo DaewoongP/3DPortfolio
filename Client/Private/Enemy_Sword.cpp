@@ -63,6 +63,8 @@ HRESULT CEnemy_Sword::Initialize(void* pArg)
 
 void CEnemy_Sword::Tick(_double dTimeDelta)
 {
+	AnimationState(dTimeDelta);
+
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -79,8 +81,6 @@ void CEnemy_Sword::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 {
-	AnimationState(dTimeDelta);
-
 	__super::Late_Tick(dTimeDelta);
 
 	return PlayEvent(dTimeDelta);

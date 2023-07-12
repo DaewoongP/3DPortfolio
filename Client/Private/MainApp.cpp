@@ -148,7 +148,7 @@ void CMainApp::Render_FPS(_double dTimeDelta)
 	if (1.0 <= m_dFpsTime)
 	{
 		swprintf_s(m_szFPS, L"FPS: %d", m_iFps);
-		SetWindowText(g_hWnd, m_szFPS);
+		m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(10.f, 10.f));
 		m_iFps = 0;
 		m_dFpsTime = 0.0;
 	}

@@ -340,7 +340,7 @@ HRESULT CPlayer::Add_Component()
 
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	AABBDesc.vExtents = _float3(10.f, 5.f, 10.f);
+	AABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
 	/* For.Com_VisionCollider */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &AABBDesc)))
@@ -486,11 +486,14 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
-		if (0 < m_BlockEnemyWeapons.size())
+		if (0 < m_BlockEnemyWeapons.size() && 
+			STATE_BLOCK != m_eCurState &&
+			STATE_ATTACK != m_eCurState)
 		{
 			m_isBlocked = true;
 			m_eCurState = STATE_BLOCK;
 		}
+		// 막기가 안나갔을 경우 일반 공격판정.
 		else
 		{
 			XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -507,7 +510,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			{
 				// 실제 게임이랑 속도 맞춤.
 				// 40퍼센트가 넘으면 다음 공격 실행가능 (연속공격 처리.)
-				if (0.4f <= m_pModelCom->Get_CurrentFramePercent())
+				if (0.35f <= m_pModelCom->Get_CurrentFramePercent())
 				{
 					_uint iCurrnetAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
 					// if Attack Right
@@ -540,20 +543,31 @@ void CPlayer::Key_Input(_double dTimeDelta)
 			m_isInvisible = true;
 	}
 #endif // _DEBUG
+
+	// 무조건 카메라 버티컬먼저 작동해야함.
+	// 안그러면 카메라와 실제 모델간에 각도값이 점점 틀어짐
+	// -> 캠Right를 기준으로 회전하기때문으로 보임.
+	// Mouse Move Vertical
+	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
+	{
+		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
+		_vector	vCamRight = XMVector3Normalize(m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT));
+
+		m_pTransformCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
+
+		_vector vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+
+		if (XMConvertToRadians(30.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
+		{
+			m_pTransformCom->Turn(vCamRight, -1.f * dwMouseMove * m_fMouseSensitivity, dTimeDelta);
+		}
+	}
 	// Mouse Move Horizontal
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
 	{
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-	}
-	// Mouse Move Vertical
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
-	{
-		// 회전축을 플레이어의 카메라 right 벡터 기준으로 처리.
-		_vector	vCamRight = m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT);
-
-		m_pTransformCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
 
 	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_DOWN))
