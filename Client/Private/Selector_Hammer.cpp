@@ -9,8 +9,8 @@ HRESULT CSelector_Hammer::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDeco
 
 	if (FAILED(Add_Child(TEXT("Sequence_Patrol"), CSequence_Patrol::Create(pBlackBoard))))
 		return E_FAIL;
-	if (FAILED(Add_Child(TEXT("Sequence_LookAttack"), CSequence_LookAttack::Create(pBlackBoard))))
-		return E_FAIL;
+	/*if (FAILED(Add_Child(TEXT("Sequence_LookAttack"), CSequence_LookAttack::Create(pBlackBoard))))
+		return E_FAIL;*/
 
 	m_Decorators.push_back(
 		// Patrol 데코레이터

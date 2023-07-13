@@ -1,7 +1,7 @@
 #include "..\Public\Enemy_Hammer.h"
 #include "GameInstance.h"
 #include "Hammer.h"
-#include "Selector_FindTargetToAttack.h"
+#include "Selector_Hammer.h"
 
 CEnemy_Hammer::CEnemy_Hammer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -40,8 +40,8 @@ HRESULT CEnemy_Hammer::Initialize(void* pArg)
 	if (FAILED(Add_Parts()))
 		return E_FAIL;
 
-	/*if (FAILED(SetUp_BehaviorTree()))
-		return E_FAIL;*/
+	if (FAILED(SetUp_BehaviorTree()))
+		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_EnemyDesc.vScale);
 	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
@@ -224,13 +224,20 @@ HRESULT CEnemy_Hammer::Add_Parts()
 HRESULT CEnemy_Hammer::SetUp_BehaviorTree()
 {
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
+	pBlackBoard->Add_Value(TEXT("Value_isDead"), &m_isDead);
+	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
+	/* Sequence Patrol */
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
 	pBlackBoard->Add_Value(TEXT("Value_Navigation"), m_pNavigationCom);
+	pBlackBoard->Add_Value(TEXT("Value_isWalk"), &m_isWalk);
+	pBlackBoard->Add_Value(TEXT("Value_isWait"), &m_isWait);
+	m_dMaxWaitTime = 5.0;
+	pBlackBoard->Add_Value(TEXT("Value_MaxWaitTime"), &m_dMaxWaitTime);
 
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
-		CSelector_FindTargetToAttack::Create(pBlackBoard))))
+		CSelector_Hammer::Create(pBlackBoard))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
 		return E_FAIL;

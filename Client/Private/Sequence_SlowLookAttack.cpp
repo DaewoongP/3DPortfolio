@@ -10,8 +10,8 @@ HRESULT CSequence_SlowLookAttack::Initialize(CBlackBoard* pBlackBoard, CDecorato
 
 	if (FAILED(Add_Child(TEXT("Task_ChaseLook"), CTask_ChaseLook::Create(pBlackBoard))))
 		return E_FAIL;
-	if (FAILED(Add_Child(TEXT("Task_Attack"), CTask_Attack::Create(pBlackBoard))))
-		return E_FAIL;
+	/*if (FAILED(Add_Child(TEXT("Task_Attack"), CTask_Attack::Create(pBlackBoard))))
+		return E_FAIL;*/
 
 	return S_OK;
 }

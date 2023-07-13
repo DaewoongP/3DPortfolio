@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CTransform;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -21,6 +22,7 @@ public:
 
 private:
 	CTransform*			m_pTransformCom = { nullptr };
+	CNavigation*		m_pNavigationCom = { nullptr };
 	_bool*				m_isWalk = { nullptr };
 
 private:
@@ -28,6 +30,9 @@ private:
 	_bool				m_bRand = { false };
 	_float				m_fRandRad = { 0.f };
 	_double				m_dRandRotAcc = { 0.0 };
+
+private:
+	void Move_Failed(_fvector vOriginPos, _fvector vNormal);
 
 public:
 	static CTask_RandomTurn* Create(class CBlackBoard* pBlackBoard);

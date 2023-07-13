@@ -44,6 +44,9 @@ private:
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
+	_bool						m_isWalk = { false };
+	_bool						m_isWait = { false };
+	_double						m_dMaxWaitTime = { 0.0 };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
