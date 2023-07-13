@@ -1,8 +1,9 @@
-#include "Sequence_LookAttack.h"
+#include "..\Public\Sequence_SlowLookAttack.h"
+#include "Task_Ready.h"
 #include "Task_ChaseLook.h"
 #include "Task_Attack.h"
 
-HRESULT CSequence_LookAttack::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
+HRESULT CSequence_SlowLookAttack::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
 	if (FAILED(__super::Initialize(pBlackBoard, pDecorator)))
 		return E_FAIL;
@@ -15,20 +16,20 @@ HRESULT CSequence_LookAttack::Initialize(CBlackBoard* pBlackBoard, CDecorator* p
 	return S_OK;
 }
 
-CSequence_LookAttack* CSequence_LookAttack::Create(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
+CSequence_SlowLookAttack* CSequence_SlowLookAttack::Create(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
-	CSequence_LookAttack* pInstance = new CSequence_LookAttack();
+	CSequence_SlowLookAttack* pInstance = new CSequence_SlowLookAttack();
 
 	if (FAILED(pInstance->Initialize(pBlackBoard, pDecorator)))
 	{
-		MSG_BOX("Failed to Created CSequence_LookAttack");
+		MSG_BOX("Failed to Created CSequence_SlowLookAttack");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSequence_LookAttack::Free()
+void CSequence_SlowLookAttack::Free()
 {
 	__super::Free();
 }

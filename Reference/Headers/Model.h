@@ -33,6 +33,7 @@ public:
 	// 현재 키프레임을 변경
 	void Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex);
 	void Delete_AnimationTranslation(_uint iAnimationIndex);
+	void Delete_AnimationRotation(_uint iAnimationIndex);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix);

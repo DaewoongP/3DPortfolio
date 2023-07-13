@@ -123,6 +123,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
 				return E_FAIL;
 			}
 		}
+
+		// Enemy_Hammer
+		if (nullptr != wcswcs(EnemyDesc.pModelPrototypeTag, TEXT("Enemy_Hammer")))
+		{
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+				TEXT("Prototype_GameObject_Enemy_Hammer"), pLayerTag, wszName, &EnemyDesc)))
+			{
+				MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Enemy_Hammer)");
+				return E_FAIL;
+			}
+		}
 	}
 
 #ifdef _DEBUG

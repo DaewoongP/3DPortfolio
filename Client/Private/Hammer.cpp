@@ -1,19 +1,17 @@
-#include "..\Public\Sword.h"
+#include "Hammer.h"
 #include "GameInstance.h"
-#include "Enemy_Sword.h"
-#include "Player.h"
 
-CSword::CSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CHammer::CHammer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPart(pDevice, pContext)
 {
 }
 
-CSword::CSword(const CSword& rhs)
+CHammer::CHammer(const CHammer& rhs)
 	: CPart(rhs)
 {
 }
 
-HRESULT CSword::Initialize_Prototype()
+HRESULT CHammer::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,7 +19,7 @@ HRESULT CSword::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CSword::Initialize(void* pArg)
+HRESULT CHammer::Initialize(void* pArg)
 {
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(&TransformDesc)))
@@ -36,14 +34,14 @@ HRESULT CSword::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CSword::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
+HRESULT CHammer::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 {
 	m_ParentMatrixDesc = ParentDesc;
 
 	return S_OK;
 }
 
-void CSword::Tick(_double dTimeDelta)
+void CHammer::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
@@ -58,7 +56,7 @@ void CSword::Tick(_double dTimeDelta)
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
-GAMEEVENT CSword::Late_Tick(_double dTimeDelta)
+GAMEEVENT CHammer::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
@@ -68,7 +66,7 @@ GAMEEVENT CSword::Late_Tick(_double dTimeDelta)
 	return GAME_NOEVENT;
 }
 
-HRESULT CSword::Render()
+HRESULT CHammer::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -95,7 +93,7 @@ HRESULT CSword::Render()
 	return S_OK;
 }
 
-HRESULT CSword::Add_Components()
+HRESULT CHammer::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -106,7 +104,7 @@ HRESULT CSword::Add_Components()
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Hammer"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
 		MSG_BOX("Failed CSword Add_Component : (Com_Model)");
@@ -135,9 +133,8 @@ HRESULT CSword::Add_Components()
 	return S_OK;
 }
 
-HRESULT CSword::SetUp_ShaderResources()
+HRESULT CHammer::SetUp_ShaderResources()
 {
-	// Part의 경우 월드행렬을 다 저장된거로 던져야함.
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
 
@@ -157,48 +154,37 @@ HRESULT CSword::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CSword::Attack()
+void CHammer::Attack()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
-
-	Safe_Release(pGameInstance);
 }
 
-void CSword::Blocked()
+CHammer* CHammer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	static_cast<CEnemy_Sword*>(m_pOwner)->Blocked();
-}
-
-CSword* CSword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CSword* pInstance = new CSword(pDevice, pContext);
+	CHammer* pInstance = new CHammer(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CSword");
+		MSG_BOX("Failed to Created CHammer");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSword::Clone(void* pArg)
+CGameObject* CHammer::Clone(void* pArg)
 {
-	CSword* pInstance = new CSword(*this);
+	CHammer* pInstance = new CHammer(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CSword");
+		MSG_BOX("Failed to Cloned CHammer");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSword::Free()
+void CHammer::Free()
 {
 	__super::Free();
 

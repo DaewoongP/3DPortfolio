@@ -51,7 +51,19 @@ CBehavior::STATE CTask_Dash::Tick(_double dTimeDelta)
 	{
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		// 못움직이면 대쉬 끝냄.
+		m_dRunningAcc = 0.0;
+		*m_isDash = false;
 		return STATE_SUCCESS;
+	}
+	else
+	{
+		if (CELL_MOVE != CellFlag)
+		{
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+			m_dRunningAcc = 0.0;
+			*m_isDash = false;
+			return STATE_SUCCESS;
+		}
 	}
 
 	m_dRunningAcc += dTimeDelta;
@@ -63,7 +75,6 @@ CBehavior::STATE CTask_Dash::Tick(_double dTimeDelta)
 	}
 
 	m_dRunningAcc = 0.0;
-
 	*m_isDash = false;
 
 	return STATE_SUCCESS;

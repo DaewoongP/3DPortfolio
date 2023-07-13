@@ -54,6 +54,14 @@ void CAnimation::Delete_Translation()
 	}
 }
 
+void CAnimation::Delete_Rotation()
+{
+	for (auto& pChannel : m_Channels)
+	{
+		pChannel->Delete_Rotation();
+	}
+}
+
 HRESULT CAnimation::Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones)
 {
 	m_isLoop = true;
@@ -129,7 +137,9 @@ ANIMATIONFLAG CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, 
 			m_dTimeAcc = 0.f;
 		}
 		else
+		{
 			return ANIM_FINISHED;
+		}
 	}
 
 	_uint		iChannelIndex = 0;

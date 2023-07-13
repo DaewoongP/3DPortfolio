@@ -112,6 +112,12 @@
     <Filter Include="02. GameObjects\00. Player\Shuriken">
       <UniqueIdentifier>{1d72be87-f290-4a37-8a3d-0a89226255e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Hammer">
+      <UniqueIdentifier>{df87a609-14b7-49af-ab59-ab060e29126f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Hammer\Hammer">
+      <UniqueIdentifier>{aa7cb8c3-d2bb-4485-9e15-f9294d4a97d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -248,6 +254,21 @@
     </ClInclude>
     <ClInclude Include="..\public\Shuriken.h">
       <Filter>02. GameObjects\00. Player\Shuriken</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Hammer.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Hammer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Hammer.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Hammer\Hammer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Selector_Hammer.h">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_SlowLookAttack.h">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_ChaseLook.h">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +407,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Shuriken.cpp">
       <Filter>02. GameObjects\00. Player\Shuriken</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Hammer.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Hammer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Hammer.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Hammer\Hammer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector_Hammer.cpp">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_SlowLookAttack.cpp">
+      <Filter>03. Behaviors\01. Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_ChaseLook.cpp">
+      <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

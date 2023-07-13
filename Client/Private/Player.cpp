@@ -76,9 +76,10 @@ void CPlayer::Tick(_double dTimeDelta)
 	SwapWeapon();
 
 	AnimationState(dTimeDelta);
+	
 	Attack(dTimeDelta);
 	Block(dTimeDelta);
-
+	
 	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 2.f);
 
 	Tick_Skills(dTimeDelta);
@@ -438,7 +439,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// Weapons
 	if (pGameInstance->Get_DIKeyState(DIK_1, CInput_Device::KEY_DOWN))
 	{
-		if (WEAPON_KATANA != m_eCurWeapon)
+		if (STATE_ATTACK != m_eCurState &&
+			WEAPON_KATANA != m_eCurWeapon &&
+			false == m_bSwapWeapon)
 		{
 			m_bSwapWeapon = true;
 			m_eCurWeapon = WEAPON_KATANA;
@@ -447,7 +450,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_2, CInput_Device::KEY_DOWN))
 	{
-		if (WEAPON_SHURIKEN != m_eCurWeapon)
+		if (STATE_ATTACK != m_eCurState &&
+			WEAPON_SHURIKEN != m_eCurWeapon &&
+			false == m_bSwapWeapon)
 		{
 			m_bSwapWeapon = true;
 			m_eCurWeapon = WEAPON_SHURIKEN;
@@ -772,7 +777,9 @@ void CPlayer::WallRunCameraReset(_double dTimeDelta)
 
 void CPlayer::Attack(_double dTimeDelta)
 {
-	if (STATE_ATTACK != m_eCurState)
+	if (STATE_ATTACK != m_eCurState ||
+		84 > m_pModelCom->Get_CurrentAnimIndex() ||
+		90 <= m_pModelCom->Get_CurrentAnimIndex())
 		return;
 
 	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
@@ -938,7 +945,8 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 
 _bool CPlayer::Check_Hook(_double dTimeDelta)
 {
-	if (STATE_HOOK != m_eCurState)
+	if (STATE_HOOK != m_eCurState &&
+		62 != m_pModelCom->Get_CurrentAnimIndex())
 		return false;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -983,6 +991,7 @@ void CPlayer::CameraMove(_double dTimeDelta)
 {
 	if (STATE_ATTACK != m_eCurState)
 		return;
+
 	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
 	if (0.1f < fCurrentFramePercent)
 		return;
@@ -1104,7 +1113,8 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 
 void CPlayer::SwapWeapon()
 {
-	if (STATE_WEAPON != m_eCurState)
+	if (STATE_WEAPON != m_eCurState ||
+		(147 != m_pModelCom->Get_CurrentAnimIndex() && 148 != m_pModelCom->Get_CurrentAnimIndex()))
 		return;
 
 	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();

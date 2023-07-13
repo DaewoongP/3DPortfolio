@@ -13,6 +13,14 @@ void CChannel::Delete_Translation()
 		KeyFrame.vTranslation = vInitPos;
 }
 
+void CChannel::Delete_Rotation()
+{
+	_float4 vInitRotation = m_KeyFrames[0].vRotation;
+	
+	for (auto& KeyFrame : m_KeyFrames)
+		KeyFrame.vRotation = vInitRotation;
+}
+
 HRESULT CChannel::Initialize(const Engine::CHANNEL& Channel, const CModel::BONES& Bones)
 {
 	lstrcpy(m_szName, Channel.Name);

@@ -83,8 +83,10 @@ void CModel::Set_AnimIndex(_uint iAnimIndex, _bool isLoop)
 	m_iPreviousAnimIndex = m_iCurrentAnimIndex;
 
 	m_Animations[m_iPreviousAnimIndex]->TimeAccReset();
-
+	
 	m_iCurrentAnimIndex = iAnimIndex;
+
+	m_Animations[m_iCurrentAnimIndex]->Reset();
 
 	m_Animations[m_iCurrentAnimIndex]->Set_Loop(isLoop);
 }
@@ -97,6 +99,11 @@ void CModel::Set_CurrentKeyFrameIndex(_uint iKeyFrameIndex)
 void CModel::Delete_AnimationTranslation(_uint iAnimationIndex)
 {
 	m_Animations[iAnimationIndex]->Delete_Translation();
+}
+
+void CModel::Delete_AnimationRotation(_uint iAnimationIndex)
+{
+	m_Animations[iAnimationIndex]->Delete_Rotation();
 }
 
 HRESULT CModel::Initialize_Prototype(TYPE eType, const _tchar* pModelFilePath, _fmatrix PivotMatrix)
