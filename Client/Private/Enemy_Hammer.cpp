@@ -47,7 +47,7 @@ HRESULT CEnemy_Hammer::Initialize(void* pArg)
 	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_EnemyDesc.vPosition));
 
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(1.f, XMConvertToRadians(90.f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(1.f, XMConvertToRadians(360.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 	// 네비게이션 초기위치 찾기.
 	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
@@ -233,6 +233,17 @@ HRESULT CEnemy_Hammer::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_isWait"), &m_isWait);
 	m_dMaxWaitTime = 5.0;
 	pBlackBoard->Add_Value(TEXT("Value_MaxWaitTime"), &m_dMaxWaitTime);
+	/* Sequence SlowLookAttack */
+	pBlackBoard->Add_Value(TEXT("Value_isReady"), &m_isReady);
+	m_dReadyTime = 0.5;
+	pBlackBoard->Add_Value(TEXT("Value_ReadyTime"), &m_dReadyTime);
+	m_dAttackCoolTime = 0.0;
+	pBlackBoard->Add_Value(TEXT("Value_AttackCoolTime"), &m_dAttackCoolTime);
+	pBlackBoard->Add_Value(TEXT("Value_isAttack"), &m_isAttack);
+	pBlackBoard->Add_Value(TEXT("Value_Weapon"), m_pHammer);
+	m_dWaitTime = 2.0;
+	pBlackBoard->Add_Value(TEXT("Value_WaitTime"), &m_dWaitTime);
+
 
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
@@ -271,12 +282,25 @@ void CEnemy_Hammer::AnimationState(_double dTimeDelta)
 	if (ANIM_FINISHED == m_eCurrentAnimationFlag &&
 		m_ePreState == m_eCurState)
 	{
+		m_isAttack = false;
 		m_eCurState = STATE_IDLE;
+
+		if (STATE_ATTACK == m_eCurState)
+			m_eCurState = STATE_WAIT;
 	}
 
 	if (STATE_DEAD != m_eCurState)
 	{
-
+		if (true == m_isWait)
+		{
+			m_eCurState = STATE_WAIT;
+		}
+		if (true == m_isWalk)
+			m_eCurState = STATE_WALK;
+		if (true == m_isReady)
+			m_eCurState = STATE_READY;
+		if (true == m_isAttack)
+			m_eCurState = STATE_ATTACK;
 	}
 
 	Motion_Change(m_eCurrentAnimationFlag);
@@ -296,7 +320,21 @@ void CEnemy_Hammer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		case STATE_IDLE:
 			m_pModelCom->Set_AnimIndex(52);
 			break;
-
+		case STATE_WALK:
+			m_pModelCom->Set_AnimIndex(68);
+			break;
+		case STATE_READY:
+			m_pModelCom->Set_AnimIndex(53, false);
+			break;
+		case STATE_ATTACK:
+			m_pModelCom->Set_AnimIndex(62, false);
+			break;
+		case STATE_WAIT:
+			m_pModelCom->Set_AnimIndex(50, false);
+			break;
+		case STATE_DEAD:
+			m_pModelCom->Set_AnimIndex(44 + rand() % 6, false);
+			break;
 		}
 
 		m_ePreState = m_eCurState;

@@ -47,6 +47,11 @@ private: /* BehaviorTree */
 	_bool						m_isWalk = { false };
 	_bool						m_isWait = { false };
 	_double						m_dMaxWaitTime = { 0.0 };
+	_bool						m_isReady = { false };
+	_double						m_dReadyTime = { 0.0 };
+	_double						m_dAttackCoolTime = { 0.0 };
+	_bool						m_isAttack = { false };
+	_double						m_dWaitTime = { 0.0 };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -84,9 +89,9 @@ END
 
 44~49 - Death
 
-53 - idle to swing
-62 - swing(hit)
-50 - hit to idle
+53 - idle to swing (Ready)
+62 - swing(Attack)
+50 - hit to idle (wait)
 
 68 - walk (로컬 움직임)
 

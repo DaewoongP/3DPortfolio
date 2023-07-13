@@ -1,6 +1,6 @@
 #include "..\Public\Selector_Hammer.h"
 #include "Sequence_Patrol.h"
-#include "Sequence_LookAttack.h"
+#include "Sequence_SlowLookAttack.h"
 
 HRESULT CSelector_Hammer::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
@@ -9,8 +9,8 @@ HRESULT CSelector_Hammer::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDeco
 
 	if (FAILED(Add_Child(TEXT("Sequence_Patrol"), CSequence_Patrol::Create(pBlackBoard))))
 		return E_FAIL;
-	/*if (FAILED(Add_Child(TEXT("Sequence_LookAttack"), CSequence_LookAttack::Create(pBlackBoard))))
-		return E_FAIL;*/
+	if (FAILED(Add_Child(TEXT("Sequence_SlowLookAttack"), CSequence_SlowLookAttack::Create(pBlackBoard))))
+		return E_FAIL;
 
 	m_Decorators.push_back(
 		// Patrol 데코레이터
