@@ -136,6 +136,7 @@ HRESULT CEnemy_Pistol::Render()
 HRESULT CEnemy_Pistol::Reset()
 {
 	m_pModelCom->Reset_Animation(54);
+	m_ePreState = STATE_END;
 	m_eCurState = STATE_IDLE;
 
 	m_pTargetPlayer = nullptr;

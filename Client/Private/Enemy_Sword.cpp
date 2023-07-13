@@ -60,8 +60,6 @@ HRESULT CEnemy_Sword::Initialize(void* pArg)
 
 void CEnemy_Sword::Tick(_double dTimeDelta)
 {
-	AnimationState(dTimeDelta);
-
 	Attack();
 
 	__super::Tick(dTimeDelta);
@@ -80,6 +78,8 @@ void CEnemy_Sword::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 {
+	AnimationState(dTimeDelta);
+
 	__super::Late_Tick(dTimeDelta);
 
 	return PlayEvent(dTimeDelta);
@@ -146,11 +146,11 @@ HRESULT CEnemy_Sword::Render()
 HRESULT CEnemy_Sword::Reset()
 {
 	m_pModelCom->Reset_Animation(1);
+
+	// 상태값 통일하면 애니메이션 초기화도 간단함.
+	m_ePreState = STATE_IDLE;
 	m_eCurState = STATE_IDLE;
-	m_isWalk = false;
-	m_isWait = false;
-	m_isDash = false;
-	m_isReady = false;
+
 	m_pTargetPlayer = nullptr;
 
 	if (FAILED(__super::Reset()))
@@ -370,7 +370,6 @@ GAMEEVENT CEnemy_Sword::PlayEvent(_double dTimeDelta)
 
 void CEnemy_Sword::Blocked()
 {
-	m_dAttackCoolTime = 5.0;
 	m_eCurState = STATE_BLOCK;
 	m_isWalk = false;
 	m_isWait = false;

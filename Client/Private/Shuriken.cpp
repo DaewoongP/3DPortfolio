@@ -31,7 +31,8 @@ HRESULT CShuriken::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(100.0, XMConvertToRadians(0.0f));
+	m_dSpeed = 100.0;
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_dSpeed, XMConvertToRadians(0.0f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
 	return S_OK;
@@ -46,41 +47,35 @@ HRESULT CShuriken::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 
 void CShuriken::Tick(_double dTimeDelta)
 {
-	m_CombinedWorldMatrix = *m_pTransformCom->Get_WorldFloat4x4();
+	m_dTimeAcc += dTimeDelta;
 
+	m_pModelCom->Play_Animation(dTimeDelta);
+
+	if (0.6 < m_dTimeAcc)
+		AttackEnd();
 
 	__super::Tick(dTimeDelta);
 }
 
 GAMEEVENT CShuriken::Late_Tick(_double dTimeDelta)
 {
-	m_dTimeAcc += dTimeDelta;
-	
-	__super::Late_Tick(dTimeDelta);
-		
-	m_pModelCom->Play_Animation(dTimeDelta);
-
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (true == m_isAttacked)
+	if (0.2 < m_dTimeAcc &&
+		true == m_isAttacked)
 	{
-		if (0.22 < m_dTimeAcc)
-		{
-			m_pTransformCom->Move_Direction(XMLoadFloat3(&m_vAttackDir), dTimeDelta);
-			m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
-			pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERWEAPON, m_pColliderCom);
-		}
+		_vector vDir = XMLoadFloat3(&m_vAttackDir) * (_float)m_dSpeed * (_float)dTimeDelta;
+		XMStoreFloat4x4(&m_CombinedWorldMatrix,
+			XMLoadFloat4x4(&m_CombinedWorldMatrix) * XMMatrixTranslation(XMVectorGetX(vDir), XMVectorGetY(vDir), XMVectorGetZ(vDir)));
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERWEAPON, m_pColliderCom);
 	}
 	else
-	{
-		m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
-	}
-	
-	Safe_Release(pGameInstance);
+		__super::Late_Tick(dTimeDelta);
 
-	if (0.6 < m_dTimeAcc)
-		AttackEnd();
+	Safe_Release(pGameInstance);
+	
+	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
@@ -185,8 +180,6 @@ void CShuriken::Attack(_fvector vDirection)
 	m_dTimeAcc = 0.0;
 	m_isAttacked = true;
 	XMStoreFloat3(&m_vAttackDir, vDirection);
-	m_OriginWorldMatrix = m_CombinedWorldMatrix;
-	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 }
 
 void CShuriken::AttackEnd()
@@ -195,7 +188,6 @@ void CShuriken::AttackEnd()
 		return;
 
 	m_isAttacked = false;
-	m_CombinedWorldMatrix = m_OriginWorldMatrix;
 	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
 }
 

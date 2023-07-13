@@ -257,6 +257,9 @@ HRESULT CPlayer::Reset()
 	m_pModelCom->Set_AnimIndex(95);
 	m_eCurState = STATE_IDLE;
 
+	m_InRangeEnemyColliders.clear();
+	m_BlockEnemyWeapons.clear();
+
 	// 표창 -> 검
 	if (WEAPON_SHURIKEN == m_eCurWeapon)
 	{
@@ -542,17 +545,15 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		else
 		{
 			// 표창던지기 문제 많음,,
-			/*if (WEAPON_SHURIKEN == m_eCurWeapon)
-				m_pShuriken->Attack(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)));*/
+			if (WEAPON_SHURIKEN == m_eCurWeapon)
+				m_pShuriken->Attack(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)));
 
 			XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 			if (STATE_ATTACK != m_eCurState &&
 				STATE_CLIMB != m_eCurState &&
 				STATE_DRONRIDE != m_eCurState)
-			{
 				m_eCurState = STATE_ATTACK;
-			}
 
 			if (STATE_ATTACK == m_eCurState &&
 				ANIM_LERP != m_eCurrentAnimationFlag)
@@ -812,7 +813,10 @@ void CPlayer::Attack(_double dTimeDelta)
 	}
 
 	if (0.15f <= fAnimFramePercent && 0.5f > fAnimFramePercent)
-		m_pKatana->Attack();
+	{
+		if (WEAPON_KATANA == m_eCurWeapon)
+			m_pKatana->Attack();
+	}
 }
 
 void CPlayer::Block(_double dTimeDelta)

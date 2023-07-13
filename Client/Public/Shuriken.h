@@ -38,6 +38,7 @@ private:
 	_float3			m_vAttackDir;
 
 	_double			m_dTimeAcc = { 0.0 };
+	_double			m_dSpeed = { 0.0 };
 
 public:
 	HRESULT Add_Components();

@@ -33,6 +33,11 @@ CBehavior::STATE CTask_RandomWait::Tick(_double dTimeDelta)
 
 HRESULT CTask_RandomWait::Reset()
 {
+	*m_isWait = false;
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

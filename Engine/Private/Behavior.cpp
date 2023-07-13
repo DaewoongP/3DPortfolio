@@ -45,6 +45,18 @@ HRESULT CBehavior::Reset()
 	m_iPreRunningChildIndex = -1;
 	m_dRunningAcc = 0.0;
 
+	if (nullptr != m_pBlackBoard)
+		m_pBlackBoard->Reset();
+
+	if (0 < m_Childs.size())
+	{
+		for (auto& Pair : m_Childs)
+		{
+			if (FAILED(Pair.second->Reset()))
+				return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 

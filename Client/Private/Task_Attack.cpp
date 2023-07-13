@@ -43,6 +43,11 @@ CBehavior::STATE CTask_Attack::Tick(_double dTimeDelta)
 
 HRESULT CTask_Attack::Reset()
 {
+	*m_isAttack = false;
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

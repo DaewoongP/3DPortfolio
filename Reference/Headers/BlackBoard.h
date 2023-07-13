@@ -13,9 +13,13 @@ public:
 	HRESULT Initialize();
 	HRESULT Add_Value(const _tchar* pValueTag, void* pValue);
 	void* Find_Value(const _tchar* pValueTag);
+	HRESULT Reset();
 
 private:
-	unordered_map<const _tchar*, void*>	m_Values;
+	// Reset호출시 초기값을 그대로 복사해주기 위한 맵컨테이너
+	unordered_map<const _tchar*, void*>			m_OriginalValues;
+
+	unordered_map<const _tchar*, void*>			m_Values;
 
 public:
 	static CBlackBoard* Create();

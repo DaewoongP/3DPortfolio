@@ -71,6 +71,12 @@ CBehavior::STATE CTask_Dash::Tick(_double dTimeDelta)
 
 HRESULT CTask_Dash::Reset()
 {
+	m_dRunningAcc = 0.0;
+	*m_isDash = false;
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

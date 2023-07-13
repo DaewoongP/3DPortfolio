@@ -13,6 +13,7 @@ HRESULT CBlackBoard::Initialize()
 HRESULT CBlackBoard::Add_Value(const _tchar* pValueTag, void* pValue)
 {
 	m_Values.emplace(pValueTag, pValue);
+	m_OriginalValues.emplace(pValueTag, pValue);
 
 	return S_OK;
 }
@@ -25,6 +26,14 @@ void* CBlackBoard::Find_Value(const _tchar* pValueTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+HRESULT CBlackBoard::Reset()
+{
+	m_Values.clear();
+	m_Values = m_OriginalValues;
+
+	return S_OK;
 }
 
 CBlackBoard* CBlackBoard::Create()

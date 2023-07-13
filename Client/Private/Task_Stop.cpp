@@ -26,6 +26,9 @@ HRESULT CTask_Stop::Reset()
 {
 	*m_isStop = false;
 
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

@@ -33,6 +33,12 @@ CBehavior::STATE CTask_FailedWait::Tick(_double dTimeDelta)
 
 HRESULT CTask_FailedWait::Reset()
 {
+	*m_isWait = false;
+	m_dRunningAcc = 0.0;
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

@@ -28,6 +28,9 @@ CBehavior::STATE CTask_TurnIdle::Tick(_double dTimeDelta)
 
 HRESULT CTask_TurnIdle::Reset()
 {
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

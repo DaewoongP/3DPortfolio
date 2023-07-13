@@ -33,6 +33,11 @@ CBehavior::STATE CTask_Ready::Tick(_double dTimeDelta)
 
 HRESULT CTask_Ready::Reset()
 {
+	*m_isReady = false;
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

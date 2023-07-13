@@ -22,6 +22,7 @@ CBehavior::STATE CTask_LookAt::Tick(_double dTimeDelta)
 
 	*m_isWait = true;
 	*m_isWalk = false;
+
 	m_pTransformCom->LookAt(pTarget->Get_Transform()->Get_State(CTransform::STATE_POSITION), true);
 
 	return STATE_SUCCESS;
@@ -29,6 +30,9 @@ CBehavior::STATE CTask_LookAt::Tick(_double dTimeDelta)
 
 HRESULT CTask_LookAt::Reset()
 {
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

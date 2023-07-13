@@ -85,6 +85,9 @@ CBehavior::STATE CTask_RandomTurn::Tick(_double dTimeDelta)
 
 HRESULT CTask_RandomTurn::Reset()
 {
+	*m_isWalk = false;
+	m_dRunningAcc = 0.0;
+
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
 
