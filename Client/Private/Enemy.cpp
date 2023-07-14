@@ -59,6 +59,13 @@ void CEnemy::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 
 void CEnemy::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
+	if (COLLISIONDESC::COLTYPE_ENEMY == CollisionDesc.ColType)
+	{
+		_vector vOtherPos = CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_POSITION);
+		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+		m_pTransformCom->Move_Direction(XMVector3Normalize(vPos - vOtherPos), g_TimeDelta);
+	}
 }
 
 void CEnemy::OnCollisionExit(COLLISIONDESC CollisionDesc)

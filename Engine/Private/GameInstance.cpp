@@ -1,11 +1,12 @@
 #include "..\Public\GameInstance.h"
-#include "Graphic_Device.h"
-#include "Level_Manager.h"
-#include "Font_Manager.h"
-#include "Object_Manager.h"
-#include "Timer_Manager.h"
-#include "Calculator.h"
 #include "Frustum.h"
+#include "Calculator.h"
+#include "Font_Manager.h"
+#include "Level_Manager.h"
+#include "Timer_Manager.h"
+#include "Graphic_Device.h"
+#include "Object_Manager.h"
+#include "RenderTarget_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -21,6 +22,7 @@ CGameInstance::CGameInstance()
 	, m_pCollision_Manager{ CCollision_Manager::GetInstance() }
 	, m_pFont_Manager{ CFont_Manager::GetInstance() }
 	, m_pFrustum{ CFrustum::GetInstance() }
+	, m_pRenderTarget_Manager{ CRenderTarget_Manager::GetInstance() }
 {
 	Safe_AddRef(m_pFrustum);
 	Safe_AddRef(m_pFont_Manager);
@@ -33,6 +35,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pComponent_Manager);
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pCollision_Manager);
+	Safe_AddRef(m_pRenderTarget_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
@@ -76,8 +79,8 @@ void CGameInstance::Tick_Engine(_double dTimeDelta)
 	m_pObject_Manager->Tick(dTimeDelta);
 	m_pPipeLine->Tick();
 	m_pFrustum->Tick();
-	m_pCollision_Manager->Tick();
 	m_pObject_Manager->Late_Tick(dTimeDelta);
+	m_pCollision_Manager->Tick();
 	m_pLevel_Manager->Tick(dTimeDelta);
 }
 
@@ -390,6 +393,8 @@ void CGameInstance::Release_Engine()
 
 	CCollision_Manager::GetInstance()->DestroyInstance();
 
+	CRenderTarget_Manager::GetInstance()->DestroyInstance();
+
 	CInput_Device::GetInstance()->DestroyInstance();
 
 	CGraphic_Device::GetInstance()->DestroyInstance();
@@ -397,6 +402,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pRenderTarget_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pCollision_Manager);

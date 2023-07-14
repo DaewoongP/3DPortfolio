@@ -99,6 +99,7 @@ private:
 	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
+	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

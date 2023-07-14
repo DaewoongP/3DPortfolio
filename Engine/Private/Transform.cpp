@@ -49,7 +49,6 @@ void CTransform::Set_Scale(const _float3& vScale)
 	Set_State(STATE::STATE_LOOK, XMVector3Normalize(Get_State(STATE::STATE_LOOK)) * vScale.z);
 }
 
-
 void CTransform::Use_RigidBody(CNavigation* pNavigation, _float fLimitVelocity, _float fMass, _float fResistance)
 {
 	m_pNavigation = pNavigation;

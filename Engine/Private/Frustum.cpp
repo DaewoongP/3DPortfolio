@@ -23,6 +23,8 @@ HRESULT CFrustum::Initialize()
 
 void CFrustum::Tick()
 {
+	/* 월드상의 절두체 평면을 구한다. */
+
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);
 
@@ -48,11 +50,33 @@ void CFrustum::Tick()
 	Safe_Release(pPipeLine);
 }
 
+void CFrustum::Transform_ToLocalSpace(_fmatrix WorldMatrix)
+{
+	_matrix		WorldMatrixInv = XMMatrixInverse(nullptr, WorldMatrix);
+
+	for (size_t i = 0; i < 6; i++)
+	{
+		XMStoreFloat4(&m_vLocalPlanes[i],
+			XMPlaneTransform(XMLoadFloat4(&m_vWorldPlanes[i]), WorldMatrixInv));
+	}
+}
+
 _bool CFrustum::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
 {
 	for (size_t i = 0; i < 6; i++)
 	{
 		if (fRange < XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_vWorldPlanes[i]), vWorldPos)))
+			return false;
+	}
+
+	return true;
+}
+
+_bool CFrustum::isIn_LocalSpace(_fvector vLocalPos, _float fRange)
+{
+	for (size_t i = 0; i < 6; i++)
+	{
+		if (fRange < XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_vLocalPlanes[i]), vLocalPos)))
 			return false;
 	}
 

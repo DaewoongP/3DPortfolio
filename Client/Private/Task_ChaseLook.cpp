@@ -28,7 +28,7 @@ CBehavior::STATE CTask_ChaseLook::Tick(_double dTimeDelta)
 
 	_vector vDir = XMVector3Normalize(vTargetPos - vPos);
 	
-	if (XMVectorGetX(XMVectorNearEqual(vLook, vDir, XMVectorSet(0.01f, 0.01f, 0.01f, 0.1f))))
+	if (XMVectorGetX(XMVectorNearEqual(vLook, vDir, XMVectorSet(0.05f, 0.05f, 0.05f, 0.1f))))
 	{
 		*m_isWalk = false;
 		// 현재 바라보는 방향이 근사치에 다다름.

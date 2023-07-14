@@ -156,6 +156,12 @@ HRESULT CHammer::SetUp_ShaderResources()
 
 void CHammer::Attack()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
+
+	Safe_Release(pGameInstance);
 }
 
 CHammer* CHammer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

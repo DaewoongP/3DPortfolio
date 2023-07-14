@@ -34,6 +34,8 @@ HRESULT CPlayer::Initialize_Prototype()
 HRESULT CPlayer::Initialize(void* pArg)
 {
 	m_fSpeed = 1.5f;
+	XMStoreFloat3(&m_vInitRotation, XMVectorSet(0.f, 90.f, 0.f, 0.f));
+	XMStoreFloat4(&m_vInitPosition, XMVectorSet(40.f, 0.f, 90.f, 1.f));
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_fSpeed, XMConvertToRadians(3.f));
 
@@ -49,7 +51,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Initailize_Skills()))
 		return E_FAIL;
 	
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	m_pTransformCom->Rotation(m_vInitRotation);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vInitPosition));
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 	// 모델의 애니메이션 인덱스 설정
@@ -61,6 +64,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pTransformCom->Use_RigidBody(m_pNavigationCom);
 
 	XMStoreFloat4x4(&m_CameraMatrix, XMMatrixIdentity());
+
+	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	m_eCurWeapon = WEAPON_KATANA;
 
@@ -152,8 +157,9 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		// 이동공격용 벡터
 		m_InRangeEnemyColliders.push_back(CollisionDesc.pOtherCollider);
 	}
-
-	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+	
+	/* Player Block Collider */
+	if (CollisionDesc.pMyCollider == m_pBlockColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
 	{
 		m_BlockEnemyWeapons.push_back(CollisionDesc.pOtherOwner);
@@ -204,7 +210,7 @@ void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 		}
 	}
 
-	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+	if (CollisionDesc.pMyCollider == m_pBlockColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
 	{
 		for (auto iter = m_BlockEnemyWeapons.begin(); iter != m_BlockEnemyWeapons.end(); ++iter)
@@ -243,6 +249,7 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 	m_pColliderCom->Render();
 	m_pVisionColliderCom->Render(DirectX::Colors::AntiqueWhite);
+	m_pBlockColliderCom->Render(DirectX::Colors::DarkRed);
 	m_pNavigationCom->Render();
 #endif // _DEBUG
 
@@ -252,6 +259,8 @@ HRESULT CPlayer::Render()
 HRESULT CPlayer::Reset()
 {
 	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
+	m_pTransformCom->Rotation(m_vInitRotation);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vInitPosition));
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 	// 모델의 애니메이션 인덱스 설정
@@ -360,14 +369,25 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(SetUp_Collider(TEXT("../../Resources/GameData/Collider/Player.Col"))))
 		return E_FAIL;
 
-	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	AABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
+	CBounding_AABB::BOUNDINGAABBDESC VisionAABBDesc;
+	VisionAABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	VisionAABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
 	/* For.Com_VisionCollider */
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &AABBDesc)))
+		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &VisionAABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_VisionCollider)");
+		return E_FAIL;
+	}
+
+	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	AABBDesc.vExtents = _float3(5.f, 3.f, 5.f);
+	/* For.Com_BlockCollider */
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_BlockCollider"), reinterpret_cast<CComponent**>(&m_pBlockColliderCom), &AABBDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_BlockCollider)");
 		return E_FAIL;
 	}
 
@@ -612,7 +632,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 
 		_vector vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
 
-		if (XMConvertToRadians(30.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
+		if (XMConvertToRadians(15.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
 		{
 			m_pTransformCom->Turn(vCamRight, -1.f * dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 		}
@@ -734,7 +754,7 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			break;
 		case STATE_BLOCK:
 			if (WEAPON_KATANA == m_eCurWeapon)
-				m_pModelCom->Set_AnimIndex(80, false);
+				m_pModelCom->Set_AnimIndex(78 + rand() % 3, false);
 			else if (WEAPON_SHURIKEN == m_eCurWeapon)
 				m_pModelCom->Set_AnimIndex(130, false);
 			break;
@@ -852,21 +872,28 @@ void CPlayer::Block(_double dTimeDelta)
 			iter = m_BlockEnemyWeapons.erase(iter);
 		}
 		else
-			++iter;
+		{
+			// 여기에 걸리지않았을 경우 그냥 어디에 맞아서 사라졌을 확률이 높기 때문에 그냥 삭제해준다.
+			iter = m_BlockEnemyWeapons.erase(iter);
+		}
 	}
 }
 
 void CPlayer::Add_Collisions()
 {
 	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 10.f);
+	_matrix BlockMatrix = XMMatrixTranslation(0.f, 0.f, 3.f);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(VisionMatrix * m_pTransformCom->Get_WorldMatrix());
+	m_pBlockColliderCom->Tick(BlockMatrix * m_pTransformCom->Get_WorldMatrix());
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pVisionColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pBlockColliderCom);
 
 	Safe_Release(pGameInstance);
 }
@@ -960,6 +987,9 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 	}
 	Safe_Release(pGameInstance);
 	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Hook"));
+
+	if (nullptr == pHookLayer)
+		return false;
 	// 거리별 컬링은 나중에 생각하고.
 	_float fDist = 70.f;
 
@@ -1225,5 +1255,6 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pVisionColliderCom);
+	Safe_Release(m_pBlockColliderCom);
 	Safe_Release(m_pPlayerCameraCom);
 }

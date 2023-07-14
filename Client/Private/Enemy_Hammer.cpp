@@ -98,6 +98,8 @@ void CEnemy_Hammer::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = CollisionDesc.pOtherOwner;
+
+	__super::OnCollisionStay(CollisionDesc);
 }
 
 void CEnemy_Hammer::OnCollisionExit(COLLISIONDESC CollisionDesc)
@@ -343,7 +345,12 @@ void CEnemy_Hammer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 
 void CEnemy_Hammer::Attack()
 {
-	if (STATE_ATTACK == m_eCurState)
+	if (STATE_ATTACK != m_eCurState)
+		return;
+
+	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
+
+	if (0.3f < fCurrentFramePercent)
 		m_pHammer->Attack();
 }
 

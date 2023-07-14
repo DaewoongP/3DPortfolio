@@ -105,6 +105,8 @@ void CEnemy_Sword::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = CollisionDesc.pOtherOwner;
+
+	__super::OnCollisionStay(CollisionDesc);
 }
 
 void CEnemy_Sword::OnCollisionExit(COLLISIONDESC CollisionDesc)

@@ -187,6 +187,9 @@
     <Filter Include="01. Utility\09. RenderTarget\Manager">
       <UniqueIdentifier>{454296c3-5155-4de0-a9ec-550b8186efc7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\07. VIBuffer\Terrain\QuadTree">
+      <UniqueIdentifier>{76a3a46c-3428-4b3a-9995-58855a9bb32a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -381,6 +384,9 @@
     <ClInclude Include="..\public\RenderTarget_Manager.h">
       <Filter>01. Utility\09. RenderTarget\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\QuadTree.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Terrain\QuadTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -556,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="..\private\RenderTarget_Manager.cpp">
       <Filter>01. Utility\09. RenderTarget\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\QuadTree.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Terrain\QuadTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

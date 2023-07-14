@@ -95,6 +95,8 @@ void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = CollisionDesc.pOtherOwner;
+
+	__super::OnCollisionStay(CollisionDesc);
 }
 
 void CEnemy_Pistol::OnCollisionExit(COLLISIONDESC CollisionDesc)
@@ -229,7 +231,7 @@ HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_MaxWaitTime"), &m_dPatrolWaitTime);
 	pBlackBoard->Add_Value(TEXT("Value_isWait"), &m_isWait);
 
-	m_dAttackCoolTime = 1.5;
+	m_dAttackCoolTime = 1.0;
 	pBlackBoard->Add_Value(TEXT("Value_AttackCoolTime"), &m_dAttackCoolTime);
 	pBlackBoard->Add_Value(TEXT("Value_isAttack"), &m_isAttack);
 	pBlackBoard->Add_Value(TEXT("Value_Weapon"), m_pPistol);
