@@ -6,15 +6,21 @@
 #include "PipeLine.h"
 #endif
 
-_float CNavigation::Get_CurrentCellY() const
+_float CNavigation::Get_CurrentCellY(_fvector vPosition) const
 {
 	if (0 > m_NaviDesc.iCurrentIndex)
 		return 0.f;
-	_vector PointA = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_A);
-	_vector PointB = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_B);
-	_vector PointC = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_C);
 
-	return XMVectorGetY(PointA + PointB + PointC);
+	_vector vPointA = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_A);
+	_vector vPointB = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_B);
+	_vector vPointC = m_Cells[m_NaviDesc.iCurrentIndex]->Get_Point(CCell::POINT_C);
+
+	_vector vCurrentPlane = XMPlaneFromPoints(vPointA, vPointB, vPointC);
+
+	// y = (-ax -cz -d) / b
+	return (-1.f * XMVectorGetX(vCurrentPlane) * XMVectorGetX(vPosition) +
+		-1.f * XMVectorGetZ(vCurrentPlane) * XMVectorGetZ(vPosition) +
+		-1.f * XMVectorGetW(vCurrentPlane)) / XMVectorGetY(vCurrentPlane);
 }
 
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -128,7 +134,7 @@ _bool CNavigation::Is_Move(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_
 	return false;
 }
 
-HRESULT CNavigation::Find_MyCell(_vector vPosition)
+HRESULT CNavigation::Find_MyCell(_fvector vPosition)
 {
 	for (auto& pCell : m_Cells)
 	{
@@ -173,12 +179,14 @@ HRESULT CNavigation::Render()
 
 		m_pShader->Begin(0);
 
-		vector<CCell*> FallCells;
+		vector<CCell*> FallCells, SlideCells;
 
 		for (auto& pCell : m_Cells)
 		{
 			if (CELL_FALL == pCell->Get_CellFlag())
 				FallCells.push_back(pCell);
+			else if (CELL_SLIDE == pCell->Get_CellFlag())
+				SlideCells.push_back(pCell);
 			else
 				pCell->Render();
 		}
@@ -196,6 +204,20 @@ HRESULT CNavigation::Render()
 		}
 
 		FallCells.clear();
+
+		vColor = _float4(1.f, 1.f, 0.f, 1.f);
+		// Slide Cells
+		if (FAILED(m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
+			return E_FAIL;
+
+		m_pShader->Begin(0);
+
+		for (auto& pCell : SlideCells)
+		{
+			pCell->Render();
+		}
+
+		SlideCells.clear();
 	}
 	else
 	{

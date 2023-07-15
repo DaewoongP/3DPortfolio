@@ -24,6 +24,7 @@ CTransform::CTransform(const CTransform& rhs)
 	, m_fOriginGroundY(rhs.m_fOriginGroundY)
 	, m_isJumping(rhs.m_isJumping)
 	, m_fResistance(rhs.m_fResistance)
+	, m_fStepOffset(rhs.m_fStepOffset)
 {
 }
 
@@ -77,6 +78,7 @@ HRESULT CTransform::Initialize(void* pArg)
 	ZEROMEM(&m_eCurrentCellFlag);
 	m_fGroundY = 4.f;
 	m_fOriginGroundY = 4.f;
+	m_fStepOffset = 0.5f;
 
 	return S_OK;
 }
@@ -141,7 +143,7 @@ void CTransform::RigidBody(_double dTimeDelta)
 	ZEROMEM(&m_vForce);
 }
 
-void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
+void CTransform::Check_Move(_fvector vCurrentPosition, _fvector vVelocity)
 {
 	_vector vXZOriginPosition = XMVectorSet(XMVectorGetX(vCurrentPosition), 0.f, XMVectorGetZ(vCurrentPosition), 1.f);
 	_vector vXZVelocity = XMVectorSet(XMVectorGetX(vVelocity), 0.f, XMVectorGetZ(vVelocity), 0.f);
@@ -161,6 +163,19 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 	// X,Z로만 체크.
 	isMove = m_pNavigation->Is_Move(vXZPosition, &vNormal, &m_eCurrentCellFlag);
 
+	// 원래 포지션의 Y값에서 셀의 Y값 만큼 더해줌.
+	if (true == isMove &&
+		(CELL_MOVE == m_eCurrentCellFlag || CELL_SLIDE == m_eCurrentCellFlag))
+	{		
+		if (false == Check_CellY(vXZPosition, vCurrentPosition))
+		{
+			m_eCurrentCellFlag = m_ePreviousCellFlag;
+
+			Set_State(STATE_POSITION, XMVectorSetY(vCurrentPosition, XMVectorGetY(vCurrentPosition) + XMVectorGetY(vVelocity)));
+			return;
+		}
+	}
+
 	_uint iExcept = { 0 };
 
 	while (false == isMove)
@@ -179,9 +194,16 @@ void CTransform::Check_Move(_vector vCurrentPosition, _vector vVelocity)
 		}
 	}
 
+	if (true == isMove &&
+		(CELL_MOVE == m_eCurrentCellFlag || CELL_SLIDE == m_eCurrentCellFlag))
+	{
+		Check_CellY(vXZPosition, vCurrentPosition);
+	}
+	
+
 	_vector vMovedPosition = XMVectorSet(
 		XMVectorGetX(vXZPosition), 
-		XMVectorGetY(vCurrentPosition) + XMVectorGetY(vVelocity), 
+		XMVectorGetY(vCurrentPosition) + XMVectorGetY(vVelocity),
 		XMVectorGetZ(vXZPosition), 
 		1.f);
 
@@ -205,6 +227,24 @@ void CTransform::Check_Cell()
 		}
 
 		m_ePreviousCellFlag = m_eCurrentCellFlag;
+	}
+}
+
+_bool CTransform::Check_CellY(_fvector vXZPosition, _fvector vCurrentPosition)
+{
+	_float fCellY = m_fOriginGroundY + m_pNavigation->Get_CurrentCellY(vCurrentPosition);
+	if (true == m_isCrouch &&
+		CELL_SLIDE != m_eCurrentCellFlag)
+		fCellY -= 2.f;
+
+	if (fCellY > XMVectorGetY(vCurrentPosition) + m_fStepOffset)
+	{
+		return false;
+	}
+	else
+	{
+		m_fGroundY = fCellY;
+		return true;
 	}
 }
 
@@ -393,6 +433,14 @@ void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpe
 	if (true == m_isJumping ||
 		CELL_FALL == m_eCurrentCellFlag)
 		return;
+
+	m_isCrouch = isCrouching;
+
+	if (true == isCrouching &&
+		CELL_SLIDE == m_eCurrentCellFlag)
+	{
+		XMStoreFloat3(&m_vVelocity, XMLoadFloat3(&m_vVelocity) * 1.03f);
+	}
 
 	// 앉기를 눌러서 천천히 내려앉음.
 	if (true == isCrouching)

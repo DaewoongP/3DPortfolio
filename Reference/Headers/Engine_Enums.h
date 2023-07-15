@@ -20,6 +20,8 @@ namespace Engine
 		CELL_FALL,
 		// 움직이지 못하는 셀 (지형같은곳)
 		CELL_STATIC,
+		// 슬라이딩 셀
+		CELL_SLIDE
 	};
 
 	// Late Tick이 종료되면 현재 상태를 반환하여 처리

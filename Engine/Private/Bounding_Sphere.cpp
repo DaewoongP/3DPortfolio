@@ -66,7 +66,7 @@ _bool CBounding_Sphere::Intersects(CCollider::TYPE eColliderType, CBounding* pOt
 
 _bool CBounding_Sphere::RayIntersects(_fvector vOrigin, _fvector vDirection, _Inout_ _float& fDist)
 {
-	return m_pSphere->Intersects(vOrigin, vDirection, fDist);
+	return m_pSphere->Intersects(vOrigin, XMVector3Normalize(vDirection), fDist);
 }
 
 #ifdef _DEBUG

@@ -33,7 +33,7 @@ HRESULT CEnemy::Initialize(void* pArg)
 }
 
 void CEnemy::Tick(_double dTimeDelta)
-{
+{	
 	__super::Tick(dTimeDelta);
 }
 

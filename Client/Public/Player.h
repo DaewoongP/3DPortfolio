@@ -132,6 +132,8 @@ private: /* Tick */
 
 	void SwapWeapon();
 
+	void Check_Fall();
+
 private: /* Late_Tick */
 	void CameraOffset(_double dTimeDelta);
 

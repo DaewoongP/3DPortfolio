@@ -17,11 +17,6 @@ HRESULT CCell::Initialize(CELLFLAG eCellFlag, _float3* pPoints, _int iIndex)
 {
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
 
-	for (_uint i = 0; i < POINT_END; ++i)
-	{
-		m_vPoints[i].y = 0;
-	}
-
 	m_iIndex = iIndex;
 	m_eCellFlag = eCellFlag;
 
@@ -61,8 +56,7 @@ _bool CCell::Is_In(_fvector vPosition, _Inout_ _float3* pNormal, _Inout_ _int* p
 			if (nullptr != pNormal &&
 				nullptr != pFlag)
 			{
-				if (-1 == m_iNeighborIndices[i])
-					XMStoreFloat3(pNormal, vNormal);
+				XMStoreFloat3(pNormal, vNormal);
 
 				*pFlag = m_eCellFlag;
 			}

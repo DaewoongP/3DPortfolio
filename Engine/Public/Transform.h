@@ -25,6 +25,7 @@ private:
 	virtual ~CTransform() = default;
 
 public:
+	_float Get_CurrentGroundY() const { return m_fGroundY; }
 	_float3 Get_Velocity() const { return m_vVelocity; }
 	TRANSFORMDESC Get_Desc() const { return m_TransformDesc; }
 	_vector Get_State(STATE _eState) const
@@ -56,6 +57,7 @@ public:
 	void RigidBody(_double dTimeDelta);
 	void Check_Move(_fvector vCurrentPosition, _fvector vVelocity);
 	void Check_Cell();
+	_bool Check_CellY(_fvector vXZPosition, _fvector vCurrentPosition);
 	void Move_Direction(_fvector vMoveDir, _double dTimeDelta);
 	void Go_Straight(_double dTimeDelta);
 	void Go_Backward(_double dTimeDelta);
@@ -102,6 +104,9 @@ private: // 공용적인 변수값
 	CELLFLAG		m_eCurrentCellFlag;
 	CELLFLAG		m_ePreviousCellFlag;
 
+	// 지형을 올라갈때 비교하는 오프셋값.
+	_float			m_fStepOffset = 0.f;
+
 private: // 객체 변수값.
 	// 최대속도 제한
 	_float			m_fLimitVelocity = 0.f;
@@ -112,6 +117,7 @@ private: // 객체 변수값.
 	// Crouch 처리용 (Player)
 	_float			m_fGroundY = 0.f;
 	_bool			m_isJumping = { false };
+	_bool			m_isCrouch = { false };
 	
 
 public:

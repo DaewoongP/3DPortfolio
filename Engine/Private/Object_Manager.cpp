@@ -60,7 +60,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	NULL_CHECK_RETURN(pPrototype, E_FAIL);
 
 	CGameObject* pGameObject = nullptr;
-	pGameObject = pPrototype->Clone(pArg);
+ 	pGameObject = pPrototype->Clone(pArg);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 

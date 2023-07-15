@@ -77,6 +77,8 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 		ImGui::RadioButton("Fall", (_int*)(&m_eCurrentCellFlag), (_int)CELL_FALL);
 		SameLine();
 		ImGui::RadioButton("Static", (_int*)(&m_eCurrentCellFlag), (_int)CELL_STATIC);
+		SameLine();
+		ImGui::RadioButton("Slide", (_int*)(&m_eCurrentCellFlag), (_int)CELL_SLIDE);
 	}
 
 	if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) &&
@@ -107,7 +109,8 @@ HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 				vector<_float3> VertexPositions = CellBuffer.second->Get_VertexPositions();
 
 				// Buffer.first == 버퍼의 인덱스 (POINT A,B,C)
-				if (VertexPositions.size() < CellBuffer.first)
+				if (VertexPositions.size() < CellBuffer.first ||
+					VertexPositions.size() == 0)
 					return E_FAIL;
 
 				VertexPositions[CellBuffer.first].y -= _float(dwMouseMove * dTimeDelta);
