@@ -958,11 +958,11 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		m_isWallRun = false;
 		if (0 > m_fWallRunAngle)
 		{
-			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 6.f, g_TimeDelta);
 		}
 		else
 		{
-			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 4.f, g_TimeDelta);
+			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 6.f, g_TimeDelta);
 		}
 	}
 

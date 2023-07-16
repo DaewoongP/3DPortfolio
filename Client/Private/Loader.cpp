@@ -224,6 +224,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	// °ÕÁö
+	//PivotMatrix = XMMatrixScaling(1.2f, 1.2f, 1.2f) * XMMatrixRotationY(XMConvertToRadians(90.f));
+	///* For.Prototype_Component_Model_Katana */
+	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/SM_Overwatch_sword.dat"), PivotMatrix))))
+	//{
+	//	MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
+	//	return E_FAIL;
+	//}
+
 	PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Shuriken */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Shuriken"),

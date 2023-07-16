@@ -240,13 +240,13 @@ HRESULT CEnemy_Sword::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_MaxWaitTime"), &m_dPatrolWaitTime);
 	pBlackBoard->Add_Value(TEXT("Value_isWait"), &m_isWait);
 
-	m_dDashTime = 1.0;
-	m_dDashSpeed = 10.0;
+	m_dDashTime = 0.4;
+	m_dDashSpeed = 25.0;
 	pBlackBoard->Add_Value(TEXT("Value_isDash"), &m_isDash);
 	pBlackBoard->Add_Value(TEXT("Value_DashTime"), &m_dDashTime);
 	pBlackBoard->Add_Value(TEXT("Value_DashSpeed"), &m_dDashSpeed);
 
-	m_dAttackCoolTime = 3.0;
+	m_dAttackCoolTime = 2.0;
 	pBlackBoard->Add_Value(TEXT("Value_WaitTime"), &m_dAttackCoolTime);
 
 	m_dReadyTime = 1.0;
