@@ -14,6 +14,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	class CTexture* Get_ORMTexture(_uint iIndex) { return m_ORMs[iIndex]; }
 	_float Get_CurrentFramePercent();
 	_float4x4 Get_PivotFloat4x4() const { return m_PivotMatrix; }
 	_matrix Get_PivotMatrix() { return XMLoadFloat4x4(&m_PivotMatrix); }
@@ -78,6 +79,9 @@ private: /* For.Animations */
 	ANIMATIONFLAG					m_eAnimationFlag = { ANIM_END };
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;
+
+private: /* For.ORM Textures*/
+	vector<class CTexture*>			m_ORMs;
 
 private:
 	_float4x4						m_PivotMatrix;

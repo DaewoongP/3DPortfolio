@@ -461,5 +461,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl">
       <Filter>97. ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxORMMesh.hlsl">
+      <Filter>97. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

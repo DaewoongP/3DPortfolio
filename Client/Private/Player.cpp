@@ -1256,6 +1256,7 @@ CGameObject* CPlayer::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CPlayer");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

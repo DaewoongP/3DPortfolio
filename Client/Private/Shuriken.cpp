@@ -129,7 +129,7 @@ HRESULT CShuriken::Add_Components()
 	}
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxORMMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Shader)");

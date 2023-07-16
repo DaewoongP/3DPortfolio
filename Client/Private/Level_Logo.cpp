@@ -75,6 +75,7 @@ CLevel_Logo* CLevel_Logo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 		MSG_BOX("Failed to Created CLevel_Logo");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

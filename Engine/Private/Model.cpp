@@ -26,6 +26,7 @@ CModel::CModel(const CModel& rhs)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
+	, m_ORMs(rhs.m_ORMs)
 {
 	for (auto& pOriginalBone : rhs.m_Bones)
 	{
@@ -46,6 +47,11 @@ CModel::CModel(const CModel& rhs)
 	for (auto& pOriginalAnimation : rhs.m_Animations)
 	{
 		m_Animations.push_back(pOriginalAnimation->Clone());
+	}
+
+	for (auto& pORM : m_ORMs)
+	{
+		Safe_AddRef(pORM);
 	}
 }
 
@@ -292,6 +298,10 @@ HRESULT CModel::Ready_File(TYPE eType, const _tchar* pModelFilePath)
 			MSG_BOX("Failed Read String Data");
 			return E_FAIL;
 		}
+
+		CTexture* pTexture = CTexture::Create(m_pDevice, m_pContext, m_Model.ORMTextures[i].Path);
+		if (nullptr != pTexture)
+			m_ORMs.push_back(pTexture);
 	}
 
 	// Nodes NumNodes
@@ -747,4 +757,10 @@ void CModel::Free()
 		Safe_Release(pAnimation);
 	}
 	m_Animations.clear();
+
+	for (auto& pORM : m_ORMs)
+	{
+		Safe_Release(pORM);
+	}
+	m_ORMs.clear();
 }
