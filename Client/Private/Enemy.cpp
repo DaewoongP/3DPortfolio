@@ -110,7 +110,7 @@ HRESULT CEnemy::Add_Component()
 	NavigationDesc.iCurrentIndex = 0;
 
 	/* For.Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 	{
 		MSG_BOX("Failed CEnemy Add_Component : (Com_Navigation)");

@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 
 #include "Sky.h"
+#include "Mouse.h"
 #include "Sword.h"
 #include "Hammer.h"
 #include "Shuriken.h"
@@ -80,7 +81,7 @@ HRESULT CLoader::Loading()
 	case LEVELID::LEVEL_LOGO:
 		hr = Loading_For_Logo();
 		break;
-	case LEVELID::LEVEL_GAMEPLAY:
+	case LEVELID::LEVEL_STAGE1:
 		hr = Loading_For_GamePlay();
 		break;
 	}
@@ -108,6 +109,14 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_Component_Texture_Mouse */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Mouse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/Cursor/gr_pc_cursor.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Mouse)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	
 
@@ -121,6 +130,14 @@ HRESULT CLoader::Loading_For_Logo()
 		CBackGround::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BackGround)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Mouse */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mouse"),
+		CMouse::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Mouse)");
 		return E_FAIL;
 	}
 	
@@ -141,7 +158,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #ifdef _DEBUG
 
 	/* For.Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Terrain)");
@@ -149,7 +166,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	/* For.Prototype_Component_Texture_Snow */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Snow"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Snow"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Snow/Snow.png")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Snow)");
@@ -165,7 +182,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #ifdef _DEBUG
 
 	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Terrain)");
@@ -180,7 +197,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	InstanceDesc.fHeight = 10.f;
 
 	/*For.Prototype_Component_VIBuffer_Rect_Instance*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
 		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &InstanceDesc, 30))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Instance)");
@@ -189,7 +206,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_Model_Fiona */
 	// 피오나 데이터 날라감 ㅋ
-	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Fiona"),
+	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Fiona"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Fiona)");
@@ -199,7 +216,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #endif // _DEBUG
 
 	/* For.Prototype_Component_Model_Sky */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Sky"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Sky"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");
@@ -208,7 +225,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, -4.f, -0.5f);
 	/* For.Prototype_Component_Model_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Player"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Player.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Player)");
@@ -217,7 +234,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Katana */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Katana"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Katana.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
@@ -227,7 +244,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	// 겐지
 	//PivotMatrix = XMMatrixScaling(1.2f, 1.2f, 1.2f) * XMMatrixRotationY(XMConvertToRadians(90.f));
 	///* For.Prototype_Component_Model_Katana */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Katana"),
 	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/SM_Overwatch_sword.dat"), PivotMatrix))))
 	//{
 	//	MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
@@ -236,7 +253,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Shuriken */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Shuriken"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Shuriken"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Shuriken.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Shuriken)");
@@ -245,7 +262,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Pistol */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Pistol"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Pistol"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Pistol.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Pistol)");
@@ -254,7 +271,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Weapon_Pistol */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Weapon_Pistol"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Weapon_Pistol"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/Weapon_Enemy_Pistol.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Pistol)");
@@ -263,7 +280,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Sword */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Sword"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Sword"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Sword_Elite.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Sword)");
@@ -272,7 +289,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Hammer */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Hammer"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Hammer"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Hammer.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Hammer)");
@@ -281,7 +298,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Hammer */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Hammer"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Hammer"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/Weapon_Enemy_Hammer.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Hammer)");
@@ -305,7 +322,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	/* Prototype_Component_Shader_VtxTexInstance */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Shader_VtxTexInstance"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Shader_VtxTexInstance"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexInstance.hlsl"),
 			VTXRECTINSTANCE_DECL::Elements, VTXRECTINSTANCE_DECL::iNumElements))))
 	{
@@ -354,7 +371,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	lstrcpy(m_szLoading, TEXT("네비게이션정보 로딩 중."));
 
 	/* For.Prototype_Component_Navigation */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
 		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Stage1.Navi")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
@@ -364,7 +381,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	lstrcpy(m_szLoading, TEXT("AI 로딩 중."));
 
 	/* For.Prototype_Component_BehaviorTree */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_BehaviorTree"),
 		CBehaviorTree::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_BehaviorTree)");
@@ -374,7 +391,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	lstrcpy(m_szLoading, TEXT("충돌체 로딩 중."));
 
 	/* For.Prototype_Component_Collider_Sphere */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_Sphere)");
@@ -382,7 +399,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	/* For.Prototype_Component_Collider_AABB */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_AABB)");
@@ -390,7 +407,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	/* For.Prototype_Component_Collider_OBB */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_OBB"),
 		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_OBB)");
@@ -558,7 +575,7 @@ HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _
 
 			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
 
-			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, wstrProto.c_str(),
+			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, wstrProto.c_str(),
 				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str(), PivotMatrix))))
 			{
 				MSG_BOX("Failed Add_Prototype : (Model Data File)");

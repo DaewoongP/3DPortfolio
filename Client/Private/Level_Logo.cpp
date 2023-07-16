@@ -14,6 +14,8 @@ HRESULT CLevel_Logo::Initialize()
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
+	if (FAILED(Ready_Layer_Mouse(TEXT("Layer_Mouse"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -27,9 +29,9 @@ void CLevel_Logo::Tick(_double dTimeDelta)
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_GAMEPLAY))))
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE1))))
 		{
-			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_GAMEPLAY");
+			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_STAGE1");
 			Safe_Release(pGameInstance);
 			return;
 		}
@@ -58,6 +60,22 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOGO, TEXT("Prototype_GameObject_BackGround"), pLayerTag, TEXT("GameObject_BackGround"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_BackGround)");
+		return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Layer_Mouse(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOGO, TEXT("Prototype_GameObject_Mouse"), pLayerTag, TEXT("GameObject_Mouse"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Mouse)");
 		return E_FAIL;
 	}
 

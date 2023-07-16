@@ -105,7 +105,7 @@ HRESULT CKatana::Add_Components()
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Katana"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Katana"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
 		MSG_BOX("Failed CKatana Add_Component : (Com_Model)");
@@ -124,7 +124,7 @@ HRESULT CKatana::Add_Components()
 	AABBDesc.vExtents = _float3(5.f, 5.f, 5.f);
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");

@@ -1,14 +1,14 @@
-#include "..\Public\BackGround.h"
+#include "..\Public\Mouse.h"
 #include "GameInstance.h"
 
-CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMouse::CMouse(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixIdentity());
 }
 
-CBackGround::CBackGround(const CBackGround& rhs)
+CMouse::CMouse(const CMouse& rhs)
 	: CGameObject(rhs)
 	, m_fX(rhs.m_fX)
 	, m_fY(rhs.m_fY)
@@ -19,15 +19,15 @@ CBackGround::CBackGround(const CBackGround& rhs)
 {
 }
 
-HRESULT CBackGround::Initialize_Prototype()
+HRESULT CMouse::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
-HRESULT CBackGround::Initialize(void* pArg)
+HRESULT CMouse::Initialize(void* pArg)
 {
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
@@ -37,47 +37,50 @@ HRESULT CBackGround::Initialize(void* pArg)
 		return E_FAIL;
 
 	// 윈도우 창에 꽉채우게 설정함.
-	m_fSizeX = g_iWinSizeX;
-	m_fSizeY = g_iWinSizeY;
-
-	// 윈도우창의 중간에 표시하게 설정.
-	m_fX = g_iWinSizeX * 0.5f;
-	m_fY = g_iWinSizeY * 0.5f;
+	m_fSizeX = 50.f;
+	m_fSizeY = 50.f;
 
 	// 트랜스폼에 값 세팅.
 	// offset값에 맞춰 세팅해줌.
 	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, 
-		XMVectorSet(
-			m_fX - g_iWinSizeX * 0.5f,
-			-m_fY + g_iWinSizeY * 0.5f,
-			0.f,
-			1.f));
-
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	// 직교 투영을 통해 처리.
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
 
 	return S_OK;
 }
 
-void CBackGround::Tick(_double dTimeDelta)
+void CMouse::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 }
 
-GAMEEVENT CBackGround::Late_Tick(_double dTimeDelta)
+GAMEEVENT CMouse::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
+	//ShowCursor(false);
+
+	POINT	pt{};
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	_vector		vMouse;
+	vMouse = XMVectorSet(
+		pt.x - g_iWinSizeX * 0.5f,
+		-pt.y + g_iWinSizeY * 0.5f,
+		0.f,
+		1.f);
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMouse);
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_PRIORITY, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;
 }
 
-HRESULT CBackGround::Render()
-{	
+HRESULT CMouse::Render()
+{
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
@@ -87,11 +90,11 @@ HRESULT CBackGround::Render()
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
-HRESULT CBackGround::Add_Components()
+HRESULT CMouse::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -118,7 +121,7 @@ HRESULT CBackGround::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
+	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Mouse"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -128,7 +131,7 @@ HRESULT CBackGround::Add_Components()
 	return S_OK;
 }
 
-HRESULT CBackGround::SetUp_ShaderResources()
+HRESULT CMouse::SetUp_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
@@ -145,33 +148,33 @@ HRESULT CBackGround::SetUp_ShaderResources()
 	return S_OK;
 }
 
-CBackGround* CBackGround::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMouse* CMouse::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBackGround* pInstance = new CBackGround(pDevice, pContext);
+	CMouse* pInstance = new CMouse(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CBackGround");
+		MSG_BOX("Failed to Created CMouse");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBackGround::Clone(void* pArg)
+CGameObject* CMouse::Clone(void* pArg)
 {
-	CBackGround* pInstance = new CBackGround(*this);
+	CMouse* pInstance = new CMouse(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CBackGround");
+		MSG_BOX("Failed to Cloned CMouse");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBackGround::Free()
+void CMouse::Free()
 {
 	__super::Free();
 

@@ -79,7 +79,7 @@ HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 	{
 	case CCollider::TYPE_SPHERE:
 		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+		if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.SphereDesc)))
 		{
 			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
@@ -88,7 +88,7 @@ HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 		break;
 	case CCollider::TYPE_AABB:
 		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+		if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.AABBDesc)))
 		{
 			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
@@ -97,7 +97,7 @@ HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 		break;
 	case CCollider::TYPE_OBB:
 		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_OBB"),
+		if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_OBB"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.OBBDesc)))
 		{
 			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");

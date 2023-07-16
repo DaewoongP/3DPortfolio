@@ -105,7 +105,7 @@ HRESULT CBullet::Add_Components()
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_Collider */
-	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Collider)");

@@ -26,7 +26,7 @@ namespace Engine
 	typedef		XMUINT2					_uint2;
 	typedef		XMUINT3					_uint3;
 	typedef		XMUINT4					_uint4;
-
+	
 	typedef		XMINT2					_int2;
 	typedef		XMINT3					_int3;
 	typedef		XMINT4					_int4;

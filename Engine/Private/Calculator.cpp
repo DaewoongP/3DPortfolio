@@ -61,7 +61,7 @@ HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fma
 	return S_OK;
 }
 
-HRESULT CCalculator::Get_WorldMouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _float4* vRayPos, _float4* vRayDir)
+HRESULT CCalculator::Get_WorldMouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)
 {
 	D3D11_VIEWPORT ViewPort;
 	UINT iNumViewPorts = 1;
@@ -145,6 +145,33 @@ HRESULT CCalculator::VectorToLineXZ(_vector vPosition, _vector vDirection, _floa
 	*pB = XMVectorGetZ(vPosition) - (*pA) * XMVectorGetX(vPosition);
 
 	return S_OK;
+}
+
+_float CCalculator::Perlin_Noise(_fvector vPixel)
+{
+	// 官款爹 弊府靛 积己.
+	_vector vGridPoints[8];
+	vGridPoints[0] = XMVectorSet(0.f, 1.f, 0.f, 1.f);
+	vGridPoints[1] = XMVectorSet(1.f, 1.f, 0.f, 1.f);
+	vGridPoints[2] = XMVectorSet(1.f, 0.f, 0.f, 1.f);
+	vGridPoints[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	vGridPoints[4] = XMVectorSet(0.f, 1.f, 1.f, 1.f);
+	vGridPoints[5] = XMVectorSet(1.f, 1.f, 1.f, 1.f);
+	vGridPoints[6] = XMVectorSet(1.f, 0.f, 1.f, 1.f);
+	vGridPoints[7] = XMVectorSet(0.f, 0.f, 1.f, 1.f);
+
+	_vector vGradient[8];
+	_vector vDistance[8];
+	_float fInfluence[8];
+	for (_uint i = 0; i < 8; ++i)
+	{
+		//vGradient[i] = vGridPoints[i] + XMVector3Normalize(XMVectorSet((rand() % 100) / (rand() % 100 + 1), (rand() % 100) / (rand() % 100 + 1), (rand() % 100) / (rand() % 100 + 1), 0.f));
+		vDistance[i] = vPixel - vGridPoints[i];
+
+		fInfluence[i] = XMVectorGetX(XMVector3Dot(vGradient[i], vDistance[i]));
+	}
+
+	return _float();
 }
 
 void CCalculator::Free()

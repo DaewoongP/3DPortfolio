@@ -1,7 +1,8 @@
 #include "..\Public\Level_Loading.h"
 #include "Loader.h"
 #include "Level_Logo.h"
-#include "Level_GamePlay.h"
+#include "Level_Stage1.h"
+#include "Level_Stage2.h"
 #include "Loading_Logo.h"
 #include "GameInstance.h"
 
@@ -26,7 +27,9 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 			return E_FAIL;
 		}
 		break;
-	case LEVEL_GAMEPLAY:
+	case LEVEL_STAGE1:
+		break;
+	case LEVEL_STAGE2:
 		break;
 	}
 	
@@ -55,10 +58,14 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 		case LEVEL_LOGO:
 			pLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
 			break;
-		case LEVEL_GAMEPLAY:
-			pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+		case LEVEL_STAGE1:
+			pLevel = CLevel_Stage1::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL_STAGE2:
+			pLevel = CLevel_Stage2::Create(m_pDevice, m_pContext);
 			break;
 		}
+
 		if (nullptr == pLevel)
 			return;
 

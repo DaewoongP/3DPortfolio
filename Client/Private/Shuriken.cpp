@@ -121,7 +121,7 @@ HRESULT CShuriken::Add_Components()
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Shuriken"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Shuriken"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Model)");
@@ -140,7 +140,7 @@ HRESULT CShuriken::Add_Components()
 	SphereDesc.fRadius = 0.2f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Collider)");

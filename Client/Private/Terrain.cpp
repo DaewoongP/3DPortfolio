@@ -64,7 +64,7 @@ HRESULT CTerrain::Render()
 HRESULT CTerrain::Add_Component()
 {
     /* For.Com_VIBuffer */
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Terrain"),
+    if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
     {
         MSG_BOX("Failed CTerrain Add_Component : (Com_VIBuffer)");
@@ -82,7 +82,7 @@ HRESULT CTerrain::Add_Component()
     }
 
     /* For.Com_Texture */
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+    if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
         TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
     {
         MSG_BOX("Failed CTerrain Add_Component : (Com_Texture)");
@@ -98,7 +98,7 @@ HRESULT CTerrain::Add_Component()
     }
 
     /* For.Com_Navigation*/
-    if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+    if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
         TEXT("Com_Navigation"), (CComponent**)&m_pNavigationCom)))
     {
         MSG_BOX("Failed CTerrain Add_Component : (Com_Navigation)");

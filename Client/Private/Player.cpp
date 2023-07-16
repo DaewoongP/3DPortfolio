@@ -280,6 +280,7 @@ HRESULT CPlayer::Reset()
 
 		m_eCurWeapon = WEAPON_KATANA;
 	}
+
 	m_bSwapWeapon = false;
 
 	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
@@ -292,7 +293,7 @@ HRESULT CPlayer::Reset()
 HRESULT CPlayer::Add_Component()
 {
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Player"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Player"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Model)");
@@ -357,7 +358,7 @@ HRESULT CPlayer::Add_Component()
 	NavigationDesc.iCurrentIndex = 0;
 
 	/* For.Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Navigation"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Navigation)");
@@ -365,7 +366,7 @@ HRESULT CPlayer::Add_Component()
 	}
 
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
@@ -379,7 +380,7 @@ HRESULT CPlayer::Add_Component()
 	VisionAABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	VisionAABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
 	/* For.Com_VisionCollider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &VisionAABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_VisionCollider)");
@@ -390,7 +391,7 @@ HRESULT CPlayer::Add_Component()
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	AABBDesc.vExtents = _float3(5.f, 3.f, 5.f);
 	/* For.Com_BlockCollider */
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_BlockCollider"), reinterpret_cast<CComponent**>(&m_pBlockColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_BlockCollider)");
@@ -461,6 +462,11 @@ void CPlayer::Key_Input(_double dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_F5, CInput_Device::KEY_DOWN))
+	{
+		m_pPlayerCameraCom->Shake(_float3(5.f, 0.f, 0.f));
+	}
 
 	// Weapons
 	if (pGameInstance->Get_DIKeyState(DIK_1, CInput_Device::KEY_DOWN))
@@ -993,7 +999,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 		return false;
 	}
 	Safe_Release(pGameInstance);
-	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_GAMEPLAY, TEXT("Layer_Hook"));
+	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_STAGE1, TEXT("Layer_Hook"));
 
 	if (nullptr == pHookLayer)
 		return false;

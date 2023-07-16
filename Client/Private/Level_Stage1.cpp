@@ -1,14 +1,14 @@
-#include "..\Public\Level_GamePlay.h"
+#include "..\Public\Level_Stage1.h"
 #include "GameInstance.h"
+#include "Enemy.h"
 #include "ColProp.h"
-#include "Enemy_Pistol.h"
 
-CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
 }
 
-HRESULT CLevel_GamePlay::Initialize()
+HRESULT CLevel_Stage1::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
@@ -27,12 +27,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	return S_OK;
 }
 
-void CLevel_GamePlay::Tick(_double dTimeDelta)
+void CLevel_Stage1::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 }
 
-HRESULT CLevel_GamePlay::Render()
+HRESULT CLevel_Stage1::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -40,12 +40,12 @@ HRESULT CLevel_GamePlay::Render()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Player"), pLayerTag, TEXT("GameObject_Player"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Player"), pLayerTag, TEXT("GameObject_Player"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_Player)");
 		return E_FAIL;
@@ -55,7 +55,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Enemy(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -105,7 +105,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
 		// Enemy_Pistol
 		if (nullptr != wcswcs(EnemyDesc.pModelPrototypeTag, TEXT("Enemy_Pistol")))
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 				TEXT("Prototype_GameObject_Enemy_Pistol"), pLayerTag, wszName, &EnemyDesc)))
 			{
 				MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Enemy_Pistol)");
@@ -116,7 +116,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
 		// Enemy_Sword_Elite
 		if (nullptr != wcswcs(EnemyDesc.pModelPrototypeTag, TEXT("Sword_Elite")))
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 				TEXT("Prototype_GameObject_Enemy_Sword"), pLayerTag, wszName, &EnemyDesc)))
 			{
 				MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Enemy_Sword)");
@@ -127,7 +127,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
 		// Enemy_Hammer
 		if (nullptr != wcswcs(EnemyDesc.pModelPrototypeTag, TEXT("Enemy_Hammer")))
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 				TEXT("Prototype_GameObject_Enemy_Hammer"), pLayerTag, wszName, &EnemyDesc)))
 			{
 				MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Enemy_Hammer)");
@@ -147,7 +147,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Enemy(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Props()
+HRESULT CLevel_Stage1::Ready_Layer_Props()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -226,7 +226,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props()
 			// 훅 레이어 따로처리.
 			if (wcswcs(wszName, TEXT("hook")))
 			{
-				if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+				if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 					TEXT("Prototype_GameObject_ColProp"), TEXT("Layer_Hook"), wszName, &ColPropDesc)))
 				{
 					MSG_BOX("Failed Add_GameObject : (GameObject_ColProps)");
@@ -235,7 +235,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props()
 			}
 			else
 			{
-				if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+				if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 					TEXT("Prototype_GameObject_ColProp"), TEXT("Layer_ColProps"), wszName, &ColPropDesc)))
 				{
 					MSG_BOX("Failed Add_GameObject : (GameObject_ColProps)");
@@ -245,7 +245,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props()
 		}
 		else // 콜라이더가 없는 오브젝트
 		{
-			if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY,
+			if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 				TEXT("Prototype_GameObject_Prop"), TEXT("Layer_Props"), wszName, &PropDesc)))
 			{
 				MSG_BOX("Failed Add_GameObject : (GameObject_Props)");
@@ -265,12 +265,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Props()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar* pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_BackGround(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Sky"), pLayerTag, TEXT("GameObject_Sky"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Sky"), pLayerTag, TEXT("GameObject_Sky"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Sky)");
 		return E_FAIL;
@@ -281,12 +281,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar* pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Camera(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Camera_Free"), pLayerTag, TEXT("GameObject_Camera_Free"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Camera_Free"), pLayerTag, TEXT("GameObject_Camera_Free"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_Camera_Free)");
 		return E_FAIL;
@@ -297,18 +297,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Debug(const _tchar* pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Debug(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Terrain"), pLayerTag, TEXT("GameObject_Terrain"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Terrain"), pLayerTag, TEXT("GameObject_Terrain"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_Terrain)");
 		return E_FAIL;
 	}
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Blue_Snow"), pLayerTag, TEXT("GameObject_Blue_Snow"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Blue_Snow"), pLayerTag, TEXT("GameObject_Blue_Snow"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_Blue_Snow)");
 		return E_FAIL;
@@ -318,19 +318,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Debug(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLevel_Stage1* CLevel_Stage1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CLevel_GamePlay* pInstance = new CLevel_GamePlay(pDevice, pContext);
+	CLevel_Stage1* pInstance = new CLevel_Stage1(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created CLevel_GamePlay");
+		MSG_BOX("Failed to Created CLevel_Stage1");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CLevel_GamePlay::Free()
+void CLevel_Stage1::Free()
 {
 	__super::Free();
 }

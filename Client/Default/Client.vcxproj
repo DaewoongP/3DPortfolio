@@ -182,13 +182,16 @@
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\public\Hammer.h" />
     <ClInclude Include="..\public\Katana.h" />
-    <ClInclude Include="..\public\Level_GamePlay.h" />
+    <ClInclude Include="..\public\Level_Boss.h" />
+    <ClInclude Include="..\public\Level_Stage1.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
+    <ClInclude Include="..\public\Level_Stage2.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\Loading_Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\public\Enemy.h" />
+    <ClInclude Include="..\public\Mouse.h" />
     <ClInclude Include="..\public\Part.h" />
     <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\public\Player.h" />
@@ -216,6 +219,7 @@
     <ClInclude Include="..\public\Task_RandomWait.h" />
     <ClInclude Include="..\public\Task_Wait.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -233,13 +237,16 @@
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\Hammer.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
-    <ClCompile Include="..\private\Level_GamePlay.cpp" />
+    <ClCompile Include="..\private\Level_Boss.cpp" />
+    <ClCompile Include="..\private\Level_Stage1.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
+    <ClCompile Include="..\private\Level_Stage2.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\Loading_Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />
+    <ClCompile Include="..\private\Mouse.cpp" />
     <ClCompile Include="..\private\Part.cpp" />
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
@@ -267,6 +274,7 @@
     <ClCompile Include="..\private\Task_RandomWait.cpp" />
     <ClCompile Include="..\private\Task_Wait.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\Public\Client_Struct.h" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

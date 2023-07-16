@@ -155,7 +155,7 @@ HRESULT CEnemy_Pistol::Reset()
 HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 {
 	/* For.Com_Model */
-	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Enemy_Pistol"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Pistol"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Model)");
@@ -176,7 +176,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	AABBDesc.vPosition = _float3(0.f, AABBDesc.vExtents.y, 0.f);
 
 	/* For.Com_Collider */
-	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Collider)");
@@ -189,7 +189,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	
 	/* For.Com_VisionCollider */
-	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_VisionCollider)");
@@ -237,7 +237,7 @@ HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_Weapon"), m_pPistol);
 
 	/* For. Com_BehaviorTree */
-	if (FAILED(CComposite::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
 		CSelector_FindTargetToAttack::Create(pBlackBoard))))
 	{
