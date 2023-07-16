@@ -3,6 +3,7 @@
 #include "Level_Loading.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Rect_Dynamic.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -125,7 +126,22 @@ HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_VIBuffer_Rect)");
 		return E_FAIL;
 	}
+	/* Prototype_Component_VIBuffer_Rect_Dynamic */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Dynamic"),
+		CVIBuffer_Rect_Dynamic::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_VIBuffer_Rect_Dynamic)");
+		return E_FAIL;
+	}
 
+	/* Prototype_Component_Texture_Loading_Logo */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading_Logo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/MainMenu/LevelSelect/LevelThumbnails_0%d.png"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_Texture_Loading_Logo)");
+		return E_FAIL;
+	}
+	
 	return S_OK;
 }
 

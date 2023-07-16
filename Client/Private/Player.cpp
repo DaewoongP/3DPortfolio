@@ -265,7 +265,7 @@ HRESULT CPlayer::Reset()
 	// 모델의 애니메이션 인덱스 설정
 	m_pModelCom->Set_AnimIndex(95);
 	m_eCurState = STATE_IDLE;
-
+	
 	m_InRangeEnemyColliders.clear();
 	m_BlockEnemyWeapons.clear();
 
@@ -280,6 +280,7 @@ HRESULT CPlayer::Reset()
 
 		m_eCurWeapon = WEAPON_KATANA;
 	}
+	m_bSwapWeapon = false;
 
 	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
 	if (FAILED(__super::Reset()))
@@ -306,7 +307,13 @@ HRESULT CPlayer::Add_Component()
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/WallRun_L.Notify"))))
 		return E_FAIL;
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/WallRun_R.Notify"))))
-		return E_FAIL; 
+		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/SH_Run.Notify"))))
+		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/SH_WallRun_L.Notify"))))
+		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/SH_WallRun_R.Notify"))))
+		return E_FAIL;
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Hook_Pull.Notify"))))
 		return E_FAIL;
 
@@ -458,7 +465,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// Weapons
 	if (pGameInstance->Get_DIKeyState(DIK_1, CInput_Device::KEY_DOWN))
 	{
-		if (STATE_ATTACK != m_eCurState &&
+		if ((STATE_IDLE == m_eCurState || STATE_RUN == m_eCurState) &&
 			WEAPON_KATANA != m_eCurWeapon &&
 			false == m_bSwapWeapon)
 		{
@@ -469,7 +476,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_2, CInput_Device::KEY_DOWN))
 	{
-		if (STATE_ATTACK != m_eCurState &&
+		if ((STATE_IDLE == m_eCurState || STATE_RUN == m_eCurState) &&
 			WEAPON_SHURIKEN != m_eCurWeapon &&
 			false == m_bSwapWeapon)
 		{
@@ -560,7 +567,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	{
 		if (0 < m_BlockEnemyWeapons.size() && 
 			STATE_BLOCK != m_eCurState &&
-			STATE_ATTACK != m_eCurState)
+			STATE_ATTACK != m_eCurState &&
+			STATE_WEAPON != m_eCurState)
 		{
 			m_isBlocked = true;
 			m_eCurState = STATE_BLOCK;
@@ -568,16 +576,16 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		// 막기가 안나갔을 경우 일반 공격판정.
 		else
 		{
-			// 표창던지기 문제 많음,,
-			if (WEAPON_SHURIKEN == m_eCurWeapon)
+			if (STATE_ATTACK != m_eCurState &&
+				STATE_CLIMB != m_eCurState &&
+				STATE_WEAPON != m_eCurState)
+				m_eCurState = STATE_ATTACK;
+
+			if (STATE_ATTACK == m_eCurState && 
+				WEAPON_SHURIKEN == m_eCurWeapon)
 				m_pShuriken->Attack(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)));
 
 			XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
-			if (STATE_ATTACK != m_eCurState &&
-				STATE_CLIMB != m_eCurState &&
-				STATE_DRONRIDE != m_eCurState)
-				m_eCurState = STATE_ATTACK;
 
 			if (STATE_ATTACK == m_eCurState &&
 				ANIM_LERP != m_eCurrentAnimationFlag)
@@ -1143,7 +1151,8 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 void CPlayer::SwapWeapon()
 {
 	if (STATE_WEAPON != m_eCurState ||
-		(147 != m_pModelCom->Get_CurrentAnimIndex() && 148 != m_pModelCom->Get_CurrentAnimIndex()))
+		(147 != m_pModelCom->Get_CurrentAnimIndex() && 148 != m_pModelCom->Get_CurrentAnimIndex()) &&
+		false == m_bSwapWeapon)
 		return;
 
 	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();

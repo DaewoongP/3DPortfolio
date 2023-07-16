@@ -127,7 +127,7 @@ void CVIBuffer_Rect_Instance::Tick(_double dTimeDelta)
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
 
-	for (size_t i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
 		static_cast<VTXINSTANCE*>(MappedSubResource.pData)[i].vTranslation.x = m_pInstancePos[i].x;
 		static_cast<VTXINSTANCE*>(MappedSubResource.pData)[i].vTranslation.z = m_pInstancePos[i].z;
@@ -148,7 +148,7 @@ HRESULT CVIBuffer_Rect_Instance::Make_InstanceLogic(const INSTANCEDESC* pInstanc
 	m_pInstanceSpeed = new _float[m_iNumInstance];
 	m_pInstancePos = new _float4[m_iNumInstance];
 
-	for (size_t i = 0; i < m_iNumInstance; ++i)
+	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
 		m_pInstanceSpeed[i] = _float(rand() % (m_InstanceDesc.vSpeed.y + 1 - m_InstanceDesc.vSpeed.x) + m_InstanceDesc.vSpeed.x);
 		m_pInstancePos[i] = _float4(rand() % (_uint(m_InstanceDesc.vExtents.x) + 1) - m_InstanceDesc.vExtents.x * 0.5f,

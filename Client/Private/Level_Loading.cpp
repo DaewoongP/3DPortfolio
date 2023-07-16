@@ -2,6 +2,7 @@
 #include "Loader.h"
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
+#include "Loading_Logo.h"
 #include "GameInstance.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -16,7 +17,21 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 
 	m_eNextLevelID = eNextLevelID;
 
+	switch (m_eNextLevelID)
+	{
+	case LEVEL_LOGO:
+		if (FAILED(Initialize_Logo()))
+		{
+			MSG_BOX("Failed Loading Logo Texture");
+			return E_FAIL;
+		}
+		break;
+	case LEVEL_GAMEPLAY:
+		break;
+	}
+	
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevelID);
+
 	if(nullptr == m_pLoader)
 		return E_FAIL;
 	
@@ -61,6 +76,9 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 		return;
 	}
 
+	if (nullptr != m_pLoadingObject)
+		m_pLoadingObject->Tick(dTimeDelta);
+
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
 #endif //_DEBUG
@@ -68,9 +86,23 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 
 HRESULT CLevel_Loading::Render()
 {
+	if (nullptr != m_pLoadingObject)
+		if (FAILED(m_pLoadingObject->Render()))
+			return E_FAIL;
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 	
+	return S_OK;
+}
+
+HRESULT CLevel_Loading::Initialize_Logo()
+{
+	m_pLoadingObject = CLoading_Logo::Create(m_pDevice, m_pContext);
+	
+	if (nullptr == m_pLoadingObject)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -86,10 +118,10 @@ CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	return pInstance;
 }
 
-
 void CLevel_Loading::Free()
 {
 	__super::Free();
 
 	Safe_Release(m_pLoader);
+	Safe_Release(m_pLoadingObject);
 }

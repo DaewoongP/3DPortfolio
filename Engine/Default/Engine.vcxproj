@@ -78,6 +78,7 @@
     <ClInclude Include="..\public\VIBuffer_Cube.h" />
     <ClInclude Include="..\public\VIBuffer_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Line.h" />
+    <ClInclude Include="..\public\VIBuffer_Rect_Dynamic.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
     <ClInclude Include="..\Public\Timer.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="..\private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Line.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Rect_Dynamic.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />

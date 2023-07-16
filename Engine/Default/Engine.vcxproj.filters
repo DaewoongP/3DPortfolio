@@ -387,6 +387,9 @@
     <ClInclude Include="..\Public\QuadTree.h">
       <Filter>01. Utility\03. Components\07. VIBuffer\Terrain\QuadTree</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Rect_Dynamic.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -565,6 +568,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\QuadTree.cpp">
       <Filter>01. Utility\03. Components\07. VIBuffer\Terrain\QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Rect_Dynamic.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

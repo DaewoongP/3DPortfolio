@@ -34,9 +34,6 @@
     <Filter Include="02. GameObjects\00. Player\Katana">
       <UniqueIdentifier>{65c21656-7e7c-4bd8-be2d-c5c37b991be4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\98. BackGround">
-      <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\99. Debug">
       <UniqueIdentifier>{c5240f45-e1ef-4bfb-b66c-08449eda0c9e}</UniqueIdentifier>
     </Filter>
@@ -118,6 +115,18 @@
     <Filter Include="02. GameObjects\01. Enemy\Enemy_Hammer\Hammer">
       <UniqueIdentifier>{aa7cb8c3-d2bb-4485-9e15-f9294d4a97d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\06. UI">
+      <UniqueIdentifier>{3eab1b69-35f0-4d3a-987d-6731fd6af7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\01. BackGround">
+      <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\99. Loading\LoadingObjects">
+      <UniqueIdentifier>{28953af2-aeda-4309-9612-6aee1b276e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\99. Loading\LoadingObjects\00. Loading_Logo">
+      <UniqueIdentifier>{e5e9a7df-4f7c-4942-96af-b1b61634c490}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -166,7 +175,7 @@
       <Filter>01. Levels\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>02. GameObjects\98. BackGround</Filter>
+      <Filter>02. GameObjects\06. UI\01. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Prop.h">
       <Filter>02. GameObjects\03. Props</Filter>
@@ -270,6 +279,9 @@
     <ClInclude Include="..\public\Task_ChaseLook.h">
       <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Loading_Logo.h">
+      <Filter>01. Levels\99. Loading\LoadingObjects\00. Loading_Logo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -298,7 +310,7 @@
       <Filter>01. Levels\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>02. GameObjects\98. BackGround</Filter>
+      <Filter>02. GameObjects\06. UI\01. BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_GamePlay.cpp">
       <Filter>01. Levels\01. GamePlay</Filter>
@@ -422,6 +434,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Task_ChaseLook.cpp">
       <Filter>03. Behaviors\02. Task\00. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loading_Logo.cpp">
+      <Filter>01. Levels\99. Loading\LoadingObjects\00. Loading_Logo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

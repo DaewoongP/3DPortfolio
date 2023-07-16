@@ -6,7 +6,6 @@ BEGIN(Engine)
 class CShader;
 class CTexture;
 class CRenderer;
-class CComposite;
 class CVIBuffer_Rect;
 END
 

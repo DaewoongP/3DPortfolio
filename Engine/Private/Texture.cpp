@@ -18,6 +18,45 @@ CTexture::CTexture(const CTexture& rhs)
 	}
 }
 
+const _float2 CTexture::Get_TextureSize(_uint iTextureIndex)
+{
+	_float2 vSize = _float2(0.f, 0.f);
+
+	// Index except
+	if (iTextureIndex >= m_Textures.size())
+		return vSize;
+
+	ID3D11Resource* pResource = { nullptr };
+
+	m_Textures[iTextureIndex]->GetResource(&pResource);
+
+	// Resource except
+	if (nullptr == pResource)
+		return vSize;
+
+	ID3D11Texture2D* pTexture2D = { nullptr };
+
+	// HRESULT except
+	if (FAILED(pResource->QueryInterface(&pTexture2D)))
+		return vSize;
+
+	// NULL except
+	if (nullptr == pTexture2D)
+		return vSize;
+
+	D3D11_TEXTURE2D_DESC TexDesc;
+	pTexture2D->GetDesc(&TexDesc);
+
+	vSize.x = static_cast<_float>(TexDesc.Width);
+	vSize.y = static_cast<_float>(TexDesc.Height);
+
+	// Get할때 내부적으로 레퍼런스 카운트 증가하여 삭제.
+	Safe_Release(pTexture2D);
+	Safe_Release(pResource);
+
+	return vSize;
+}
+
 HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNumTextures)
 {
 	FAILED_CHECK_RETURN(CoInitializeEx(nullptr, 0), E_FAIL);
@@ -53,7 +92,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 		{
 			hr = CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 		}
-
+		
 		if (FAILED(hr))
 		{
 			//MSG_BOX("Failed Create Texture");
@@ -62,6 +101,7 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 		m_Textures.emplace_back(pSRV);
 	}
+
 	return S_OK;
 }
 
@@ -92,6 +132,7 @@ CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 		//MSG_BOX("Failed to Created CTexture");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -104,6 +145,7 @@ CComponent* CTexture::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CTexture");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

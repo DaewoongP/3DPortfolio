@@ -130,9 +130,7 @@ HRESULT CBackGround::Add_Components()
 
 HRESULT CBackGround::SetUp_ShaderResources()
 {
-	_float4x4 mat = *m_pTransformCom->Get_WorldFloat4x4();
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &mat)))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
