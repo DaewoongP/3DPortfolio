@@ -78,6 +78,10 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 	AnimationState(dTimeDelta);
 
 	__super::Late_Tick(dTimeDelta);
+#ifdef _DEBUG
+	m_pColliderCom->Set_Color(DirectX::Colors::Aquamarine);
+	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
 
 	return PlayEvent(dTimeDelta);
 }
@@ -126,11 +130,6 @@ HRESULT CEnemy_Pistol::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-	m_pVisionColliderCom->Render(DirectX::Colors::Aquamarine);
-#endif // _DEBUG
 
 	return S_OK;
 }

@@ -7,15 +7,15 @@ class CLight_Manager final : public CBase
 {
 	DECLARE_SINGLETON(CLight_Manager)
 private:
-	CLight_Manager();
+	explicit CLight_Manager();
 	virtual ~CLight_Manager() = default;
 
 public:
 	const CLight::LIGHTDESC* Get_Light(_uint iIndex);
 
 public:
-	HRESULT Add_Lights(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const CLight::LIGHTDESC& LightDesc);
-
+	HRESULT Add_Lights(const CLight::LIGHTDESC& LightDesc);
+	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 private:
 	list<class CLight*>				m_Lights;
 

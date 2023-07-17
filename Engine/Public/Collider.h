@@ -17,6 +17,7 @@ public:
 	TYPE Get_ColliderType() const { return m_eColliderType; }
 	_float3 Get_BoundingCenterPosition() const;
 	void Set_BoundingDesc(void* pBoundingDesc);
+	void Set_Color(_fvector vColor) { m_vColor = vColor; }
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eColliderType);
@@ -25,7 +26,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	virtual HRESULT Render(_fvector vColor = COLLIDERCOLOR);
+	virtual HRESULT Render() override;
 #endif // _DEBUG
 
 public:
@@ -47,6 +48,7 @@ private:
 #ifdef _DEBUG
 private:
 	_bool						m_isRendering = { true };
+	_vector						m_vColor;
 #endif // _DEBUG
 
 public:

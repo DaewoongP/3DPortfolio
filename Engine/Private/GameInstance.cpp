@@ -23,6 +23,7 @@ CGameInstance::CGameInstance()
 	, m_pFont_Manager{ CFont_Manager::GetInstance() }
 	, m_pFrustum{ CFrustum::GetInstance() }
 	, m_pRenderTarget_Manager{ CRenderTarget_Manager::GetInstance() }
+	, m_pLight_Manager{ CLight_Manager::GetInstance() }
 {
 	Safe_AddRef(m_pFrustum);
 	Safe_AddRef(m_pFont_Manager);
@@ -36,6 +37,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pInput_Device);
 	Safe_AddRef(m_pCollision_Manager);
 	Safe_AddRef(m_pRenderTarget_Manager);
+	Safe_AddRef(m_pLight_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
@@ -371,6 +373,22 @@ _bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
 	return m_pFrustum->isIn_WorldFrustum(vWorldPos, fRange);
 }
 
+const CLight::LIGHTDESC* CGameInstance::Get_Light(_uint iIndex)
+{
+	if (nullptr == m_pLight_Manager)
+		return nullptr;
+
+	return m_pLight_Manager->Get_Light(iIndex);
+}
+
+HRESULT CGameInstance::Add_Lights(const CLight::LIGHTDESC& LightDesc)
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	return m_pLight_Manager->Add_Lights(LightDesc);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -395,6 +413,8 @@ void CGameInstance::Release_Engine()
 
 	CRenderTarget_Manager::GetInstance()->DestroyInstance();
 
+	CLight_Manager::GetInstance()->DestroyInstance();
+
 	CInput_Device::GetInstance()->DestroyInstance();
 
 	CGraphic_Device::GetInstance()->DestroyInstance();
@@ -402,6 +422,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pRenderTarget_Manager);
 	Safe_Release(m_pFrustum);
 	Safe_Release(m_pFont_Manager);

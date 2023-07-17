@@ -78,7 +78,12 @@ GAMEEVENT CShuriken::Late_Tick(_double dTimeDelta)
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
 	if (nullptr != m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
+	}
 
 	return GAME_NOEVENT;
 }
@@ -102,10 +107,6 @@ HRESULT CShuriken::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-#ifdef _DEBUG
-	m_pColliderCom->Render(DirectX::Colors::Tomato);
-#endif // _DEBUG
 
 	return S_OK;
 }

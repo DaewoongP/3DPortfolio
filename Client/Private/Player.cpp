@@ -107,7 +107,17 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	if (GAME_OBJECT_DEAD != m_eGameEvent &&
 		GAME_STAGE_RESET != m_eGameEvent &&
 		nullptr != m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+		m_pVisionColliderCom->Set_Color(DirectX::Colors::AntiqueWhite);
+		m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
+		m_pBlockColliderCom->Set_Color(DirectX::Colors::DarkRed);
+		m_pRendererCom->Add_DebugGroup(m_pBlockColliderCom);
+		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
+#endif // _DEBUG
+	}
 
 	__super::Late_Tick(dTimeDelta);
 
@@ -244,13 +254,6 @@ HRESULT CPlayer::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-	m_pVisionColliderCom->Render(DirectX::Colors::AntiqueWhite);
-	m_pBlockColliderCom->Render(DirectX::Colors::DarkRed);
-	m_pNavigationCom->Render();
-#endif // _DEBUG
 
 	return S_OK;
 }
@@ -462,11 +465,6 @@ void CPlayer::Key_Input(_double dTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_F5, CInput_Device::KEY_DOWN))
-	{
-		m_pPlayerCameraCom->Shake(_float3(5.f, 0.f, 0.f));
-	}
 
 	// Weapons
 	if (pGameInstance->Get_DIKeyState(DIK_1, CInput_Device::KEY_DOWN))

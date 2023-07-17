@@ -58,16 +58,17 @@ GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
 
+#ifdef _DEBUG
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
+
 	return m_eGameEvent;
 }
 
 HRESULT CColProp::Render()
 {
 	__super::Render();
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-#endif // _DEBUG
 
 	return S_OK;
 }

@@ -15,6 +15,7 @@ public:
 public:
 	HRESULT Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4& vClearColor);	
 	HRESULT Clear();
+	HRESULT Bind_ShaderResourceView(class CShader* pShader, const _char* pConstantName);
 
 #ifdef _DEBUG
 public:

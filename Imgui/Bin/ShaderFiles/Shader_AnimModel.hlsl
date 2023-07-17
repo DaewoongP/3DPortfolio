@@ -2,17 +2,7 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_BoneMatrices[256];
-
-vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vCamPosition;
-
 texture2D g_DiffuseTexture;
-vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlEmissive;
 
 struct VS_IN
 {
@@ -69,7 +59,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -78,18 +69,9 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
-    if (vDiffuse.a <= 0.1f)
-        discard;
-    
-    float fShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f);
-
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_vCamPosition;
-
-    float fSpecular = pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f);
-
-    Out.vColor = (g_vLightDiffuse * vDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
-		+ (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+    Out.vDiffuse = vDiffuse;
+    Out.vDiffuse.a = 1.f;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
     return Out;
 }

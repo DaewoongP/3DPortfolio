@@ -52,7 +52,16 @@ GAMEEVENT CAnimModel::Late_Tick(_double dTimeDelta)
     __super::Late_Tick(dTimeDelta);
 
     if (nullptr != m_pRendererCom)
+    {
         m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+        if (nullptr != m_pColliderCom)
+        {
+            m_pColliderCom->Set_Color(DirectX::Colors::Gold);
+            m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+        }
+#endif // _DEBUG
+    }
 
     return GAME_NOEVENT;
 }
@@ -121,9 +130,6 @@ HRESULT CAnimModel::SetUp_ShaderResources()
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
         return E_FAIL;
 
-    if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", pGameInstance->Get_CamPosition(), sizeof(_float4))))
-        return E_FAIL;
-
     Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -162,5 +168,4 @@ void CAnimModel::Free()
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
-    //Safe_Release(m_pColliderCom);
 }

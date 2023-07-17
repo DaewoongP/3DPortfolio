@@ -50,7 +50,7 @@ HRESULT CCollider::Initialize(CBounding* pBounding, void* pArg)
 	
 	if (nullptr == m_pBounding)
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -65,11 +65,11 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 }
 
 #ifdef _DEBUG
-HRESULT CCollider::Render(_fvector vColor)
+HRESULT CCollider::Render()
 {
 	if (nullptr == m_pBounding)
 		return E_FAIL;
-	
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
@@ -81,7 +81,7 @@ HRESULT CCollider::Render(_fvector vColor)
 			m_isRendering = true;
 	}
 	if (m_isRendering)
-		m_pBounding->Render(vColor);
+		m_pBounding->Render(m_vColor);
 
 	Safe_Release(pGameInstance);
 

@@ -32,9 +32,6 @@ HRESULT CDummy::Render()
 {
 	__super::Render();
 
-	if (nullptr != m_pColliderCom)
-		m_pColliderCom->Render();
-
 	return S_OK;
 }
 

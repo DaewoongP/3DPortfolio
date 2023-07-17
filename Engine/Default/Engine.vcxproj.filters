@@ -190,6 +190,9 @@
     <Filter Include="01. Utility\03. Components\07. VIBuffer\Terrain\QuadTree">
       <UniqueIdentifier>{76a3a46c-3428-4b3a-9995-58855a9bb32a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\02. Renderer\Shader">
+      <UniqueIdentifier>{67b966f5-8d6b-46ea-b659-38dea30a5284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -342,12 +345,6 @@
     <ClInclude Include="..\public\VIBuffer_Rect_Instance.h">
       <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Client\Public\Light.h">
-      <Filter>01. Utility\06. Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Client\Public\Light_Manager.h">
-      <Filter>01. Utility\06. Light\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\CustomFont.h">
       <Filter>01. Utility\08. Font</Filter>
     </ClInclude>
@@ -389,6 +386,12 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Rect_Dynamic.h">
       <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01. Utility\06. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>01. Utility\06. Light\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,12 +527,6 @@
     <ClCompile Include="..\private\VIBuffer_Rect_Instance.cpp">
       <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Client\Private\Light.cpp">
-      <Filter>01. Utility\06. Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Client\Private\Light_Manager.cpp">
-      <Filter>01. Utility\06. Light\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\CustomFont.cpp">
       <Filter>01. Utility\08. Font</Filter>
     </ClCompile>
@@ -572,10 +569,19 @@
     <ClCompile Include="..\private\VIBuffer_Rect_Dynamic.cpp">
       <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>01. Utility\06. Light\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01. Utility\06. Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Navigation.hlsl">
       <Filter>01. Utility\03. Components\08. Navigation\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>01. Utility\03. Components\02. Renderer\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

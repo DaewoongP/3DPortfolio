@@ -84,6 +84,16 @@ HRESULT CRenderTarget_Manager::End_MRT(ID3D11DeviceContext* pContext)
 	return S_OK;
 }
 
+HRESULT CRenderTarget_Manager::Bind_ShaderResourceView(const _tchar* pTargetTag, CShader* pShader, const _char* pConstantName)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
+
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->Bind_ShaderResourceView(pShader, pConstantName);
+}
+
 #ifdef _DEBUG
 HRESULT CRenderTarget_Manager::Ready_Debug(const _tchar* pTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {

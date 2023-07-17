@@ -62,7 +62,12 @@ GAMEEVENT CKatana::Late_Tick(_double dTimeDelta)
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
+	}
 
 	return GAME_NOEVENT;
 }
@@ -86,10 +91,6 @@ HRESULT CKatana::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-#endif // _DEBUG
 
 	return S_OK;
 }

@@ -53,8 +53,17 @@ GAMEEVENT CNonAnimModel::Late_Tick(_double dTimeDelta)
     __super::Late_Tick(dTimeDelta);
 
     if (nullptr != m_pRendererCom)
+    {
         m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-
+#ifdef _DEBUG
+        if (nullptr != m_pColliderCom)
+        {
+            m_pColliderCom->Set_Color(DirectX::Colors::Gold);
+            m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+        }
+#endif // _DEBUG
+    }
+    
     return GAME_NOEVENT;
 }
 
@@ -158,7 +167,6 @@ void CNonAnimModel::Free()
 {
     __super::Free();
 
-    Safe_Release(m_pColliderCom);
     Safe_Release(m_pRendererCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);

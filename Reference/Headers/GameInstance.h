@@ -1,6 +1,7 @@
 #pragma once
 #include "PipeLine.h"
 #include "Input_Device.h"
+#include "Light_Manager.h"
 #include "Component_Manager.h"
 #include "Collision_Manager.h"
 
@@ -87,6 +88,10 @@ public: /* For. Font_Manager */
 public: /* For. Frustum */
 	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRange = 0.f);
 
+public: /* For.Light_Manager */
+	const CLight::LIGHTDESC* Get_Light(_uint iIndex);
+	HRESULT Add_Lights(const CLight::LIGHTDESC & LightDesc);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -100,6 +105,7 @@ private:
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };
+	class CLight_Manager*			m_pLight_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

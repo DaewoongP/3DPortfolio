@@ -44,13 +44,20 @@ struct PS_IN_PHONG
     float4 vWorldPos : TEXCOORD1;
 };
 
-float4 PS_MAIN_PHONG(PS_IN_PHONG In) : SV_TARGET0
+struct PS_OUT
 {
-    float4 vColor = (float4) 0;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+};
+
+PS_OUT PS_MAIN_PHONG(PS_IN_PHONG In)
+{
+    PS_OUT Out = (PS_OUT) 0;
     
-    vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV * 30.f);
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV * 30.f);
+    Out.vNormal = In.vNormal;
     
-    return vColor;
+    return Out;
 }
 
 technique11 DefaultTechnique

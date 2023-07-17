@@ -2,10 +2,8 @@
 #include "Dummy.h"
 
 BEGIN(Engine)
-class CMesh;
 class CModel;
 class CShader;
-class CTexture;
 class CRenderer;
 END
 
@@ -28,7 +26,6 @@ public:
 private:
 	CModel* m_pModelCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom = { nullptr };
 	CRenderer* m_pRendererCom = { nullptr };
 
 private:

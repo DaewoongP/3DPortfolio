@@ -1,14 +1,17 @@
 #include "..\Public\Renderer.h"
 #include "GameObject.h"
 #include "RenderTarget_Manager.h"
+#include "Light_Manager.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 
 CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 	, m_pRenderTarget_Manager( CRenderTarget_Manager::GetInstance() )
+	, m_pLight_Manager( CLight_Manager::GetInstance() )
 {
 	Safe_AddRef(m_pRenderTarget_Manager);
+	Safe_AddRef(m_pLight_Manager);
 }
 
 
@@ -23,7 +26,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	m_pContext->RSGetViewports(&iNumViews, &ViewportDesc);
 
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
-		TEXT("Target_Diffuse"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+		TEXT("Target_Diffuse"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Normal"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
@@ -47,10 +50,14 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
 
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
+	m_WorldMatrix._11 = ViewportDesc.Width;
+	m_WorldMatrix._22 = ViewportDesc.Height;
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.f, 1.f));
 
-#ifdef _DEBUG
+#ifdef _DEBUG 
+#elif !_USE_IMGUI
 	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Diffuse"), 100.f, 100.f, 200.f, 200.f)))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Normal"), 100.f, 300.f, 200.f, 200.f)))
@@ -78,17 +85,31 @@ void CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pGameObje
 		return;
 	}
 
-	m_RenderObjects[eRenderGroup].emplace_back(pGameObject);
+	m_RenderObjects[eRenderGroup].push_back(pGameObject);
 
 	Safe_AddRef(pGameObject);
 }
 
+#ifdef _DEBUG
+HRESULT CRenderer::Add_DebugGroup(CComponent* pDebugCom)
+{
+	m_DebugObject.push_back(pDebugCom);
+
+	Safe_AddRef(pDebugCom);
+
+	return S_OK;
+}
+#endif // _DEBUG
+
 HRESULT CRenderer::Draw_RenderGroup()
 {
-	// 렌더링 그룹별로 관리하여 처리.
 	if (FAILED(Render_Priority()))
 		return E_FAIL;
 	if (FAILED(Render_NonBlend()))
+		return E_FAIL;
+	if (FAILED(Render_Lights()))
+		return E_FAIL;
+	if (FAILED(Render_Deferred()))
 		return E_FAIL;
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
@@ -97,9 +118,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (FAILED(Render_UI()))
 		return E_FAIL;
 
+
 #ifdef _DEBUG
-	/*if (FAILED(Render_Debug()))
-		return E_FAIL;*/
+	if (FAILED(Render_Debug()))
+		return E_FAIL;
 #endif // _DEBUG
 
 	return S_OK;
@@ -125,8 +147,9 @@ HRESULT CRenderer::Render_NonBlend()
 	if (nullptr == m_pRenderTarget_Manager)
 		return E_FAIL;
 
-	/*if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_GameObjects"))))
-		return E_FAIL;*/
+	/* Diffuse(0) + Normal(1) */
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_GameObjects"))))
+		return E_FAIL;
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_NONBLEND])
 	{
@@ -138,8 +161,62 @@ HRESULT CRenderer::Render_NonBlend()
 
 	m_RenderObjects[RENDER_NONBLEND].clear();
 
-	/*if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
-		return E_FAIL;*/
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Lights()
+{
+	if (nullptr == m_pRenderTarget_Manager)
+		return E_FAIL;
+
+	/* Shade(0) */
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Lights"))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	/* 노멀 렌더타겟을 셰이더 전역으로 던진다.*/
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Normal"), m_pShader, "g_NormalTexture")))
+		return E_FAIL;
+
+	/* 빛 정보를 던진다. */
+	m_pLight_Manager->Render_Lights(m_pShader, m_pVIBuffer);
+
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Deferred()
+{
+	// 백버퍼에 최종적으로 그려낸다.
+
+	/* Diffuse * Shader */
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	m_pShader->Begin(3);
+
+	m_pVIBuffer->Render();
+
 
 	return S_OK;
 }
@@ -195,6 +272,16 @@ HRESULT CRenderer::Render_Debug()
 	if (nullptr == m_pRenderTarget_Manager)
 		return E_FAIL;
 
+	for (auto& pDebugCom : m_DebugObject)
+	{
+		if (nullptr != pDebugCom)
+			pDebugCom->Render();
+
+		Safe_Release(pDebugCom);
+	}
+
+	m_DebugObject.clear();
+
 	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
@@ -219,6 +306,7 @@ CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 		MSG_BOX("Failed to Created CRenderer");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -241,6 +329,7 @@ void CRenderer::Free()
 	}
 
 	Safe_Release(m_pRenderTarget_Manager);
+	Safe_Release(m_pLight_Manager);
 
 	Safe_Release(m_pShader);
 	Safe_Release(m_pVIBuffer);

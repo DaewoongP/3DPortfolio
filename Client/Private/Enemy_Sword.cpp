@@ -82,6 +82,12 @@ GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 
 	__super::Late_Tick(dTimeDelta);
 
+#ifdef _DEBUG
+	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
+	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
+#endif // _DEBUG
+
 	return PlayEvent(dTimeDelta);
 }
 
@@ -136,11 +142,6 @@ HRESULT CEnemy_Sword::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-	m_pVisionColliderCom->Render(DirectX::Colors::Aquamarine);
-#endif // _DEBUG
 
 	return S_OK;
 }

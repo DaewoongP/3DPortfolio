@@ -60,8 +60,14 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 		m_eGameEvent = GAME_OBJECT_DEAD;
 
 	if (nullptr != m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-	
+#ifdef _DEBUG
+		m_pColliderCom->Set_Color(DirectX::Colors::Red);
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
+	}
+
 	return m_eGameEvent;
 }
 
@@ -74,9 +80,8 @@ void CBullet::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 
 HRESULT CBullet::Render()
 {
-#ifdef _DEBUG
-	m_pColliderCom->Render(DirectX::Colors::Red);
-#endif // _DEBUG
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 
 	return S_OK;
 }

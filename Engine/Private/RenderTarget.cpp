@@ -1,7 +1,7 @@
 #include "..\Public\RenderTarget.h"
+#include "Shader.h"
 
 #ifdef _DEBUG
-#include "Shader.h"
 #include "VIBuffer_Rect.h"
 #endif // _DEBUG
 
@@ -85,6 +85,14 @@ HRESULT CRenderTarget::Clear()
 	m_pContext->ClearRenderTargetView(m_pRTV, (_float*)&m_vClearColor);
 
 	return S_OK;
+}
+
+HRESULT CRenderTarget::Bind_ShaderResourceView(CShader* pShader, const _char* pConstantName)
+{
+	if (nullptr == m_pSRV)
+		return E_FAIL;
+
+	return pShader->Bind_ShaderResource(pConstantName, m_pSRV);
 }
 
 CRenderTarget* CRenderTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4& vClearColor)

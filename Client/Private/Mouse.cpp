@@ -56,8 +56,6 @@ GAMEEVENT CMouse::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	//ShowCursor(false);
-
 	POINT	pt{};
 	GetCursorPos(&pt);
 	ScreenToClient(g_hWnd, &pt);
@@ -78,9 +76,11 @@ GAMEEVENT CMouse::Late_Tick(_double dTimeDelta)
 
 	return GAME_NOEVENT;
 }
-
+	
 HRESULT CMouse::Render()
 {
+	ShowCursor(false);
+
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 

@@ -11,6 +11,7 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 HRESULT CLevel_Stage1::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Lights(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
@@ -40,6 +41,29 @@ HRESULT CLevel_Stage1::Render()
 	return S_OK;
 }
 
+HRESULT CLevel_Stage1::Ready_Lights()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CLight::LIGHTDESC		LightDesc;
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+
+	LightDesc.eType = CLight::TYPE_DIRECTIONAL;
+	LightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
+
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(pGameInstance->Add_Lights(LightDesc)))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -60,7 +84,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Enemy(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Test.AnimMap"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Stage1.AnimMap"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;

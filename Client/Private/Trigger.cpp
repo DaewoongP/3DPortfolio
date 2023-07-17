@@ -35,6 +35,10 @@ HRESULT CTrigger::Initialize(void* pArg)
 
 void CTrigger::Tick(_double dTimeDelta)
 {
+#ifdef _DEBUG
+	m_pColliderCom->Set_Color(XMLoadFloat4(&m_vColliderColor));
+#endif // _DEBUG
+
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());;
@@ -50,6 +54,10 @@ void CTrigger::Tick(_double dTimeDelta)
 GAMEEVENT CTrigger::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
+
+#ifdef _DEBUG
+	m_pRenderer->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
 
 	return GAME_NOEVENT;
 }
@@ -77,9 +85,7 @@ HRESULT CTrigger::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-#ifdef _DEBUG
-	m_pColliderCom->Render(XMLoadFloat4(&m_vColliderColor));
-#endif // _DEBUG
+	return S_OK;
 }
 
 HRESULT CTrigger::Reset()
@@ -101,9 +107,20 @@ HRESULT CTrigger::Add_Component()
 	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
-		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Collider)");
+		MSG_BOX("Failed CTrigger Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
+
+#ifdef _DEBUG
+	/* For.Com_Collider */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
+		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRenderer))))
+	{
+		MSG_BOX("Failed CTrigger Add_Component : (Com_Renderer)");
+		return E_FAIL;
+	}
+#endif // _DEBUG
+
 
 	return S_OK;
 }

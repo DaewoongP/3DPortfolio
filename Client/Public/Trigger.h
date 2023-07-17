@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CCollider;
+class CRenderer;
 END
 
 BEGIN(Client)
@@ -28,9 +29,10 @@ public:
 
 protected:
 	CCollider*		m_pColliderCom = { nullptr };
-
+	
 protected:
 #ifdef _DEBUG
+	CRenderer*		m_pRenderer = { nullptr };
 	_float4			m_vColliderColor;
 #endif // _DEBUG
 

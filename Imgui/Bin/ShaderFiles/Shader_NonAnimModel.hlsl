@@ -2,7 +2,7 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D g_DiffuseTexture, g_NormalTexture, g_EmissiveTexture;
+texture2D g_DiffuseTexture;
 
 struct VS_IN
 {
@@ -30,7 +30,7 @@ VS_OUT VS_MAIN(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
 
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vNormal = normalize(mul(vector(In.vNormal, 1.f), g_WorldMatrix));
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
     Out.vTexUV = In.vTexUV;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	
@@ -47,7 +47,8 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vColor : SV_TARGET0;
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -56,8 +57,10 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
 
-    Out.vColor = vDiffuse;
-	
+    Out.vDiffuse = vDiffuse;
+
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+
     return Out;
 }
 
