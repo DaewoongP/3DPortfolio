@@ -81,7 +81,7 @@ HRESULT CCollider::Render()
 			m_isRendering = true;
 	}
 	if (m_isRendering)
-		m_pBounding->Render(m_vColor);
+		m_pBounding->Render(XMLoadFloat4(&m_vColor));
 
 	Safe_Release(pGameInstance);
 
