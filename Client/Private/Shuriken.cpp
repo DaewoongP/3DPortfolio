@@ -195,6 +195,11 @@ void CShuriken::AttackEnd()
 	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
 }
 
+void CShuriken::Reset_Collider()
+{
+	
+}
+
 CShuriken* CShuriken::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CShuriken* pInstance = new CShuriken(pDevice, pContext);

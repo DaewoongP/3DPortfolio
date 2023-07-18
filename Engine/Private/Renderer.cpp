@@ -234,10 +234,12 @@ HRESULT CRenderer::Render_Deferred()
 {
 	// 백버퍼에 최종적으로 그려낸다.
 
-	/* Diffuse * Shader */
+	/* Diffuse * Shader + Specular */
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture")))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Shade"), m_pShader, "g_ShadeTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Specular"), m_pShader, "g_SpecularTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -250,7 +252,6 @@ HRESULT CRenderer::Render_Deferred()
 	m_pShader->Begin(3);
 
 	m_pVIBuffer->Render();
-
 
 	return S_OK;
 }

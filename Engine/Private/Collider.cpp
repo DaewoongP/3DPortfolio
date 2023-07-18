@@ -11,6 +11,7 @@ CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CCollider::CCollider(const CCollider& rhs)
 	: CComponent(rhs)
 	, m_eColliderType(rhs.m_eColliderType)
+	, m_vColor(rhs.m_vColor)
 {
 }
 
@@ -27,6 +28,8 @@ void CCollider::Set_BoundingDesc(void* pBoundingDesc)
 HRESULT CCollider::Initialize_Prototype(TYPE eColliderType)
 {
 	m_eColliderType = eColliderType;
+
+	m_vColor = _float4(0.f, 1.f, 0.f, 1.f);
 
 	switch (eColliderType)
 	{

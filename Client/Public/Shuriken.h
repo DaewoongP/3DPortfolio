@@ -45,6 +45,7 @@ public:
 	HRESULT SetUp_ShaderResources();
 	void Attack(_fvector vDirection);
 	void AttackEnd();
+	void Reset_Collider();
 
 public:
 	static CShuriken* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

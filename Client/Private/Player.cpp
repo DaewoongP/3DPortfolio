@@ -95,9 +95,9 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	CameraOffset(dTimeDelta);
+	//CameraMove(dTimeDelta);
 	// 객체포지션 -> 카메라 오프셋 고정 -> 카메라 상태행렬 갱신 -> 이후 처리 순서를 맞추기위해 함수이름 바꿈.
 	m_pPlayerCameraCom->Tick_Camera(dTimeDelta);
-	//CameraMove(dTimeDelta);
 
 	Check_Fall();
 
@@ -474,6 +474,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (pGameInstance->Get_DIKeyState(DIK_1, CInput_Device::KEY_DOWN))
 	{
 		if ((STATE_IDLE == m_eCurState || STATE_RUN == m_eCurState) &&
+			ANIM_LERP != m_eCurrentAnimationFlag &&
 			WEAPON_KATANA != m_eCurWeapon &&
 			false == m_bSwapWeapon)
 		{
@@ -485,6 +486,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (pGameInstance->Get_DIKeyState(DIK_2, CInput_Device::KEY_DOWN))
 	{
 		if ((STATE_IDLE == m_eCurState || STATE_RUN == m_eCurState) &&
+			ANIM_LERP != m_eCurrentAnimationFlag &&
 			WEAPON_SHURIKEN != m_eCurWeapon &&
 			false == m_bSwapWeapon)
 		{
@@ -508,7 +510,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_W, CInput_Device::KEY_UP))
 	{
-		if (STATE_ATTACK != m_eCurState)
+		// Up누를때 IDLE로 강제로 바꿔주면 처리에 문제생김.
+		if (STATE_ATTACK != m_eCurState &&
+			STATE_WEAPON != m_eCurState)
 			m_eCurState = STATE_IDLE;
 	}
 	// backward
@@ -525,7 +529,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_S, CInput_Device::KEY_UP))
 	{
-		if (STATE_ATTACK != m_eCurState)
+		if (STATE_ATTACK != m_eCurState &&
+			STATE_WEAPON != m_eCurState)
 			m_eCurState = STATE_IDLE;
 	}
 	// left
@@ -1055,11 +1060,9 @@ void CPlayer::CameraMove(_double dTimeDelta)
 
 	_uint iCurrentAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
 	
-	if (84 == iCurrentAnimIndex)
-	{
-		fVerticalMove = 10.f;
-		fHorizentalMove = -10.f; 
-	}
+
+	fVerticalMove = 10.f;
+	fHorizentalMove = -10.f; 
 
 	_vector	vCamRight = XMVector3Normalize(m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT));
 	m_pTransformCom->Turn(vCamRight, fVerticalMove * m_fMouseSensitivity, dTimeDelta);
@@ -1159,13 +1162,14 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 void CPlayer::SwapWeapon()
 {
 	if (STATE_WEAPON != m_eCurState ||
-		(147 != m_pModelCom->Get_CurrentAnimIndex() && 148 != m_pModelCom->Get_CurrentAnimIndex()) &&
-		false == m_bSwapWeapon)
+		(147 != m_pModelCom->Get_CurrentAnimIndex() && 148 != m_pModelCom->Get_CurrentAnimIndex()))
 		return;
 
 	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
 
 	if (0.5f > fCurrentFramePercent)
+		return;
+	if (false == m_bSwapWeapon)
 		return;
 
 	if (WEAPON_KATANA == m_eCurWeapon)
@@ -1175,6 +1179,7 @@ void CPlayer::SwapWeapon()
 
 		m_Components.emplace(TEXT("Part_Katana"), m_pKatana);
 		Safe_AddRef(m_pKatana);
+		m_bSwapWeapon = false;
 	}
 
 	if (WEAPON_SHURIKEN == m_eCurWeapon)
@@ -1184,9 +1189,8 @@ void CPlayer::SwapWeapon()
 
 		m_Components.emplace(TEXT("Part_Shuriken"), m_pShuriken);
 		Safe_AddRef(m_pShuriken);
+		m_bSwapWeapon = false;
 	}
-
-	m_bSwapWeapon = false;
 }
 
 void CPlayer::Check_Fall()
