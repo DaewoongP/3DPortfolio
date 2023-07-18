@@ -30,7 +30,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual GAMEEVENT	Late_Tick(_double dTimeDelta) override;
+	virtual void Tick_Camera(_double dTimeDelta);
 
 public:
 	void Go_Straight(_double dTimeDelta) { m_pTransform->Go_Straight(dTimeDelta); }

@@ -4,6 +4,8 @@ float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_BoneMatrices[256];
 texture2D g_DiffuseTexture;
 
+float g_fCamFar;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -20,6 +22,7 @@ struct VS_OUT
     float4 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -45,6 +48,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
     Out.vTexUV = In.vTexUV;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    // SV_POSITION으로 나가기전의 포지션 값 -> 투영스페이스상의 포지션값 대입.
+    Out.vProjPos = Out.vPosition;
 
     return Out;
 }
@@ -55,12 +60,14 @@ struct PS_IN
     float4 vNormal : NORMAL;
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -73,7 +80,10 @@ PS_OUT PS_MAIN(PS_IN In)
 	
     // UNORM 4개 타입에 값을 넣으므로 여기서 0~1로 보정처리하고 나중에 받을때 -1~1로 보정처리를 다시한다.
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-
+    // SV_POSITION으로 설정되지 않았던 투영포지션 값이므로 w나누기를 수행한 z값 (투영스페이스) 값을 r, 
+    // 다시 이후 셰이더에서 w를 곱해주기 위해 b에 값을 다시 대입해줌.
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+    
     return Out;
 }
 

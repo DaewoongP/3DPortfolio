@@ -79,7 +79,7 @@ GAMEEVENT CMouse::Late_Tick(_double dTimeDelta)
 	
 HRESULT CMouse::Render()
 {
-	ShowCursor(false);
+	//ShowCursor(false);
 
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;

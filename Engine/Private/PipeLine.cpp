@@ -43,6 +43,11 @@ _float4* CPipeLine::Get_CamPosition()
 	return &m_vCameraPos;
 }
 
+_float* CPipeLine::Get_CamFar()
+{
+	return &m_fCameraFar;
+}
+
 void CPipeLine::Tick()
 {
 	for (_uint i = 0; i < D3DTS_END; i++)

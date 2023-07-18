@@ -95,6 +95,8 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	CameraOffset(dTimeDelta);
+	// 객체포지션 -> 카메라 오프셋 고정 -> 카메라 상태행렬 갱신 -> 이후 처리 순서를 맞추기위해 함수이름 바꿈.
+	m_pPlayerCameraCom->Tick_Camera(dTimeDelta);
 	//CameraMove(dTimeDelta);
 
 	Check_Fall();
@@ -440,6 +442,8 @@ HRESULT CPlayer::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

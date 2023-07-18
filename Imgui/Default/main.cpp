@@ -65,11 +65,6 @@ int main(int, char**)
         {
             pGameInstance->Tick_Timer(TEXT("Timer_60"));
 
-            // Handle window resize (we don't resize directly in the WM_SIZE handler)
-            if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
-            {
-                pGameInstance->Resize_Buffer(g_ResizeWidth, g_ResizeHeight);
-            }
             // Start the Dear ImGui frame
             ImGui_ImplDX11_NewFrame();
             ImGui_ImplWin32_NewFrame();
@@ -80,7 +75,6 @@ int main(int, char**)
 
             dTimerAcc = { 0.0 };
         }
-        
     }
 
     Safe_Release(pGameInstance);

@@ -21,8 +21,8 @@ HRESULT CMainTool::Initialize()
 	ZeroMemory(&GraphicDesc, sizeof GraphicDesc);
 
 	GraphicDesc.hWnd = g_hWnd;
-	GraphicDesc.iViewportSizeX = g_iWinSizeX;
-	GraphicDesc.iViewportSizeY = g_iWinSizeY;
+	GraphicDesc.iViewportSizeX = 1264;
+	GraphicDesc.iViewportSizeY = 681;
 	GraphicDesc.eWinMode = GRAPHICDESC::WM_WIN;
 
 	FAILED_CHECK_RETURN_MSG(m_pGameInstance->Initialize_Engine(g_hInst, LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext), E_FAIL,
