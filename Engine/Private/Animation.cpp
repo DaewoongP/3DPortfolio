@@ -168,11 +168,23 @@ void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransfor
 	_vector vCamDir = pCamera->Get_TransformState(CTransform::STATE_LOOK);
 	_vector vPos = pPlayerTransform->Get_State(CTransform::STATE_POSITION);
 
-	_vector vNotifyDir = XMLoadFloat4(&Notify.vAt) - XMLoadFloat4(&Notify.vEye);
+	_vector vNotifyDir = XMVector3Normalize(XMLoadFloat4(&Notify.vAt) - XMLoadFloat4(&Notify.vEye));
+
+	// 툴에서 바라보는 방향 (양의 z축)
+	_float fRad = acosf(XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 0.f, 1.f, 0.f), vNotifyDir)));
+	// 연산최소화
+	if (0.f == fRad)
+		return;
+	_vector vDirAxis = XMVector3Cross(XMVectorSet(0.f, 0.f, 1.f, 0.f), vNotifyDir);
+
+	_matrix matNotify = XMMatrixIdentity();
+	matNotify = XMMatrixRotationAxis(vDirAxis, fRad);
+
+	_vector vInvalidateDir = XMVector3Normalize(XMVector3TransformNormal(vCamDir, matNotify));
 
 	_matrix InvalidateMatrix = 
 		XMMatrixInverse(nullptr, 
-			XMMatrixLookAtLH(vCamPos, vCamPos +XMVector3Normalize(vCamDir + vNotifyDir), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+			XMMatrixLookAtLH(vCamPos, vCamPos + vInvalidateDir, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
 }

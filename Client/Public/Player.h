@@ -145,6 +145,7 @@ private: /* Skills */
 	void Dash(_double dTimeDelta);
 
 private: /* Setup Files */
+	HRESULT Add_Notifies();
 	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
 	HRESULT SetUp_Collider(const _tchar* pColliderFilePath);
 
