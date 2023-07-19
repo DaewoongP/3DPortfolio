@@ -65,6 +65,8 @@ void CCamera_Free::Tick(_double dTimeDelta)
 	}
 
 	__super::Tick(dTimeDelta);
+
+	m_pCamera->Tick_Camera(dTimeDelta);
 }
 
 HRESULT CCamera_Free::Add_Components()
