@@ -20,6 +20,8 @@ void CBounding_AABB::Set_BoundingDesc(void* pBoundingDesc)
 	{
 		m_pAABB_Original->Extents = static_cast<BOUNDINGAABBDESC*>(pBoundingDesc)->vExtents;
 		m_pAABB_Original->Center = static_cast<BOUNDINGAABBDESC*>(pBoundingDesc)->vPosition;
+
+		*m_pAABB = *m_pAABB_Original;
 	}
 }
 
@@ -36,8 +38,6 @@ HRESULT CBounding_AABB::Initialize_Prototype()
 HRESULT CBounding_AABB::Initialize(void* pBoundingDesc)
 {
 	Set_BoundingDesc(pBoundingDesc);
-
-	*m_pAABB = *m_pAABB_Original;
 
 	return S_OK;
 }

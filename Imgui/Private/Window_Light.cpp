@@ -100,11 +100,24 @@ HRESULT CWindow_Light::Find_Position()
 
 HRESULT CWindow_Light::SetUp_LightDesc()
 {
-	ImGui::InputFloat3("Light Position", reinterpret_cast<_float*>(&m_LightDesc.vPos));
-	ImGui::InputFloat("Light Range", &m_LightDesc.fRange, 1.f);
-	ImGui::InputFloat3("Light Diffuse", reinterpret_cast<_float*>(&m_LightDesc.vDiffuse));
-	ImGui::InputFloat3("Light Ambient", reinterpret_cast<_float*>(&m_LightDesc.vAmbient));
-	ImGui::InputFloat3("Light Specular", reinterpret_cast<_float*>(&m_LightDesc.vSpecular));
+	if (ImGui::InputFloat3("Light Position", reinterpret_cast<_float*>(&m_LightDesc.vPos)) ||
+		ImGui::InputFloat("Light Range", &m_LightDesc.fRange, 1.f) ||
+		ImGui::InputFloat3("Light Diffuse", reinterpret_cast<_float*>(&m_LightDesc.vDiffuse)) ||
+		ImGui::InputFloat3("Light Ambient", reinterpret_cast<_float*>(&m_LightDesc.vAmbient)) ||
+		ImGui::InputFloat3("Light Specular", reinterpret_cast<_float*>(&m_LightDesc.vSpecular)))
+	{
+		if (-1 != m_iCurrentListBoxIndex &&
+			0 < m_Lights.size())
+		{
+			m_Lights[m_iCurrentListBoxIndex].second = m_LightDesc;
+
+			CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
+			ZEROMEM(&SphereDesc);
+			SphereDesc.fRadius = m_LightDesc.fRange;
+			m_Lights[m_iCurrentListBoxIndex].first->Set_BoundingDesc(&SphereDesc);
+			Remake_Lights();
+		}
+	}
 
 	if (ImGui::Button("Same As Diffuse"))
 	{
@@ -189,8 +202,8 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 		vPos = m_Lights[m_iCurrentListBoxIndex].second.vPos;
 		vPos.w = 1.f;
 		vCamPos = vPos;
-		vCamPos.y += 10.f;
-		vCamPos.z -= 10.f;
+		vCamPos.y += m_Lights[m_iCurrentListBoxIndex].second.fRange;
+		vCamPos.z -= m_Lights[m_iCurrentListBoxIndex].second.fRange;
 		pCam->Set_CameraView(vCamPos, vPos, _float4(0.f, 1.f, 0.f, 0.f));
 	}
 
@@ -288,16 +301,33 @@ HRESULT CWindow_Light::Pick_Light(_double dTimeDelta)
 			-1 != m_iPickingIndex)
 		{
 			_long dwMouseMove = { 0 };
-			dwMouseMove = m_pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
-			if (0 != dwMouseMove)
+			if (m_pGameInstance->Get_DIKeyState(DIK_LSHIFT, CInput_Device::KEY_PRESSING))
 			{
-				m_Lights[m_iPickingIndex].second.vPos.y -= _float(dwMouseMove * dTimeDelta * m_Lights[m_iPickingIndex].second.fRange * 0.5f);
-				
-				Remake_Lights();
+				// shift 누르면 X축 이동
+				dwMouseMove = m_pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X);
+				if (0 != dwMouseMove)
+				{
+					m_Lights[m_iPickingIndex].second.vPos.x += _float(dwMouseMove * dTimeDelta * m_Lights[m_iPickingIndex].second.fRange * 0.5f);
+
+					Remake_Lights();
+				}
+			}
+			else
+			{
+				dwMouseMove = m_pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
+				if (0 != dwMouseMove)
+				{
+					m_Lights[m_iPickingIndex].second.vPos.y -= _float(dwMouseMove * dTimeDelta * m_Lights[m_iPickingIndex].second.fRange * 0.5f);
+
+					Remake_Lights();
+				}
 			}
 		}
 		if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_UP))
+		{
+			memcpy(&m_LightDesc.vPos, &m_Lights[m_iPickingIndex].second.vPos, sizeof(_float3));
 			m_iPickingIndex = -1;
+		}
 	}
 
 	return S_OK;

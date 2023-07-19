@@ -20,6 +20,8 @@ void CBounding_Sphere::Set_BoundingDesc(void* pBoundingDesc)
 	{
 		m_pSphere_Original->Radius = static_cast<BOUNDINGSPHEREDESC*>(pBoundingDesc)->fRadius;
 		m_pSphere_Original->Center = static_cast<BOUNDINGSPHEREDESC*>(pBoundingDesc)->vPosition;
+
+		*m_pSphere = *m_pSphere_Original;
 	}
 }
 
@@ -36,8 +38,6 @@ HRESULT CBounding_Sphere::Initialize_Prototype()
 HRESULT CBounding_Sphere::Initialize(void* pBoundingDesc)
 {
 	Set_BoundingDesc(pBoundingDesc);
-
-	*m_pSphere = *m_pSphere_Original;
 
 	return S_OK;
 }

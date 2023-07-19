@@ -25,6 +25,8 @@ void CBounding_OBB::Set_BoundingDesc(void* pBoundingDesc)
 				static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.x,
 				static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.y,
 				static_cast<BOUNDINGOBBDESC*>(pBoundingDesc)->vRotation.z));
+
+		*m_pOBB = *m_pOBB_Original;
 	}
 }
 
@@ -41,8 +43,6 @@ HRESULT CBounding_OBB::Initialize_Prototype()
 HRESULT CBounding_OBB::Initialize(void* pBoundingDesc)
 {
 	Set_BoundingDesc(pBoundingDesc);
-
-	*m_pOBB = *m_pOBB_Original;
 
 	return S_OK;
 }
