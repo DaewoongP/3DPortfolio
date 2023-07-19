@@ -174,11 +174,37 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
     if (vDiffuse.a == 0.f)
         discard;
+    
+    float4 vFogColor = vector(0.1f, 0.1f, 0.1f, 0.1f);
+    
+    float fFogPower = 0.f;
+    
+    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexUV);
+    float fViewZ = vDepthDesc.y * g_fCamFar;
+    vector vPosition;
 
+	/* 투영스페이스 상의 위치 */
+    vPosition.x = In.vTexUV.x * 2.f - 1.f;
+    vPosition.y = In.vTexUV.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+
+	/* 뷰스페이스 상의 위치. */
+    vPosition = vPosition * fViewZ;
+    vPosition = mul(vPosition, g_ProjMatrixInv);
+
+	/* 월드스페이스 상의 위치. */
+    vPosition = mul(vPosition, g_ViewMatrixInv);
+
+    if (vPosition.y >= 0.f)
+        fFogPower = 0.f;
+    else
+        fFogPower = saturate(vPosition.y / -30.f);
+    
     vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
     vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-
-    Out.vColor = vDiffuse * vShade + vSpecular;
+    //vSpecular = (vector) 0;
+    Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular);
 
     return Out;
 }

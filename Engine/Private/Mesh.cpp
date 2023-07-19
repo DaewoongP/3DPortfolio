@@ -118,6 +118,8 @@ HRESULT CMesh::Ready_VertexBuffer_NonAnim(const Engine::MESH* pMesh, _fmatrix Pi
 
 		memcpy(&pVertices[i].vTexCoord, &pMesh->TexCoords[i], sizeof(_float2));
 		memcpy(&pVertices[i].vTangent, &pMesh->Tangents[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vTangent,
+			XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PivotMatrix));
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);

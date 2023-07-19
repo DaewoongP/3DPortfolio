@@ -2,6 +2,8 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float g_fCamFar;
+bool g_isNormal;
+
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
 
@@ -20,6 +22,8 @@ struct VS_OUT
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -36,6 +40,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexUV = In.vTexUV;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), g_WorldMatrix));
+    Out.vBinormal = vector(normalize(cross(Out.vNormal.xyz, Out.vTangent.xyz)), 0.f);
     
 	return Out;
 }
@@ -47,6 +53,8 @@ struct PS_IN
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float4 vTangent : TANGENT;
+    float4 vBinormal : BINORMAL;
 };
 
 struct PS_OUT
@@ -61,13 +69,26 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    float3 vNormal = (float3) 0;
     
+    if (true == g_isNormal)
+    {
+        vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexUV);
+        vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+        float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+
+        vNormal = mul(vNormal, WorldMatrix);
+    }
+    else
+        vNormal = float3(In.vNormal.xyz * 0.5f + 0.5f);
+
     Out.vDiffuse = vDiffuse;
     
-    if (0 == Out.vDiffuse.a)
-        discard;
+    Out.vDiffuse.a = 1.f;
+    
 
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
     
     return Out;

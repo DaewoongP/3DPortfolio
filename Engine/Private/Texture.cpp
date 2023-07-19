@@ -74,6 +74,8 @@ HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNu
 
 		wsprintf(szTextureFilePath, pTextureFilePath, i);
 
+		lstrcpy(m_szTextureFilePath, pTextureFilePath);
+
 		_tchar			szExt[MAX_PATH] = TEXT("");
 		_wsplitpath_s(szTextureFilePath, nullptr, 0, nullptr, 0, nullptr, 0, szExt, 256);
 
