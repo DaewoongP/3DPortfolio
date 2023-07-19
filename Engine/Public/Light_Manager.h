@@ -15,7 +15,9 @@ public:
 
 public:
 	HRESULT Add_Lights(const CLight::LIGHTDESC& LightDesc);
+	HRESULT Clear_Lights();
 	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+
 private:
 	list<class CLight*>				m_Lights;
 

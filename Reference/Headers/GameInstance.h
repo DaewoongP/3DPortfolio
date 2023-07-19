@@ -92,6 +92,7 @@ public: /* For. Frustum */
 public: /* For.Light_Manager */
 	const CLight::LIGHTDESC* Get_Light(_uint iIndex);
 	HRESULT Add_Lights(const CLight::LIGHTDESC & LightDesc);
+	HRESULT Clear_Lights();
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

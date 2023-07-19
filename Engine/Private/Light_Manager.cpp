@@ -29,6 +29,16 @@ HRESULT CLight_Manager::Add_Lights(const CLight::LIGHTDESC & LightDesc)
 	return S_OK;
 }
 
+HRESULT CLight_Manager::Clear_Lights()
+{
+	for (auto& pLight : m_Lights)
+		Safe_Release(pLight);
+
+	m_Lights.clear();
+
+	return S_OK;
+}
+
 HRESULT CLight_Manager::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
 	for (auto& pLight : m_Lights)

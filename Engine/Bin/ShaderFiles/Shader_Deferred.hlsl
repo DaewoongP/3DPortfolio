@@ -20,6 +20,7 @@ vector g_vLightAmbient;
 vector g_vLightSpecular;
 
 vector g_vMtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
+vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 sampler LinearSampler = sampler_state
 {
@@ -97,7 +98,6 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
-
     Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient));
 
     vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexUV);
@@ -120,7 +120,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     vector vReflect = reflect(normalize(g_vLightDir), vNormal);
     vector vLook = vPosition - g_vCamPosition;
 
-    Out.vSpecular = pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f);
+    Out.vSpecular = (g_vLightSpecular) * (g_vMtrlSpecular) * pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f);
 
     return Out;
 }
@@ -129,7 +129,40 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
 
+    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexUV);
+    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
+    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexUV);
+    float fViewZ = vDepthDesc.y * g_fCamFar;
+    
+    vector vPosition;
+
+	/* 투영스페이스 상의 위치 */
+    vPosition.x = In.vTexUV.x * 2.f - 1.f;
+    vPosition.y = In.vTexUV.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+
+	/* 뷰스페이스 상의 위치. */
+    vPosition = vPosition * fViewZ;
+    vPosition = mul(vPosition, g_ProjMatrixInv);
+
+	/* 월드스페이스 상의 위치. */
+    vPosition = mul(vPosition, g_ViewMatrixInv);
+
+    vector vLightDir = vPosition - g_vLightPos;
+
+    float fDistance = length(vLightDir);
+    
+    // 빛의 감쇄량을 0~1로 정규화 시켜 처리하기 위함.
+    float fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
+	
+    Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;
+
+    vector vReflect = reflect(normalize(vLightDir), vNormal);
+    vector vLook = vPosition - g_vCamPosition;
+
+    Out.vSpecular = (g_vLightSpecular) * (g_vMtrlSpecular) * pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f) * fAtt;
 
     return Out;
 }
@@ -175,7 +208,16 @@ BlendState BS_Default
     BlendEnable[0] = false;
 };
 
+BlendState BS_BlendOne
+{
+// 렌더타겟 두개를 합칠 것이므로 0번, 1번 둘다 처리해줘야한다.
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
 
+    SrcBlend = one;
+    DestBlend = one;
+    BlendOp = Add;
+};
 
 technique11 DefaultTechnique
 {
@@ -195,7 +237,8 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Depth_Disable, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        // 빛을 모두 더해서 적용하기 위한 BS
+        SetBlendState(BS_BlendOne, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
@@ -207,7 +250,10 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Depth_Disable, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        // 점광원은 여러개로 처리될 수 있기 때문에 알파블렌드를 활용하여 픽셀의 색상값을 계속 더해주어
+        // 하나의 렌더타겟에 모든값이 저장될 수 있도록 다중 광원을 처리해야한다.
+        // 따라서 가지고있는 픽셀의 색상값을 그대로 가져와서 ADD 처리 해야함.
+        SetBlendState(BS_BlendOne, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;

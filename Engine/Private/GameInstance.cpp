@@ -396,6 +396,14 @@ HRESULT CGameInstance::Add_Lights(const CLight::LIGHTDESC& LightDesc)
 	return m_pLight_Manager->Add_Lights(LightDesc);
 }
 
+HRESULT CGameInstance::Clear_Lights()
+{
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	return m_pLight_Manager->Clear_Lights();
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
