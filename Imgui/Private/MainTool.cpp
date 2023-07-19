@@ -267,12 +267,9 @@ HRESULT CMainTool::Add_Windows()
 	// enum == pushback
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Tool::Create());
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 0), ImVec2(500, 200));
-	
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_UI::Create());
-	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 200), ImVec2(500, 250));
 
-	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create());
-	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 450), ImVec2(500, 270));
+	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Light::Create(m_pContext));
+	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 200), ImVec2(500, 520));
 	
 	m_pImWindow_Manager->m_ImWindows.push_back(CWindow_Navigation::Create(m_pDevice, m_pContext));
 	m_pImWindow_Manager->m_ImWindows.back()->Set_Window(ImVec2(0, 720), ImVec2(500, 300));

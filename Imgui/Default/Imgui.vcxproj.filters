@@ -52,9 +52,6 @@
     <ClCompile Include="..\private\Window_Navigation.cpp">
       <Filter>01. ImWindow\03. Navigation</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Window_UI.cpp">
-      <Filter>01. ImWindow\05. UI</Filter>
-    </ClCompile>
     <ClCompile Include="ImGuiFileDialog.cpp">
       <Filter>98. Imgui</Filter>
     </ClCompile>
@@ -137,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Window_Navigation.h">
       <Filter>01. ImWindow\03. Navigation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Window_UI.h">
-      <Filter>01. ImWindow\05. UI</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiFileDialog.h">
       <Filter>98. Imgui</Filter>
@@ -250,9 +244,6 @@
     </Filter>
     <Filter Include="01. ImWindow\04. Light">
       <UniqueIdentifier>{08763a61-47f1-4480-a559-c5cafbb514a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. ImWindow\05. UI">
-      <UniqueIdentifier>{940470a4-51a9-434b-9968-118ceb59f3f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

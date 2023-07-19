@@ -31,6 +31,8 @@ private:
 
 	_int							m_iTextureIndex = { 0 };
 
+	_bool							m_bTerrainRender = { true };
+
 private:
 	CCamera_Free*					m_pCamera_Free = { nullptr };
 	CTerrain*						m_pTerrain = { nullptr };
@@ -45,6 +47,8 @@ private:
 	void WireFrame();
 	void CamSpeedAndAxisDist();
 	void AxisRendering();
+
+	void TerrainRendering();
 
 public:
 	static CWindow_Tool* Create(void* pArg = nullptr);

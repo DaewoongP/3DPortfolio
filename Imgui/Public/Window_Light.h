@@ -12,7 +12,7 @@ BEGIN(Tool)
 class CWindow_Light final : public CImWindow
 {
 private:
-	explicit CWindow_Light();
+	explicit CWindow_Light(ID3D11DeviceContext* pContext);
 	virtual ~CWindow_Light() = default;
 
 public:
@@ -20,6 +20,10 @@ public:
 	virtual void Tick(_double dTimeDelta) override;
 
 private:
+	ID3D11DeviceContext*		m_pContext = { nullptr };
+
+private:
+	class CTerrain*				m_pTerrain  = { nullptr };
 	class CRenderer*			m_pRenderer = { nullptr };
 	class CCollider*			m_pOriginCollider = { nullptr };
 	// 저장할 빛 구조체 정보
@@ -32,12 +36,29 @@ private:
 	_uint						m_iCurrentLightIndex = { 0 };
 	// 점광원을 화면에 띄울것인지 디렉션 광원을 띄울것인지
 	_bool						m_isLight = { false };
+	_bool						m_bClearButton = { false };
+
+	_bool						m_isPickMode = { false };
+
+	
 private:
+	// 피킹을 통해 포지션만 갱신하기 위한 함수.
+	HRESULT Find_Position();
 	HRESULT SetUp_LightDesc();
 	HRESULT Delete_LightDesc();
 
+	HRESULT LightSaveLoad();
+	HRESULT LightSaveButton();
+	HRESULT LightWrite_File(const _tchar* pPath);
+	HRESULT LightLoadButton();
+	HRESULT LightRead_File(const _tchar* pFileName);
+
+private:
+	void Add_DirectionalLight();
+	void Remake_Lights();
+
 public:
-	static CWindow_Light* Create(void* pArg = nullptr);
+	static CWindow_Light* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
 };
 

@@ -48,6 +48,8 @@ HRESULT CTerrain::Initialize(void* pArg)
 
     m_Cells.clear();
 
+    m_isRendering = true;
+
     return S_OK;
 }
 
@@ -82,7 +84,8 @@ HRESULT CTerrain::Render()
     
 	m_pShaderCom->Begin(0);
 
-    m_pTerrainCom->Render();
+    if (true == m_isRendering)
+        m_pTerrainCom->Render();
 
     m_pCellShaderCom->Begin(0);
    

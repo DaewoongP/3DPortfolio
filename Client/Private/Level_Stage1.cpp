@@ -11,11 +11,11 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 HRESULT CLevel_Stage1::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Lights(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Test1.Light")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy"), TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Stage1.AnimMap")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
-	FAILED_CHECK_RETURN(Ready_Layer_Props(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("..\\..\\Resources\\GameData\\Map\\NonAnim\\Stage1.Map")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
 	
 	
@@ -41,43 +41,35 @@ HRESULT CLevel_Stage1::Render()
 	return S_OK;
 }
 
-HRESULT CLevel_Stage1::Ready_Lights()
+HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CLight::LIGHTDESC		LightDesc;
-	ZeroMemory(&LightDesc, sizeof LightDesc);
+	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-	/*LightDesc.eType = CLight::TYPE_DIRECTIONAL;
-	LightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
-
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	if (FAILED(pGameInstance->Add_Lights(LightDesc)))
-		return E_FAIL;*/
-
-	LightDesc.eType = CLight::TYPE_POINT;
-	LightDesc.fRange = 20.f;
-	LightDesc.vPos = _float4(40.f, 5.f, 90.f, 1.f);
-	LightDesc.vDiffuse = _float4(1.f, 0.f, 1.f, 1.f);
-	LightDesc.vAmbient = LightDesc.vDiffuse;
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	if (FAILED(pGameInstance->Add_Lights(LightDesc)))
+	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
 
-	LightDesc.eType = CLight::TYPE_POINT;
-	LightDesc.fRange = 20.f;
-	LightDesc.vPos = _float4(50.f, 5.f, 90.f, 1.f);
-	LightDesc.vDiffuse = _float4(0.f, 0.f, 1.f, 1.f);
-	LightDesc.vAmbient = LightDesc.vDiffuse;
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	_ulong	dwByte = 0;
 
-	if (FAILED(pGameInstance->Add_Lights(LightDesc)))
-		return E_FAIL;
+	_uint iSize = { 0 };
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	CLight::LIGHTDESC LightDesc;
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		ZEROMEM(&LightDesc);
+		ReadFile(hFile, &LightDesc, sizeof(CLight::LIGHTDESC), &dwByte, nullptr);
+
+		if (FAILED(pGameInstance->Add_Lights(LightDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+	MSG_BOX("Light File Load Success");
 
 	Safe_Release(pGameInstance);
 
@@ -99,12 +91,12 @@ HRESULT CLevel_Stage1::Ready_Layer_Player(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Stage1::Ready_Layer_Enemy(const _tchar* pLayerTag)
+HRESULT CLevel_Stage1::Ready_Layer_Enemy(const _tchar* pLayerTag, const _tchar* pFilePath)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Stage1.AnimMap"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
@@ -181,7 +173,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Enemy(const _tchar* pLayerTag)
 	}
 
 #ifdef _DEBUG
-	MSG_BOX("File Load Success");
+	MSG_BOX("Enemy File Load Success");
 #endif // _DEBUG
 
 	CloseHandle(hFile);
@@ -191,12 +183,12 @@ HRESULT CLevel_Stage1::Ready_Layer_Enemy(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Stage1::Ready_Layer_Props()
+HRESULT CLevel_Stage1::Ready_Layer_Props(const _tchar* pFilePath)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	HANDLE hFile = CreateFile(TEXT("..\\..\\Resources\\GameData\\Map\\NonAnim\\Stage1.Map"), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 		return E_FAIL;
@@ -299,7 +291,7 @@ HRESULT CLevel_Stage1::Ready_Layer_Props()
 	}
 
 #ifdef _DEBUG
-	MSG_BOX("File Load Success");
+	MSG_BOX("Prop File Load Success");
 #endif // _DEBUG
 
 	CloseHandle(hFile);

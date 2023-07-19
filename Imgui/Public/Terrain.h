@@ -26,6 +26,7 @@ public:
 	// 텍스처 인덱스 저장
 	void Set_TextureIndex(_int iIndex);
 	void Set_WireFrame(_bool isWireFrame) { m_bIsWireFrame = isWireFrame; }
+	void Set_Render(_bool isRendering) { m_isRendering = isRendering; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -58,6 +59,7 @@ private:
 private:
 	_uint					m_iTextureIndex = { 0 };
 	_bool					m_bIsWireFrame = { false };
+	_bool					m_isRendering = { false };
 
 private:
 	HRESULT		Add_Component();

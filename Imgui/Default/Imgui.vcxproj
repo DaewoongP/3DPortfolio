@@ -186,7 +186,6 @@
     <ClCompile Include="..\private\Window_Light.cpp" />
     <ClCompile Include="..\private\Window_Model.cpp" />
     <ClCompile Include="..\private\Window_Tool.cpp" />
-    <ClCompile Include="..\private\Window_UI.cpp" />
     <ClCompile Include="backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="backends\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui.cpp" />
@@ -217,7 +216,6 @@
     <ClInclude Include="..\public\Window_Light.h" />
     <ClInclude Include="..\public\Window_Model.h" />
     <ClInclude Include="..\public\Window_Tool.h" />
-    <ClInclude Include="..\public\Window_UI.h" />
     <ClInclude Include="backends\imgui_impl_dx11.h" />
     <ClInclude Include="backends\imgui_impl_win32.h" />
     <ClInclude Include="imconfig.h" />

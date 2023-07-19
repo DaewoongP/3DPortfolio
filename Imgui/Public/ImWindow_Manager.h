@@ -5,7 +5,6 @@
 #include "Base.h"
 #include "Window_Tool.h"
 #include "Window_Navigation.h"
-#include "Window_UI.h"
 #include "Window_Light.h"
 #include "Window_Model.h"
 #include "Window_Object.h"
@@ -21,7 +20,6 @@ public:
     enum TOOLWINDOW 
     {
         TOOL,
-        UI,
         LIGHT,
         NAVIGATION,
         MODEL,

@@ -10,8 +10,8 @@ CWindow_Tool::CWindow_Tool()
 
 HRESULT CWindow_Tool::Initialize(void* pArg)
 {
-	m_TerrainSize[0] = 500;
-	m_TerrainSize[1] = 500;
+	m_TerrainSize[0] = 700;
+	m_TerrainSize[1] = 700;
 	m_TerrainOverflowSize[0] = 50000;
 	m_TerrainOverflowSize[1] = 50000;
 
@@ -65,6 +65,8 @@ void CWindow_Tool::Tick(_double dTimeDelta)
 	CamSpeedAndAxisDist();
 	
 	AxisRendering();
+
+	TerrainRendering();
 
     End();
 }
@@ -180,6 +182,15 @@ void CWindow_Tool::AxisRendering()
 	if (Checkbox("Center Axis", &m_AxisState[CAxis::AXIS_CENTER]))
 	{
 		m_pAxisCenter->Set_Rendering(m_AxisState[CAxis::AXIS_CENTER]);
+	}
+}
+
+void CWindow_Tool::TerrainRendering()
+{
+	if (ImGui::Checkbox("Terrain Render", &m_bTerrainRender))
+	{
+		if (nullptr != m_pTerrain)
+			m_pTerrain->Set_Render(m_bTerrainRender);
 	}
 }
 
