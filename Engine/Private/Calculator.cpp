@@ -53,8 +53,6 @@ HRESULT CCalculator::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fma
 	vPickPos = XMVector3TransformCoord(vPickPos, PickingWorldMatrix_Inverse);
 	vPickDir = XMVector3TransformNormal(vPickDir, PickingWorldMatrix_Inverse);
 
-	
-
 	XMStoreFloat4(vRayPos, vPickPos);
 	XMStoreFloat4(vRayDir, vPickDir);
 

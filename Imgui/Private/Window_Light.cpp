@@ -42,11 +42,20 @@ void CWindow_Light::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
+	if (m_isPickMode)
+		m_isModifyMode = false;
+	if (m_isModifyMode)
+		m_isPickMode = false;
+
 	// 콜라이더 렌더링.
 	for (auto& pair : m_Lights)
 	{
 		if (nullptr != pair.first)
+		{
+			pair.first->Tick(XMMatrixTranslation(pair.second.vPos.x, pair.second.vPos.y, pair.second.vPos.z));
+
 			m_pRenderer->Add_DebugGroup(pair.first);
+		}
 	}
 
 	Begin("Light", nullptr, m_WindowFlag);
@@ -56,6 +65,8 @@ void CWindow_Light::Tick(_double dTimeDelta)
 	SetUp_LightDesc();
 
 	Delete_LightDesc();
+
+	Pick_Light(dTimeDelta);
 
 	LightSaveLoad();
 
@@ -113,7 +124,6 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 		CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
 		ZEROMEM(&SphereDesc);
 
-		memcpy(&SphereDesc.vPosition, &m_LightDesc.vPos, sizeof(_float3));
 		SphereDesc.fRadius = m_LightDesc.fRange;
 
 		_char* szIndex = New _char[6];
@@ -262,6 +272,37 @@ HRESULT CWindow_Light::Delete_LightDesc()
 	return S_OK;
 }
 
+HRESULT CWindow_Light::Pick_Light(_double dTimeDelta)
+{
+	ImGui::Checkbox("Modify Light", &m_isModifyMode);
+
+	if (true == m_isModifyMode)
+	{
+		if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN) &&
+			m_pGameInstance->IsMouseInClient(m_pContext, g_hWnd))
+		{
+			m_iPickingIndex = isPickLight();
+		}
+		if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_PRESSING) &&
+			m_pGameInstance->IsMouseInClient(m_pContext, g_hWnd) &&
+			-1 != m_iPickingIndex)
+		{
+			_long dwMouseMove = { 0 };
+			dwMouseMove = m_pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
+			if (0 != dwMouseMove)
+			{
+				m_Lights[m_iPickingIndex].second.vPos.y -= _float(dwMouseMove * dTimeDelta * m_Lights[m_iPickingIndex].second.fRange * 0.5f);
+				
+				Remake_Lights();
+			}
+		}
+		if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_UP))
+			m_iPickingIndex = -1;
+	}
+
+	return S_OK;
+}
+
 HRESULT CWindow_Light::LightSaveLoad()
 {
 	ImGui::PushID(0);
@@ -391,8 +432,6 @@ HRESULT CWindow_Light::LightRead_File(const _tchar* pFileName)
 		ReadFile(hFile, &LightDesc, sizeof(CLight::LIGHTDESC), &dwByte, nullptr);
 
 		ZEROMEM(&SphereDesc);
-
-		memcpy(&SphereDesc.vPosition, &LightDesc.vPos, sizeof(_float3));
 		SphereDesc.fRadius = LightDesc.fRange;
 
 		_char* szIndex = New _char[6];
@@ -436,6 +475,34 @@ void CWindow_Light::Remake_Lights()
 		if (FAILED(m_pGameInstance->Add_Lights(pair.second)))
 			return;
 	}
+}
+
+_int CWindow_Light::isPickLight()
+{
+	_float4 vRayPos, vRayDir;
+
+	if (FAILED(m_pGameInstance->Get_MouseRay(m_pContext, g_hWnd, XMMatrixIdentity(), &vRayPos, &vRayDir)))
+		return false;
+
+	_float fIntersectsDistance = 999.f;
+	_int iIndex = { -1 };
+	_int iIntersectsIndex = { -1 };
+	for (auto& pair : m_Lights)
+	{
+		++iIndex;
+		_float fDist = 1000.f;
+
+		if (true == pair.first->RayIntersects(XMLoadFloat4(&vRayPos), XMLoadFloat4(&vRayDir), fDist))
+		{
+			if (0.f < fDist && fIntersectsDistance > fDist)
+			{
+				fIntersectsDistance = fDist;
+				iIntersectsIndex = iIndex;
+			}
+		}
+	}
+
+	return iIntersectsIndex;
 }
 
 CWindow_Light* CWindow_Light::Create(ID3D11DeviceContext* pContext, void* pArg)

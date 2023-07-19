@@ -39,13 +39,15 @@ private:
 	_bool						m_bClearButton = { false };
 
 	_bool						m_isPickMode = { false };
-
+	_bool						m_isModifyMode = { false };
+	_int						m_iPickingIndex = { -1 };
 	
 private:
 	// 피킹을 통해 포지션만 갱신하기 위한 함수.
 	HRESULT Find_Position();
 	HRESULT SetUp_LightDesc();
 	HRESULT Delete_LightDesc();
+	HRESULT Pick_Light(_double dTimeDelta);
 
 	HRESULT LightSaveLoad();
 	HRESULT LightSaveButton();
@@ -56,6 +58,7 @@ private:
 private:
 	void Add_DirectionalLight();
 	void Remake_Lights();
+	_int isPickLight();
 
 public:
 	static CWindow_Light* Create(ID3D11DeviceContext* pContext, void* pArg = nullptr);

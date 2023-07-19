@@ -128,7 +128,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
-
+    vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
+    
     vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexUV);
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
@@ -153,7 +154,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     vector vLightDir = vPosition - g_vLightPos;
 
     float fDistance = length(vLightDir);
-    
+
     // 빛의 감쇄량을 0~1로 정규화 시켜 처리하기 위함.
     float fAtt = saturate((g_fLightRange - fDistance) / g_fLightRange);
 	
