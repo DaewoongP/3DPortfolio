@@ -115,17 +115,11 @@
     <Filter Include="02. GameObjects\06. UI">
       <UniqueIdentifier>{3eab1b69-35f0-4d3a-987d-6731fd6af7e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\06. UI\01. BackGround">
-      <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Levels\99. Loading\LoadingObjects">
       <UniqueIdentifier>{28953af2-aeda-4309-9612-6aee1b276e78}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Levels\99. Loading\LoadingObjects\00. Loading_Logo">
       <UniqueIdentifier>{e5e9a7df-4f7c-4942-96af-b1b61634c490}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\06. UI\00. Mouse">
-      <UniqueIdentifier>{617ae68c-347e-40b8-976b-980bd9ca8fc0}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Levels\02. Stage2">
       <UniqueIdentifier>{2b5c9a91-1869-4191-b98d-bccef8ed33a6}</UniqueIdentifier>
@@ -138,6 +132,27 @@
     </Filter>
     <Filter Include="02. GameObjects\07. Trigger">
       <UniqueIdentifier>{fa361131-17b9-4e0f-a954-6608c9047281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\GamePlay">
+      <UniqueIdentifier>{16b91256-4498-4d23-95cc-4082fdc58091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\Logo">
+      <UniqueIdentifier>{142eb8dd-a7b4-49e5-a7f3-571ecd216592}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\Logo\01. BackGround">
+      <UniqueIdentifier>{17930ece-8234-43c2-ba59-83ad14c180a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\Logo\00. Mouse">
+      <UniqueIdentifier>{617ae68c-347e-40b8-976b-980bd9ca8fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\Logo\02. MenuSelect">
+      <UniqueIdentifier>{821ff2aa-0032-417a-a237-9d4f70331f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\GamePlay\00. Crosshair">
+      <UniqueIdentifier>{6ec616fa-3098-4e09-bf3d-a6af67bb084a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. UI\GamePlay\01. Dash">
+      <UniqueIdentifier>{3d7fb998-a78c-4ad9-908e-3d4b11b06095}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +202,7 @@
       <Filter>01. Levels\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BackGround.h">
-      <Filter>02. GameObjects\06. UI\01. BackGround</Filter>
+      <Filter>02. GameObjects\06. UI\Logo\01. BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Prop.h">
       <Filter>02. GameObjects\03. Props</Filter>
@@ -295,7 +310,7 @@
       <Filter>01. Levels\99. Loading\LoadingObjects\00. Loading_Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Mouse.h">
-      <Filter>02. GameObjects\06. UI\00. Mouse</Filter>
+      <Filter>02. GameObjects\06. UI\Logo\00. Mouse</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Stage2.h">
       <Filter>01. Levels\02. Stage2</Filter>
@@ -305,6 +320,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Trigger.h">
       <Filter>02. GameObjects\07. Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI.h">
+      <Filter>02. GameObjects\06. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MenuSelect.h">
+      <Filter>02. GameObjects\06. UI\Logo\02. MenuSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Crosshair.h">
+      <Filter>02. GameObjects\06. UI\GamePlay\00. Crosshair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_Dash.h">
+      <Filter>02. GameObjects\06. UI\GamePlay\01. Dash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -334,7 +361,7 @@
       <Filter>01. Levels\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BackGround.cpp">
-      <Filter>02. GameObjects\06. UI\01. BackGround</Filter>
+      <Filter>02. GameObjects\06. UI\Logo\01. BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage1.cpp">
       <Filter>01. Levels\01. Stage1</Filter>
@@ -463,7 +490,7 @@
       <Filter>01. Levels\99. Loading\LoadingObjects\00. Loading_Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Mouse.cpp">
-      <Filter>02. GameObjects\06. UI\00. Mouse</Filter>
+      <Filter>02. GameObjects\06. UI\Logo\00. Mouse</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_Stage2.cpp">
       <Filter>01. Levels\02. Stage2</Filter>
@@ -473,6 +500,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Trigger.cpp">
       <Filter>02. GameObjects\07. Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI.cpp">
+      <Filter>02. GameObjects\06. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MenuSelect.cpp">
+      <Filter>02. GameObjects\06. UI\Logo\02. MenuSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Crosshair.cpp">
+      <Filter>02. GameObjects\06. UI\GamePlay\00. Crosshair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Dash.cpp">
+      <Filter>02. GameObjects\06. UI\GamePlay\01. Dash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

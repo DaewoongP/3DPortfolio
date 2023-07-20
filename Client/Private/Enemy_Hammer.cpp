@@ -55,6 +55,10 @@ HRESULT CEnemy_Hammer::Initialize(void* pArg)
 	m_pModelCom->Reset_Animation(52);
 	m_pModelCom->Delete_AnimationTranslation(68);
 
+#ifdef _DEBUG
+	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
+#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -85,7 +89,6 @@ GAMEEVENT CEnemy_Hammer::Late_Tick(_double dTimeDelta)
 
 #ifdef _DEBUG
 	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
-	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
 	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
 #endif // _DEBUG
 

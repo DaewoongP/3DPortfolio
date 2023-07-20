@@ -55,7 +55,7 @@ public:
 	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
 	ANIMATIONFLAG Lerp_TransformMatrix(CModel::BONES& Bones, class CAnimation* pCurrentAnimation, _double TimeDelta, _double dDuration = 0.2);
 
-public:
+private:
 	_tchar						m_szName[MAX_STR] = TEXT("");
 	// 애니메이션이 사용하는 채널(뼈)의 개수
 	_uint						m_iNumChannels = { 0 };

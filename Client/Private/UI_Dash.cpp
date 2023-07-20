@@ -1,17 +1,17 @@
-#include "..\Public\Mouse.h"
+#include "..\Public\UI_Dash.h"
 #include "GameInstance.h"
 
-CMouse::CMouse(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Dash::CUI_Dash(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CMouse::CMouse(const CMouse& rhs)
+CUI_Dash::CUI_Dash(const CUI_Dash& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CMouse::Initialize_Prototype()
+HRESULT CUI_Dash::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -19,7 +19,7 @@ HRESULT CMouse::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CMouse::Initialize(void* pArg)
+HRESULT CUI_Dash::Initialize(void* pArg)
 {
 	if (FAILED(Add_Components()))
 		return E_FAIL;
@@ -27,9 +27,9 @@ HRESULT CMouse::Initialize(void* pArg)
 	m_fSizeX = 50.f;
 	m_fSizeY = 50.f;
 
-	// 트랜스폼에 값 세팅.
-	// offset값에 맞춰 세팅해줌.
-	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
+	// 윈도우창의 중간에 표시하게 설정.
+	m_fX = g_iWinSizeX * 0.5f;
+	m_fY = g_iWinSizeY * 0.5f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -37,38 +37,23 @@ HRESULT CMouse::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CMouse::Tick(_double dTimeDelta)
+void CUI_Dash::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 }
 
-GAMEEVENT CMouse::Late_Tick(_double dTimeDelta)
+GAMEEVENT CUI_Dash::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
-
-	POINT	pt{};
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-
-	_vector		vMouse;
-	vMouse = XMVectorSet(
-		pt.x - g_iWinSizeX * 0.5f,
-		-pt.y + g_iWinSizeY * 0.5f,
-		0.f,
-		1.f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMouse);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;
 }
-	
-HRESULT CMouse::Render()
-{
-	ShowCursor(false);
 
+HRESULT CUI_Dash::Render()
+{
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
@@ -82,7 +67,7 @@ HRESULT CMouse::Render()
 	return S_OK;
 }
 
-HRESULT CMouse::Add_Components()
+HRESULT CUI_Dash::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -109,7 +94,7 @@ HRESULT CMouse::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Mouse"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Dash"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -119,7 +104,7 @@ HRESULT CMouse::Add_Components()
 	return S_OK;
 }
 
-HRESULT CMouse::SetUp_ShaderResources()
+HRESULT CUI_Dash::SetUp_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
@@ -130,40 +115,39 @@ HRESULT CMouse::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 1)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-CMouse* CMouse::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Dash* CUI_Dash::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMouse* pInstance = new CMouse(pDevice, pContext);
+	CUI_Dash* pInstance = new CUI_Dash(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CMouse");
+		MSG_BOX("Failed to Created CUI_Dash");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMouse::Clone(void* pArg)
+CGameObject* CUI_Dash::Clone(void* pArg)
 {
-	CMouse* pInstance = new CMouse(*this);
+	CUI_Dash* pInstance = new CUI_Dash(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CMouse");
+		MSG_BOX("Failed to Cloned CUI_Dash");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMouse::Free()
+void CUI_Dash::Free()
 {
 	__super::Free();
-
 }

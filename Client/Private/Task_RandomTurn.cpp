@@ -65,6 +65,11 @@ CBehavior::STATE CTask_RandomTurn::Tick(_double dTimeDelta)
 		{
 			if (CELL_MOVE != CellFlag)
 				Move_Failed(vPos, XMLoadFloat3(&vNormal));
+			else if (3.f < fabs(m_pNavigationCom->Get_CurrentCellY(vPos) - m_pNavigationCom->Get_CurrentCellY(m_pTransformCom->Get_State(CTransform::STATE_POSITION))))
+			{
+				// 현재 셀과 다음 체킹셀의 차이가 크면 이동금지
+				Move_Failed(vPos, XMLoadFloat3(&vNormal));
+			}
 		}
 
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fRandRad, dTimeDelta);

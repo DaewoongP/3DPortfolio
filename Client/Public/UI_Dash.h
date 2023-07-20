@@ -3,12 +3,12 @@
 
 BEGIN(Client)
 
-class CBackGround final : public CUI
+class CUI_Dash final : public CUI
 {
 private:
-	explicit CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CBackGround(const CBackGround& rhs);
-	virtual ~CBackGround() = default;
+	explicit CUI_Dash(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CUI_Dash(const CUI_Dash& rhs);
+	virtual ~CUI_Dash() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -18,14 +18,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	_uint			m_iBackGroundTextureIndex = { 0 };
-
-private:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 
 public:
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_Dash* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

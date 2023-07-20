@@ -1,17 +1,17 @@
-#include "..\Public\Mouse.h"
+#include "..\Public\Crosshair.h"
 #include "GameInstance.h"
 
-CMouse::CMouse(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCrosshair::CCrosshair(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CMouse::CMouse(const CMouse& rhs)
+CCrosshair::CCrosshair(const CCrosshair& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CMouse::Initialize_Prototype()
+HRESULT CCrosshair::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -19,17 +19,17 @@ HRESULT CMouse::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CMouse::Initialize(void* pArg)
+HRESULT CCrosshair::Initialize(void* pArg)
 {
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_fSizeX = 50.f;
-	m_fSizeY = 50.f;
+	m_fSizeX = 7.f;
+	m_fSizeY = 7.f;
 
-	// 트랜스폼에 값 세팅.
-	// offset값에 맞춰 세팅해줌.
-	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
+	// 윈도우창의 중간에 표시하게 설정.
+	m_fX = g_iWinSizeX * 0.5f;
+	m_fY = g_iWinSizeY * 0.5f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -37,38 +37,23 @@ HRESULT CMouse::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CMouse::Tick(_double dTimeDelta)
+void CCrosshair::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 }
 
-GAMEEVENT CMouse::Late_Tick(_double dTimeDelta)
+GAMEEVENT CCrosshair::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
-
-	POINT	pt{};
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-
-	_vector		vMouse;
-	vMouse = XMVectorSet(
-		pt.x - g_iWinSizeX * 0.5f,
-		-pt.y + g_iWinSizeY * 0.5f,
-		0.f,
-		1.f);
-
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vMouse);
 
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;
 }
-	
-HRESULT CMouse::Render()
-{
-	ShowCursor(false);
 
+HRESULT CCrosshair::Render()
+{
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
@@ -82,7 +67,7 @@ HRESULT CMouse::Render()
 	return S_OK;
 }
 
-HRESULT CMouse::Add_Components()
+HRESULT CCrosshair::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -109,7 +94,7 @@ HRESULT CMouse::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Mouse"),
+	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Crosshair"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -119,7 +104,7 @@ HRESULT CMouse::Add_Components()
 	return S_OK;
 }
 
-HRESULT CMouse::SetUp_ShaderResources()
+HRESULT CCrosshair::SetUp_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
@@ -136,34 +121,33 @@ HRESULT CMouse::SetUp_ShaderResources()
 	return S_OK;
 }
 
-CMouse* CMouse::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCrosshair* CCrosshair::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMouse* pInstance = new CMouse(pDevice, pContext);
+	CCrosshair* pInstance = new CCrosshair(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CMouse");
+		MSG_BOX("Failed to Created CCrosshair");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMouse::Clone(void* pArg)
+CGameObject* CCrosshair::Clone(void* pArg)
 {
-	CMouse* pInstance = new CMouse(*this);
+	CCrosshair* pInstance = new CCrosshair(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CMouse");
+		MSG_BOX("Failed to Cloned CCrosshair");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMouse::Free()
+void CCrosshair::Free()
 {
 	__super::Free();
-
 }

@@ -78,7 +78,7 @@ public:
 	void Jump(_float fJumpForce, _double dTimeDelta);
 	void Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta);
 	// 리지드 바디 사용
-	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 8.f, _float fResistance = 60.f);
+	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 10.f, _float fResistance = 60.f);
 	_bool IsJumping() const { return m_isJumping; }
 	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f, _float fSlidingSpeed = 1.5f);
 	void WallRun(_float fWallRunY, _fvector vWallRunDirection);

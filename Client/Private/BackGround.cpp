@@ -1,21 +1,14 @@
 #include "..\Public\BackGround.h"
 #include "GameInstance.h"
+#include "Level_Loading.h"
 
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CUI(pDevice, pContext)
 {
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixIdentity());
 }
 
 CBackGround::CBackGround(const CBackGround& rhs)
-	: CGameObject(rhs)
-	, m_fX(rhs.m_fX)
-	, m_fY(rhs.m_fY)
-	, m_fSizeX(rhs.m_fSizeX)
-	, m_fSizeY(rhs.m_fSizeY)
-	, m_ViewMatrix(rhs.m_ViewMatrix)
-	, m_ProjMatrix(rhs.m_ProjMatrix)
+	: CUI(rhs)
 {
 }
 
@@ -29,10 +22,6 @@ HRESULT CBackGround::Initialize_Prototype()
 
 HRESULT CBackGround::Initialize(void* pArg)
 {
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
-	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
-		return E_FAIL;
-
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
@@ -44,19 +33,8 @@ HRESULT CBackGround::Initialize(void* pArg)
 	m_fX = g_iWinSizeX * 0.5f;
 	m_fY = g_iWinSizeY * 0.5f;
 
-	// 트랜스폼에 값 세팅.
-	// offset값에 맞춰 세팅해줌.
-	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, 
-		XMVectorSet(
-			m_fX - g_iWinSizeX * 0.5f,
-			-m_fY + g_iWinSizeY * 0.5f,
-			0.f,
-			1.f));
-
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-	// 직교 투영을 통해 처리.
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f));
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -64,6 +42,26 @@ HRESULT CBackGround::Initialize(void* pArg)
 void CBackGround::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
+	/*CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
+	{
+		m_iBackGroundTextureIndex = 1;
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_F10, CInput_Device::KEY_DOWN))
+	{
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE1))))
+		{
+			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_STAGE1");
+			Safe_Release(pGameInstance);
+			return;
+		}
+	}
+
+	Safe_Release(pGameInstance);*/
 }
 
 GAMEEVENT CBackGround::Late_Tick(_double dTimeDelta)
@@ -118,7 +116,7 @@ HRESULT CBackGround::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
+	if (FAILED(__super::Add_Component(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Main"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -139,7 +137,7 @@ HRESULT CBackGround::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iBackGroundTextureIndex)))
 		return E_FAIL;
 
 	return S_OK;
@@ -174,9 +172,4 @@ CGameObject* CBackGround::Clone(void* pArg)
 void CBackGround::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pRendererCom);
 }

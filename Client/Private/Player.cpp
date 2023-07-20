@@ -34,7 +34,7 @@ HRESULT CPlayer::Initialize_Prototype()
 HRESULT CPlayer::Initialize(void* pArg)
 {
 	m_fSpeed = 4.f;
-	m_fJumpPower = 17.f;
+	m_fJumpPower = 20.f;
 	m_fWallRunVelocity = 0.6f;
 	m_fHookPower = 2.f;
 	XMStoreFloat3(&m_vInitRotation, XMVectorSet(0.f, 90.f, 0.f, 0.f));
@@ -75,6 +75,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_eCurWeapon = WEAPON_KATANA;
 
+#ifdef _DEBUG
+	m_pVisionColliderCom->Set_Color(DirectX::Colors::AntiqueWhite);
+	m_pBlockColliderCom->Set_Color(DirectX::Colors::DarkRed);
+#endif // _DEBUG
+
+
 	return S_OK;
 }
 
@@ -102,7 +108,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
 	CameraOffset(dTimeDelta);
 
-	m_pModelCom->Invalidate_AnimationCamera(m_pPlayerCameraCom, m_pTransformCom, dTimeDelta);
+	//m_pModelCom->Invalidate_AnimationCamera(m_pPlayerCameraCom, m_pTransformCom, dTimeDelta);
 	//CameraMove(dTimeDelta);
 	// 객체포지션 -> 카메라 오프셋 고정 -> 카메라 상태행렬 갱신 -> 이후 처리 순서를 맞추기위해 함수이름 바꿈.
 	m_pPlayerCameraCom->Tick_Camera(dTimeDelta);
@@ -121,15 +127,17 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 #ifdef _DEBUG
 		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
-		m_pVisionColliderCom->Set_Color(DirectX::Colors::AntiqueWhite);
 		m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
-		m_pBlockColliderCom->Set_Color(DirectX::Colors::DarkRed);
 		m_pRendererCom->Add_DebugGroup(m_pBlockColliderCom);
 		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
 #endif // _DEBUG
 	}
 
 	__super::Late_Tick(dTimeDelta);
+
+	if (true == m_pTransformCom->IsJumping() &&
+		STATE_RUN == m_eCurState)
+		m_eCurState = STATE_IDLE;
 
 #ifdef _DEBUG
 	if (m_isInvisible)
@@ -1002,7 +1010,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 	if (nullptr == pHookLayer)
 		return false;
 
-	_float fDist = 80.f;
+	_float fDist = 90.f;
 
 	for (auto& pObject : pHookLayer->Get_AllGameObject())
 	{

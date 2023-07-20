@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
+    <ClInclude Include="..\public\Crosshair.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Blue_Snow.h" />
     <ClInclude Include="..\public\Bullet.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="..\public\Loading_Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\public\Enemy.h" />
+    <ClInclude Include="..\public\MenuSelect.h" />
     <ClInclude Include="..\public\Mouse.h" />
     <ClInclude Include="..\public\Part.h" />
     <ClInclude Include="..\public\Pistol.h" />
@@ -220,12 +222,15 @@
     <ClInclude Include="..\public\Task_Wait.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\Trigger.h" />
+    <ClInclude Include="..\public\UI.h" />
+    <ClInclude Include="..\public\UI_Dash.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Crosshair.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Blue_Snow.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
@@ -246,6 +251,7 @@
     <ClCompile Include="..\private\Loading_Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />
+    <ClCompile Include="..\private\MenuSelect.cpp" />
     <ClCompile Include="..\private\Mouse.cpp" />
     <ClCompile Include="..\private\Part.cpp" />
     <ClCompile Include="..\private\Pistol.cpp" />
@@ -275,6 +281,8 @@
     <ClCompile Include="..\private\Task_Wait.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
+    <ClCompile Include="..\private\UI.cpp" />
+    <ClCompile Include="..\private\UI_Dash.cpp" />
     <ClCompile Include="..\Public\Client_Struct.h" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

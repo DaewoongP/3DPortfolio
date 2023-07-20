@@ -43,6 +43,11 @@ CBehavior::STATE CTask_MoveForward::Tick(_double dTimeDelta)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 			return STATE_FAILED;
 		}
+		else if (3.f < fabs(m_pNavigationCom->Get_CurrentCellY(vPos) - m_pNavigationCom->Get_CurrentCellY(m_pTransformCom->Get_State(CTransform::STATE_POSITION))))
+		{
+			// 현재 셀과 다음 체킹셀의 차이가 크면 이동금지
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+		}
 	}
 
 	m_dRunningAcc += dTimeDelta;

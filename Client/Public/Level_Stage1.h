@@ -21,6 +21,7 @@ private:
 	HRESULT Ready_Layer_Enemy(const _tchar* pLayerTag, const _tchar* pFilePath);
 	HRESULT Ready_Layer_Props(const _tchar* pFilePath);
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
+	HRESULT Ready_UI(const _tchar* pLayerTag);
 
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Debug(const _tchar* pLayerTag);

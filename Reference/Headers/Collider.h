@@ -17,7 +17,9 @@ public:
 	TYPE Get_ColliderType() const { return m_eColliderType; }
 	_float3 Get_BoundingCenterPosition() const;
 	void Set_BoundingDesc(void* pBoundingDesc);
+#ifdef _DEBUG
 	void Set_Color(_fvector vColor) { XMStoreFloat4(&m_vColor, vColor); }
+#endif // _DEBUG
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eColliderType);

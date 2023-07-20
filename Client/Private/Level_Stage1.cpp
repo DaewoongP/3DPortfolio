@@ -11,12 +11,13 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 HRESULT CLevel_Stage1::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Test2.Light")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Test4.Light")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy"), TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Stage1.AnimMap")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
 	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("..\\..\\Resources\\GameData\\Map\\NonAnim\\Test.Map")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_UI(TEXT("Layer_UI")), E_FAIL);
 	
 	
 	// 디버깅용 카메라 및 객체.. 등등
@@ -50,9 +51,10 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 	ZEROMEM(&DirLightDesc);
 	DirLightDesc.eType = CLight::TYPE_DIRECTIONAL;
 	DirLightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
+	//DirLightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.3f, 1.f);
 	DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	DirLightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	DirLightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
+	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
 
 	if (FAILED(pGameInstance->Add_Lights(DirLightDesc)))
 		return E_FAIL;
@@ -271,7 +273,8 @@ HRESULT CLevel_Stage1::Ready_Layer_Props(const _tchar* pFilePath)
 			}
 
 			// 훅 레이어 따로처리.
-			if (wcswcs(wszName, TEXT("hook")))
+			if (wcswcs(wszName, TEXT("hook")) ||
+				wcswcs(wszName, TEXT("Hook")))
 			{
 				if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1,
 					TEXT("Prototype_GameObject_ColProp"), TEXT("Layer_Hook"), wszName, &ColPropDesc)))
@@ -322,6 +325,28 @@ HRESULT CLevel_Stage1::Ready_Layer_BackGround(const _tchar* pLayerTag)
 		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Sky)");
 		return E_FAIL;
 	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_UI(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Crosshair"), pLayerTag, TEXT("GameObject_Crosshair"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Crosshair)");
+		return E_FAIL;
+	}
+
+	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Dash"), pLayerTag, TEXT("GameObject_UI_Dash"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_UI_Dash)");
+		return E_FAIL;
+	}*/
 
 	Safe_Release(pGameInstance);
 

@@ -54,6 +54,10 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 
 	m_pModelCom->Reset_Animation(54);
 
+#ifdef _DEBUG
+	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
+#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -79,8 +83,8 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 
 	__super::Late_Tick(dTimeDelta);
 #ifdef _DEBUG
-	m_pColliderCom->Set_Color(DirectX::Colors::Aquamarine);
 	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
 #endif // _DEBUG
 
 	return PlayEvent(dTimeDelta);

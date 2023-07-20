@@ -107,7 +107,8 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 		ImGui::InputFloat3("Light Specular", reinterpret_cast<_float*>(&m_LightDesc.vSpecular)))
 	{
 		if (-1 != m_iCurrentListBoxIndex &&
-			0 < m_Lights.size())
+			0 < m_Lights.size() &&
+			true == m_isModifyMode)
 		{
 			m_Lights[m_iCurrentListBoxIndex].second = m_LightDesc;
 
@@ -317,7 +318,7 @@ HRESULT CWindow_Light::Pick_Light(_double dTimeDelta)
 				dwMouseMove = m_pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y);
 				if (0 != dwMouseMove)
 				{
-					m_Lights[m_iPickingIndex].second.vPos.y -= _float(dwMouseMove * dTimeDelta * m_Lights[m_iPickingIndex].second.fRange * 0.5f);
+					m_Lights[m_iPickingIndex].second.vPos.z -= _float(dwMouseMove * dTimeDelta * m_Lights[m_iPickingIndex].second.fRange * 0.5f);
 
 					Remake_Lights();
 				}
@@ -325,6 +326,8 @@ HRESULT CWindow_Light::Pick_Light(_double dTimeDelta)
 		}
 		if (m_pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_UP))
 		{
+			if (0 > m_iPickingIndex)
+				return S_OK;
 			memcpy(&m_LightDesc.vPos, &m_Lights[m_iPickingIndex].second.vPos, sizeof(_float3));
 			m_iPickingIndex = -1;
 		}

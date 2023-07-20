@@ -12,6 +12,8 @@
 #include "Katana.h"
 #include "ColProp.h"
 #include "Texture.h"
+#include "UI_Dash.h"
+#include "Crosshair.h"
 #include "BackGround.h"
 #include "Enemy_Sword.h"
 #include "Enemy_Pistol.h"
@@ -102,10 +104,10 @@ HRESULT CLoader::Loading_For_Logo()
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
 	/* For.Prototype_Component_Texture_Logo */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Main"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/MainMenu/Main%d.png"), 2))))
 	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Logo)");
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Main)");
 		return E_FAIL;
 	}
 
@@ -154,6 +156,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
+
+	/* For.Prototype_Component_Texture_Crosshair */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Crosshair"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/crosshair.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Crosshair)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_Dash */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Dash"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/hud_dash_%d.png"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dash)");
+		return E_FAIL;
+	}
 
 #ifdef _DEBUG
 
@@ -372,7 +390,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Stage1.Navi")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Test.Navi")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;
@@ -519,7 +537,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ColProp)");
 		return E_FAIL;
 	}
-		
+	
+	/* For.Prototype_GameObject_Crosshair */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Crosshair"),
+		CCrosshair::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Crosshair)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_UI_Dash */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dash"),
+		CUI_Dash::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Dash)");
+		return E_FAIL;
+	}
+
 #ifdef _DEBUG
 	/* For.Prototype_GameObject_Camera_Free */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),

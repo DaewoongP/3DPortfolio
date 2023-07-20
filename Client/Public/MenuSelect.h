@@ -3,12 +3,12 @@
 
 BEGIN(Client)
 
-class CBackGround final : public CUI
+class CMenuSelect final : public CUI
 {
 private:
-	explicit CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CBackGround(const CBackGround& rhs);
-	virtual ~CBackGround() = default;
+	explicit CMenuSelect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CMenuSelect(const CMenuSelect& rhs);
+	virtual ~CMenuSelect() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -18,14 +18,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	_uint			m_iBackGroundTextureIndex = { 0 };
-
-private:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 
 public:
-	static CBackGround* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMenuSelect* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

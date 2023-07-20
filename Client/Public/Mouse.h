@@ -1,17 +1,9 @@
 #pragma once
-#include "GameObject.h"
-#include "Client_Defines.h"
-
-BEGIN(Engine)
-class CShader;
-class CTexture;
-class CRenderer;
-class CVIBuffer_Rect;
-END
+#include "UI.h"
 
 BEGIN(Client)
 
-class CMouse final : public CGameObject
+class CMouse final : public CUI
 {
 private:
 	explicit CMouse(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -24,25 +16,6 @@ public:
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
-
-private:
-	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom = { nullptr };
-	CRenderer* m_pRendererCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
-private:
-	// 윈도우창의 실제 x좌표
-	_float			m_fX = { 0.f };
-	// 윈도우창의 실제 y좌표
-	_float			m_fY = { 0.f };
-	// 텍스처 x사이즈 설정
-	_float			m_fSizeX = { 0.f };
-	// 텍스처 y사이즈 설정
-	_float			m_fSizeY = { 0.f };
-
-	_float4x4		m_ViewMatrix;
-	_float4x4		m_ProjMatrix;
 
 private:
 	HRESULT Add_Components();

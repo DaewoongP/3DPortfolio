@@ -19,7 +19,7 @@ vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
 
-vector g_vMtrlAmbient = vector(0.3f, 0.3f, 0.3f, 1.f);
+vector g_vMtrlAmbient = vector(0.5f, 0.5f, 0.5f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 sampler LinearSampler = sampler_state
@@ -120,7 +120,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     vector vReflect = reflect(normalize(g_vLightDir), vNormal);
     vector vLook = vPosition - g_vCamPosition;
 
-    Out.vSpecular = (g_vLightSpecular) * (g_vMtrlSpecular) * pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f);
+    Out.vSpecular = (g_vLightSpecular) * (g_vMtrlSpecular) * pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 10.f);
 
     return Out;
 }
@@ -163,7 +163,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     vector vReflect = reflect(normalize(vLightDir), vNormal);
     vector vLook = vPosition - g_vCamPosition;
 
-    Out.vSpecular = (g_vLightSpecular) * (g_vMtrlSpecular) * pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 30.f) * fAtt;
+    Out.vSpecular = (g_vLightSpecular) * (g_vMtrlSpecular) * pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 10.f) * fAtt;
 
     return Out;
 }

@@ -416,6 +416,10 @@ void CTransform::Turn(_fvector vAxis, _float fRadian, _double dTimeDelta)
 void CTransform::Jump(_float fJumpForce, _double dTimeDelta)
 {
 	m_isJumping = true;
+#ifdef _DEBUG
+	m_isJumping = false;
+#endif // _DEBUG
+
 
 	m_vForce.y += fJumpForce / (_float)dTimeDelta;
 }

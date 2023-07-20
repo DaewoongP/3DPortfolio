@@ -262,6 +262,7 @@ HRESULT CWindow_Model::MakeNonAnimModel(const _tchar* pName, _float4 vPickPos)
 		TEXT("Prototype_GameObject_NonAnimModel"), TEXT("Layer_Tool"), pName, &ObjectDesc)))
 	{
 		MSG_BOX("Failed Add GameObject NonAnimModel");
+		m_iCurrentModelIndex++;
 		return E_FAIL;
 	}
 
@@ -287,6 +288,7 @@ HRESULT CWindow_Model::MakeAnimModel(const _tchar* pName, _float4 vPickPos)
 		TEXT("Prototype_GameObject_AnimModel"), TEXT("Layer_Tool"), pName, &ObjectDesc)))
 	{
 		MSG_BOX("Failed Add GameObject AnimModel");
+		m_iCurrentModelIndex++;
 		return E_FAIL;
 	}
 

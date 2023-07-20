@@ -45,6 +45,8 @@ HRESULT CWindow_Tool::Initialize(void* pArg)
 	m_AxisState[CAxis::AXIS_CENTER] = false;
 	m_pAxisCenter->Set_Rendering(m_AxisState[CAxis::AXIS_CENTER]);
 
+	m_pTerrain->RemakeTerrain(700, 700);
+
 	return S_OK;
 }
 
