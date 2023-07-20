@@ -78,7 +78,7 @@ HRESULT CTransform::Initialize(void* pArg)
 	ZEROMEM(&m_eCurrentCellFlag);
 	m_fGroundY = 4.f;
 	m_fOriginGroundY = 4.f;
-	m_fStepOffset = 0.5f;
+	m_fStepOffset = 1.1f;
 
 	return S_OK;
 }
@@ -233,9 +233,10 @@ void CTransform::Check_Cell()
 _bool CTransform::Check_CellY(_fvector vXZPosition, _fvector vCurrentPosition)
 {
 	_float fCellY = m_fOriginGroundY + m_pNavigation->Get_CurrentCellY(vCurrentPosition);
+
 	if (true == m_isCrouch &&
 		CELL_SLIDE != m_eCurrentCellFlag)
-		fCellY -= 2.f;
+		fCellY -= m_fOriginGroundY - m_fGroundY;
 
 	if (fCellY > XMVectorGetY(vCurrentPosition) + m_fStepOffset)
 	{
@@ -427,7 +428,7 @@ void CTransform::Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta)
 }
 
 
-void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize)
+void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize, _float fSlidingSpeed)
 {
 	// 점프상태일경우 리턴
 	if (true == m_isJumping ||
@@ -439,17 +440,19 @@ void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpe
 	if (true == isCrouching &&
 		CELL_SLIDE == m_eCurrentCellFlag)
 	{
-		XMStoreFloat3(&m_vVelocity, XMLoadFloat3(&m_vVelocity) * 1.03f);
+		XMStoreFloat3(&m_vVelocity, XMLoadFloat3(&m_vVelocity) * fSlidingSpeed);
 	}
+
+	m_fCrouchSize = fCrouchSpeed * fCrouchSize * (_float)dTimeDelta;
 
 	// 앉기를 눌러서 천천히 내려앉음.
 	if (true == isCrouching)
 	{
-		m_fGroundY -= fCrouchSpeed * fCrouchSize * (_float)dTimeDelta;
+		m_fGroundY -= m_fCrouchSize;
 	}
 	else
 	{
-		m_fGroundY += fCrouchSpeed * fCrouchSize * (_float)dTimeDelta;
+		m_fGroundY += m_fCrouchSize;
 	}
 
 	// 예외처리

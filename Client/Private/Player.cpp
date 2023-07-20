@@ -33,7 +33,10 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	m_fSpeed = 1.5f;
+	m_fSpeed = 4.f;
+	m_fJumpPower = 17.f;
+	m_fWallRunVelocity = 0.6f;
+	m_fHookPower = 2.f;
 	XMStoreFloat3(&m_vInitRotation, XMVectorSet(0.f, 90.f, 0.f, 0.f));
 	XMStoreFloat4(&m_vInitPosition, XMVectorSet(40.f, 0.f, 90.f, 1.f));
 
@@ -85,7 +88,7 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 
-	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 2.f);
+	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 4.f, 2.f, 1.5f);
 	
 	Attack(dTimeDelta);
 	Block(dTimeDelta);
@@ -445,9 +448,9 @@ HRESULT CPlayer::Initailize_Skills()
 	m_Dash.dCurTime = 0.0;
 	m_Dash.dOriginCoolTime = 2.0;
 	m_Dash.dCoolTime = 0.0;
-	m_Dash.dDuration = 0.05;
+	m_Dash.dDuration = 0.1;
 	m_Dash.fLimitVelocity = 10.f;
-	m_Dash.fSpeed = 50.f;
+	m_Dash.fSpeed = 60.f;
 
 	return S_OK;
 }
@@ -533,7 +536,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// jump, SPACE
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
 	{
-		m_pTransformCom->Jump(6.f, dTimeDelta);
+		m_pTransformCom->Jump(m_fJumpPower, dTimeDelta);
 		if (STATE_ATTACK != m_eCurState)
 			m_eCurState = STATE_IDLE;
 	}
@@ -953,9 +956,9 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 	}
 
 	if (0 < XMVectorGetX(XMVector3Dot(vLook, XMLoadFloat3(&m_vWallDir))))
-		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * 0.3f);
+		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * m_fWallRunVelocity);
 	else
-		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * -0.3f);
+		m_pTransformCom->WallRun(m_fWallRunY, XMLoadFloat3(&m_vWallDir) * -m_fWallRunVelocity);
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -967,11 +970,11 @@ void CPlayer::CollisionStayWall(COLLISIONDESC CollisionDesc)
 		m_isWallRun = false;
 		if (0 > m_fWallRunAngle)
 		{
-			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 6.f, g_TimeDelta);
+			m_pTransformCom->Jump(-vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fJumpPower, g_TimeDelta);
 		}
 		else
 		{
-			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), 6.f, g_TimeDelta);
+			m_pTransformCom->Jump(vWallLook + XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fJumpPower, g_TimeDelta);
 		}
 	}
 
@@ -998,7 +1001,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 
 	if (nullptr == pHookLayer)
 		return false;
-	// 거리별 컬링은 나중에 생각하고.
+
 	_float fDist = 80.f;
 
 	for (auto& pObject : pHookLayer->Get_AllGameObject())
@@ -1011,7 +1014,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 		{
 			if (80.f > fDist)
 			{
-				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * 0.7f, dTimeDelta);
+				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * m_fHookPower, dTimeDelta);
 				return true;
 			}
 		}
@@ -1206,8 +1209,8 @@ HRESULT CPlayer::Add_Notifies()
 		return E_FAIL;
 	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/SH_WallRun_R.Notify"))))
 		return E_FAIL;
-	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Hook_Pull.Notify"))))
-		return E_FAIL;
+	/*if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Hook_Pull.Notify"))))
+		return E_FAIL;*/
 
 	return S_OK;
 }

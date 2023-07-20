@@ -78,9 +78,9 @@ public:
 	void Jump(_float fJumpForce, _double dTimeDelta);
 	void Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta);
 	// 리지드 바디 사용
-	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 7.f, _float fResistance = 40.f);
+	void Use_RigidBody(class CNavigation* pNavigation, _float fLimitVelocity = 1.f, _float fMass = 8.f, _float fResistance = 60.f);
 	_bool IsJumping() const { return m_isJumping; }
-	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f);
+	void Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize = 2.f, _float fSlidingSpeed = 1.5f);
 	void WallRun(_float fWallRunY, _fvector vWallRunDirection);
 	void ZeroVelocity();
 
@@ -91,7 +91,7 @@ private:
 private: // 공용적인 변수값
 	_float4x4		m_WorldMatrix;
 	_bool			m_isRigidBody = { false };
-	_float3			m_vGravity = _float3(0.f, -2.5f, 0.f);
+	_float3			m_vGravity = _float3(0.f, -5.f, 0.f);
 	// 속도
 	_float3			m_vVelocity;
 	// 힘
@@ -106,8 +106,7 @@ private: // 공용적인 변수값
 
 	// 지형을 올라갈때 비교하는 오프셋값.
 	_float			m_fStepOffset = { 0.f };
-
-	_float			m_fCrouchingSize = { 0.f };
+	_float			m_fCrouchSize = { 0.f };
 
 private: // 객체 변수값.
 	// 최대속도 제한
@@ -120,7 +119,6 @@ private: // 객체 변수값.
 	_float			m_fGroundY = { 0.f };
 	_bool			m_isJumping = { false };
 	_bool			m_isCrouch = { false };
-	
 
 public:
 	static CTransform* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

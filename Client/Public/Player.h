@@ -82,7 +82,10 @@ private:
 
 	_bool					m_isCrouch = { false };
 
-	_float					m_fSpeed;
+	_float					m_fSpeed = { 0.f };
+	_float					m_fJumpPower = { 0.f };
+	_float					m_fWallRunVelocity = { 0.f };
+	_float					m_fHookPower = { 0.f };
 	DASHDESC				m_Dash;
 
 private: // WallRun
