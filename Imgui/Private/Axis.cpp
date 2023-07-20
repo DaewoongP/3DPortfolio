@@ -54,15 +54,34 @@ HRESULT CAxis::Initialize(void* pArg)
 
 void CAxis::Tick(_double dTimeDelta)
 {
-	Set_Position();
-
 	__super::Tick(dTimeDelta);
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (AXIS_ORIGIN == m_eState)
+	{
+		Set_Origin(pGameInstance);
+	}
+
+	Safe_Release(pGameInstance);
 }
 
 GAMEEVENT CAxis::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
-	
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (AXIS_UI == m_eState)
+		Set_UI(pGameInstance);
+
+	if (AXIS_CENTER == m_eState)
+		Set_Center(pGameInstance);
+
+	Safe_Release(pGameInstance);
+
 	if (nullptr != m_pRendererCom)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
@@ -138,29 +157,6 @@ HRESULT CAxis::SetUp_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
-}
-
-void CAxis::Set_Position()
-{
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	switch (m_eState)
-	{
-	case AXIS_ORIGIN:
-		Set_Origin(pGameInstance);
-		break;
-	case AXIS_UI:
-		Set_UI(pGameInstance);
-		break;
-	case AXIS_CENTER:
-		Set_Center(pGameInstance);
-		break;
-	default:
-		break;
-	}
-
-	Safe_Release(pGameInstance);
 }
 
 void CAxis::Set_Origin(CGameInstance* pGameInstance)

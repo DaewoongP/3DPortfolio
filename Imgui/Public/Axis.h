@@ -57,7 +57,6 @@ private:
 private:
 	HRESULT		Add_Component();
 	HRESULT		SetUp_ShaderResources();
-	void		Set_Position();
 
 	void Set_Origin(CGameInstance* pGameInstance);
 	void Set_UI(CGameInstance* pGameInstance);

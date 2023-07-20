@@ -99,23 +99,25 @@ private: // 공용적인 변수값
 	// 가속도
 	_float3			m_vAccel;
 	// 바닥 Y값.
-	_float			m_fOriginGroundY = 0.f;
+	_float			m_fOriginGroundY = { 0.f };
 	// 현재 셀 상태값
 	CELLFLAG		m_eCurrentCellFlag;
 	CELLFLAG		m_ePreviousCellFlag;
 
 	// 지형을 올라갈때 비교하는 오프셋값.
-	_float			m_fStepOffset = 0.f;
+	_float			m_fStepOffset = { 0.f };
+
+	_float			m_fCrouchingSize = { 0.f };
 
 private: // 객체 변수값.
 	// 최대속도 제한
-	_float			m_fLimitVelocity = 0.f;
+	_float			m_fLimitVelocity = { 0.f };
 	// 질량
-	_float			m_fMass = 0.f;
+	_float			m_fMass = { 0.f };
 	// 저항
-	_float			m_fResistance = 0.f;
+	_float			m_fResistance = { 0.f };
 	// Crouch 처리용 (Player)
-	_float			m_fGroundY = 0.f;
+	_float			m_fGroundY = { 0.f };
 	_bool			m_isJumping = { false };
 	_bool			m_isCrouch = { false };
 	

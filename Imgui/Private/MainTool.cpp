@@ -206,7 +206,6 @@ HRESULT CMainTool::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const
 					//std::filesystem::remove(entry.path());
 					return E_FAIL;
 				}
-
 			}
 		}
 
