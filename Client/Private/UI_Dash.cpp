@@ -115,7 +115,14 @@ HRESULT CUI_Dash::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 1)))
+	_uint iIndex = { 0 };
+
+	if (true == m_isDash)
+		iIndex = 1;
+	else
+		iIndex = 0;
+
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", iIndex)))
 		return E_FAIL;
 
 	return S_OK;

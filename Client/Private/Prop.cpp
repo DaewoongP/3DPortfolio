@@ -76,10 +76,10 @@ HRESULT CProp::Render()
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-		/*if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS)))
 			isNormal = false;
 		else
-			isNormal = true;*/
+			isNormal = true;
 
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_isNormal", &isNormal, sizeof(_bool))))
 			return E_FAIL;

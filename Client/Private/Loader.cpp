@@ -84,7 +84,13 @@ HRESULT CLoader::Loading()
 		hr = Loading_For_Logo();
 		break;
 	case LEVELID::LEVEL_STAGE1:
-		hr = Loading_For_GamePlay();
+		hr = Loading_For_Stage1();
+		break;
+	case LEVELID::LEVEL_STAGE2:
+		hr = Loading_For_Stage2();
+		break;
+	case LEVELID::LEVEL_BOSS:
+		hr = Loading_For_Boss();
 		break;
 	}
 
@@ -150,7 +156,7 @@ HRESULT CLoader::Loading_For_Logo()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_For_GamePlay()
+HRESULT CLoader::Loading_For_Stage1()
 {
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
@@ -240,24 +246,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");
 		return E_FAIL;
 	}
-	
-	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, -4.f, -0.5f);
-	/* For.Prototype_Component_Model_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Player"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Player.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Player)");
-		return E_FAIL;
-	}
-
-	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	/* For.Prototype_Component_Model_Katana */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Katana"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Katana.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
-		return E_FAIL;
-	}
 
 	// °ÕÁö
 	//PivotMatrix = XMMatrixScaling(1.2f, 1.2f, 1.2f) * XMMatrixRotationY(XMConvertToRadians(90.f));
@@ -268,15 +256,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	//	MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
 	//	return E_FAIL;
 	//}
-
-	PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
-	/* For.Prototype_Component_Model_Shuriken */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Shuriken"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Shuriken.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Shuriken)");
-		return E_FAIL;
-	}
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Pistol */
@@ -583,6 +562,29 @@ HRESULT CLoader::Loading_For_GamePlay()
 	lstrcpy(m_szLoading, TEXT("·Îµù ¿Ï·á."));
 
 	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Stage2()
+{
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Boss()
+{
+	lstrcpy(m_szLoading, TEXT("¸ðµ¨ ·Îµù Áß."));
+
+	_matrix PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
+	/* For.Prototype_Component_Model_Enemy_Bakunin */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Enemy_Bakunin"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Bakunin.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Bakunin)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("°´Ã¼ ·Îµù Áß."));
 
 	return S_OK;
 }

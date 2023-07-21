@@ -36,7 +36,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fSpeed = 4.f;
 	m_fJumpPower = 20.f;
 	m_fWallRunVelocity = 0.6f;
-	m_fHookPower = 2.f;
+	m_fHookPower = 2.2f;
 	XMStoreFloat3(&m_vInitRotation, XMVectorSet(0.f, 90.f, 0.f, 0.f));
 	XMStoreFloat4(&m_vInitPosition, XMVectorSet(40.f, 0.f, 90.f, 1.f));
 
@@ -314,7 +314,7 @@ HRESULT CPlayer::Reset()
 HRESULT CPlayer::Add_Component()
 {
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Player"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Model_Player"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Model)");
@@ -534,12 +534,38 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	// left
 	if (pGameInstance->Get_DIKeyState(DIK_A))
 	{
+		if (STATE_IDLE == m_eCurState &&
+			false == m_pTransformCom->IsJumping() &&
+			STATE_ATTACK != m_eCurState)
+		{
+			m_eCurState = STATE_RUN;
+		}
+
 		m_pTransformCom->Go_Left(dTimeDelta);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_A, CInput_Device::KEY_UP))
+	{
+		if (STATE_ATTACK != m_eCurState &&
+			STATE_WEAPON != m_eCurState)
+			m_eCurState = STATE_IDLE;
 	}
 	// right
 	if (pGameInstance->Get_DIKeyState(DIK_D))
 	{
+		if (STATE_IDLE == m_eCurState &&
+			false == m_pTransformCom->IsJumping() &&
+			STATE_ATTACK != m_eCurState)
+		{
+			m_eCurState = STATE_RUN;
+		}
+
 		m_pTransformCom->Go_Right(dTimeDelta);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_D, CInput_Device::KEY_UP))
+	{
+		if (STATE_ATTACK != m_eCurState &&
+			STATE_WEAPON != m_eCurState)
+			m_eCurState = STATE_IDLE;
 	}
 	// jump, SPACE
 	if (false == m_pTransformCom->IsJumping() && pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))

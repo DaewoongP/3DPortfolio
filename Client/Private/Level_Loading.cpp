@@ -3,6 +3,7 @@
 #include "Level_Logo.h"
 #include "Level_Stage1.h"
 #include "Level_Stage2.h"
+#include "Level_Boss.h"
 #include "Loading_Logo.h"
 #include "GameInstance.h"
 
@@ -63,6 +64,9 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 			break;
 		case LEVEL_STAGE2:
 			pLevel = CLevel_Stage2::Create(m_pDevice, m_pContext);
+			break;
+		case LEVEL_BOSS:
+			pLevel = CLevel_Boss::Create(m_pDevice, m_pContext);
 			break;
 		}
 

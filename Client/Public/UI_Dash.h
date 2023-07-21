@@ -18,6 +18,9 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	_bool				m_isDash = { false };
+
+private:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 

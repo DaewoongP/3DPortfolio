@@ -44,7 +44,9 @@ private:
 
 private:
 	HRESULT Loading_For_Logo();
-	HRESULT Loading_For_GamePlay();
+	HRESULT Loading_For_Stage1();
+	HRESULT Loading_For_Stage2();
+	HRESULT Loading_For_Boss();
 	// 파일시스템에서 데이터 파일을 한번에 프로토타입으로 만들기 위한 함수.
 	HRESULT Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag);
 

@@ -154,6 +154,9 @@
     <Filter Include="02. GameObjects\06. UI\GamePlay\01. Dash">
       <UniqueIdentifier>{3d7fb998-a78c-4ad9-908e-3d4b11b06095}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss">
+      <UniqueIdentifier>{c4dd895e-d3a6-455a-b095-93ee7bf2027f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -332,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UI_Dash.h">
       <Filter>02. GameObjects\06. UI\GamePlay\01. Dash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss.h">
+      <Filter>02. GameObjects\01. Enemy\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -512,6 +518,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UI_Dash.cpp">
       <Filter>02. GameObjects\06. UI\GamePlay\01. Dash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

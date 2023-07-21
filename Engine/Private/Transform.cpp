@@ -417,7 +417,7 @@ void CTransform::Jump(_float fJumpForce, _double dTimeDelta)
 {
 	m_isJumping = true;
 #ifdef _DEBUG
-	m_isJumping = false;
+	//m_isJumping = false;
 #endif // _DEBUG
 
 

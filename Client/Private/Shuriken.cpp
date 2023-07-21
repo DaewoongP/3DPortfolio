@@ -122,7 +122,7 @@ HRESULT CShuriken::Add_Components()
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Shuriken"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Model_Shuriken"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Model)");

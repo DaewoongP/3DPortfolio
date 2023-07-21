@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
+    <ClInclude Include="..\public\Boss.h" />
     <ClInclude Include="..\public\Crosshair.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Blue_Snow.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Boss.cpp" />
     <ClCompile Include="..\private\Crosshair.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\private\Blue_Snow.cpp" />
