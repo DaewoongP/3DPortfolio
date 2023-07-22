@@ -35,6 +35,14 @@ HRESULT CKatana::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CKatana::Initialize_Level(_uint iLevelIndex)
+{
+	if (FAILED(Add_Components_Level(iLevelIndex)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CKatana::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 {
 	m_ParentMatrixDesc = ParentDesc;
@@ -125,12 +133,19 @@ HRESULT CKatana::Add_Components()
 	AABBDesc.vExtents = _float3(5.f, 5.f, 5.f);
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CKatana::Add_Components_Level(_uint iLevelIndex)
+{
+	
 
 	return S_OK;
 }

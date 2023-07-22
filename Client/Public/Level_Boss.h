@@ -19,7 +19,7 @@ private:
 	HRESULT Ready_Layer_Player(const _tchar * pLayerTag);
 	HRESULT Ready_Layer_Boss(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Enemy(const _tchar * pLayerTag);
-	HRESULT Ready_Layer_Props();
+	HRESULT Ready_Layer_Props(const _tchar* pFilePath);
 	HRESULT Ready_Layer_BackGround(const _tchar * pLayerTag);
 
 public:

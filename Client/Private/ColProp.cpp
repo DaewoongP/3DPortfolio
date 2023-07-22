@@ -23,14 +23,13 @@ HRESULT CColProp::Initialize(void* pArg)
 {
 	if (nullptr != pArg)
 	{
-		PROPDESC PropDesc;
 		COLPROPDESC ColPropDesc = (*static_cast<COLPROPDESC*>(pArg));
-		lstrcpy(PropDesc.pModelPrototypeTag, ColPropDesc.pModelPrototypeTag);
-		PropDesc.vPosition = ColPropDesc.vPosition;
-		PropDesc.vRotation = ColPropDesc.vRotation;
-		PropDesc.vScale = ColPropDesc.vScale;
+		lstrcpy(m_PropDesc.pModelPrototypeTag, ColPropDesc.pModelPrototypeTag);
+		m_PropDesc.vPosition = ColPropDesc.vPosition;
+		m_PropDesc.vRotation = ColPropDesc.vRotation;
+		m_PropDesc.vScale = ColPropDesc.vScale;
 
-		if (FAILED(__super::Initialize(&PropDesc)))
+		if (FAILED(__super::Initialize(&m_PropDesc)))
 			return E_FAIL;
 
 		if (FAILED(Add_Components(ColPropDesc)))
@@ -80,7 +79,7 @@ HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 	{
 	case CCollider::TYPE_SPHERE:
 		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.SphereDesc)))
 		{
 			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
@@ -89,7 +88,7 @@ HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 		break;
 	case CCollider::TYPE_AABB:
 		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.AABBDesc)))
 		{
 			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
@@ -98,7 +97,7 @@ HRESULT CColProp::Add_Components(COLPROPDESC ColDesc)
 		break;
 	case CCollider::TYPE_OBB:
 		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_OBB"),
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"),
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &ColDesc.OBBDesc)))
 		{
 			MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");

@@ -63,7 +63,12 @@ GAMEEVENT CSword::Late_Tick(_double dTimeDelta)
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
+	}
 
 	return GAME_NOEVENT;
 }
@@ -87,10 +92,6 @@ HRESULT CSword::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-#ifdef _DEBUG
-	m_pColliderCom->Render();
-#endif // _DEBUG
 
 	return S_OK;
 }
@@ -125,7 +126,7 @@ HRESULT CSword::Add_Components()
 	AABBDesc.vExtents = _float3(5.f, 5.f, 5.f);
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");

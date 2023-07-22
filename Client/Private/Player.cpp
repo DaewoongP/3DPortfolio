@@ -37,8 +37,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fJumpPower = 20.f;
 	m_fWallRunVelocity = 0.6f;
 	m_fHookPower = 2.2f;
-	XMStoreFloat3(&m_vInitRotation, XMVectorSet(0.f, 90.f, 0.f, 0.f));
-	XMStoreFloat4(&m_vInitPosition, XMVectorSet(40.f, 0.f, 90.f, 1.f));
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_fSpeed, XMConvertToRadians(3.f));
 
@@ -51,12 +49,35 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Add_Notifies()))
 		return E_FAIL;
 
-	if (FAILED(Add_Parts()))
-		return E_FAIL;
-
 	if (FAILED(Initailize_Skills()))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Initialize_Level(_uint iLevelIndex)
+{
+	XMStoreFloat3(&m_vInitRotation, XMVectorSet(0.f, 90.f, 0.f, 0.f));
+
+	switch ((LEVELID)iLevelIndex)
+	{
+	case LEVEL_STAGE1:
+		XMStoreFloat4(&m_vInitPosition, XMVectorSet(40.f, 0.f, 90.f, 1.f));
+		break;
+	case LEVEL_BOSS:
+		XMStoreFloat4(&m_vInitPosition, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		break;
+	default:
+		XMStoreFloat4(&m_vInitPosition, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		break;
+	}
 	
+	if (FAILED(Add_Component_Level(iLevelIndex)))
+		return E_FAIL;
+
+	if (FAILED(Add_Parts(iLevelIndex)))
+		return E_FAIL;
+
 	m_pTransformCom->Rotation(m_vInitRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vInitPosition));
 	// 카메라 초기 값을 객체의 트랜스폼 월드값으로 초기화.
@@ -79,12 +100,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::AntiqueWhite);
 	m_pBlockColliderCom->Set_Color(DirectX::Colors::DarkRed);
 #endif // _DEBUG
-
-
+		
 	return S_OK;
 }
 
-// Tick : 이동 관련 연산 처리.
 void CPlayer::Tick(_double dTimeDelta)
 {
 	Key_Input(dTimeDelta);
@@ -357,19 +376,8 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 	}
 
-	CNavigation::NAVIGATIONDESC NavigationDesc;
-	NavigationDesc.iCurrentIndex = 0;
-
-	/* For.Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
-	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_Navigation)");
-		return E_FAIL;
-	}
-
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom))))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
@@ -383,7 +391,7 @@ HRESULT CPlayer::Add_Component()
 	VisionAABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	VisionAABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
 	/* For.Com_VisionCollider */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &VisionAABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_VisionCollider)");
@@ -394,7 +402,7 @@ HRESULT CPlayer::Add_Component()
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	AABBDesc.vExtents = _float3(5.f, 3.f, 5.f);
 	/* For.Com_BlockCollider */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_BlockCollider"), reinterpret_cast<CComponent**>(&m_pBlockColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_BlockCollider)");
@@ -404,7 +412,24 @@ HRESULT CPlayer::Add_Component()
 	return S_OK;
 }
 
-HRESULT CPlayer::Add_Parts()
+HRESULT CPlayer::Add_Component_Level(_uint iLevelIndex)
+{
+	CNavigation::NAVIGATIONDESC NavigationDesc;
+	NavigationDesc.iCurrentIndex = 0;
+
+	/* For.Com_Navigation */
+	if (FAILED(__super::Add_Component(iLevelIndex, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_Navigation)");
+		return E_FAIL;
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Add_Parts(_uint iLevelIndex)
 {
 	CPart::PARENTMATRIXDESC ParentMatrixDesc;
 	ZEROMEM(&ParentMatrixDesc);
@@ -416,11 +441,11 @@ HRESULT CPlayer::Add_Parts()
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Katana"), TEXT("Layer_PlayerWeapon"),
+	if (FAILED(__super::Add_Part(iLevelIndex, TEXT("Prototype_GameObject_Katana"), TEXT("Layer_PlayerWeapon"),
 		TEXT("Part_Katana"), reinterpret_cast<CGameObject**>(&m_pKatana), &ParentMatrixDesc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Shuriken"), TEXT("Layer_PlayerWeapon"),
+	if (FAILED(__super::Add_Part(iLevelIndex, TEXT("Prototype_GameObject_Shuriken"), TEXT("Layer_PlayerWeapon"),
 		TEXT("Part_Shuriken"), reinterpret_cast<CGameObject**>(&m_pShuriken), &ParentMatrixDesc)))
 		return E_FAIL;
 

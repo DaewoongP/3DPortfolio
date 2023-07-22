@@ -23,6 +23,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
@@ -66,7 +67,7 @@ private:
 
 private: /* Tick */
 	HRESULT Add_Component(ENEMYDESC& EnemyDesc);
-	HRESULT Add_Parts();
+	HRESULT Add_Parts(_uint iLevelIndex);
 	HRESULT SetUp_BehaviorTree();
 	HRESULT SetUp_ShaderResources();
 

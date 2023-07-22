@@ -167,7 +167,7 @@ HRESULT CBoss::Add_Component(ENEMYDESC& EnemyDesc)
 	AABBDesc.vPosition = _float3(0.f, AABBDesc.vExtents.y, 0.f);
 
 	/* For.Com_Collider */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Collider)");
@@ -180,7 +180,7 @@ HRESULT CBoss::Add_Component(ENEMYDESC& EnemyDesc)
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_VisionCollider */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_VisionCollider)");

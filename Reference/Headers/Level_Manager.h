@@ -12,6 +12,9 @@ private:
 	virtual ~CLevel_Manager() = default;
 
 public:
+	_uint Get_CurrentLevelIndex() const { return m_iLevelIndex; }
+
+public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 	void	Tick(_double dTimeDelta);
 

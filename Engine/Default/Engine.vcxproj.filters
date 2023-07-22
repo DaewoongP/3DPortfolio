@@ -193,6 +193,9 @@
     <Filter Include="01. Utility\03. Components\02. Renderer\Shader">
       <UniqueIdentifier>{67b966f5-8d6b-46ea-b659-38dea30a5284}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\02. GameObjects\02. Part">
+      <UniqueIdentifier>{859d1421-951a-4cc9-bd7c-01c6723b1c4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -393,6 +396,9 @@
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>01. Utility\06. Light\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Part.h">
+      <Filter>01. Utility\02. GameObjects\02. Part</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -574,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Light.cpp">
       <Filter>01. Utility\06. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Part.cpp">
+      <Filter>01. Utility\02. GameObjects\02. Part</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

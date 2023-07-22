@@ -165,6 +165,13 @@ HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel* pNewLevel)
 	return m_pLevel_Manager->Open_Level(iLevelIndex, pNewLevel);
 }
 
+_uint CGameInstance::Get_CurrentLevelIndex() const
+{
+	NULL_CHECK_RETURN_MSG(m_pLevel_Manager, 0, TEXT("Level_Manager NULL"));
+
+	return m_pLevel_Manager->Get_CurrentLevelIndex();
+}
+
 HRESULT CGameInstance::Add_Prototype(const _tchar* pPrototypeTag, CGameObject* pPrototype)
 {
 	NULL_CHECK_RETURN_MSG(m_pObject_Manager, E_FAIL, TEXT("Object_Manager NULL"));

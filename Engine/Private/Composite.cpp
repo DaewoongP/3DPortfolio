@@ -61,7 +61,7 @@ HRESULT CComposite::Add_Component(_uint iLevelIndex, const _tchar* pPrototypeTag
 	return S_OK;
 }
 
-HRESULT CComposite::Add_Part(const _tchar* pPrototypeTag, const _tchar* pLayerTag, const _tchar* pObjectTag, _Inout_ CGameObject** ppOut, void* pArg)
+HRESULT CComposite::Add_Part(_uint iLevelIndex, const _tchar* pPrototypeTag, const _tchar* pLayerTag, const _tchar* pObjectTag, _Inout_ CGameObject** ppOut, void* pArg)
 {
 	CObject_Manager* pObjectManager = CObject_Manager::GetInstance();
 	Safe_AddRef(pObjectManager);
@@ -73,6 +73,8 @@ HRESULT CComposite::Add_Part(const _tchar* pPrototypeTag, const _tchar* pLayerTa
 	pGameObject->Set_LayerTag(pLayerTag);
 
 	pGameObject->Set_Tag(pObjectTag);
+
+	pGameObject->Initialize_Level(iLevelIndex);
 	
 	m_Components.emplace(pObjectTag, pGameObject);
 

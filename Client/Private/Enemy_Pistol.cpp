@@ -37,10 +37,15 @@ HRESULT CEnemy_Pistol::Initialize(void* pArg)
 	if (FAILED(Add_Component(m_EnemyDesc)))
 		return E_FAIL;
 
-	if (FAILED(Add_Parts()))
+	if (FAILED(SetUp_BehaviorTree()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_BehaviorTree()))
+	return S_OK;
+}
+
+HRESULT CEnemy_Pistol::Initialize_Level(_uint iLevelIndex)
+{
+	if (FAILED(Add_Parts(iLevelIndex)))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(m_EnemyDesc.vScale);
@@ -179,7 +184,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	AABBDesc.vPosition = _float3(0.f, AABBDesc.vExtents.y, 0.f);
 
 	/* For.Com_Collider */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Collider)");
@@ -192,7 +197,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	
 	/* For.Com_VisionCollider */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_VisionCollider)");
@@ -202,7 +207,7 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 	return S_OK;
 }
 
-HRESULT CEnemy_Pistol::Add_Parts()
+HRESULT CEnemy_Pistol::Add_Parts(_uint iLevelIndex)
 {
 	CPart::PARENTMATRIXDESC ParentMatrixDesc;
 	ZEROMEM(&ParentMatrixDesc);
@@ -214,7 +219,7 @@ HRESULT CEnemy_Pistol::Add_Parts()
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	if (FAILED(__super::Add_Part(TEXT("Prototype_GameObject_Weapon_Pistol"), TEXT("Layer_EnemyPart"),
+	if (FAILED(__super::Add_Part(iLevelIndex, TEXT("Prototype_GameObject_Weapon_Pistol"), TEXT("Layer_EnemyPart"),
 		TEXT("Part_Pistol"), reinterpret_cast<CGameObject**>(&m_pPistol), &ParentMatrixDesc)))
 		return E_FAIL;
 

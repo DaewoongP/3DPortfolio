@@ -23,6 +23,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg, CTransform::TRANSFORMDESC* pTransformDesc);
+	virtual HRESULT Initialize_Level(_uint iLevelIndex);
 	virtual void	Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) {}

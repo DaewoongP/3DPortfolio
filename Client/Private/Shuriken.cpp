@@ -31,6 +31,14 @@ HRESULT CShuriken::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CShuriken::Initialize_Level(_uint iLevelIndex)
+{
+	if (FAILED(Add_Components_Level(iLevelIndex)))
+		return E_FAIL;
+
 	m_dSpeed = 100.0;
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_dSpeed, XMConvertToRadians(0.0f));
 	m_pTransformCom->Set_Desc(TransformDesc);
@@ -141,12 +149,19 @@ HRESULT CShuriken::Add_Components()
 	SphereDesc.fRadius = 0.2f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CShuriken::Add_Components_Level(_uint iLevelIndex)
+{
+	
 
 	return S_OK;
 }

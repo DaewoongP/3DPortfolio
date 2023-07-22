@@ -21,11 +21,10 @@ HRESULT CProp::Initialize_Prototype()
 
 HRESULT CProp::Initialize(void* pArg)
 {
-	PROPDESC PropDesc;
-	ZEROMEM(&PropDesc);
-
 	if (nullptr != pArg)
-		PropDesc = *(static_cast<PROPDESC*>(pArg));
+	{
+		m_PropDesc = *(static_cast<PROPDESC*>(pArg));
+	}
 	else
 	{
 		MSG_BOX("Failed Read PropDesc");
@@ -36,12 +35,20 @@ HRESULT CProp::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
-	if (FAILED(Add_Components(PropDesc)))
+	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(PropDesc.vScale);
-	m_pTransformCom->Rotation(PropDesc.vRotation);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&PropDesc.vPosition));
+	m_pTransformCom->Set_Scale(m_PropDesc.vScale);
+	m_pTransformCom->Rotation(m_PropDesc.vRotation);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_PropDesc.vPosition));
+
+	return S_OK;
+}
+
+HRESULT CProp::Initialize_Level(_uint iLevelIndex)
+{
+	if (FAILED(Add_Components_Level(iLevelIndex)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -92,26 +99,31 @@ HRESULT CProp::Render()
 	return S_OK;
 }
 
-HRESULT CProp::Add_Components(PROPDESC PropDesc)
+HRESULT CProp::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, PropDesc.pModelPrototypeTag,
-		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-	{
-		MSG_BOX("Failed CProp Add_Component : (Com_Model)");
-		return E_FAIL;
-	}
-
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
 		MSG_BOX("Failed CProp Add_Component : (Com_Shader)");
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CProp::Add_Components_Level(_uint iLevelIndex)
+{
+	/* For.Com_Model */
+	if (FAILED(__super::Add_Component(iLevelIndex, m_PropDesc.pModelPrototypeTag,
+		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	{
+		MSG_BOX("Failed CProp Add_Component : (Com_Model)");
 		return E_FAIL;
 	}
 

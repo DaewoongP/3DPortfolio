@@ -65,6 +65,7 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
 	pGameObject->Set_LayerTag(pLayerTag);
+	pGameObject->Initialize_Level(iLevelIndex);
 
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
 

@@ -385,32 +385,6 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 
-	lstrcpy(m_szLoading, TEXT("충돌체 로딩 중."));
-
-	/* For.Prototype_Component_Collider_Sphere */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_Sphere"),
-		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_Sphere)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_Component_Collider_AABB */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
-		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_AABB)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_Component_Collider_OBB */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_OBB"),
-		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_OBB)");
-		return E_FAIL;
-	}
-
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
 
 	/* For.Prototype_GameObject_Player */
@@ -573,9 +547,32 @@ HRESULT CLoader::Loading_For_Stage2()
 
 HRESULT CLoader::Loading_For_Boss()
 {
-	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+	if (nullptr == m_pGameInstance)
+		return E_FAIL;
 
-	_matrix PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
+	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
+
+	/* For.Prototype_Component_Texture_Crosshair */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Crosshair"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/crosshair.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Crosshair)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_Dash */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Dash"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/hud_dash_%d.png"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dash)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
+	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
+	_matrix		PivotMatrix = XMMatrixIdentity();
+
+	PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Enemy_Bakunin */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Enemy_Bakunin"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Bakunin.dat"), PivotMatrix))))
@@ -584,7 +581,64 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_Component_Model_Sky */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Sky"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");
+		return E_FAIL;
+	}
+
+	// Test 나중에 ㅅ학제해야함-----------------------------------------------------
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_NonAnimModel_SM_SM_Floors_01_mod_big_flat_03"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props\\SM_SM_Floors_01_mod_big_flat_03.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Model Data File)");
+		return E_FAIL;
+	}
+
+	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
+	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
+
+	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
+
+	/* Prototype_Component_Shader_VtxTexInstance */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Shader_VtxTexInstance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexInstance.hlsl"),
+			VTXRECTINSTANCE_DECL::Elements, VTXRECTINSTANCE_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxTexInstance)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("네비게이션정보 로딩 중."));
+
+	/* For.Prototype_Component_Navigation */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Debug.Navi")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("AI 로딩 중."));
+
+	/* For.Prototype_Component_BehaviorTree */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_BehaviorTree"),
+		CBehaviorTree::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_BehaviorTree)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
+	// 이미 만들어놓은 프로토타입은 추가 생성할 필요없음.
+	
+	lstrcpy(m_szLoading, TEXT("로딩 완료."));
+
+	m_isFinished = true;
 
 	return S_OK;
 }

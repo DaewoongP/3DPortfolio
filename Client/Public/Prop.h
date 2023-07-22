@@ -29,17 +29,22 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
 protected:
-	CModel* m_pModelCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CRenderer* m_pRendererCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
+	CRenderer*			m_pRendererCom = { nullptr };
 
-public:
-	HRESULT Add_Components(PROPDESC PropDesc);
+protected:
+	PROPDESC			m_PropDesc;
+
+private:
+	HRESULT Add_Components();
+	HRESULT Add_Components_Level(_uint iLevelIndex);
 	HRESULT SetUp_ShaderResources();
 
 public:

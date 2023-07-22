@@ -1,5 +1,4 @@
 #include "..\Public\GameObject.h"
-#include "GameInstance.h"
 
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComposite(pDevice, pContext)
@@ -18,6 +17,7 @@ HRESULT CGameObject::Initialize_Prototype()
 
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -33,6 +33,11 @@ HRESULT CGameObject::Initialize(void* pArg, CTransform::TRANSFORMDESC* pTransfor
 		Safe_AddRef(m_pTransformCom);
 	}
 
+	return S_OK;
+}
+
+HRESULT CGameObject::Initialize_Level(_uint iLevelIndex)
+{
 	return S_OK;
 }
 

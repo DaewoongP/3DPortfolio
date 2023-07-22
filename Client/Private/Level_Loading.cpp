@@ -49,7 +49,7 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 	if (GetKeyState(VK_RETURN) & 0x8000)
 	{
 		// 로딩완료 체크
-		if (false == m_pLoader->Get_Finished())
+ 		if (false == m_pLoader->Get_Finished())
 			return;
 
 		CLevel* pLevel = { nullptr };

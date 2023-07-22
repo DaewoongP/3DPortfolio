@@ -24,20 +24,20 @@ void CLevel_Logo::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	if (GetKeyState(VK_SPACE) & 0x8000)
-	{
-		CGameInstance* pGameInstance = CGameInstance::GetInstance();
-		Safe_AddRef(pGameInstance);
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
+	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
+	{
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE1))))
 		{
 			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_STAGE1");
 			Safe_Release(pGameInstance);
 			return;
 		}
-
-		Safe_Release(pGameInstance);
 	}
+
+	Safe_Release(pGameInstance);
 
 #ifdef _DEBUG
 	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));

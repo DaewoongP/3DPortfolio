@@ -1,10 +1,9 @@
 #pragma once
 #include "GameObject.h"
-#include "Client_Defines.h"
 
-BEGIN(Client)
+BEGIN(Engine)
 
-class CPart abstract : public CGameObject
+class ENGINE_DLL CPart abstract : public CGameObject
 {
 public:
 	typedef struct tagParentMatrixDesc
