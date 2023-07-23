@@ -142,57 +142,6 @@ HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 		return E_FAIL;
 	}
 
-	_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, -4.f, -0.5f);
-	/* For.Prototype_Component_Model_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Player"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Player.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Player)");
-		return E_FAIL;
-	}
-
-	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	/* For.Prototype_Component_Model_Katana */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Katana"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Katana.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
-		return E_FAIL;
-	}
-
-	PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
-	/* For.Prototype_Component_Model_Shuriken */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Shuriken"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Shuriken.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Shuriken)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_Component_Collider_Sphere */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
-		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_SPHERE))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_Sphere)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_Component_Collider_AABB */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
-		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_AABB))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_AABB)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_Component_Collider_OBB */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"),
-		CCollider::Create(m_pDevice, m_pContext, CCollider::TYPE_OBB))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_OBB)");
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 

@@ -37,9 +37,6 @@ HRESULT CEnemy_Hammer::Initialize(void* pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	if (FAILED(SetUp_BehaviorTree()))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -54,8 +51,6 @@ HRESULT CEnemy_Hammer::Initialize_Level(_uint iLevelIndex)
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(1.f, XMConvertToRadians(360.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
-	// 네비게이션 초기위치 찾기.
-	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	m_pModelCom->Reset_Animation(52);
 	m_pModelCom->Delete_AnimationTranslation(68);
@@ -63,6 +58,12 @@ HRESULT CEnemy_Hammer::Initialize_Level(_uint iLevelIndex)
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
 #endif // _DEBUG
+
+	if (FAILED(__super::Initialize_Level(iLevelIndex)))
+		return E_FAIL;
+
+	if (FAILED(SetUp_BehaviorTree()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -258,7 +259,7 @@ HRESULT CEnemy_Hammer::SetUp_BehaviorTree()
 
 
 	/* For. Com_BehaviorTree */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_BehaviorTree"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
 		CSelector_Hammer::Create(pBlackBoard))))
 	{

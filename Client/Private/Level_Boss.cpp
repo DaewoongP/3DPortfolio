@@ -54,6 +54,11 @@ HRESULT CLevel_Boss::Ready_Layer_Boss(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss"), pLayerTag, TEXT("GameObject_Boss"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Boss)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 

@@ -50,7 +50,7 @@ private:
 	STATE						m_eCurState = { STATE_IDLE };
 
 private: /* Initialize */
-	HRESULT Add_Component(ENEMYDESC& EnemyDesc);
+	HRESULT Add_Component();
 	HRESULT Add_Parts();
 	HRESULT SetUp_BehaviorTree();
 	HRESULT SetUp_ShaderResources();
@@ -69,3 +69,10 @@ public:
 };
 
 END
+
+
+/*
+
+1 - idle
+
+*/

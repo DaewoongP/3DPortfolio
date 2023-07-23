@@ -19,7 +19,6 @@ CPlayer::CPlayer(const CPlayer& rhs)
 #ifdef _DEBUG
 	, m_isMouseFixed(rhs.m_isMouseFixed)
 #endif // _DEBUG
-
 {
 }
 

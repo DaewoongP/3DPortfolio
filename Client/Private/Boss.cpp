@@ -21,18 +21,10 @@ HRESULT CBoss::Initialize_Prototype()
 
 HRESULT CBoss::Initialize(void* pArg)
 {
-	if (nullptr != pArg)
-		m_EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
-	else
-	{
-		MSG_BOX("Failed Read EnemyDesc");
-		return E_FAIL;
-	}
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Add_Component(m_EnemyDesc)))
+	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	if (FAILED(Add_Parts()))
@@ -41,14 +33,12 @@ HRESULT CBoss::Initialize(void* pArg)
 	if (FAILED(SetUp_BehaviorTree()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(m_EnemyDesc.vScale);
-	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_EnemyDesc.vPosition));
+	m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+	m_pTransformCom->Rotation(_float3(0.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(10.f, 0.f, 10.f, 1.f));
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
-	// 네비게이션 초기위치 찾기.
-	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	m_pModelCom->Reset_Animation(1);
 	m_pModelCom->Delete_AnimationTranslation(5);
@@ -62,7 +52,7 @@ HRESULT CBoss::Initialize(void* pArg)
 
 void CBoss::Tick(_double dTimeDelta)
 {
-	/*__super::Tick(dTimeDelta);
+	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -73,20 +63,23 @@ void CBoss::Tick(_double dTimeDelta)
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
-	Safe_Release(pGameInstance);*/
+	Safe_Release(pGameInstance);
 }
 
 GAMEEVENT CBoss::Late_Tick(_double dTimeDelta)
 {
-//	AnimationState(dTimeDelta);
-//
-//	__super::Late_Tick(dTimeDelta);
-//
-//#ifdef _DEBUG
-//	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
-//	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
-//#endif // _DEBUG
-//
+	AnimationState(dTimeDelta);
+
+	__super::Late_Tick(dTimeDelta);
+
+	if (nullptr != m_pRendererCom)
+	{
+#ifdef _DEBUG
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+		m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
+#endif // _DEBUG
+	}
+
 	return PlayEvent(dTimeDelta);
 }
 
@@ -143,10 +136,10 @@ HRESULT CBoss::Reset()
 	return S_OK;
 }
 
-HRESULT CBoss::Add_Component(ENEMYDESC& EnemyDesc)
+HRESULT CBoss::Add_Component()
 {
 	/* For.Com_Model */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Bakunin"),
+	if (FAILED(CComposite::Add_Component(LEVEL_BOSS, TEXT("Prototype_Component_Model_Enemy_Bakunin"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Model)");
@@ -192,17 +185,31 @@ HRESULT CBoss::Add_Component(ENEMYDESC& EnemyDesc)
 
 HRESULT CBoss::Add_Parts()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CBoss::SetUp_BehaviorTree()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CBoss::SetUp_ShaderResources()
 {
-	return E_NOTIMPL;
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
 }
 
 void CBoss::AnimationState(_double dTimeDelta)
@@ -215,19 +222,42 @@ void CBoss::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 
 GAMEEVENT CBoss::PlayEvent(_double dTimeDelta)
 {
-	return GAMEEVENT();
+	return GAME_NOEVENT;
 }
 
 CBoss* CBoss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	return nullptr;
+	CBoss* pInstance = new CBoss(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created CBoss");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 CGameObject* CBoss::Clone(void* pArg)
 {
-	return nullptr;
+	CBoss* pInstance = new CBoss(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned CBoss");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CBoss::Free()
 {
+	__super::Free();
+
+	Safe_Release(m_pModelCom);
+	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pVisionColliderCom);
+	Safe_Release(m_pBehaviorTreeCom);
 }

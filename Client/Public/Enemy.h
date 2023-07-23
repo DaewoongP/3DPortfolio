@@ -28,6 +28,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
@@ -45,6 +46,7 @@ protected:
 
 private: /* Tick */
 	HRESULT Add_Component();
+	HRESULT Add_Component_Level(_uint iLevelIndex);
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

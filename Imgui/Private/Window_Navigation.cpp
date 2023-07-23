@@ -59,6 +59,82 @@ void CWindow_Navigation::Tick(_double dTimeDelta)
 	ImGui::End();
 }
 
+HRESULT CWindow_Navigation::Render()
+{
+	if (true == m_bPickNavigation)
+	{
+		_tchar szPickIndex[20] = TEXT("");
+		_itow_s(m_iCurrentPickIndex + 1, szPickIndex, sizeof(4), 10);
+
+		
+		_tchar szFont[20] = TEXT("Current Index : ");
+
+		lstrcat(szFont , szPickIndex);
+
+		_float2 vCursorPos;
+		POINT	pt{};
+		GetCursorPos(&pt);
+		ScreenToClient(g_hWnd, &pt);
+
+		vCursorPos.x = (_float)pt.x;
+		vCursorPos.y = (_float)pt.y;
+
+		if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), szPickIndex, vCursorPos, DirectX::Colors::HotPink, 0.f, _float2(0.f, 0.f), 3.f)))
+			return E_FAIL;
+	}
+
+	for (_uint i = 0; i < m_Cells.size(); ++i)
+	{
+		if (i >= m_CellIndices.size())
+			break;
+
+		_vector vCenter = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+		for (_uint j = 0; j < CCell::POINT_END; ++j)
+		{
+			vCenter += XMLoadFloat3(&m_Cells[i][j]);
+		}
+
+		vCenter /= CCell::POINT_END;
+		
+		_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
+		_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+		_vector vViewPos = XMVector3TransformCoord(vCenter, ViewMatrix);
+		_vector vProjPos = XMVector3TransformCoord(vViewPos, ProjMatrix);
+
+		_uint iVP = 1;
+		D3D11_VIEWPORT ViewPort;
+		ZEROMEM(&ViewPort);
+		m_pContext->RSGetViewports(&iVP, &ViewPort);
+
+		_float3 vRenderCenterPos;
+		_float2 vRender;
+		XMStoreFloat3(&vRenderCenterPos, vProjPos);
+		// 투영 좌표가 아닌 친구들을 렌더링 하지 않게 처리.
+		if (-1.f > vRenderCenterPos.x ||
+			1.f < vRenderCenterPos.x ||
+			-1.f > vRenderCenterPos.y ||
+			1.f < vRenderCenterPos.y ||
+			0.f > vRenderCenterPos.z ||
+			1.f < vRenderCenterPos.z)
+			continue;
+
+		vRender.x = (vRenderCenterPos.x + 1.f) * 0.5f * ViewPort.Width;
+		vRender.y = (1.f - vRenderCenterPos.y) * 0.5f * ViewPort.Height;
+
+		_float fDepth = (1.f - vRenderCenterPos.z) * 200.f;
+
+		_tchar szCellIndex[MAX_STR] = TEXT("");
+		CharToWChar(m_CellIndices[i], szCellIndex);
+
+		if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), szCellIndex, vRender, DirectX::Colors::Red, 0.f, _float2(0.f, 0.f), fDepth)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CWindow_Navigation::Pick_Navigation(_double dTimeDelta)
 {
 	if (false == m_bCellModifyMode && ImGui::Checkbox("Pick Cell", &m_bPickNavigation))

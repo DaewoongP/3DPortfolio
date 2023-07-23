@@ -37,10 +37,6 @@ HRESULT CEnemy_Sword::Initialize(void* pArg)
 	if (FAILED(Add_Component(m_EnemyDesc)))
 		return E_FAIL;
 
-	if (FAILED(SetUp_BehaviorTree()))
-		return E_FAIL;
-
-
 	return S_OK;
 }
 
@@ -55,15 +51,19 @@ HRESULT CEnemy_Sword::Initialize_Level(_uint iLevelIndex)
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
-	// 네비게이션 초기위치 찾기.
-	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-
+	
 	m_pModelCom->Reset_Animation(1);
 	m_pModelCom->Delete_AnimationTranslation(5);
 
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
 #endif // _DEBUG
+
+	if (FAILED(__super::Initialize_Level(iLevelIndex)))
+		return E_FAIL;
+
+	if (FAILED(SetUp_BehaviorTree()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -266,7 +266,7 @@ HRESULT CEnemy_Sword::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_isBlocked"), &m_isBlocked);
 
 	/* For. Com_BehaviorTree */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_BehaviorTree"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
 		CSelector_FindTargetToDashAttack::Create(pBlackBoard))))
 	{

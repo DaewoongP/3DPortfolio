@@ -36,6 +36,7 @@ public:
     HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ImGuiIO** pIO);
     void Tick(_double dTimeDelta);
     void Render();
+    void Render_Windows();
 
 private:
     ImGuiIO*                m_pIO = { nullptr };

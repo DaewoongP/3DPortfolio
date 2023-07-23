@@ -37,7 +37,7 @@ void CLevel_Stage1::Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (pGameInstance->Get_DIKeyState(DIK_F5, CInput_Device::KEY_DOWN))
+	if (pGameInstance->Get_DIKeyState(DIK_F7, CInput_Device::KEY_DOWN))
 	{
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_BOSS))))
 		{

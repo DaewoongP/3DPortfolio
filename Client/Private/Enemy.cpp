@@ -32,6 +32,17 @@ HRESULT CEnemy::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CEnemy::Initialize_Level(_uint iLevelIndex)
+{
+	if (FAILED(Add_Component_Level(iLevelIndex)))
+		return E_FAIL;
+
+	// 네비게이션 초기위치 찾기.
+	m_pNavigationCom->Find_MyCell(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+
+	return S_OK;
+}
+
 void CEnemy::Tick(_double dTimeDelta)
 {	
 	__super::Tick(dTimeDelta);
@@ -44,8 +55,13 @@ GAMEEVENT CEnemy::Late_Tick(_double dTimeDelta)
 
 	if (nullptr != m_pRendererCom &&
 		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 4.f))
+	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-
+#ifdef _DEBUG
+		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
+#endif // _DEBUG
+	}
+	
 	__super::Late_Tick(dTimeDelta);
 
 	Safe_Release(pGameInstance);
@@ -77,10 +93,6 @@ HRESULT CEnemy::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-#ifdef _DEBUG
-	m_pNavigationCom->Render();
-#endif // _DEBUG
-
 	return S_OK;
 }
 
@@ -106,11 +118,16 @@ HRESULT CEnemy::Add_Component()
 		return E_FAIL;
 	}
 
+	return S_OK;
+}
+
+HRESULT CEnemy::Add_Component_Level(_uint iLevelIndex)
+{
 	CNavigation::NAVIGATIONDESC NavigationDesc;
 	NavigationDesc.iCurrentIndex = 0;
 
 	/* For.Com_Navigation */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Navigation"),
+	if (FAILED(__super::Add_Component(iLevelIndex, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NavigationDesc)))
 	{
 		MSG_BOX("Failed CEnemy Add_Component : (Com_Navigation)");

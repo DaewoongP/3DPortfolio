@@ -36,6 +36,10 @@ HRESULT CMainTool::Initialize()
 	m_pImWindow_Manager->Initialize(m_pDevice, m_pContext, &m_pIO);
 
 	FAILED_CHECK_RETURN(Add_Windows(), E_FAIL);
+
+	if (FAILED(m_pGameInstance->Add_Fonts(m_pDevice, m_pContext, TEXT("Font_135"), TEXT("../Bin/Resources/Fonts/135ex.spritefont"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -61,6 +65,7 @@ HRESULT CMainTool::Render(void)
 	FAILED_CHECK_RETURN(m_pRenderer->Draw_RenderGroup(), E_FAIL);
 	m_pImWindow_Manager->Render();
 	m_pGameInstance->ResetRenderTargets();
+	m_pImWindow_Manager->Render_Windows();
 	FAILED_CHECK_RETURN(m_pGameInstance->Present(), E_FAIL);
 
 	return S_OK;
