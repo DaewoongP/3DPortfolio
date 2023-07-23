@@ -19,7 +19,8 @@ CBehavior::STATE CTask_ChaseLook::Tick(_double dTimeDelta)
 	if (nullptr == pTarget)
 		return STATE_FAILED;
 
-	*m_isWalk = true;
+	if (nullptr != m_isWalk)
+		*m_isWalk = true;
 
 	// y값 전부 제거.
 	_vector vTargetPos = XMVectorSetY(pTarget->Get_Transform()->Get_State(CTransform::STATE_POSITION), 0.f);
@@ -30,7 +31,8 @@ CBehavior::STATE CTask_ChaseLook::Tick(_double dTimeDelta)
 	
 	if (XMVectorGetX(XMVectorNearEqual(vLook, vDir, XMVectorSet(0.05f, 0.05f, 0.05f, 0.1f))))
 	{
-		*m_isWalk = false;
+		if (nullptr != m_isWalk)
+			*m_isWalk = false;
 		// 현재 바라보는 방향이 근사치에 다다름.
 		return STATE_SUCCESS;
 	}

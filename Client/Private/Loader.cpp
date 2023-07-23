@@ -3,6 +3,7 @@
 
 #include "Sky.h"
 #include "Boss.h"
+#include "Bomb.h"
 #include "Mouse.h"
 #include "Sword.h"
 #include "Hammer.h"
@@ -289,7 +290,7 @@ HRESULT CLoader::Loading_For_Stage1()
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Pistol */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Pistol"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Enemy_Pistol"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Pistol.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Pistol)");
@@ -298,7 +299,7 @@ HRESULT CLoader::Loading_For_Stage1()
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Weapon_Pistol */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Weapon_Pistol"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Weapon_Pistol"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/Weapon_Enemy_Pistol.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Pistol)");
@@ -307,7 +308,7 @@ HRESULT CLoader::Loading_For_Stage1()
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Sword */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Sword"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Enemy_Sword"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Sword_Elite.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Sword)");
@@ -316,7 +317,7 @@ HRESULT CLoader::Loading_For_Stage1()
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Hammer */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Hammer"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Enemy_Hammer"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Hammer.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Hammer)");
@@ -325,7 +326,7 @@ HRESULT CLoader::Loading_For_Stage1()
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Hammer */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Hammer"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Hammer"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/Weapon_Enemy_Hammer.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Hammer)");
@@ -714,6 +715,14 @@ HRESULT CLoader::Loading_For_Boss()
 		CBoss_Sword::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Sword)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Bomb */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bomb"),
+		CBomb::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Bomb)");
 		return E_FAIL;
 	}
 

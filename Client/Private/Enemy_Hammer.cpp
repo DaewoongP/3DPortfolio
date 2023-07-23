@@ -168,7 +168,7 @@ HRESULT CEnemy_Hammer::Reset()
 HRESULT CEnemy_Hammer::Add_Component()
 {
 	/* For.Com_Model */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Hammer"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Model_Enemy_Hammer"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Model)");

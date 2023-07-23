@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
+    <ClInclude Include="..\public\Bomb.h" />
     <ClInclude Include="..\public\Boss.h" />
     <ClInclude Include="..\public\Boss_Sword.h" />
     <ClInclude Include="..\public\Crosshair.h" />
@@ -199,13 +200,16 @@
     <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Prop.h" />
+    <ClInclude Include="..\public\RandomChoose_FlyingAttack.h" />
     <ClInclude Include="..\public\Selector_Boss.h" />
     <ClInclude Include="..\public\Selector_FindTargetToAttack.h" />
     <ClInclude Include="..\public\Selector_FindTargetToDashAttack.h" />
     <ClInclude Include="..\public\Selector_Hammer.h" />
     <ClInclude Include="..\public\Sequence_DashAttack.h" />
+    <ClInclude Include="..\public\Sequence_Flying.h" />
     <ClInclude Include="..\public\Sequence_LookAttack.h" />
     <ClInclude Include="..\Public\Sequence_Patrol.h" />
+    <ClInclude Include="..\Public\RandomChoose_Move.h" />
     <ClInclude Include="..\public\Sequence_SlowLookAttack.h" />
     <ClInclude Include="..\public\Shuriken.h" />
     <ClInclude Include="..\public\Sky.h" />
@@ -216,10 +220,16 @@
     <ClInclude Include="..\public\Task_FailedWait.h" />
     <ClInclude Include="..\public\Task_Fly.h" />
     <ClInclude Include="..\public\Task_LookAt.h" />
+    <ClInclude Include="..\public\Task_MoveBack.h" />
     <ClInclude Include="..\Public\Task_MoveForward.h" />
+    <ClInclude Include="..\public\Task_MoveFront.h" />
+    <ClInclude Include="..\public\Task_MoveLeft.h" />
+    <ClInclude Include="..\public\Task_MoveRight.h" />
     <ClInclude Include="..\Public\Task_RandomTurn.h" />
     <ClInclude Include="..\public\Task_Ready.h" />
     <ClInclude Include="..\public\Task_Stop.h" />
+    <ClInclude Include="..\public\Task_Summon.h" />
+    <ClInclude Include="..\public\Task_ThrowBomb.h" />
     <ClInclude Include="..\public\Task_TurnIdle.h" />
     <ClInclude Include="..\public\Task_RandomWait.h" />
     <ClInclude Include="..\public\Task_Wait.h" />
@@ -233,6 +243,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Bomb.cpp" />
     <ClCompile Include="..\private\Boss.cpp" />
     <ClCompile Include="..\private\Boss_Sword.cpp" />
     <ClCompile Include="..\private\Crosshair.cpp" />
@@ -261,13 +272,16 @@
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Prop.cpp" />
+    <ClCompile Include="..\private\RandomChoose_FlyingAttack.cpp" />
     <ClCompile Include="..\private\Selector_Boss.cpp" />
     <ClCompile Include="..\private\Selector_FindTargetToAttack.cpp" />
     <ClCompile Include="..\private\Selector_FindTargetToDashAttack.cpp" />
     <ClCompile Include="..\private\Selector_Hammer.cpp" />
     <ClCompile Include="..\private\Sequence_DashAttack.cpp" />
+    <ClCompile Include="..\private\Sequence_Flying.cpp" />
     <ClCompile Include="..\private\Sequence_LookAttack.cpp" />
     <ClCompile Include="..\Private\Sequence_Patrol.cpp" />
+    <ClCompile Include="..\Private\RandomChoose_Move.cpp" />
     <ClCompile Include="..\private\Sequence_SlowLookAttack.cpp" />
     <ClCompile Include="..\private\Shuriken.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
@@ -278,10 +292,16 @@
     <ClCompile Include="..\private\Task_FailedWait.cpp" />
     <ClCompile Include="..\private\Task_Fly.cpp" />
     <ClCompile Include="..\private\Task_LookAt.cpp" />
+    <ClCompile Include="..\private\Task_MoveBack.cpp" />
     <ClCompile Include="..\Private\Task_MoveForward.cpp" />
+    <ClCompile Include="..\private\Task_MoveFront.cpp" />
+    <ClCompile Include="..\private\Task_MoveLeft.cpp" />
+    <ClCompile Include="..\private\Task_MoveRight.cpp" />
     <ClCompile Include="..\Private\Task_RandomTurn.cpp" />
     <ClCompile Include="..\private\Task_Ready.cpp" />
     <ClCompile Include="..\private\Task_Stop.cpp" />
+    <ClCompile Include="..\private\Task_Summon.cpp" />
+    <ClCompile Include="..\private\Task_ThrowBomb.cpp" />
     <ClCompile Include="..\private\Task_TurnIdle.cpp" />
     <ClCompile Include="..\private\Task_RandomWait.cpp" />
     <ClCompile Include="..\private\Task_Wait.cpp" />

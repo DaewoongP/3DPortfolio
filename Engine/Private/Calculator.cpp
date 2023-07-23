@@ -200,7 +200,7 @@ _int CCalculator::RandomChoose(vector<_float> Weights, _uint iChooseSize)
 		}
 	}
 
-	_float fRand = (rand() % 100) / 100.f;
+	_float fRand = (rand() % 101) * 0.01f;
 
 	for (_uint iIndex = 0; iIndex < Weights.size(); ++iIndex)
 	{

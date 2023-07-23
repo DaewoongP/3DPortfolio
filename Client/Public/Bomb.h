@@ -10,24 +10,18 @@ END
 
 BEGIN(Client)
 
-class CBullet : public CGameObject
+class CBomb final : public CGameObject
 {
 private:
-	explicit CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CBullet(const CBullet& rhs);
-	virtual ~CBullet() = default;
-
-public:
-	void Set_Type(COLLISIONDESC::COLTYPE eType) {
-		m_eColType = eType;
-	}
+	explicit CBomb(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CBomb(const CBomb& rhs);
+	virtual ~CBomb() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
-	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Reset() override;
 
@@ -37,11 +31,9 @@ private:
 	CCollider*		m_pColliderCom = { nullptr };
 
 private:
-	_double			m_dDeleteTimeAcc = { 0.0 };
-	_double			m_dDeleteTime = { 5.0 };
-
-private:
-	COLLISIONDESC::COLTYPE	m_eColType = { COLLISIONDESC::COLTYPE_END };
+	_double			m_dExplodeTimeAcc = { 0.0 };
+	_double			m_dExplodeTime = { 3.0 };
+	_double			m_dDeleteTime = { 3.5 };
 
 public:
 	HRESULT Add_Components();
@@ -49,7 +41,7 @@ public:
 	void Fire(_fvector vInitPosition, _fvector vTargetPosition);
 
 public:
-	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CBomb* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

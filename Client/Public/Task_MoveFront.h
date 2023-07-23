@@ -8,11 +8,11 @@ END
 
 BEGIN(Client)
 
-class CTask_Fly final : public CTask
+class CTask_MoveFront final : public CTask
 {
 private:
-	explicit CTask_Fly() = default;
-	virtual ~CTask_Fly() = default;
+	explicit CTask_MoveFront() = default;
+	virtual ~CTask_MoveFront() = default;
 
 public:
 	virtual HRESULT Initialize(CBlackBoard * pBlackBoard) override;
@@ -21,11 +21,11 @@ public:
 
 private:
 	CTransform*			m_pTransformCom = { nullptr };
-	_float*				m_fFlyHeight = { nullptr };
-	_float*				m_fFlySpeed = { nullptr };
+	_double*			m_dMoveTime = { nullptr };
+	_bool*				m_isMoveFront = { nullptr };
 
 public:
-	static CTask_Fly* Create(class CBlackBoard* pBlackBoard);
+	static CTask_MoveFront* Create(class CBlackBoard* pBlackBoard);
 	virtual void Free() override;
 };
 

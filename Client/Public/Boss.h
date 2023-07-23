@@ -31,6 +31,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Reset() override;
 
+public:
+	void Throw_Bomb(_fvector vTargetPosition);
+
 private:
 	CModel*						m_pModelCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
@@ -40,9 +43,19 @@ private:
 
 private: /* Parts */
 	class CBoss_Sword*			m_pSword = { nullptr };
+	vector<CGameObject*>		m_Bombs;
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
+	/* Task Fly */
+	_float						m_fFlyHeight = { 0.f };
+	_float						m_fFlySpeed = { 0.f };
+	/* RandomChoose_Move */
+	_bool						m_isMoveFront = { false };
+	_bool						m_isMoveBack = { false };
+	_bool						m_isMoveRight = { false };
+	_bool						m_isMoveLeft = { false };
+	_double						m_dMoveTime = { 0.0 };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -61,9 +74,11 @@ private: /* Initialize */
 private: /* Tick */
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
+	void Tick_Bomb(_double dTimeDelta);
 
 private: /* Late_Tick */
 	GAMEEVENT PlayEvent(_double dTimeDelta);
+	void Late_Tick_Bomb(_double dTimeDelta);
 
 public:
 	static CBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

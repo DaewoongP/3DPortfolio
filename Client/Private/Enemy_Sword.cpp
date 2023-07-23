@@ -174,7 +174,7 @@ HRESULT CEnemy_Sword::Reset()
 HRESULT CEnemy_Sword::Add_Component(ENEMYDESC& EnemyDesc)
 {
 	/* For.Com_Model */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Enemy_Sword"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Model_Enemy_Sword"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Model)");

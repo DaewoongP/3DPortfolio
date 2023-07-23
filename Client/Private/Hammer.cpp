@@ -105,7 +105,7 @@ HRESULT CHammer::Add_Components()
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Hammer"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Model_Hammer"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
 		MSG_BOX("Failed CSword Add_Component : (Com_Model)");

@@ -1,7 +1,8 @@
 #include "..\Public\Boss.h"
 #include "GameInstance.h"
 #include "Boss_Sword.h"
-#include "BlackBoard.h"
+#include "Selector_Boss.h"
+#include "Bomb.h"
 
 CBoss::CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -32,8 +33,8 @@ HRESULT CBoss::Initialize(void* pArg)
 	if (FAILED(Add_Parts()))
 		return E_FAIL;
 
-	/*if (FAILED(SetUp_BehaviorTree()))
-		return E_FAIL;*/
+	if (FAILED(SetUp_BehaviorTree()))
+		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
 	m_pTransformCom->Rotation(_float3(0.f, 0.f, 0.f));
@@ -54,6 +55,8 @@ HRESULT CBoss::Initialize(void* pArg)
 
 void CBoss::Tick(_double dTimeDelta)
 {
+	Tick_Bomb(dTimeDelta);
+
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -70,6 +73,8 @@ void CBoss::Tick(_double dTimeDelta)
 
 GAMEEVENT CBoss::Late_Tick(_double dTimeDelta)
 {
+	Late_Tick_Bomb(dTimeDelta);
+
 	AnimationState(dTimeDelta);
 
 	__super::Late_Tick(dTimeDelta);
@@ -145,7 +150,37 @@ HRESULT CBoss::Reset()
 
 	m_pTargetPlayer = nullptr;
 
+	for (auto& pBomb : m_Bombs)
+		pBomb->Reset();
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
 	return S_OK;
+}
+
+void CBoss::Throw_Bomb(_fvector vTargetPosition)
+{
+	CGameObject* pBomb = { nullptr };
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Bomb"), nullptr);
+
+	pGameObject->Set_Owner(this);
+
+	pGameObject->Set_LayerTag(TEXT("Layer_EnemyWeapon"));
+
+	pGameObject->Set_Tag(TEXT("GameObject_Bomb"));
+
+	pGameObject->Initialize_Level(LEVEL_BOSS);
+
+	m_Bombs.push_back(pGameObject);
+
+	Safe_Release(pGameInstance);
+
+	static_cast<CBomb*>(pGameObject)->Fire(m_pTransformCom->Get_State(CTransform::STATE_POSITION), vTargetPosition);
 }
 
 HRESULT CBoss::Add_Component()
@@ -181,7 +216,7 @@ HRESULT CBoss::Add_Component()
 
 	CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
 
-	SphereDesc.fRadius = 10.f;
+	SphereDesc.fRadius = 200.f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_VisionCollider */
@@ -217,18 +252,32 @@ HRESULT CBoss::Add_Parts()
 HRESULT CBoss::SetUp_BehaviorTree()
 {
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
+	pBlackBoard->Add_Value(TEXT("Value_Owner"), this);
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
 	pBlackBoard->Add_Value(TEXT("Value_Navigation"), m_pNavigationCom);
 	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
+	pBlackBoard->Add_Value(TEXT("Value_isDead"), &m_isDead);
+	/* Task Fly */
+	m_fFlyHeight = 15.f;
+	pBlackBoard->Add_Value(TEXT("Value_FlyHeight"), &m_fFlyHeight);
+	m_fFlySpeed = 3.f;
+	pBlackBoard->Add_Value(TEXT("Value_FlySpeed"), &m_fFlySpeed);
+	/* RandomChoose_Move */
+	pBlackBoard->Add_Value(TEXT("Value_isMoveFront"), &m_isMoveFront);
+	pBlackBoard->Add_Value(TEXT("Value_isMoveBack"), &m_isMoveBack);
+	pBlackBoard->Add_Value(TEXT("Value_isMoveRight"), &m_isMoveRight);
+	pBlackBoard->Add_Value(TEXT("Value_isMoveLeft"), &m_isMoveLeft);
+	m_dMoveTime = 2.0;
+	pBlackBoard->Add_Value(TEXT("Value_MoveTime"), &m_dMoveTime);
 
 	/* For. Com_BehaviorTree */
-	/*if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BehaviorTree"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BehaviorTree"),
 		TEXT("Com_BehaviorTree"), reinterpret_cast<CComponent**>(&m_pBehaviorTreeCom),
-		CSelector_FindTargetToDashAttack::Create(pBlackBoard))))
+		CSelector_Boss::Create(pBlackBoard))))
 	{
-		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BehaviorTree)");
+		MSG_BOX("Failed CBoss Add_Component : (Com_BehaviorTree)");
 		return E_FAIL;
-	}*/
+	}
 
 	return S_OK;
 }
@@ -295,6 +344,27 @@ void CBoss::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 	}
 }
 
+void CBoss::Tick_Bomb(_double dTimeDelta)
+{
+	for (auto& pBomb : m_Bombs)
+		pBomb->Tick(dTimeDelta);
+}
+
+void CBoss::Late_Tick_Bomb(_double dTimeDelta)
+{
+	for (auto iter = m_Bombs.begin(); iter != m_Bombs.end();)
+	{
+		GAMEEVENT eEvent = (*iter)->Late_Tick(dTimeDelta);
+		if (GAME_OBJECT_DEAD == eEvent)
+		{
+			Safe_Release(*iter);
+			iter = m_Bombs.erase(iter);
+		}
+		else
+			++iter;
+	}
+}
+
 GAMEEVENT CBoss::PlayEvent(_double dTimeDelta)
 {
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
@@ -338,6 +408,10 @@ CGameObject* CBoss::Clone(void* pArg)
 void CBoss::Free()
 {
 	__super::Free();
+
+	for (auto& pBomb : m_Bombs)
+		Safe_Release(pBomb);
+	m_Bombs.clear();
 
 	Safe_Release(m_pSword);
 	Safe_Release(m_pModelCom);

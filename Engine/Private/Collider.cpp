@@ -126,7 +126,7 @@ void CCollider::OnCollision(COLLISIONDESC::COLTYPE eCollisionType, COLLISIONDESC
 		m_isDead.push_back(false);
 		m_Collisions.push_back(CollisionDesc);
 
-		static_cast<CGameObject*>(m_pOwner)->OnCollisionEnter(CollisionDesc);
+ 		static_cast<CGameObject*>(m_pOwner)->OnCollisionEnter(CollisionDesc);
 	}
 }
 
@@ -149,7 +149,8 @@ _bool CCollider::IsCollision(CCollider* pOtherCollider)
 
 	// 이미 맵안에 들어가있었기때문에 Stay인게 확정.
 	// 나머지는 갱신할 필요 없음.
-	static_cast<CGameObject*>(m_pOwner)->OnCollisionStay(*iter);
+	if (nullptr != m_pOwner)
+		static_cast<CGameObject*>(m_pOwner)->OnCollisionStay(*iter);
 
 	return true;
 }

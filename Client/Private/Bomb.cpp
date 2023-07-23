@@ -1,17 +1,17 @@
-#include "..\Public\Bullet.h"
+#include "..\Public\Bomb.h"
 #include "GameInstance.h"
 
-CBullet::CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBomb::CBomb(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
 }
 
-CBullet::CBullet(const CBullet& rhs)
+CBomb::CBomb(const CBomb& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CBullet::Initialize_Prototype()
+HRESULT CBomb::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -19,9 +19,9 @@ HRESULT CBullet::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CBullet::Initialize(void* pArg)
+HRESULT CBomb::Initialize(void* pArg)
 {
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(30.0, XMConvertToRadians(0.0f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(100.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
@@ -33,34 +33,19 @@ HRESULT CBullet::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBullet::Tick(_double dTimeDelta)
+void CBomb::Tick(_double dTimeDelta)
 {
-	m_pTransformCom->Go_Straight(dTimeDelta);
+	if (0.05f < XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
+		m_pTransformCom->Go_Straight(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 }
 
-GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
+GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
-
-	m_dDeleteTimeAcc += dTimeDelta;
-	// 총알 사망 삭제 시 콜라이더나 렌더러에 넣지 않음.
-	if (true == m_isDead ||
-		m_dDeleteTimeAcc > m_dDeleteTime)
-	{
-		m_eGameEvent = GAME_OBJECT_DEAD;
-		return m_eGameEvent;
-	}
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	pGameInstance->Add_Collider(m_eColType, m_pColliderCom);
-
-	Safe_Release(pGameInstance);
 
 	if (nullptr != m_pRendererCom)
 	{
@@ -70,17 +55,28 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 #endif // _DEBUG
 	}
 
+	if (1.f > XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
+		m_dExplodeTimeAcc += dTimeDelta;
+
+	if (m_dExplodeTimeAcc > m_dDeleteTime)
+	{
+		m_eGameEvent = GAME_OBJECT_DEAD;
+		return m_eGameEvent;
+	}
+	else if (m_dExplodeTimeAcc > m_dExplodeTime)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
+
+		Safe_Release(pGameInstance);
+	}
+
 	return m_eGameEvent;
 }
 
-void CBullet::OnCollisionEnter(COLLISIONDESC CollisionDesc)
-{
-	if (COLLISIONDESC::COLTYPE_ENEMY == CollisionDesc.ColType ||
-		COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
-		m_isDead = true;
-}
-
-HRESULT CBullet::Render()
+HRESULT CBomb::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -88,7 +84,7 @@ HRESULT CBullet::Render()
 	return S_OK;
 }
 
-HRESULT CBullet::Reset()
+HRESULT CBomb::Reset()
 {
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
@@ -96,7 +92,7 @@ HRESULT CBullet::Reset()
 	return S_OK;
 }
 
-HRESULT CBullet::Add_Components()
+HRESULT CBomb::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -108,7 +104,7 @@ HRESULT CBullet::Add_Components()
 
 	CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
 
-	SphereDesc.fRadius = 0.3f;
+	SphereDesc.fRadius = 20.f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_Collider */
@@ -118,10 +114,11 @@ HRESULT CBullet::Add_Components()
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
-HRESULT CBullet::SetUp_ShaderResources()
+HRESULT CBomb::SetUp_ShaderResources()
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -138,39 +135,39 @@ HRESULT CBullet::SetUp_ShaderResources()
 	return S_OK;
 }
 
-void CBullet::Fire(_fvector vInitPosition, _fvector vTargetPosition)
+void CBomb::Fire(_fvector vInitPosition, _fvector vTargetPosition)
 {
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vInitPosition);
 	m_pTransformCom->LookAt(vTargetPosition);
 }
 
-CBullet* CBullet::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBomb* CBomb::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBullet* pInstance = new CBullet(pDevice, pContext);
+	CBomb* pInstance = new CBomb(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CBullet");
+		MSG_BOX("Failed to Created CBomb");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CBullet::Clone(void* pArg)
+CGameObject* CBomb::Clone(void* pArg)
 {
-	CBullet* pInstance = new CBullet(*this);
+	CBomb* pInstance = new CBomb(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CBullet");
+		MSG_BOX("Failed to Cloned CBomb");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBullet::Free()
+void CBomb::Free()
 {
 	__super::Free();
 

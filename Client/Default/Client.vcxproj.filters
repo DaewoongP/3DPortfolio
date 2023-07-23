@@ -163,6 +163,18 @@
     <Filter Include="03. Behaviors\03. Boss Tree\Task">
       <UniqueIdentifier>{b6cb5186-7a2d-48f7-b380-a908a0338397}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree\Task\Move">
+      <UniqueIdentifier>{5a11352d-3d75-4c77-87fa-4416531f30f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree\Random">
+      <UniqueIdentifier>{59db7b81-a584-47dc-b44b-9c3bce4eef8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree\Sequence">
+      <UniqueIdentifier>{4d560696-baea-4b50-a9d3-cde4dc5f9d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss\Bomb">
+      <UniqueIdentifier>{fcf04298-7f90-4787-a337-d77c6ad3ab78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -349,6 +361,36 @@
       <Filter>03. Behaviors\03. Boss Tree</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Task_Fly.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_MoveFront.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_MoveBack.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_MoveRight.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_MoveLeft.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RandomChoose_Move.h">
+      <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_Flying.h">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RandomChoose_FlyingAttack.h">
+      <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_ThrowBomb.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bomb.h">
+      <Filter>02. GameObjects\01. Enemy\Boss\Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Summon.h">
       <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
     </ClInclude>
   </ItemGroup>
@@ -538,6 +580,36 @@
       <Filter>03. Behaviors\03. Boss Tree</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Task_Fly.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_MoveFront.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_MoveBack.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_MoveRight.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_MoveLeft.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RandomChoose_Move.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_Flying.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RandomChoose_FlyingAttack.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_ThrowBomb.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bomb.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss\Bomb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Summon.cpp">
       <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
     </ClCompile>
   </ItemGroup>

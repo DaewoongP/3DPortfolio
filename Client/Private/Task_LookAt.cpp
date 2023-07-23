@@ -20,9 +20,13 @@ CBehavior::STATE CTask_LookAt::Tick(_double dTimeDelta)
 	if (nullptr == pTarget)
 		return STATE_FAILED;
 
-	*m_isWait = true;
-	*m_isWalk = false;
-
+	if (nullptr != m_isWait &&
+		nullptr != m_isWalk)
+	{
+		*m_isWait = true;
+		*m_isWalk = false;
+	}
+	
 	m_pTransformCom->LookAt(pTarget->Get_Transform()->Get_State(CTransform::STATE_POSITION), true);
 
 	return STATE_SUCCESS;
