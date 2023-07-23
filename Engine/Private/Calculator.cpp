@@ -172,6 +172,56 @@ _float CCalculator::Perlin_Noise(_fvector vPixel)
 	return _float();
 }
 
+_int CCalculator::RandomChoose(vector<_float> Weights, _uint iChooseSize)
+{
+	// 입력 잘못한경우
+	if (Weights.size() > iChooseSize)
+		return -1;
+
+	if (Weights.size() < iChooseSize)
+	{
+		_uint iRemainders = { 0 };
+		_float fPercents = { 0.f };
+		_float fRemainPercents = { 0.f };
+
+		iRemainders = iChooseSize - (_uint)Weights.size();
+
+		for (auto& Weight : Weights)
+		{
+			fPercents += Weight;
+		}
+
+		fRemainPercents = 1.f - fPercents;
+
+		for (_uint i = 0; i < iRemainders; ++i)
+		{
+			// 남은 퍼센트를 분배해서 대입해줌.
+			Weights.push_back(fRemainPercents / iRemainders);
+		}
+	}
+
+	_float fRand = (rand() % 100) / 100.f;
+
+	for (_uint iIndex = 0; iIndex < Weights.size(); ++iIndex)
+	{
+		if (Weights[iIndex] >= fRand)
+		{
+			return iIndex;
+		}
+
+		// 마지막 인덱스 예외처리.
+		if (iIndex + 1 == Weights.size() - 1)
+			return iIndex + 1;
+		else
+		{
+			Weights[iIndex + 1] += Weights[iIndex];
+		}
+	}
+
+	// 오류
+	return -1;
+}
+
 void CCalculator::Free()
 {
 }

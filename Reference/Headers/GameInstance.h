@@ -79,6 +79,7 @@ public: /* For. Calculator */
 	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
 	HRESULT Get_WorldMouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
 	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
+	_uint RandomChoose(vector<_float> Weights, _uint iChooseSize);
 
 public: /* For. Collision_Manager */
 	HRESULT Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, class CCollider* pCollider);

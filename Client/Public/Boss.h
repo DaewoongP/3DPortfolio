@@ -76,6 +76,36 @@ END
 
 /*
 
-1 - idle
+0 - charge_end
+1 - charge_loop
+2 - sequence end to fly
+3 - fly back
+4 - fly block
+5 - fly front
+6 - fly fall loop
+
+7 - fly hit 1
+8 - fly hit 2
+9 - fly hit 3
+
+10 - fly left
+11 - fly loop
+12 - fly right
+
+13 - fly to idle
+
+14 - idle loop
+
+15 - attack sequence 1
+16 - attack sequence 1 end
+
+17 - attack sequence 2
+18 - attack sequence 2 end
+
+19 - idle to charge
+
+20 - block loop (클릭 연타 부분)
+
+21 - OTL loop
 
 */

@@ -66,6 +66,7 @@
     <ClInclude Include="..\Public\Part.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\QuadTree.h" />
+    <ClInclude Include="..\public\RandomChoose.h" />
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\public\RenderTarget.h" />
     <ClInclude Include="..\public\RenderTarget_Manager.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="..\Private\Part.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\QuadTree.cpp" />
+    <ClCompile Include="..\private\RandomChoose.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
     <ClCompile Include="..\private\RenderTarget.cpp" />
     <ClCompile Include="..\private\RenderTarget_Manager.cpp" />

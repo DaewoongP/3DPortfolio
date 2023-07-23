@@ -355,6 +355,13 @@ _bool CGameInstance::IsMouseInClient(ID3D11DeviceContext* pContext, HWND hWnd)
 	return m_pCalculator->IsMouseInClient(pContext, hWnd);
 }
 
+_uint CGameInstance::RandomChoose(vector<_float> Weights, _uint iChooseSize)
+{
+	NULL_CHECK_RETURN_MSG(m_pCalculator, 0, TEXT("Calculator NULL"));
+
+	return m_pCalculator->RandomChoose(Weights, iChooseSize);
+}
+
 HRESULT CGameInstance::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CCollider* pCollider)
 {
 	if (nullptr == m_pCollision_Manager)

@@ -157,6 +157,12 @@
     <Filter Include="02. GameObjects\01. Enemy\Boss\Sword">
       <UniqueIdentifier>{b97f0901-26f3-47a9-a5ac-6ebeacbda73f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree">
+      <UniqueIdentifier>{7a593e93-bd16-4a45-a8d4-67fd6f4a273b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree\Task">
+      <UniqueIdentifier>{b6cb5186-7a2d-48f7-b380-a908a0338397}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -245,9 +251,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Task_Stop.h">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Selector_FindTargetToAttack.h">
-      <Filter>03. Behaviors\00. Selector</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Task_Attack.h">
       <Filter>03. Behaviors\02. Task\01. Attack</Filter>
@@ -339,6 +342,15 @@
     <ClInclude Include="..\public\Boss_Sword.h">
       <Filter>02. GameObjects\01. Enemy\Boss\Sword</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Selector_FindTargetToAttack.h">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Selector_Boss.h">
+      <Filter>03. Behaviors\03. Boss Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Fly.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -429,9 +441,6 @@
     <ClCompile Include="..\private\Task_Stop.cpp">
       <Filter>03. Behaviors\02. Task\99. Stop</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Selector_FindTargetToAttack.cpp">
-      <Filter>03. Behaviors\00. Selector</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Task_Attack.cpp">
       <Filter>03. Behaviors\02. Task\01. Attack</Filter>
     </ClCompile>
@@ -521,6 +530,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_Sword.cpp">
       <Filter>02. GameObjects\01. Enemy\Boss\Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector_FindTargetToAttack.cpp">
+      <Filter>03. Behaviors\00. Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Selector_Boss.cpp">
+      <Filter>03. Behaviors\03. Boss Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Fly.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

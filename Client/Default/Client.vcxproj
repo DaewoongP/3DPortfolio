@@ -199,6 +199,7 @@
     <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Prop.h" />
+    <ClInclude Include="..\public\Selector_Boss.h" />
     <ClInclude Include="..\public\Selector_FindTargetToAttack.h" />
     <ClInclude Include="..\public\Selector_FindTargetToDashAttack.h" />
     <ClInclude Include="..\public\Selector_Hammer.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="..\public\Task_ChaseLook.h" />
     <ClInclude Include="..\public\Task_Dash.h" />
     <ClInclude Include="..\public\Task_FailedWait.h" />
+    <ClInclude Include="..\public\Task_Fly.h" />
     <ClInclude Include="..\public\Task_LookAt.h" />
     <ClInclude Include="..\Public\Task_MoveForward.h" />
     <ClInclude Include="..\Public\Task_RandomTurn.h" />
@@ -259,6 +261,7 @@
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Prop.cpp" />
+    <ClCompile Include="..\private\Selector_Boss.cpp" />
     <ClCompile Include="..\private\Selector_FindTargetToAttack.cpp" />
     <ClCompile Include="..\private\Selector_FindTargetToDashAttack.cpp" />
     <ClCompile Include="..\private\Selector_Hammer.cpp" />
@@ -273,6 +276,7 @@
     <ClCompile Include="..\private\Task_ChaseLook.cpp" />
     <ClCompile Include="..\private\Task_Dash.cpp" />
     <ClCompile Include="..\private\Task_FailedWait.cpp" />
+    <ClCompile Include="..\private\Task_Fly.cpp" />
     <ClCompile Include="..\private\Task_LookAt.cpp" />
     <ClCompile Include="..\Private\Task_MoveForward.cpp" />
     <ClCompile Include="..\Private\Task_RandomTurn.cpp" />

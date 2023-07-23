@@ -196,6 +196,9 @@
     <Filter Include="01. Utility\02. GameObjects\02. Part">
       <UniqueIdentifier>{859d1421-951a-4cc9-bd7c-01c6723b1c4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Random">
+      <UniqueIdentifier>{5760ada8-6a73-4899-b987-5be12eafccfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -399,6 +402,9 @@
     <ClInclude Include="..\Public\Part.h">
       <Filter>01. Utility\02. GameObjects\02. Part</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\RandomChoose.h">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Random</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -583,6 +589,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Part.cpp">
       <Filter>01. Utility\02. GameObjects\02. Part</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RandomChoose.cpp">
+      <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Random</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
