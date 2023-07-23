@@ -6,8 +6,8 @@ CMainConverter::CMainConverter()
 
 HRESULT CMainConverter::Convert()
 {
-	ReadFileInDirectory(CModelConverter::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations\\Game\\Visual\\Characters\\Enemy_Bakunin"));
-	//ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations\\Game\\Visual\\Props\\Animated_Ads"));
+	//ReadFileInDirectory(CModelConverter::TYPE_ANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations\\Game\\Visual\\Characters\\Enemy_Bakunin"));
+	//ReadFileInDirectory(CModelConverter::TYPE_NONANIM, TEXT("C:\\Users\\msi\\Desktop\\GhostRunner\\Animations\\Game\\Visual\\Characters\\Hero_Swords\\Parts\\Animations"));
 	return S_OK;
 }
 

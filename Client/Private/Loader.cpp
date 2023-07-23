@@ -15,6 +15,7 @@
 #include "Texture.h"
 #include "UI_Dash.h"
 #include "Crosshair.h"
+#include "Boss_Sword.h"
 #include "BackGround.h"
 #include "Enemy_Sword.h"
 #include "Enemy_Pistol.h"
@@ -636,6 +637,15 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 	}
 
+	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	/* For.Prototype_Component_Model_Bakunin_Sword */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bakunin_Sword"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Bakunin_Sword.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Sword)");
+		return E_FAIL;
+	}
+
 	/* For.Prototype_Component_Model_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Sky"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))
@@ -696,6 +706,14 @@ HRESULT CLoader::Loading_For_Boss()
 		CBoss::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Boss_Sword */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Sword"),
+		CBoss_Sword::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Sword)");
 		return E_FAIL;
 	}
 

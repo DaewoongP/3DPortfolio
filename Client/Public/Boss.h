@@ -13,7 +13,7 @@ BEGIN(Client)
 class CBoss final : public CEnemy
 {
 public:
-	enum STATE { STATE_IDLE, STATE_END };
+	enum STATE { STATE_IDLE, STATE_DEAD, STATE_END };
 
 private:
 	explicit CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -37,6 +37,9 @@ private:
 	CCollider*					m_pColliderCom = { nullptr };
 	CCollider*					m_pVisionColliderCom = { nullptr };
 	CBehaviorTree*				m_pBehaviorTreeCom = { nullptr };
+
+private: /* Parts */
+	class CBoss_Sword*			m_pSword = { nullptr };
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };

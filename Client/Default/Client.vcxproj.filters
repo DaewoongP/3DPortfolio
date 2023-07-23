@@ -154,6 +154,9 @@
     <Filter Include="02. GameObjects\06. Trigger">
       <UniqueIdentifier>{fa361131-17b9-4e0f-a954-6608c9047281}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss\Sword">
+      <UniqueIdentifier>{b97f0901-26f3-47a9-a5ac-6ebeacbda73f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -332,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss.h">
       <Filter>02. GameObjects\01. Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Sword.h">
+      <Filter>02. GameObjects\01. Enemy\Boss\Sword</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -512,6 +518,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss.cpp">
       <Filter>02. GameObjects\01. Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Sword.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss\Sword</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
