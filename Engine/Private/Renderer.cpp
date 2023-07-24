@@ -5,6 +5,10 @@
 #include "PipeLine.h"
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
+#ifdef _DEBUG
+#include "Input_Device.h"
+#endif // _DEBUG
+
 
 CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -310,9 +314,18 @@ HRESULT CRenderer::Render_Debug()
 	if (nullptr == m_pRenderTarget_Manager)
 		return E_FAIL;
 
+	CInput_Device* pInput_Device = CInput_Device::GetInstance();
+	Safe_AddRef(pInput_Device);
+
+	if (pInput_Device->Get_DIKeyState(DIK_F1, CInput_Device::KEY_DOWN))
+		m_isDebugRender = !m_isDebugRender;
+
+	Safe_Release(pInput_Device);
+
 	for (auto& pDebugCom : m_DebugObject)
 	{
-		if (nullptr != pDebugCom)
+		if (nullptr != pDebugCom &&
+			true == m_isDebugRender)
 			pDebugCom->Render();
 
 		Safe_Release(pDebugCom);
@@ -363,8 +376,16 @@ void CRenderer::Free()
 	{
 		for (auto& pGameObject : RenderList)
 			Safe_Release(pGameObject);
+
 		RenderList.clear();
 	}
+#ifdef _DEBUG
+	for (auto& pDebugCom : m_DebugObject)
+		Safe_Release(pDebugCom);
+
+	m_DebugObject.clear();
+#endif // _DEBUG
+
 
 	Safe_Release(m_pRenderTarget_Manager);
 	Safe_Release(m_pLight_Manager);

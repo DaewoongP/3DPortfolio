@@ -49,7 +49,6 @@ private:
 
 #ifdef _DEBUG
 private:
-	_bool						m_isRendering = { true };
 	_float4						m_vColor;
 #endif // _DEBUG
 

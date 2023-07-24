@@ -278,7 +278,7 @@ HRESULT CBoss::SetUp_BehaviorTree()
 	/* Task Charge */
 	m_dChargeReadyTime = 1.0;
 	pBlackBoard->Add_Value(TEXT("Value_ChargeReadyTime"), &m_dChargeReadyTime);
-	m_dChargeSpeed = 10.0;
+	m_dChargeSpeed = 15.0;
 	pBlackBoard->Add_Value(TEXT("Value_ChargeSpeed"), &m_dChargeSpeed);
 	pBlackBoard->Add_Value(TEXT("Value_isCharge"), &m_isCharge);
 	/* Task AttackSequence */

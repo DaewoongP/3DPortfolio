@@ -76,20 +76,7 @@ HRESULT CCollider::Render()
 	if (nullptr == m_pBounding)
 		return E_FAIL;
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_F1, CInput_Device::KEY_DOWN))
-	{
-		if (m_isRendering)
-			m_isRendering = false;
-		else
-			m_isRendering = true;
-	}
-	if (m_isRendering)
-		m_pBounding->Render(XMLoadFloat4(&m_vColor));
-
-	Safe_Release(pGameInstance);
+	m_pBounding->Render(XMLoadFloat4(&m_vColor));
 
 	return S_OK;
 }

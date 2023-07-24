@@ -208,7 +208,6 @@
     <ClInclude Include="..\public\Selector_FindTargetToAttack.h" />
     <ClInclude Include="..\public\Selector_FindTargetToDashAttack.h" />
     <ClInclude Include="..\public\Selector_Hammer.h" />
-    <ClInclude Include="..\public\Sequence_BossBlock.h" />
     <ClInclude Include="..\public\Sequence_Charge.h" />
     <ClInclude Include="..\public\Sequence_DashAttack.h" />
     <ClInclude Include="..\public\Sequence_Flying.h" />
@@ -223,7 +222,6 @@
     <ClInclude Include="..\Public\Task_Attack.h" />
     <ClInclude Include="..\public\Task_AttackSequence1.h" />
     <ClInclude Include="..\public\Task_AttackSequence2.h" />
-    <ClInclude Include="..\public\Task_BossBlock.h" />
     <ClInclude Include="..\public\Task_Charge.h" />
     <ClInclude Include="..\public\Task_ChaseLook.h" />
     <ClInclude Include="..\public\Task_Dash.h" />
@@ -291,7 +289,6 @@
     <ClCompile Include="..\private\Selector_FindTargetToAttack.cpp" />
     <ClCompile Include="..\private\Selector_FindTargetToDashAttack.cpp" />
     <ClCompile Include="..\private\Selector_Hammer.cpp" />
-    <ClCompile Include="..\private\Sequence_BossBlock.cpp" />
     <ClCompile Include="..\private\Sequence_Charge.cpp" />
     <ClCompile Include="..\private\Sequence_DashAttack.cpp" />
     <ClCompile Include="..\private\Sequence_Flying.cpp" />
@@ -306,7 +303,6 @@
     <ClCompile Include="..\Private\Task_Attack.cpp" />
     <ClCompile Include="..\private\Task_AttackSequence1.cpp" />
     <ClCompile Include="..\private\Task_AttackSequence2.cpp" />
-    <ClCompile Include="..\private\Task_BossBlock.cpp" />
     <ClCompile Include="..\private\Task_Charge.cpp" />
     <ClCompile Include="..\private\Task_ChaseLook.cpp" />
     <ClCompile Include="..\private\Task_Dash.cpp" />

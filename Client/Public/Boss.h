@@ -77,7 +77,6 @@ private: /* BehaviorTree */
 	_bool						m_isAttack1 = { false };
 	_double						m_dAttack2Time = { 0.0 };
 	_bool						m_isAttack2 = { false };
-
 	_bool						m_isAttackFinished = { false };
 	/* Task Block */
 	_bool						m_isBlock = { false };

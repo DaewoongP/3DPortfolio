@@ -42,6 +42,7 @@ CBehavior::STATE CTask_Charge::Tick(_double dTimeDelta)
 		if (m_fStopLength < XMVectorGetX(XMVector4Length(vDir)))
 		{
 			m_pTransformCom->MoveTo(vTargetPos, dTimeDelta * (*m_dChargeSpeed));
+
 			return STATE_RUNNING;
 		}
 		else

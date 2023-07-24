@@ -426,12 +426,6 @@
     <ClInclude Include="..\Public\Sequence_BossAttack.h">
       <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Sequence_BossBlock.h">
-      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Task_BossBlock.h">
-      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -677,12 +671,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Sequence_BossAttack.cpp">
       <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Sequence_BossBlock.cpp">
-      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Task_BossBlock.cpp">
-      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
