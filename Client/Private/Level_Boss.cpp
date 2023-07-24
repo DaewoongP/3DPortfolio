@@ -191,6 +191,17 @@ HRESULT CLevel_Boss::Ready_Layer_Props(const _tchar* pFilePath)
 
 HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar* pLayerTag)
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_Sky"), pLayerTag, TEXT("GameObject_Sky"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Sky)");
+		return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 
@@ -199,7 +210,7 @@ HRESULT CLevel_Boss::Ready_UI(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Crosshair"), pLayerTag, TEXT("GameObject_Crosshair"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_Crosshair"), pLayerTag, TEXT("GameObject_Crosshair"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Crosshair)");
 		return E_FAIL;

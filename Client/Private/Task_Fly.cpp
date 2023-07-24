@@ -9,6 +9,7 @@ HRESULT CTask_Fly::Initialize(CBlackBoard* pBlackBoard)
 	m_pTransformCom = static_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
 	m_fFlyHeight = static_cast<_float*>(m_pBlackBoard->Find_Value(TEXT("Value_FlyHeight")));
 	m_fFlySpeed = static_cast<_float*>(m_pBlackBoard->Find_Value(TEXT("Value_FlySpeed")));
+	m_isFly = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isFly")));
 
 	return S_OK;
 }
@@ -26,6 +27,8 @@ CBehavior::STATE CTask_Fly::Tick(_double dTimeDelta)
 	{
 		_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 		m_pTransformCom->Move_Direction(XMVector3Normalize(vUp), dTimeDelta * (*m_fFlySpeed));
+		
+		*m_isFly = true;
 
 		return STATE_RUNNING;
 	}

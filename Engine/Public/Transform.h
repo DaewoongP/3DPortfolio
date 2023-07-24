@@ -59,6 +59,7 @@ public:
 	void Check_Cell();
 	_bool Check_CellY(_fvector vXZPosition, _fvector vCurrentPosition);
 	void Move_Direction(_fvector vMoveDir, _double dTimeDelta);
+	void MoveTo(_fvector vTo, _double dTimeDelta);
 	void Go_Straight(_double dTimeDelta);
 	void Go_Backward(_double dTimeDelta);
 	void Go_Left(_double dTimeDelta);

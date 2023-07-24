@@ -12,6 +12,7 @@ private:
 
 public:
 	virtual HRESULT Initialize(CBlackBoard * pBlackBoard, CDecorator * pDecorator) override;
+	virtual CBehavior::STATE Tick(_double dTimeDelta) override;
 
 public:
 	static CRandomChoose_FlyingAttack* Create(CBlackBoard * pBlackBoard, CDecorator * pDecorator = nullptr);

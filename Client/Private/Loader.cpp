@@ -271,7 +271,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 	/* For.Prototype_Component_Model_Sky */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Sky"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Sky"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");

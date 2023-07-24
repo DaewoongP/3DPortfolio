@@ -13,7 +13,14 @@ BEGIN(Client)
 class CBoss final : public CEnemy
 {
 public:
-	enum STATE { STATE_IDLE, STATE_DEAD, STATE_END };
+	enum STATE { 
+		STATE_IDLE, STATE_FLY_IDLE, STATE_FLY_FRONT, 
+		STATE_FLY_BACK, STATE_FLY_LEFT, STATE_FLY_RIGHT,
+		STATE_FLY_HIT, STATE_IDLETOCHARGE, STATE_CHARGE,
+		STATE_ATTACK1, STATE_ATTACK1_END, STATE_ATTACK2,
+		STATE_ATTACK2_END, STATE_ATTACKTOFLY,
+		
+		STATE_DEAD, STATE_END };
 
 private:
 	explicit CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -47,15 +54,33 @@ private: /* Parts */
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
+	_uint						m_iCurPatternCnt = { 0 };
+	_uint						m_iMaxPatternCnt = { 0 };
 	/* Task Fly */
 	_float						m_fFlyHeight = { 0.f };
 	_float						m_fFlySpeed = { 0.f };
+	_bool						m_isFly = { false };
 	/* RandomChoose_Move */
 	_bool						m_isMoveFront = { false };
 	_bool						m_isMoveBack = { false };
 	_bool						m_isMoveRight = { false };
 	_bool						m_isMoveLeft = { false };
 	_double						m_dMoveTime = { 0.0 };
+	/* Task Landing */
+	_double						m_dLandingSpeed = { 0.0 };
+	/* Task Charge */
+	_double						m_dChargeReadyTime = { 0.0 };
+	_double						m_dChargeSpeed = { 0.0 };
+	_bool						m_isCharge = { false };
+	/* Task AttackSequence */
+	_double						m_dAttack1Time = { 0.0 };
+	_bool						m_isAttack1 = { false };
+	_double						m_dAttack2Time = { 0.0 };
+	_bool						m_isAttack2 = { false };
+
+	_bool						m_isAttackFinished = { false };
+	/* Task Block */
+	_bool						m_isBlock = { false };
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
@@ -64,6 +89,8 @@ private:
 	// 현재와 이전 상태를 비교해서 애니메이션 변경처리
 	STATE						m_ePreState = { STATE_END };
 	STATE						m_eCurState = { STATE_IDLE };
+
+	STATE						m_ePreAttack = { STATE_END };
 
 private: /* Initialize */
 	HRESULT Add_Component();
@@ -94,6 +121,7 @@ END
 0 - charge_end
 1 - charge_loop
 2 - sequence end to fly
+
 3 - fly back
 4 - fly block
 5 - fly front
@@ -104,7 +132,7 @@ END
 9 - fly hit 3
 
 10 - fly left
-11 - fly loop
+11 - fly loop (fly idle)
 12 - fly right
 
 13 - fly to idle
@@ -121,6 +149,6 @@ END
 
 20 - block loop (클릭 연타 부분)
 
-21 - OTL loop
+21 - OTL loop (사망 루프가 굉장히 길기때문에 빠르게 ㅅ사망처리 해줘야함.)
 
 */

@@ -17,6 +17,19 @@ HRESULT CRandomChoose_FlyingAttack::Initialize(CBlackBoard* pBlackBoard, CDecora
 	return S_OK;
 }
 
+CBehavior::STATE CRandomChoose_FlyingAttack::Tick(_double dTimeDelta)
+{
+	CBehavior::STATE eState = __super::Tick(dTimeDelta);
+
+	if (STATE_SUCCESS == eState)
+	{
+		_uint* iCurPatternCnt = reinterpret_cast<_uint*>(m_pBlackBoard->Find_Value(TEXT("Value_CurPatternCnt")));
+		*iCurPatternCnt += 1;
+	}
+
+	return eState;
+}
+
 CRandomChoose_FlyingAttack* CRandomChoose_FlyingAttack::Create(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
 	CRandomChoose_FlyingAttack* pInstance = new CRandomChoose_FlyingAttack();

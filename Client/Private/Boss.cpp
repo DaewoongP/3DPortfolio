@@ -43,8 +43,7 @@ HRESULT CBoss::Initialize(void* pArg)
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
-	m_pModelCom->Reset_Animation(1);
-	m_pModelCom->Delete_AnimationTranslation(5);
+	m_pModelCom->Reset_Animation(14);
 
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
@@ -142,7 +141,7 @@ HRESULT CBoss::Render()
 
 HRESULT CBoss::Reset()
 {
-	m_pModelCom->Reset_Animation(1);
+	m_pModelCom->Reset_Animation(14);
 
 	// 상태값 통일하면 애니메이션 초기화도 간단함.
 	m_ePreState = STATE_IDLE;
@@ -257,11 +256,15 @@ HRESULT CBoss::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_Navigation"), m_pNavigationCom);
 	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
 	pBlackBoard->Add_Value(TEXT("Value_isDead"), &m_isDead);
+	pBlackBoard->Add_Value(TEXT("Value_CurPatternCnt"), &m_iCurPatternCnt);
+	m_iMaxPatternCnt = 2;
+	pBlackBoard->Add_Value(TEXT("Value_MaxPatternCnt"), &m_iMaxPatternCnt);
 	/* Task Fly */
 	m_fFlyHeight = 15.f;
 	pBlackBoard->Add_Value(TEXT("Value_FlyHeight"), &m_fFlyHeight);
 	m_fFlySpeed = 3.f;
 	pBlackBoard->Add_Value(TEXT("Value_FlySpeed"), &m_fFlySpeed);
+	pBlackBoard->Add_Value(TEXT("Value_isFly"), &m_isFly);
 	/* RandomChoose_Move */
 	pBlackBoard->Add_Value(TEXT("Value_isMoveFront"), &m_isMoveFront);
 	pBlackBoard->Add_Value(TEXT("Value_isMoveBack"), &m_isMoveBack);
@@ -269,6 +272,24 @@ HRESULT CBoss::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_isMoveLeft"), &m_isMoveLeft);
 	m_dMoveTime = 2.0;
 	pBlackBoard->Add_Value(TEXT("Value_MoveTime"), &m_dMoveTime);
+	/* Task Landing */
+	m_dLandingSpeed = 6.0;
+	pBlackBoard->Add_Value(TEXT("Value_LandingSpeed"), &m_dLandingSpeed);
+	/* Task Charge */
+	m_dChargeReadyTime = 1.0;
+	pBlackBoard->Add_Value(TEXT("Value_ChargeReadyTime"), &m_dChargeReadyTime);
+	m_dChargeSpeed = 10.0;
+	pBlackBoard->Add_Value(TEXT("Value_ChargeSpeed"), &m_dChargeSpeed);
+	pBlackBoard->Add_Value(TEXT("Value_isCharge"), &m_isCharge);
+	/* Task AttackSequence */
+	m_dAttack1Time = 3.0;
+	pBlackBoard->Add_Value(TEXT("Value_AttackSequence1Time"), &m_dAttack1Time);
+	pBlackBoard->Add_Value(TEXT("Value_isAttackSequence1"), &m_isAttack1);
+	m_dAttack2Time = 3.0;
+	pBlackBoard->Add_Value(TEXT("Value_AttackSequence2Time"), &m_dAttack2Time);
+	pBlackBoard->Add_Value(TEXT("Value_isAttackSequence2"), &m_isAttack2);
+
+	pBlackBoard->Add_Value(TEXT("Value_isAttackFinished"), &m_isAttackFinished);
 
 	/* For. Com_BehaviorTree */
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_BehaviorTree"),
@@ -309,12 +330,67 @@ void CBoss::AnimationState(_double dTimeDelta)
 	if (ANIM_FINISHED == m_eCurrentAnimationFlag &&
 		m_ePreState == m_eCurState)
 	{
-		m_eCurState = STATE_IDLE;
+		if (true == m_isCharge &&
+			m_eCurState != STATE_IDLETOCHARGE)
+			m_eCurState = STATE_CHARGE;
+		else if (STATE_ATTACKTOFLY == m_eCurState)
+		{
+			m_isAttackFinished = false;
+			m_isFly = true;
+			m_iCurPatternCnt = 0;
+			m_eCurState = STATE_FLY_IDLE;
+		}
+		else if (STATE_ATTACK1_END == m_eCurState ||
+			STATE_ATTACK2_END == m_eCurState)
+			m_eCurState = STATE_ATTACKTOFLY;
+		else
+		{
+			m_eCurState = STATE_IDLE;
+		}
 	}
 
-	if (STATE_DEAD != m_eCurState)
+	if (STATE_DEAD != m_eCurState &&
+		STATE_ATTACKTOFLY != m_eCurState)
 	{
+		if (true == m_isFly)
+		{
+			m_eCurState = STATE_FLY_IDLE;
 
+			if (true == m_isMoveFront)
+				m_eCurState = STATE_FLY_FRONT;
+			else if (true == m_isMoveBack)
+				m_eCurState = STATE_FLY_BACK;
+			else if (true == m_isMoveLeft)
+				m_eCurState = STATE_FLY_LEFT;
+			else if (true == m_isMoveRight)
+				m_eCurState = STATE_FLY_RIGHT;
+		}
+		else
+		{
+			m_eCurState = STATE_IDLE;
+
+			if (true == m_isCharge &&
+				m_eCurState != STATE_CHARGE)
+				m_eCurState = STATE_IDLETOCHARGE;
+
+			if (true == m_isAttack1)
+			{
+				m_eCurState = STATE_ATTACK1;
+				m_ePreAttack = STATE_ATTACK1;
+			}
+			if (true == m_isAttack2)
+			{
+				m_eCurState = STATE_ATTACK2;
+				m_ePreAttack = STATE_ATTACK2;
+			}
+			
+			if (true == m_isAttackFinished &&
+				STATE_ATTACK1 == m_ePreAttack)
+				m_eCurState = STATE_ATTACK1_END;
+			else if (true == m_isAttackFinished &&
+				STATE_ATTACK2 == m_ePreAttack)
+				m_eCurState = STATE_ATTACK2_END;
+		}
 	}
 
 	Motion_Change(m_eCurrentAnimationFlag);
@@ -332,11 +408,49 @@ void CBoss::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 		switch (m_eCurState)
 		{
 		case STATE_IDLE:
+			m_pModelCom->Set_AnimIndex(14);
+			break;
+		case STATE_FLY_IDLE:
+			m_pModelCom->Set_AnimIndex(11);
+			break;
+		case STATE_FLY_FRONT:
+			m_pModelCom->Set_AnimIndex(5);
+			break;
+		case STATE_FLY_BACK:
+			m_pModelCom->Set_AnimIndex(3);
+			break;
+		case STATE_FLY_LEFT:
+			m_pModelCom->Set_AnimIndex(10);
+			break;
+		case STATE_FLY_RIGHT:
+			m_pModelCom->Set_AnimIndex(12);
+			break;
+		case STATE_FLY_HIT:
+			m_pModelCom->Set_AnimIndex(7 + rand() % 2, false);
+			break;
+		case STATE_IDLETOCHARGE:
+			m_pModelCom->Set_AnimIndex(19, false);
+			break;
+		case STATE_CHARGE:
 			m_pModelCom->Set_AnimIndex(1);
 			break;
-
+		case STATE_ATTACK1:
+			m_pModelCom->Set_AnimIndex(15, false);
+			break;
+		case STATE_ATTACK1_END:
+			m_pModelCom->Set_AnimIndex(16, false);
+			break;
+		case STATE_ATTACK2:
+			m_pModelCom->Set_AnimIndex(17, false);
+			break;
+		case STATE_ATTACK2_END:
+			m_pModelCom->Set_AnimIndex(18, false);
+			break;
+		case STATE_ATTACKTOFLY:
+			m_pModelCom->Set_AnimIndex(2, false);
+			break;
 		case STATE_DEAD:
-			m_pModelCom->Set_AnimIndex(13 + rand() % 3, false);
+			m_pModelCom->Set_AnimIndex(21, false);
 			break;
 		}
 

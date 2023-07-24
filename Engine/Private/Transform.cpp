@@ -286,6 +286,17 @@ void CTransform::Move_Direction(_fvector vMoveDir, _double dTimeDelta)
 	}
 }
 
+void CTransform::MoveTo(_fvector vTo, _double dTimeDelta)
+{
+	_vector		vPosition = Get_State(STATE_POSITION);
+
+	_vector		vDir = XMVector3Normalize(vTo - vPosition);
+
+	vPosition += vDir * (_float)m_TransformDesc.dSpeedPerSec * (_float)dTimeDelta;
+
+	Set_State(STATE_POSITION, vPosition);
+}
+
 void CTransform::Go_Straight(_double dTimeDelta)
 {
 	_vector vLook = Get_State(STATE::STATE_LOOK);

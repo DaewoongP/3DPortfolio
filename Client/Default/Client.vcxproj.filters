@@ -175,6 +175,12 @@
     <Filter Include="02. GameObjects\01. Enemy\Boss\Bomb">
       <UniqueIdentifier>{fcf04298-7f90-4787-a337-d77c6ad3ab78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree\Selector">
+      <UniqueIdentifier>{a158cd88-9d1c-49c2-9a34-e5cec66bb205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Behaviors\03. Boss Tree\Task\Attack">
+      <UniqueIdentifier>{9d945761-1b1b-4064-946b-6fc68aff82db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -360,9 +366,6 @@
     <ClInclude Include="..\public\Selector_Boss.h">
       <Filter>03. Behaviors\03. Boss Tree</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Task_Fly.h">
-      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Task_MoveFront.h">
       <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
     </ClInclude>
@@ -384,14 +387,50 @@
     <ClInclude Include="..\public\RandomChoose_FlyingAttack.h">
       <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Task_ThrowBomb.h">
-      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Bomb.h">
       <Filter>02. GameObjects\01. Enemy\Boss\Bomb</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Selector_BossPattern.h">
+      <Filter>03. Behaviors\03. Boss Tree\Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_Landing.h">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_Charge.h">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\RandomChoose_AttackSequence.h">
+      <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Charge.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_AttackSequence1.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_AttackSequence2.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_ThrowBomb.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Task_Summon.h">
-      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Landing.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_Fly.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sequence_BossAttack.h">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sequence_BossBlock.h">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_BossBlock.h">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -579,9 +618,6 @@
     <ClCompile Include="..\private\Selector_Boss.cpp">
       <Filter>03. Behaviors\03. Boss Tree</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Task_Fly.cpp">
-      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Task_MoveFront.cpp">
       <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
     </ClCompile>
@@ -603,14 +639,50 @@
     <ClCompile Include="..\private\RandomChoose_FlyingAttack.cpp">
       <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Task_ThrowBomb.cpp">
-      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Bomb.cpp">
       <Filter>02. GameObjects\01. Enemy\Boss\Bomb</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Selector_BossPattern.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_Landing.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_Charge.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\RandomChoose_AttackSequence.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_AttackSequence1.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_AttackSequence2.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Charge.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Task_Summon.cpp">
-      <Filter>03. Behaviors\03. Boss Tree\Task</Filter>
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_ThrowBomb.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Fly.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_Landing.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_BossAttack.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sequence_BossBlock.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_BossBlock.cpp">
+      <Filter>03. Behaviors\03. Boss Tree\Task\Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

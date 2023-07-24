@@ -27,14 +27,18 @@ CBehavior::STATE CTask_Summon::Tick(_double dTimeDelta)
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+
 	lstrcpy(EnemyDesc.pModelPrototypeTag, TEXT("Prototype_Component_Model_Enemy_Pistol"));
+
 	for (_uint i = 0; i < 3; ++i)
 	{
 		m_iObjectIndex++;
 		lstrcat(szObjectTag, TEXT("_Pistol"));
 		lstrcat(szObjectTag, szIndex);
+
 		_float fRadius = (rand() % 501) * 0.01f;
 		_float fAngle = _float(rand() % 360);
+
 		EnemyDesc.vScale = _float3(1.f, 1.f, 1.f);
 		EnemyDesc.vPosition = _float4(fRadius * cosf(XMConvertToRadians(fAngle)), 10.f, fRadius * sinf(XMConvertToRadians(fAngle)), 1.f);
 
