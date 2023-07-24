@@ -14,6 +14,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
+	_float Get_CurrentNotifySpeed() const;
 	class CTexture* Get_ORMTexture(_uint iIndex) { return m_ORMs[iIndex]; }
 	_float Get_CurrentFramePercent();
 	_float4x4 Get_PivotFloat4x4() const { return m_PivotMatrix; }

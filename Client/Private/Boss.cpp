@@ -38,12 +38,14 @@ HRESULT CBoss::Initialize(void* pArg)
 
 	m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
 	m_pTransformCom->Rotation(_float3(0.f, 0.f, 0.f));
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(10.f, 0.f, 10.f, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(150.f, 0.f, 150.f, 1.f));
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
 	m_pModelCom->Reset_Animation(14);
+	m_pModelCom->Delete_AnimationTranslation(19);
+	m_pModelCom->Delete_AnimationTranslation(1);
 
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
@@ -54,20 +56,26 @@ HRESULT CBoss::Initialize(void* pArg)
 
 void CBoss::Tick(_double dTimeDelta)
 {
-	Tick_Bomb(dTimeDelta);
-
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+	m_pKnockBackColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);	
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
+	if (0.7f > m_pModelCom->Get_CurrentNotifySpeed())
+		m_pSword->Attack();
+		
+	//pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_KNOCKBACK, m_pKnockBackColliderCom);
+	
 	Safe_Release(pGameInstance);
+
+	Tick_Bomb(dTimeDelta);
 }
 
 GAMEEVENT CBoss::Late_Tick(_double dTimeDelta)
@@ -141,19 +149,31 @@ HRESULT CBoss::Render()
 
 HRESULT CBoss::Reset()
 {
+	// 무조건 위에 있어야함.
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
+	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
+	m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
+	m_pTransformCom->Rotation(_float3(0.f, 0.f, 0.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(150.f, 0.f, 150.f, 1.f));
+
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
+	m_pTransformCom->Set_Desc(TransformDesc);
+
 	m_pModelCom->Reset_Animation(14);
 
 	// 상태값 통일하면 애니메이션 초기화도 간단함.
 	m_ePreState = STATE_IDLE;
-	m_eCurState = STATE_IDLE;
+	if (m_isFly)
+		m_eCurState = STATE_FLY_IDLE;
+	else
+		m_eCurState = STATE_IDLE;
 
 	m_pTargetPlayer = nullptr;
 
 	for (auto& pBomb : m_Bombs)
 		pBomb->Reset();
-
-	if (FAILED(__super::Reset()))
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -188,15 +208,17 @@ HRESULT CBoss::Add_Component()
 	if (FAILED(CComposite::Add_Component(LEVEL_BOSS, TEXT("Prototype_Component_Model_Enemy_Bakunin"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
-		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Model)");
+		MSG_BOX("Failed CBoss Add_Component : (Com_Model)");
 		return E_FAIL;
 	}
+
+	Add_Notifies();
 
 	/* For.Com_Shader */
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 	{
-		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Shader)");
+		MSG_BOX("Failed CBoss Add_Component : (Com_Shader)");
 		return E_FAIL;
 	}
 
@@ -209,7 +231,19 @@ HRESULT CBoss::Add_Component()
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
-		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Collider)");
+		MSG_BOX("Failed CBoss Add_Component : (Com_Collider)");
+		return E_FAIL;
+	}
+	
+
+	AABBDesc.vExtents = _float3(20.f, 20.f, 20.f);
+	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+
+	/* For.Com_Collider */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_KnockBackCollider"), reinterpret_cast<CComponent**>(&m_pKnockBackColliderCom), &AABBDesc)))
+	{
+		MSG_BOX("Failed CBoss Add_Component : (Com_KnockBackCollider)");
 		return E_FAIL;
 	}
 
@@ -222,7 +256,7 @@ HRESULT CBoss::Add_Component()
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
 	{
-		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_VisionCollider)");
+		MSG_BOX("Failed CBoss Add_Component : (Com_VisionCollider)");
 		return E_FAIL;
 	}
 
@@ -241,10 +275,24 @@ HRESULT CBoss::Add_Parts()
 	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
 	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	if (FAILED(__super::Add_Part(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss_Sword"), TEXT("Layer_EnemyWeapon"),
-		TEXT("Part_Boss_Sword"), reinterpret_cast<CGameObject**>(&m_pSword), &ParentMatrixDesc)))
+	if (FAILED(__super::Add_Part(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss_Sword"), TEXT("Layer_BossWeapon"),
+		TEXT("Part_Boss_Weapon"), reinterpret_cast<CGameObject**>(&m_pSword), &ParentMatrixDesc)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CBoss::Add_Notifies()
+{
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Sequence1.Notify"))))
+		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Sequence2.Notify"))))
+		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Sequence1_End.Notify"))))
+		return E_FAIL;
+	if (FAILED(SetUp_AnimationNotifies(TEXT("../../Resources/GameData/Notify/Sequence2_End.Notify"))))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -282,10 +330,10 @@ HRESULT CBoss::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_ChargeSpeed"), &m_dChargeSpeed);
 	pBlackBoard->Add_Value(TEXT("Value_isCharge"), &m_isCharge);
 	/* Task AttackSequence */
-	m_dAttack1Time = 3.0;
+	m_dAttack1Time = 4.0;
 	pBlackBoard->Add_Value(TEXT("Value_AttackSequence1Time"), &m_dAttack1Time);
 	pBlackBoard->Add_Value(TEXT("Value_isAttackSequence1"), &m_isAttack1);
-	m_dAttack2Time = 3.0;
+	m_dAttack2Time = 7.0;
 	pBlackBoard->Add_Value(TEXT("Value_AttackSequence2Time"), &m_dAttack2Time);
 	pBlackBoard->Add_Value(TEXT("Value_isAttackSequence2"), &m_isAttack2);
 
@@ -318,6 +366,42 @@ HRESULT CBoss::SetUp_ShaderResources()
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CBoss::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
+{
+	_uint				iAnimationIndex = { 0 };
+	_uint				iAnimationFrames = { 0 };
+	vector<NOTIFY>		Notifies;
+
+	HANDLE hFile = CreateFile(pNotifyFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	// Current Animation Index
+	ReadFile(hFile, &iAnimationIndex, sizeof(_uint), &dwByte, nullptr);
+	// Animation's NumFrames
+	ReadFile(hFile, &iAnimationFrames, sizeof(_uint), &dwByte, nullptr);
+
+	for (_uint i = 0; i < iAnimationFrames; ++i)
+	{
+		NOTIFY Notify;
+		// Notify Save
+		ReadFile(hFile, &Notify, sizeof(NOTIFY), &dwByte, nullptr);
+
+		Notifies.push_back(Notify);
+	}
+
+	CloseHandle(hFile);
+
+	// for문 돌면서 read file. 하면서 값다 처리.
+	if (FAILED(m_pModelCom->SetUp_AnimationNotifies(iAnimationIndex, Notifies)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -532,5 +616,6 @@ void CBoss::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pVisionColliderCom);
+	Safe_Release(m_pKnockBackColliderCom);
 	Safe_Release(m_pBehaviorTreeCom);
 }

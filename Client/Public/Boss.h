@@ -46,6 +46,7 @@ private:
 	CShader*					m_pShaderCom = { nullptr };
 	CCollider*					m_pColliderCom = { nullptr };
 	CCollider*					m_pVisionColliderCom = { nullptr };
+	CCollider*					m_pKnockBackColliderCom = { nullptr };
 	CBehaviorTree*				m_pBehaviorTreeCom = { nullptr };
 
 private: /* Parts */
@@ -94,8 +95,11 @@ private:
 private: /* Initialize */
 	HRESULT Add_Component();
 	HRESULT Add_Parts();
+	HRESULT Add_Notifies();
 	HRESULT SetUp_BehaviorTree();
 	HRESULT SetUp_ShaderResources();
+	HRESULT SetUp_AnimationNotifies(const _tchar* pNotifyFilePath);
+	
 
 private: /* Tick */
 	void AnimationState(_double dTimeDelta);

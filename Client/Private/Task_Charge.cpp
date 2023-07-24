@@ -11,8 +11,7 @@ HRESULT CTask_Charge::Initialize(CBlackBoard* pBlackBoard)
 	m_dChargeSpeed = static_cast<_double*>(m_pBlackBoard->Find_Value(TEXT("Value_ChargeSpeed")));
 	m_isCharge = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isCharge")));
 
-	// 10이 마지노선인거같음.
-	m_fStopLength = 13.f;
+	m_fStopLength = 5.f;
 
 	return S_OK;
 }
@@ -61,6 +60,9 @@ HRESULT CTask_Charge::Reset()
 {
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
+
+	*m_isCharge = false;
+	m_dRunningAcc = 0.0;
 
 	return S_OK;
 }

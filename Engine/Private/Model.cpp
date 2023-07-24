@@ -55,6 +55,11 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
+_float CModel::Get_CurrentNotifySpeed() const
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentNotifySpeed();
+}
+
 _float CModel::Get_CurrentFramePercent()
 {
 	return _float(m_Animations[m_iCurrentAnimIndex]->Get_CurrentAnimationFrame()) / m_Animations[m_iCurrentAnimIndex]->Get_AnimationFrames();

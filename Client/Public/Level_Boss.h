@@ -16,6 +16,7 @@ public:
 	virtual HRESULT Render();
 
 private:
+	HRESULT Ready_Lights(const _tchar* pFilePath);
 	HRESULT Ready_Layer_Player(const _tchar * pLayerTag);
 	HRESULT Ready_Layer_Boss(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Enemy(const _tchar * pLayerTag);

@@ -27,6 +27,11 @@ private:
 	CEnemy_Hammer*			m_pHammer = { nullptr };
 	CEnemy_Sword*			m_pSword = { nullptr };
 
+private:
+	HRESULT Summon_Pistol();
+	HRESULT Summon_Hammer();
+	HRESULT Summon_Sword();
+
 public:
 	static CTask_Summon* Create(class CBlackBoard* pBlackBoard);
 	virtual void Free() override;

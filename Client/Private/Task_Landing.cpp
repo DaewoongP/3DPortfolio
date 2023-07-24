@@ -10,7 +10,7 @@ HRESULT CTask_Landing::Initialize(CBlackBoard* pBlackBoard)
 	m_dLandingSpeed = static_cast<_double*>(m_pBlackBoard->Find_Value(TEXT("Value_LandingSpeed")));
 	m_isFly = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isFly")));
 
-	m_vMapCenterPosition = _float4(10.f, 0.f, 10.f, 1.f);
+	m_vMapCenterPosition = _float4(150.f, 0.f, 150.f, 1.f);
 
 	return S_OK;
 }

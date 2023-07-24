@@ -64,7 +64,7 @@ HRESULT CPlayer::Initialize_Level(_uint iLevelIndex)
 		XMStoreFloat4(&m_vInitPosition, XMVectorSet(40.f, 0.f, 90.f, 1.f));
 		break;
 	case LEVEL_BOSS:
-		XMStoreFloat4(&m_vInitPosition, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		XMStoreFloat4(&m_vInitPosition, XMVectorSet(100.f, 0.f, 150.f, 1.f));
 		break;
 	default:
 		XMStoreFloat4(&m_vInitPosition, XMVectorSet(0.f, 0.f, 0.f, 1.f));
@@ -209,6 +209,13 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	{
 		m_BlockEnemyWeapons.push_back(CollisionDesc.pOtherOwner);
 	}
+
+	if (CollisionDesc.pMyCollider == m_pBlockColliderCom &&
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_BossWeapon")))
+	{
+		// 보스 패링 패턴.
+		m_BlockEnemyWeapons.push_back(CollisionDesc.pOtherOwner);
+	}
 	
 	Safe_Release(pGameInstance);
 }
@@ -266,6 +273,14 @@ void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 				break;
 			}
 		}
+	}
+
+	if (CollisionDesc.pMyCollider == m_pBlockColliderCom &&
+		COLLISIONDESC::COLTYPE_PARRYING == CollisionDesc.ColType)
+	{
+		// 보스 패링 패턴.
+		if (0 < m_BlockEnemyWeapons.size())
+			m_eGameEvent = GAME_OBJECT_DEAD;
 	}
 }
 

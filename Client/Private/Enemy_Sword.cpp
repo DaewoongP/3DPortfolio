@@ -70,6 +70,18 @@ HRESULT CEnemy_Sword::Initialize_Level(_uint iLevelIndex)
 
 void CEnemy_Sword::Tick(_double dTimeDelta)
 {
+	// ¼¿ Y°ª°ú Â÷ÀÌ³ª¸é ¶¥À¸·Î ¶³±À
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+	if (m_pNavigationCom->Get_CurrentCellY(vPos) < XMVectorGetY(vPos))
+	{
+		m_pTransformCom->Move_Direction(XMVectorSet(0.f, -1.f, 0.f, 0.f), dTimeDelta * 20.0);
+
+		_float fY = XMVectorGetY(vPos) - m_pNavigationCom->Get_CurrentCellY(vPos);
+		if (1.f > fY)
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pNavigationCom->Get_CurrentCellY(vPos)));
+	}
+
 	Attack();
 
 	__super::Tick(dTimeDelta);

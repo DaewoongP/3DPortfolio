@@ -334,8 +334,8 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
-	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
-	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
 	
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
@@ -624,7 +624,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dash)");
 		return E_FAIL;
 	}
-
+	
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();
@@ -655,18 +655,7 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 	}
 
-	// Test 나중에 ㅅ학제해야함-----------------------------------------------------
-	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_NonAnimModel_SM_SM_Floors_01_mod_big_flat_03"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props\\SM_SM_Floors_01_mod_big_flat_03.dat"), PivotMatrix))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Model Data File)");
-		return E_FAIL;
-	}
-
-	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
-	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
-	//Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_BOSS, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\BossProps"), TEXT("Prototype_Component_NonAnimModel_"));
 
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
@@ -683,7 +672,7 @@ HRESULT CLoader::Loading_For_Boss()
 
 	/* For.Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Debug.Navi")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../../Resources/GameData/Navigation/Boss.Navi")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;
@@ -733,7 +722,7 @@ HRESULT CLoader::Loading_For_Boss()
 	return S_OK;
 }
 
-HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _tchar* pPath, const _tchar* pPrototypeTag)
+HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, LEVELID eLevelID, const _tchar* pPath, const _tchar* pPrototypeTag)
 {
 	_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 
@@ -745,7 +734,7 @@ HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _
 
 		if (fs::is_directory(entry.path()))
 		{
-			Ready_Prototype_Component_ModelData(eType, entry.path().c_str(), pPrototypeTag);
+			Ready_Prototype_Component_ModelData(eType, eLevelID, entry.path().c_str(), pPrototypeTag);
 		}
 
 		if (!lstrcmp(entry.path().extension().c_str(), TEXT(".dat")))
@@ -755,7 +744,7 @@ HRESULT CLoader::Ready_Prototype_Component_ModelData(CModel::TYPE eType, const _
 
 			wstrProto += wstrFileName.substr(0, wstrFileName.find(TEXT(".dat"), 0));
 
-			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, wstrProto.c_str(),
+			if (FAILED(m_pGameInstance->Add_Prototype(eLevelID, wstrProto.c_str(),
 				CModel::Create(m_pDevice, m_pContext, eType, entry.path().c_str(), PivotMatrix))))
 			{
 				MSG_BOX("Failed Add_Prototype : (Model Data File)");

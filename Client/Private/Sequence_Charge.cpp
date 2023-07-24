@@ -1,6 +1,7 @@
 #include "..\Public\Sequence_Charge.h"
 #include "Task_LookAt.h"
 #include "Task_Charge.h"
+#include "Task_Landing.h"
 
 HRESULT CSequence_Charge::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecorator)
 {
@@ -10,6 +11,8 @@ HRESULT CSequence_Charge::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDeco
 	if (FAILED(Add_Child(TEXT("Task_LookAt"), CTask_LookAt::Create(pBlackBoard))))
 		return E_FAIL;
 	if (FAILED(Add_Child(TEXT("Task_Charge"), CTask_Charge::Create(pBlackBoard))))
+		return E_FAIL;
+	if (FAILED(Add_Child(TEXT("Task_LookAt2"), CTask_LookAt::Create(pBlackBoard))))
 		return E_FAIL;
 
 	return S_OK;

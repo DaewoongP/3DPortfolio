@@ -2,6 +2,10 @@
 #include "Task.h"
 #include "Client_Defines.h"
 
+BEGIN(Engine)
+class CPart;
+END
+
 BEGIN(Client)
 
 class CTask_Attack final : public CTask
@@ -18,7 +22,7 @@ public:
 private:
 	_double*				m_dAttackCoolTime = { nullptr };
 	_bool*					m_isAttack = { nullptr };
-	class CPart*			m_pWeapon = { nullptr };
+	CPart*					m_pWeapon = { nullptr };
 
 public:
 	static CTask_Attack* Create(class CBlackBoard* pBlackBoard);

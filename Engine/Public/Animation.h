@@ -11,6 +11,12 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
+	_float Get_CurrentNotifySpeed() const { 
+		if (m_AnimationNotify.size() > 0)
+			return m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]].fSpeed;
+		else
+			return 0.f;
+	}
 	// 현재 애니메이션 이름 반환
 	const _tchar* Get_AnimationName() const { return m_szName; }
 	// 애니메이션의 프레임 개수 반환

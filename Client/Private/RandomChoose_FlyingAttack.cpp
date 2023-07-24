@@ -7,10 +7,10 @@ HRESULT CRandomChoose_FlyingAttack::Initialize(CBlackBoard* pBlackBoard, CDecora
 	if (FAILED(__super::Initialize(pBlackBoard, pDecorator)))
 		return E_FAIL;
 
-	m_ChildWeights.push_back(0.5f);
+	m_ChildWeights.push_back(0.7f);
 	if (FAILED(Add_Child(TEXT("Task_ThrowBomb"), CTask_ThrowBomb::Create(pBlackBoard))))
 		return E_FAIL;
-	m_ChildWeights.push_back(0.5f);
+	m_ChildWeights.push_back(0.3f);
 	if (FAILED(Add_Child(TEXT("Task_Summon"), CTask_Summon::Create(pBlackBoard))))
 		return E_FAIL;
 

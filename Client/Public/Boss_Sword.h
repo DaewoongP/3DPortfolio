@@ -36,6 +36,7 @@ public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 	void Attack();
+	void AttackEnd();
 	void Blocked();
 
 public:

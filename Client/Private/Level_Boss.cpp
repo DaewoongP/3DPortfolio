@@ -10,7 +10,9 @@ CLevel_Boss::CLevel_Boss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CLevel_Boss::Initialize()
 {
+	
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Test4.Light")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Boss(TEXT("Layer_Boss")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
@@ -30,6 +32,37 @@ HRESULT CLevel_Boss::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	// 스테이지 있는 빛이 있을 경우 삭제하고 시작. 
+	if (FAILED(pGameInstance->Clear_Lights()))
+	{
+		Safe_Release(pGameInstance);
+		return E_FAIL;
+	}
+
+	CLight::LIGHTDESC DirLightDesc;
+	ZEROMEM(&DirLightDesc);
+	DirLightDesc.eType = CLight::TYPE_DIRECTIONAL;
+	DirLightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
+	DirLightDesc.vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
+	//DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
+	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
+
+	if (FAILED(pGameInstance->Add_Lights(DirLightDesc)))
+	{
+		Safe_Release(pGameInstance);
+		return E_FAIL;
+	}
+		
+	Safe_Release(pGameInstance);
 	return S_OK;
 }
 

@@ -46,12 +46,6 @@ void CBoss_Sword::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-	_vector vLook = XMVectorSet(m_ParentMatrixDesc.pParentWorldMatrix->_31, m_ParentMatrixDesc.pParentWorldMatrix->_32, m_ParentMatrixDesc.pParentWorldMatrix->_33, 0.f);
-	XMStoreFloat3(&AABBDesc.vPosition, vLook * 3.f);
-	AABBDesc.vExtents = _float3(4.f, 4.f, 4.f);
-	m_pColliderCom->Set_BoundingDesc(&AABBDesc);
-
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
 	m_pModelCom->Play_Animation(dTimeDelta);
@@ -101,7 +95,7 @@ HRESULT CBoss_Sword::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 	{
-		MSG_BOX("Failed CSword Add_Component : (Com_Renderer)");
+		MSG_BOX("Failed CBoss_Sword Add_Component : (Com_Renderer)");
 		return E_FAIL;
 	}
 
@@ -109,7 +103,7 @@ HRESULT CBoss_Sword::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bakunin_Sword"),
 		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 	{
-		MSG_BOX("Failed CSword Add_Component : (Com_Model)");
+		MSG_BOX("Failed CBoss_Sword Add_Component : (Com_Model)");
 		return E_FAIL;
 	}
 
@@ -117,18 +111,18 @@ HRESULT CBoss_Sword::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
-		MSG_BOX("Failed CSword Add_Component : (Com_Shader)");
+		MSG_BOX("Failed CBoss_Sword Add_Component : (Com_Shader)");
 		return E_FAIL;
 	}
 
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
-	AABBDesc.vExtents = _float3(5.f, 5.f, 5.f);
+	AABBDesc.vExtents = _float3(4.f, 4.f, 4.f);
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_Collider)");
+		MSG_BOX("Failed CBoss_Sword Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
 
@@ -165,9 +159,13 @@ void CBoss_Sword::Attack()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PARRYING, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
+}
+
+void CBoss_Sword::AttackEnd()
+{
 }
 
 void CBoss_Sword::Blocked()

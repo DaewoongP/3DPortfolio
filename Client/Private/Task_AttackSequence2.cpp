@@ -39,6 +39,9 @@ HRESULT CTask_AttackSequence2::Reset()
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
 
+	*m_isAttackSequence2 = false;
+	m_dRunningAcc = 0.0;
+
 	return S_OK;
 }
 
