@@ -22,6 +22,8 @@ HRESULT CWindow_Light::Initialize(void* pArg)
 	ZEROMEM(&m_LightDesc);
 	m_LightDesc.eType = CLight::TYPE_POINT; // 고정
 	m_LightDesc.vPos = _float4(0.f, 0.f, 0.f, 1.f);
+	m_LightDesc.vDir = _float4(0.f, -1.f, 0.f, 0.f);
+	m_LightDesc.fSpotPower = 10.f;
 	m_LightDesc.fRange = 1.f;
 	m_LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	m_LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
@@ -41,11 +43,6 @@ HRESULT CWindow_Light::Initialize(void* pArg)
 void CWindow_Light::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-
-	if (m_isPickMode)
-		m_isModifyMode = false;
-	if (m_isModifyMode)
-		m_isPickMode = false;
 
 	// 콜라이더 렌더링.
 	for (auto& pair : m_Lights)
@@ -71,6 +68,54 @@ void CWindow_Light::Tick(_double dTimeDelta)
 	LightSaveLoad();
 
 	End();
+}
+
+HRESULT CWindow_Light::Render()
+{
+	for (_uint i = 0; i < m_Lights.size(); ++i)
+	{
+		if (i >= m_LightIndices.size())
+			break;
+
+		_float3 vLightCenterPos = m_Lights[i].first->Get_BoundingCenterPosition();
+		_vector vCenter = XMVectorSet(vLightCenterPos.x, vLightCenterPos.y, vLightCenterPos.z, 1.f);
+
+		_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
+		_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+		_vector vViewPos = XMVector3TransformCoord(vCenter, ViewMatrix);
+		_vector vProjPos = XMVector3TransformCoord(vViewPos, ProjMatrix);
+
+		_uint iVP = 1;
+		D3D11_VIEWPORT ViewPort;
+		ZEROMEM(&ViewPort);
+		m_pContext->RSGetViewports(&iVP, &ViewPort);
+
+		_float3 vRenderCenterPos;
+		_float2 vRender;
+		XMStoreFloat3(&vRenderCenterPos, vProjPos);
+		// 투영 좌표가 아닌 친구들을 렌더링 하지 않게 처리.
+		if (-1.f > vRenderCenterPos.x ||
+			1.f < vRenderCenterPos.x ||
+			-1.f > vRenderCenterPos.y ||
+			1.f < vRenderCenterPos.y ||
+			0.f > vRenderCenterPos.z ||
+			1.f < vRenderCenterPos.z)
+			continue;
+
+		_float fDepth = (1.f - vRenderCenterPos.z) * m_Lights[i].second.fRange * 20.f;
+
+		vRender.x = (vRenderCenterPos.x + 1.f) * 0.5f * ViewPort.Width - fDepth * 0.5f;
+		vRender.y = (1.f - vRenderCenterPos.y) * 0.5f * ViewPort.Height - fDepth * 0.5f;
+
+		_tchar szLightIndex[MAX_STR] = TEXT("");
+		CharToWChar(m_LightIndices[i], szLightIndex);
+
+		if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), szLightIndex, vRender, XMLoadFloat4(&m_Lights[i].second.vDiffuse), 0.f, _float2(0.f, 0.f), fDepth)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 HRESULT CWindow_Light::Find_Position()
@@ -100,11 +145,19 @@ HRESULT CWindow_Light::Find_Position()
 
 HRESULT CWindow_Light::SetUp_LightDesc()
 {
+	ImGui::RadioButton("Point Light", reinterpret_cast<_int*>(&m_LightDesc.eType), _int(CLight::TYPE_POINT));
+	ImGui::SameLine();
+	ImGui::RadioButton("Spot Light", reinterpret_cast<_int*>(&m_LightDesc.eType), _int(CLight::TYPE_SPOTLIGHT));
+
+	
 	if (ImGui::InputFloat3("Light Position", reinterpret_cast<_float*>(&m_LightDesc.vPos)) ||
 		ImGui::InputFloat("Light Range", &m_LightDesc.fRange, 1.f) ||
 		ImGui::InputFloat3("Light Diffuse", reinterpret_cast<_float*>(&m_LightDesc.vDiffuse)) ||
 		ImGui::InputFloat3("Light Ambient", reinterpret_cast<_float*>(&m_LightDesc.vAmbient)) ||
-		ImGui::InputFloat3("Light Specular", reinterpret_cast<_float*>(&m_LightDesc.vSpecular)))
+		ImGui::InputFloat3("Light Specular", reinterpret_cast<_float*>(&m_LightDesc.vSpecular)) ||
+		CLight::TYPE_SPOTLIGHT != m_LightDesc.eType ||
+		ImGui::InputFloat3("Light Direction", reinterpret_cast<_float*>(&m_LightDesc.vDir)) ||
+		ImGui::InputFloat("Light Power", &m_LightDesc.fSpotPower, 1.f))
 	{
 		if (-1 != m_iCurrentListBoxIndex &&
 			0 < m_Lights.size() &&
@@ -156,11 +209,11 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 	SameLine();
 	if (ImGui::Checkbox("Show Lights", &m_isLight))
 	{
-		m_pGameInstance->Clear_Lights();
-
 		// Directional Light
 		if (false == m_isLight)
 		{
+			m_pGameInstance->Clear_Lights();
+
 			CLight::LIGHTDESC		LightDesc;
 			ZeroMemory(&LightDesc, sizeof LightDesc);
 
@@ -176,11 +229,7 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 		}
 		else
 		{
-			for (auto& pair : m_Lights)
-			{
-				if (FAILED(m_pGameInstance->Add_Lights(pair.second)))
-					return E_FAIL;
-			}
+			Remake_Lights();
 		}
 	}
 
@@ -190,6 +239,8 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 			m_iCurrentListBoxIndex >= m_Lights.size() &&
 			0 > m_iCurrentListBoxIndex)
 			return E_FAIL;
+
+		m_isModifyMode = false;
 
 		// 값 화면에 띄우기 위한 복사.
 		memcpy(&m_LightDesc, &m_Lights[m_iCurrentListBoxIndex].second, sizeof(CLight::LIGHTDESC));
@@ -288,7 +339,12 @@ HRESULT CWindow_Light::Delete_LightDesc()
 
 HRESULT CWindow_Light::Pick_Light(_double dTimeDelta)
 {
-	ImGui::Checkbox("Modify Light", &m_isModifyMode);
+	if (ImGui::Checkbox("Modify Light", &m_isModifyMode))
+	{
+		if (m_iCurrentListBoxIndex >= m_Lights.size())
+			return E_FAIL;
+		memcpy(&m_LightDesc, &m_Lights[m_iCurrentListBoxIndex].second, sizeof(CLight::LIGHTDESC));
+	}
 
 	if (true == m_isModifyMode)
 	{
@@ -502,6 +558,20 @@ void CWindow_Light::Add_DirectionalLight()
 void CWindow_Light::Remake_Lights()
 {
 	m_pGameInstance->Clear_Lights();
+
+	// 살짝 밝게
+	CLight::LIGHTDESC		LightDesc;
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+
+	LightDesc.eType = CLight::TYPE_DIRECTIONAL;
+	LightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
+
+	LightDesc.vDiffuse = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = _float4(0.2f, 0.2f, 0.2f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Lights(LightDesc)))
+		return;
 
 	for (auto& pair : m_Lights)
 	{

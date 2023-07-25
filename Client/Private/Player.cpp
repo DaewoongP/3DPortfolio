@@ -127,7 +127,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	CameraOffset(dTimeDelta);
 
 	//m_pModelCom->Invalidate_AnimationCamera(m_pPlayerCameraCom, m_pTransformCom, dTimeDelta);
-	//CameraMove(dTimeDelta);
+	CameraMove(dTimeDelta);
 	// 객체포지션 -> 카메라 오프셋 고정 -> 카메라 상태행렬 갱신 -> 이후 처리 순서를 맞추기위해 함수이름 바꿈.
 	m_pPlayerCameraCom->Tick_Camera(dTimeDelta);
 
@@ -1124,27 +1124,7 @@ void CPlayer::CameraMove(_double dTimeDelta)
 	88 - Att L2
 	89 - Att L3
 	*/
-
-	_float fVerticalMove = 0.f;
-	_float fHorizentalMove = 0.f;
-
-	_uint iCurrentAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
 	
-
-	fVerticalMove = 10.f;
-	fHorizentalMove = -10.f; 
-
-	_vector	vCamRight = XMVector3Normalize(m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT));
-	m_pTransformCom->Turn(vCamRight, fVerticalMove * m_fMouseSensitivity, dTimeDelta);
-	_vector vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
-
-	if (XMConvertToRadians(30.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
-	{
-		m_pTransformCom->Turn(vCamRight, -1.f * fVerticalMove * m_fMouseSensitivity, dTimeDelta);
-	}
-
-	_vector	vAxisUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-	m_pTransformCom->Turn(vAxisUp, fHorizentalMove * m_fMouseSensitivity, dTimeDelta);
 }
 
 void CPlayer::CameraOffset(_double dTimeDelta)

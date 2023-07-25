@@ -12,7 +12,7 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 HRESULT CLevel_Stage1::Initialize()
 {
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Test4.Light")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Stage1.Light")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy"), TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Stage1.AnimMap")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
@@ -71,7 +71,7 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 	ZEROMEM(&DirLightDesc);
 	DirLightDesc.eType = CLight::TYPE_DIRECTIONAL;
 	DirLightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
-	DirLightDesc.vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
+	DirLightDesc.vDiffuse = _float4(0.15f, 0.15f, 0.15f, 1.f);
 	//DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
 	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;

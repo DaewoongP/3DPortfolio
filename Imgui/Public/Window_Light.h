@@ -18,6 +18,7 @@ private:
 public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
+	virtual HRESULT Render() override;
 
 private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };

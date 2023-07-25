@@ -30,6 +30,19 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 
 		iPassIndex = 2;
 	}
+	else if (TYPE_SPOTLIGHT == m_LightDesc.eType)
+	{
+		if (FAILED(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vDir, sizeof(_float4))))
+			return E_FAIL;
+
+		if (FAILED(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPos, sizeof(_float4))))
+			return E_FAIL;
+
+		if (FAILED(pShader->Bind_RawValue("g_fSpotPower", &m_LightDesc.fSpotPower, sizeof(_float))))
+			return E_FAIL;
+
+		iPassIndex = 3;
+	}
 
 	if (FAILED(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4))))
 		return E_FAIL;

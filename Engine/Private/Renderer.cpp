@@ -255,7 +255,7 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	m_pShader->Begin(3);
+	m_pShader->Begin(4);
 
 	m_pVIBuffer->Render();
 
