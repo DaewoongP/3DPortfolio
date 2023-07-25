@@ -193,6 +193,12 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		m_eGameEvent = GAME_OBJECT_DEAD;
 	}
 
+	if (CollisionDesc.pMyCollider == m_pColliderCom &&
+		COLLISIONDESC::COLTYPE_KNOCKBACK == CollisionDesc.ColType)
+	{
+		m_pTransformCom->Jump(CollisionDesc.pOtherTransform->Get_State(CTransform::STATE_LOOK) + XMVectorSet(0.f, 3.f, 0.f, 0.f), 40.f, g_TimeDelta);
+	}
+
 	/* Player Vision Collider */
 
 	if (WEAPON_KATANA == m_eCurWeapon &&

@@ -19,6 +19,7 @@ public:
 	void			Set_Dead() { m_isDead = true; }
 	void			Set_Tag(const _tchar * pTag) { lstrcpy(m_pTag, pTag); }
 	void			Set_LayerTag(const _tchar* pTag) { lstrcpy(m_pLayerTag, pTag); }
+	void			Set_GameEvent(GAMEEVENT eEvent) { m_eGameEvent = eEvent; }
 
 public:
 	virtual HRESULT Initialize_Prototype();

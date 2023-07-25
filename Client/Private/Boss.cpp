@@ -43,12 +43,17 @@ HRESULT CBoss::Initialize(void* pArg)
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
+	m_pModelCom->Delete_AnimationTranslation(1);
 	m_pModelCom->Reset_Animation(14);
 	m_pModelCom->Delete_AnimationTranslation(19);
-	m_pModelCom->Delete_AnimationTranslation(1);
+	m_pModelCom->Delete_AnimationTranslation(21);
+
+	m_dDeadTime = 4.0;
+	m_iHp = 3;
 
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
+	m_pKnockBackColliderCom->Set_Color(DirectX::Colors::HotPink);
 #endif // _DEBUG
 
 	return S_OK;
@@ -70,9 +75,9 @@ void CBoss::Tick(_double dTimeDelta)
 
 	if (0.7f > m_pModelCom->Get_CurrentNotifySpeed())
 		m_pSword->Attack();
-		
-	//pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_KNOCKBACK, m_pKnockBackColliderCom);
-	
+
+	Knockback(dTimeDelta);
+
 	Safe_Release(pGameInstance);
 
 	Tick_Bomb(dTimeDelta);
@@ -103,6 +108,27 @@ void CBoss::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		COLLISIONDESC::COLTYPE_PLAYERWEAPON == CollisionDesc.ColType)
 	{
 		// 플레이어 칼 충돌
+		if (STATE_ATTACK1_END == m_eCurState || STATE_ATTACK2_END == m_eCurState)
+		{
+			_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
+
+			if (0.7f > fCurrentFramePercent)
+			{
+				m_iHp -= 1;
+
+				if (0 >= m_iHp)
+				{
+					CGameInstance* pGameInstance = CGameInstance::GetInstance();
+					Safe_AddRef(pGameInstance);
+
+					pGameInstance->SetUp_GameEvent(LEVEL_BOSS, TEXT("Layer_Enemy"), GAME_OBJECT_DEAD);
+
+					Safe_Release(pGameInstance);
+
+					m_eGameEvent = GAME_OBJECT_DEAD;
+				}
+			}
+		}
 	}
 }
 
@@ -153,23 +179,33 @@ HRESULT CBoss::Reset()
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Clear_Layer(LEVEL_BOSS, TEXT("Layer_Enemy"));
+
+	Safe_Release(pGameInstance);
+
 	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
 	m_pTransformCom->Set_Scale(_float3(1.f, 1.f, 1.f));
 	m_pTransformCom->Rotation(_float3(0.f, 0.f, 0.f));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(150.f, 0.f, 150.f, 1.f));
 
-	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(3.f, XMConvertToRadians(90.f));
+	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(6.f, XMConvertToRadians(90.f));
 	m_pTransformCom->Set_Desc(TransformDesc);
 
 	m_pModelCom->Reset_Animation(14);
 
 	// 상태값 통일하면 애니메이션 초기화도 간단함.
 	m_ePreState = STATE_IDLE;
+
 	if (m_isFly)
 		m_eCurState = STATE_FLY_IDLE;
 	else
 		m_eCurState = STATE_IDLE;
 
+	/* BlackBoard Reset */
+	m_iCurPatternCnt = 0;
 	m_pTargetPlayer = nullptr;
 
 	for (auto& pBomb : m_Bombs)
@@ -236,12 +272,9 @@ HRESULT CBoss::Add_Component()
 	}
 	
 
-	AABBDesc.vExtents = _float3(20.f, 20.f, 20.f);
-	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
-	/* For.Com_Collider */
+	/* For.Com_KnockBackCollider */
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_KnockBackCollider"), reinterpret_cast<CComponent**>(&m_pKnockBackColliderCom), &AABBDesc)))
+		TEXT("Com_KnockBackCollider"), reinterpret_cast<CComponent**>(&m_pKnockBackColliderCom))))
 	{
 		MSG_BOX("Failed CBoss Add_Component : (Com_KnockBackCollider)");
 		return E_FAIL;
@@ -548,6 +581,30 @@ void CBoss::Tick_Bomb(_double dTimeDelta)
 		pBomb->Tick(dTimeDelta);
 }
 
+void CBoss::Knockback(_double dTimeDelta)
+{
+	if (false == (STATE_ATTACK1_END == m_eCurState || STATE_ATTACK2_END == m_eCurState))
+		return;
+
+	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
+
+	if (0.7f < fCurrentFramePercent)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+
+		CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+
+		AABBDesc.vExtents = _float3(10.f, 10.f, 10.f);
+		_vector vColPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION) + m_pTransformCom->Get_State(CTransform::STATE_LOOK) * 10.f;
+		XMStoreFloat3(&AABBDesc.vPosition, vColPos);
+		m_pKnockBackColliderCom->Set_BoundingDesc(&AABBDesc);
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_KNOCKBACK, m_pKnockBackColliderCom);
+
+		Safe_Release(pGameInstance);
+	}
+}
+
 void CBoss::Late_Tick_Bomb(_double dTimeDelta)
 {
 	for (auto iter = m_Bombs.begin(); iter != m_Bombs.end();)
@@ -570,8 +627,11 @@ GAMEEVENT CBoss::PlayEvent(_double dTimeDelta)
 		m_eCurState = STATE_DEAD;
 		m_isDead = true;
 
-		if (ANIM_FINISHED == m_eCurrentAnimationFlag)
+		m_dDeadAnimAcc += dTimeDelta;
+
+		if (m_dDeadTime < m_dDeadAnimAcc)
 			return GAME_OBJECT_DEAD;
+		//if (ANIM_FINISHED == m_eCurrentAnimationFlag)
 	}
 
 	return GAME_NOEVENT;

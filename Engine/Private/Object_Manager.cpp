@@ -212,9 +212,16 @@ HRESULT CObject_Manager::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	pLayer->Clear_Layer();
+	return pLayer->Clear_Layer();
+}
 
-	return S_OK;
+HRESULT CObject_Manager::SetUp_GameEvent(_uint iLevelIndex, const _tchar* pLayerTag, GAMEEVENT eEvent)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	return pLayer->SetUp_GameEvent(eEvent);
 }
 
 CGameObject* CObject_Manager::Find_Prototype(const _tchar* pPrototypeTag)

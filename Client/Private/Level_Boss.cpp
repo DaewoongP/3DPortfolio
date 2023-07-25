@@ -51,8 +51,7 @@ HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
 	ZEROMEM(&DirLightDesc);
 	DirLightDesc.eType = CLight::TYPE_DIRECTIONAL;
 	DirLightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
-	DirLightDesc.vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
-	//DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
 	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
 

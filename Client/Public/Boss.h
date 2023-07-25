@@ -18,9 +18,8 @@ public:
 		STATE_FLY_BACK, STATE_FLY_LEFT, STATE_FLY_RIGHT,
 		STATE_FLY_HIT, STATE_IDLETOCHARGE, STATE_CHARGE,
 		STATE_ATTACK1, STATE_ATTACK1_END, STATE_ATTACK2,
-		STATE_ATTACK2_END, STATE_ATTACKTOFLY,
-		
-		STATE_DEAD, STATE_END };
+		STATE_ATTACK2_END, STATE_ATTACKTOFLY, STATE_DEAD,
+		STATE_END };
 
 private:
 	explicit CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -92,6 +91,11 @@ private:
 
 	STATE						m_ePreAttack = { STATE_END };
 
+private:
+	_int						m_iHp = { 0 };
+	_double						m_dDeadAnimAcc = { 0.0 };
+	_double						m_dDeadTime = { 0.0 };
+
 private: /* Initialize */
 	HRESULT Add_Component();
 	HRESULT Add_Parts();
@@ -105,6 +109,7 @@ private: /* Tick */
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);
 	void Tick_Bomb(_double dTimeDelta);
+	void Knockback(_double dTimeDelta);
 
 private: /* Late_Tick */
 	GAMEEVENT PlayEvent(_double dTimeDelta);

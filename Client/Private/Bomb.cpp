@@ -47,14 +47,6 @@ GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-	{
-#ifdef _DEBUG
-		m_pColliderCom->Set_Color(DirectX::Colors::Red);
-		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
-#endif // _DEBUG
-	}
-
 	if (1.f > XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
 		m_dExplodeTimeAcc += dTimeDelta;
 
@@ -73,6 +65,15 @@ GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 		Safe_Release(pGameInstance);
 	}
 
+	if (nullptr != m_pRendererCom)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+		m_pColliderCom->Set_Color(DirectX::Colors::Red);
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+#endif // _DEBUG
+	}
+
 	return m_eGameEvent;
 }
 
@@ -80,6 +81,21 @@ HRESULT CBomb::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+
+	if (FAILED(SetUp_ShaderResources()))
+		return E_FAIL;
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
+		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
+
+		m_pShaderCom->Begin(0);
+
+		m_pModelCom->Render(i);
+	}
 
 	return S_OK;
 }
@@ -99,6 +115,22 @@ HRESULT CBomb::Add_Components()
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 	{
 		MSG_BOX("Failed CEnemy Add_Component : (Com_Renderer)");
+		return E_FAIL;
+	}
+
+	/* For.Com_Model */
+	if (FAILED(__super::Add_Component(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bomb"),
+		TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
+	{
+		MSG_BOX("Failed CBoss_Sword Add_Component : (Com_Model)");
+		return E_FAIL;
+	}
+
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
+		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	{
+		MSG_BOX("Failed CBoss_Sword Add_Component : (Com_Shader)");
 		return E_FAIL;
 	}
 
@@ -171,6 +203,7 @@ void CBomb::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pColliderCom);

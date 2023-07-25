@@ -57,6 +57,14 @@ HRESULT CLayer::Clear_Layer()
 	return S_OK;
 }
 
+HRESULT CLayer::SetUp_GameEvent(GAMEEVENT eEvent)
+{
+	for (auto& pGameObject : m_GameObjects)
+		pGameObject.second->Set_GameEvent(eEvent);
+
+	return S_OK;
+}
+
 void CLayer::Tick(_double dTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
@@ -97,8 +105,11 @@ HRESULT CLayer::ResetStage()
 	
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (FAILED(pGameObject.second->Reset()))
-			return E_FAIL;
+		if (nullptr != pGameObject.second)
+		{
+			if (FAILED(pGameObject.second->Reset()))
+				return E_FAIL;
+		}
 	}
 
 	return S_OK;

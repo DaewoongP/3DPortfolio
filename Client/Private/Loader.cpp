@@ -647,6 +647,15 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 	}
 
+	PivotMatrix = XMMatrixScaling(10.f, 10.f, 10.f) * XMMatrixRotationY(XMConvertToRadians(90.f));
+	/* For.Prototype_Component_Model_Bomb */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bomb"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/SM_Bomb.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bomb)");
+		return E_FAIL;
+	}
+
 	/* For.Prototype_Component_Model_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Sky"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))

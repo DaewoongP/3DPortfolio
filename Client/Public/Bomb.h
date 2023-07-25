@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CModel;
 class CShader;
 class CRenderer;
 class CCollider;
@@ -26,6 +27,7 @@ public:
 	virtual HRESULT Reset() override;
 
 private:
+	CModel*			m_pModelCom = { nullptr };
 	CShader*		m_pShaderCom = { nullptr };
 	CRenderer*		m_pRendererCom = { nullptr };
 	CCollider*		m_pColliderCom = { nullptr };

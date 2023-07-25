@@ -51,6 +51,7 @@ public: /* For.Object_Manager */
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
 	HRESULT Delete_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pGameObjectTag);
 	HRESULT Clear_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
+	HRESULT SetUp_GameEvent(_uint iLevelIndex, const _tchar * pLayerTag, GAMEEVENT eEvent);
 
 	class CGameObject* Get_LastGameObject();
 	HRESULT Set_LastGameObject(class CGameObject* pGameObject);
