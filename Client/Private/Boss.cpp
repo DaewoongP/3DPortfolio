@@ -183,6 +183,7 @@ HRESULT CBoss::Reset()
 	Safe_AddRef(pGameInstance);
 
 	pGameInstance->Clear_Layer(LEVEL_BOSS, TEXT("Layer_Enemy"));
+	pGameInstance->Clear_DeadObjects(LEVEL_BOSS, TEXT("Layer_Enemy"));
 
 	Safe_Release(pGameInstance);
 

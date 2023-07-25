@@ -57,6 +57,16 @@ HRESULT CLayer::Clear_Layer()
 	return S_OK;
 }
 
+HRESULT CLayer::Clear_DeadObjects()
+{
+	for (auto& pDeadObject : m_DeadObjects)
+		Safe_Release(pDeadObject.second);
+
+	m_DeadObjects.clear();
+
+	return S_OK;
+}
+
 HRESULT CLayer::SetUp_GameEvent(GAMEEVENT eEvent)
 {
 	for (auto& pGameObject : m_GameObjects)

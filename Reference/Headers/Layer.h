@@ -19,6 +19,7 @@ public:
 	HRESULT			Delete_GameObject(const _tchar* pGameObjectTag);
 	// 레이어 클리어
 	HRESULT			Clear_Layer();
+	HRESULT			Clear_DeadObjects();
 	HRESULT			SetUp_GameEvent(GAMEEVENT eEvent);
 
 public:

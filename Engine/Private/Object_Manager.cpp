@@ -215,6 +215,15 @@ HRESULT CObject_Manager::Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	return pLayer->Clear_Layer();
 }
 
+HRESULT CObject_Manager::Clear_DeadObjects(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	return pLayer->Clear_DeadObjects();
+}
+
 HRESULT CObject_Manager::SetUp_GameEvent(_uint iLevelIndex, const _tchar* pLayerTag, GAMEEVENT eEvent)
 {
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);

@@ -27,6 +27,7 @@ public:
 	HRESULT				Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
 	// 레벨에 맞는 레이어안의 게임오브젝트들을 모두 삭제.
 	HRESULT				Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
+	HRESULT				Clear_DeadObjects(_uint iLevelIndex, const _tchar* pLayerTag);
 	HRESULT				SetUp_GameEvent(_uint iLevelIndex, const _tchar* pLayerTag, GAMEEVENT eEvent);
 
 public:

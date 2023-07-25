@@ -25,7 +25,7 @@ CBehavior::STATE CTask_Landing::Tick(_double dTimeDelta)
 	_vector vTargetPos = pGameObject->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 
 	// 2 * CenterPos - TargetPos => 중점기준으로 반대쪽 방향 포지션 구할 수 있음.
-	_vector vOppositePos = 2.f * XMLoadFloat4(&m_vMapCenterPosition) - vTargetPos;
+	_vector vOppositePos = 2.f * XMLoadFloat4(&m_vMapCenterPosition) - XMVectorSetY(vTargetPos, 0.f);
 	vOppositePos = XMVectorSetY(vOppositePos, 0.f);
 
 	m_pTransformCom->MoveTo(vOppositePos, dTimeDelta * (*m_dLandingSpeed));
