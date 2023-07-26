@@ -199,7 +199,8 @@
     <ClInclude Include="..\public\Loading_Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\public\Enemy.h" />
-    <ClInclude Include="..\public\MenuSelect.h" />
+    <ClInclude Include="..\public\MiniEnemy.h" />
+    <ClInclude Include="..\public\MiniMap.h" />
     <ClInclude Include="..\public\Mouse.h" />
     <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\public\Player.h" />
@@ -284,7 +285,8 @@
     <ClCompile Include="..\private\Loading_Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />
-    <ClCompile Include="..\private\MenuSelect.cpp" />
+    <ClCompile Include="..\private\MiniEnemy.cpp" />
+    <ClCompile Include="..\private\MiniMap.cpp" />
     <ClCompile Include="..\private\Mouse.cpp" />
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\private\Player.cpp" />

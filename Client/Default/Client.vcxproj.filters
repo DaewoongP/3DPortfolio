@@ -142,9 +142,6 @@
     <Filter Include="02. GameObjects\05. UI\Logo\00. Mouse">
       <UniqueIdentifier>{617ae68c-347e-40b8-976b-980bd9ca8fc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\05. UI\Logo\02. MenuSelect">
-      <UniqueIdentifier>{821ff2aa-0032-417a-a237-9d4f70331f3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\06. Trigger">
       <UniqueIdentifier>{fa361131-17b9-4e0f-a954-6608c9047281}</UniqueIdentifier>
     </Filter>
@@ -183,6 +180,12 @@
     </Filter>
     <Filter Include="02. GameObjects\05. UI\Loading\01. Loading_GamePlay">
       <UniqueIdentifier>{afb097c4-d61b-4a26-86c2-64a306a25cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\02. Minimap">
+      <UniqueIdentifier>{0b41a7db-2d22-4b19-923f-b0e32d1a415a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\02. Minimap\MiniEnemy">
+      <UniqueIdentifier>{8ca84763-476b-401e-9bf0-fd23871bc40f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -348,9 +351,6 @@
     <ClInclude Include="..\public\UI.h">
       <Filter>02. GameObjects\05. UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MenuSelect.h">
-      <Filter>02. GameObjects\05. UI\Logo\02. MenuSelect</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Crosshair.h">
       <Filter>02. GameObjects\05. UI\GamePlay\00. Crosshair</Filter>
     </ClInclude>
@@ -440,6 +440,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Black_BackGround.h">
       <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniMap.h">
+      <Filter>02. GameObjects\05. UI\GamePlay\02. Minimap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniEnemy.h">
+      <Filter>02. GameObjects\05. UI\GamePlay\02. Minimap\MiniEnemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -606,9 +612,6 @@
     <ClCompile Include="..\private\UI.cpp">
       <Filter>02. GameObjects\05. UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MenuSelect.cpp">
-      <Filter>02. GameObjects\05. UI\Logo\02. MenuSelect</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Crosshair.cpp">
       <Filter>02. GameObjects\05. UI\GamePlay\00. Crosshair</Filter>
     </ClCompile>
@@ -698,6 +701,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Black_BackGround.cpp">
       <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniMap.cpp">
+      <Filter>02. GameObjects\05. UI\GamePlay\02. Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniEnemy.cpp">
+      <Filter>02. GameObjects\05. UI\GamePlay\02. Minimap\MiniEnemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

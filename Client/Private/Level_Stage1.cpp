@@ -359,13 +359,25 @@ HRESULT CLevel_Stage1::Ready_UI(const _tchar* pLayerTag)
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Crosshair"), pLayerTag, TEXT("GameObject_Crosshair"))))
 	{
-		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Crosshair)");
+		MSG_BOX("Failed Add_GameObject : (GameObject_Crosshair)");
 		return E_FAIL;
 	}
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Dash"), pLayerTag, TEXT("GameObject_UI_Dash"))))
 	{
-		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_UI_Dash)");
+		MSG_BOX("Failed Add_GameObject : (GameObject_UI_Dash)");
+		return E_FAIL;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Minimap"), pLayerTag, TEXT("GameObject_MiniMap"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MiniMap)");
+		return E_FAIL;
+	}
+	
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_MiniEnemy"), pLayerTag, TEXT("GameObject_MiniEnemy"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MiniEnemy)");
 		return E_FAIL;
 	}
 

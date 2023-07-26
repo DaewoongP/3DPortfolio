@@ -47,7 +47,7 @@ void CColProp::Tick(_double TimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
-
+	
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_STATIC, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
@@ -67,7 +67,8 @@ GAMEEVENT CColProp::Late_Tick(_double TimeDelta)
 
 HRESULT CColProp::Render()
 {
-	__super::Render();
+	if (FAILED(__super::Render()))
+		return E_FAIL;
 
 	return S_OK;
 }
