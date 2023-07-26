@@ -34,6 +34,8 @@ HRESULT CColProp::Initialize(void* pArg)
 
 		if (FAILED(Add_Components(ColPropDesc)))
 			return E_FAIL;
+
+		m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	}
 
 	return S_OK;

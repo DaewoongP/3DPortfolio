@@ -380,6 +380,12 @@ HRESULT CLevel_Stage1::Ready_UI(const _tchar* pLayerTag)
 		MSG_BOX("Failed Add_GameObject : (GameObject_MiniEnemy)");
 		return E_FAIL;
 	}
+	
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Hook"), pLayerTag, TEXT("GameObject_UI_Hook"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_UI_Hook)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 

@@ -55,7 +55,6 @@ HRESULT CProp::Initialize_Level(_uint iLevelIndex)
 
 void CProp::Tick(_double TimeDelta)
 {
-	
 	__super::Tick(TimeDelta);
 }
 

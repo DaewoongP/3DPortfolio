@@ -3,6 +3,8 @@
 Texture2D g_Texture;
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
+float4 g_vColor;
+
 struct VS_IN
 {
 	float3 vPosition : POSITION;
@@ -49,12 +51,26 @@ float4 PS_MAIN_UI(PS_IN In) : SV_TARGET0
 	
     vColor = g_Texture.Sample(PointSampler, In.vTexUV);
 	
-    if (0.1f >= vColor.a)
-        discard;
+    //if (0.1f >= vColor.a)
+    //    discard;
 
     return vColor;
 }
 
+float4 PS_MAIN_COLOR_UI(PS_IN In) : SV_TARGET0
+{
+    float4 vColor = (float4) 0;
+	
+    vColor = g_Texture.Sample(PointSampler, In.vTexUV);
+	
+	// 알파값은 그대로 유지.
+    if (0.1f < vColor.a)
+        vColor.xyz = g_vColor.xyz;
+	else
+        discard;
+	
+    return vColor;
+}
 
 technique11 DefaultTechnique
 {
@@ -83,6 +99,19 @@ technique11 DefaultTechnique
 		DomainShader	= NULL /*compile ds_5_0 DS_MAIN()*/;
 		PixelShader		= compile ps_5_0 PS_MAIN_UI();
 	}
+
+    pass ColorUI
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_COLOR_UI();
+    }
 
 	pass Effect
 	{

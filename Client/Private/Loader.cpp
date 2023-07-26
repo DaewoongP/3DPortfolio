@@ -16,6 +16,7 @@
 #include "ColProp.h"
 #include "Texture.h"
 #include "UI_Dash.h"
+#include "UI_Hook.h"
 #include "Crosshair.h"
 #include "MiniEnemy.h"
 #include "Boss_Sword.h"
@@ -272,19 +273,11 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 	
-	/* For.Prototype_Component_Texture_InnerHook*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_InnerHook"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/GrapplingPoint/Grappling_point_inner.png")))))
+	/* For.Prototype_Component_Texture_Hook*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hook"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/GrapplingPoint/Grappling_point.png")))))
 	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_InnerHook)");
-		return E_FAIL;
-	}
-	
-	/* For.Prototype_Component_Texture_OuterHook*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_OuterHook"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/GrapplingPoint/Grappling_point_outer_ring.png")))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_OuterHook)");
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Hook)");
 		return E_FAIL;
 	}
 
@@ -636,6 +629,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CMiniEnemy::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_MiniEnemy)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_UI_Hook */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Hook"),
+		CUI_Hook::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Hook)");
 		return E_FAIL;
 	}
 

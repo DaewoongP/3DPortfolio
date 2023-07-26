@@ -251,6 +251,7 @@
     <ClInclude Include="..\public\Trigger.h" />
     <ClInclude Include="..\public\UI.h" />
     <ClInclude Include="..\public\UI_Dash.h" />
+    <ClInclude Include="..\public\UI_Hook.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -337,6 +338,7 @@
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\UI.cpp" />
     <ClCompile Include="..\private\UI_Dash.cpp" />
+    <ClCompile Include="..\private\UI_Hook.cpp" />
     <ClCompile Include="..\Public\Client_Struct.h" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
