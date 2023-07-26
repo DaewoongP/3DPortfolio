@@ -23,6 +23,7 @@ public:
 public:
 	// 게임 전체에서 사용하기 위한 스태틱 컴포넌트 생성 함수
 	HRESULT Ready_Prototype_Component_For_Static();
+	HRESULT Ready_Prototype_Object_For_Loading();
 	HRESULT Ready_Fonts();
 	HRESULT Open_Level(LEVELID eLevelIndex);
 

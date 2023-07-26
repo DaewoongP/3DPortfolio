@@ -38,6 +38,7 @@ private:
 
 public:
 	STATE Get_CurrentState() const { return m_eCurState; }
+	_bool IsDashCoolTime() const { return m_Dash.isCoolTime; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

@@ -36,6 +36,13 @@ void CLevel_Manager::Tick(_double dTimeDelta)
 	m_pCurrentLevel->Tick(dTimeDelta);
 }
 
+HRESULT CLevel_Manager::Render()
+{
+	NULL_CHECK_RETURN_MSG(m_pCurrentLevel, E_FAIL, TEXT("Current Level NULL"));
+
+	return m_pCurrentLevel->Render();
+}
+
 void CLevel_Manager::Free()
 {
 	Safe_Release(m_pCurrentLevel);

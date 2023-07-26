@@ -24,7 +24,7 @@ HRESULT CLevel_Stage1::Initialize()
 	// 디버깅용 카메라 및 객체.. 등등
 #ifdef _DEBUG
 	//FAILED_CHECK_RETURN(Ready_Layer_Camera(TEXT("Layer_Camera")), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_Debug(TEXT("Layer_Debug")), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_Layer_Debug(TEXT("Layer_Debug")), E_FAIL);
 #endif // _DEBUG
 
 	return S_OK;
@@ -363,11 +363,11 @@ HRESULT CLevel_Stage1::Ready_UI(const _tchar* pLayerTag)
 		return E_FAIL;
 	}
 
-	/*if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Dash"), pLayerTag, TEXT("GameObject_UI_Dash"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Dash"), pLayerTag, TEXT("GameObject_UI_Dash"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_UI_Dash)");
 		return E_FAIL;
-	}*/
+	}
 
 	Safe_Release(pGameInstance);
 

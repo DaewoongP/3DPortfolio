@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
+    <ClInclude Include="..\public\Black_BackGround.h" />
     <ClInclude Include="..\public\Bomb.h" />
     <ClInclude Include="..\public\Boss.h" />
     <ClInclude Include="..\public\Boss_Sword.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="..\public\Enemy_Pistol.h" />
     <ClInclude Include="..\public\Enemy_Sword.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
+    <ClInclude Include="..\public\GhostRunner_Logo.h" />
     <ClInclude Include="..\public\Hammer.h" />
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\Level_Boss.h" />
@@ -192,6 +194,8 @@
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_Stage2.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\Loading_InnerCycle.h" />
+    <ClInclude Include="..\public\Loading_OuterCycle.h" />
     <ClInclude Include="..\public\Loading_Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\public\Enemy.h" />
@@ -252,6 +256,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Black_BackGround.cpp" />
     <ClCompile Include="..\private\Bomb.cpp" />
     <ClCompile Include="..\private\Boss.cpp" />
     <ClCompile Include="..\private\Boss_Sword.cpp" />
@@ -265,6 +270,7 @@
     <ClCompile Include="..\private\Enemy_Pistol.cpp" />
     <ClCompile Include="..\private\Enemy_Sword.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
+    <ClCompile Include="..\private\GhostRunner_Logo.cpp" />
     <ClCompile Include="..\private\Hammer.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\Level_Boss.cpp" />
@@ -273,6 +279,8 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_Stage2.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\Loading_InnerCycle.cpp" />
+    <ClCompile Include="..\private\Loading_OuterCycle.cpp" />
     <ClCompile Include="..\private\Loading_Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />

@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Rect_Dynamic.h"
+#include "Loading_Logo.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -32,6 +33,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototype_Component_For_Static()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Prototype_Object_For_Loading()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Fonts()))
@@ -69,6 +73,8 @@ HRESULT CMainApp::Render()
 	if (FAILED(m_pGameInstance->Clear_DepthStencil_View()))
 		return E_FAIL;
 	if (FAILED(m_pRenderer->Draw_RenderGroup()))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Render_Level()))
 		return E_FAIL;
 #ifdef _DEBUG
 	if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(1100.f, 10.f))))
@@ -134,11 +140,24 @@ HRESULT CMainApp::Ready_Prototype_Component_For_Static()
 		return E_FAIL;
 	}
 
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_Object_For_Loading()
+{
 	/* Prototype_Component_Texture_Loading_Logo */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading_Logo"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/MainMenu/LevelSelect/LevelThumbnails_0%d.png"), 2))))
 	{
 		MSG_BOX("Failed Add_Prototype  : (Prototype_Component_Texture_Loading_Logo)");
+		return E_FAIL;
+	}
+
+	/* Prototype_Object_Loading_Logo */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Object_Loading_Logo"),
+		CLoading_Logo::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype  : (Prototype_Object_Loading_Logo)");
 		return E_FAIL;
 	}
 

@@ -91,12 +91,6 @@
     <Filter Include="02. GameObjects\01. Enemy\Enemy_Hammer\Hammer">
       <UniqueIdentifier>{aa7cb8c3-d2bb-4485-9e15-f9294d4a97d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\99. Loading\LoadingObjects">
-      <UniqueIdentifier>{28953af2-aeda-4309-9612-6aee1b276e78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\99. Loading\LoadingObjects\00. Loading_Logo">
-      <UniqueIdentifier>{e5e9a7df-4f7c-4942-96af-b1b61634c490}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Levels\02. Stage2">
       <UniqueIdentifier>{2b5c9a91-1869-4191-b98d-bccef8ed33a6}</UniqueIdentifier>
     </Filter>
@@ -180,6 +174,15 @@
     </Filter>
     <Filter Include="03. Behaviors\03. Boss Tree\Task\Attack">
       <UniqueIdentifier>{9d945761-1b1b-4064-946b-6fc68aff82db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\Loading">
+      <UniqueIdentifier>{28953af2-aeda-4309-9612-6aee1b276e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\Loading\00. Loading_Logo">
+      <UniqueIdentifier>{e5e9a7df-4f7c-4942-96af-b1b61634c490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\Loading\01. Loading_GamePlay">
+      <UniqueIdentifier>{afb097c4-d61b-4a26-86c2-64a306a25cac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -328,7 +331,7 @@
       <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loading_Logo.h">
-      <Filter>01. Levels\99. Loading\LoadingObjects\00. Loading_Logo</Filter>
+      <Filter>02. GameObjects\05. UI\Loading\00. Loading_Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Mouse.h">
       <Filter>02. GameObjects\05. UI\Logo\00. Mouse</Filter>
@@ -425,6 +428,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sequence_BossAttack.h">
       <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GhostRunner_Logo.h">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loading_OuterCycle.h">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loading_InnerCycle.h">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Black_BackGround.h">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -574,7 +589,7 @@
       <Filter>03. Behaviors\02. Task\00. Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loading_Logo.cpp">
-      <Filter>01. Levels\99. Loading\LoadingObjects\00. Loading_Logo</Filter>
+      <Filter>02. GameObjects\05. UI\Loading\00. Loading_Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Mouse.cpp">
       <Filter>02. GameObjects\05. UI\Logo\00. Mouse</Filter>
@@ -671,6 +686,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Sequence_BossAttack.cpp">
       <Filter>03. Behaviors\03. Boss Tree\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GhostRunner_Logo.cpp">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loading_OuterCycle.cpp">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loading_InnerCycle.cpp">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Black_BackGround.cpp">
+      <Filter>02. GameObjects\05. UI\Loading\01. Loading_GamePlay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

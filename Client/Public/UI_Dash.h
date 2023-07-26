@@ -13,12 +13,13 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
 
 private:
-	_bool				m_isDash = { false };
+	class CPlayer*		m_pPlayer = { nullptr };
 
 private:
 	HRESULT Add_Components();

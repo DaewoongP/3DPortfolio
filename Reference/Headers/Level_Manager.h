@@ -17,6 +17,7 @@ public:
 public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 	void	Tick(_double dTimeDelta);
+	HRESULT Render();
 
 private:
 	class CLevel*	m_pCurrentLevel = { nullptr };

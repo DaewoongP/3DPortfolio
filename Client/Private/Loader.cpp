@@ -21,6 +21,10 @@
 #include "Enemy_Sword.h"
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
+#include "GhostRunner_Logo.h"
+#include "Black_BackGround.h"
+#include "Loading_OuterCycle.h"
+#include "Loading_InnerCycle.h"
 
 #ifdef _DEBUG
 #include "Terrain.h"
@@ -128,6 +132,40 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
+	/////////////////////////////////////// 로딩 객체
+	
+	/* For.Prototype_Component_Texture_GhostRunner_Logo */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_GhostRunner_Logo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/MainMenu/Logo_1K.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_GhostRunner_Logo)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Loading_OuterCycle*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading_OuterCycle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/MainMenu/Loading/Loading_outerCircle.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Loading_OuterCycle)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Loading_InnerCycle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Loading_InnerCycle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/MainMenu/Loading/Loading_innerCirlcle.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Loading_InnerCycle)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Black*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Black"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/Black.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Black)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	
 
@@ -151,6 +189,40 @@ HRESULT CLoader::Loading_For_Logo()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Mouse)");
 		return E_FAIL;
 	}
+
+	/////////////////////////////////////// 로딩 객체
+	
+	/* For.Prototype_GameObject_GhostRunner_Logo */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GhostRunner_Logo"),
+		CGhostRunner_Logo::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_GhostRunner_Logo)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_OuterCycle */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_OuterCycle"),
+		CLoading_OuterCycle::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_OuterCycleS)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_InnerCycle */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_InnerCycle"),
+		CLoading_InnerCycle::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_InnerCycle)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_Black_BackGround */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Black_BackGround"),
+		CBlack_BackGround::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Black_BackGround)");
+		return E_FAIL;
+	}
 	
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 
@@ -167,7 +239,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
 	/* For.Prototype_Component_Texture_Crosshair */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Crosshair"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Crosshair"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/crosshair.png")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Crosshair)");
@@ -175,7 +247,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 	/* For.Prototype_Component_Texture_Dash */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Dash"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dash"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/hud_dash_%d.png"), 2))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dash)");
@@ -183,14 +255,6 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 #ifdef _DEBUG
-
-	/* For.Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Terrain)");
-		return E_FAIL;
-	}
 
 	/* For.Prototype_Component_Texture_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Snow"),
@@ -206,16 +270,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
-
 #ifdef _DEBUG
-
-	/*For.Prototype_Component_VIBuffer_Terrain*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, 500, 500))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Terrain)");
-		return E_FAIL;
-	}
 
 	CVIBuffer_Rect_Instance::INSTANCEDESC InstanceDesc;
 	ZEROMEM(&InstanceDesc);
@@ -231,15 +286,6 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Instance)");
 		return E_FAIL;
 	}
-
-	/* For.Prototype_Component_Model_Fiona */
-	// 피오나 데이터 날라감 ㅋ
-	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Model_Fiona"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Fiona.dat")))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Fiona)");
-		return E_FAIL;
-	}*/
 
 #endif // _DEBUG
 
@@ -336,29 +382,8 @@ HRESULT CLoader::Loading_For_Stage1()
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
-	
+
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
-
-#ifdef _DEBUG
-	/* Prototype_Component_Shader_VtxNorTex */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Terrain"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Terrain.hlsl"),
-			VTXPOSNORTEX_DECL::Elements, VTXPOSNORTEX_DECL::iNumElements))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_Terrain)");
-		return E_FAIL;
-	}
-
-	/* Prototype_Component_Shader_VtxTexInstance */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_Shader_VtxTexInstance"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexInstance.hlsl"),
-			VTXRECTINSTANCE_DECL::Elements, VTXRECTINSTANCE_DECL::iNumElements))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxTexInstance)");
-		return E_FAIL;
-	}
-
-#endif // _DEBUG
 
 	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxNorTex"),
@@ -565,21 +590,6 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 #ifdef _DEBUG
-	/* For.Prototype_GameObject_Camera_Free */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Camera_Free"),
-		CCamera_Free::Create(m_pDevice, m_pContext))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Camera_Free)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"),
-		CTerrain::Create(m_pDevice, m_pContext))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Terrain)");
-		return E_FAIL;
-	}
 
 	/* For.Prototype_GameObject_Blue_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Blue_Snow"),
@@ -589,6 +599,9 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 #endif // _DEBUG
+
+	if (100 > m_iLoadingPercent)
+		m_iLoadingPercent = 100;
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 
@@ -609,22 +622,6 @@ HRESULT CLoader::Loading_For_Boss()
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
-	/* For.Prototype_Component_Texture_Crosshair */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Crosshair"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/crosshair.png")))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Crosshair)");
-		return E_FAIL;
-	}
-
-	/* For.Prototype_Component_Texture_Dash */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Dash"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/hud_dash_%d.png"), 2))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dash)");
-		return E_FAIL;
-	}
-	
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();

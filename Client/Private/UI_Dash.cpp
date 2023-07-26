@@ -1,5 +1,6 @@
 #include "..\Public\UI_Dash.h"
 #include "GameInstance.h"
+#include "Player.h"
 
 CUI_Dash::CUI_Dash(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -33,6 +34,31 @@ HRESULT CUI_Dash::Initialize(void* pArg)
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CUI_Dash::Initialize_Level(_uint iLevelIndex)
+{
+	if (FAILED(__super::Initialize_Level(iLevelIndex)))
+		return E_FAIL;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pGameObject = pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Player"), TEXT("GameObject_Player"));
+
+	if (nullptr == pGameObject)
+	{
+		MSG_BOX("Failed Find Player");
+		Safe_Release(pGameInstance);
+		return E_FAIL;
+	}
+
+	m_pPlayer = dynamic_cast<CPlayer*>(pGameObject);
+	Safe_AddRef(m_pPlayer);
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -94,7 +120,7 @@ HRESULT CUI_Dash::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Texture_Dash"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dash"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -117,10 +143,10 @@ HRESULT CUI_Dash::SetUp_ShaderResources()
 
 	_uint iIndex = { 0 };
 
-	if (true == m_isDash)
-		iIndex = 1;
-	else
+	if (true == m_pPlayer->IsDashCoolTime())
 		iIndex = 0;
+	else
+		iIndex = 1;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", iIndex)))
 		return E_FAIL;
@@ -157,4 +183,6 @@ CGameObject* CUI_Dash::Clone(void* pArg)
 void CUI_Dash::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pPlayer);
 }

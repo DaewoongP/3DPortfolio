@@ -498,6 +498,7 @@ HRESULT CPlayer::Initailize_Skills()
 {
 	/* Dash */
 	m_Dash.isUsed = false;
+	m_Dash.isCoolTime = false;
 	m_Dash.dCurTime = 0.0;
 	m_Dash.dOriginCoolTime = 2.0;
 	m_Dash.dCoolTime = 0.0;
@@ -1147,15 +1148,17 @@ void CPlayer::Dash(_double dTimeDelta)
 	{
 		// 쿨타임이라 사용 불가.
 		m_Dash.dCoolTime -= dTimeDelta;
+		m_Dash.isCoolTime = true;
 		// shift 미리눌림방지
 		m_Dash.isUsed = false;
 	}
+	else
+		m_Dash.isCoolTime = false;
 	// 누르질 않음.
 	if (false == m_Dash.isUsed)
 		return;
-
+	
 	m_Dash.dCurTime += dTimeDelta;
-
 	m_pTransformCom->Set_LimitVelocity(m_Dash.fLimitVelocity);
 	m_pTransformCom->Set_Speed(m_Dash.fSpeed);
 

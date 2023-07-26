@@ -8,7 +8,20 @@ CLoading_Logo::CLoading_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixIdentity());
 }
 
-HRESULT CLoading_Logo::Initialize()
+CLoading_Logo::CLoading_Logo(const CLoading_Logo& rhs)
+	: CGameObject(rhs)
+{
+}
+
+HRESULT CLoading_Logo::Initialize_Prototype()
+{
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoading_Logo::Initialize(void* pArg)
 {
 	if (FAILED(Add_Components()))
 		return E_FAIL;
@@ -18,7 +31,7 @@ HRESULT CLoading_Logo::Initialize()
 		MSG_BOX("Failed Change TexCoord");
 		return E_FAIL;
 	}
-	
+
 	// 윈도우 창에 꽉채우게 설정함.
 	m_fSizeX = g_iWinSizeX;
 	m_fSizeY = g_iWinSizeY;
@@ -133,9 +146,22 @@ CLoading_Logo* CLoading_Logo::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 {
 	CLoading_Logo* pInstance = new CLoading_Logo(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize()))
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created CLoading_Logo");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject* CLoading_Logo::Clone(void* pArg)
+{
+	CLoading_Logo* pInstance = new CLoading_Logo(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned CLoading_Logo");
 		Safe_Release(pInstance);
 	}
 

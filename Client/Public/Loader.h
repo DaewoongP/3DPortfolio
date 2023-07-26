@@ -18,6 +18,7 @@ private:
 
 public:
 	const _tchar* Get_LoadingText() const { return m_szLoading; }
+	_uint Get_LoadingPercent() const { return m_iLoadingPercent; }
 	_bool Get_Finished() const { return m_isFinished; }
 
 public:
@@ -41,6 +42,8 @@ private:
 	_tchar					m_szLoading[MAX_STR] = TEXT("");
 	// 로딩이 끝났는지 확인하는 변수
 	_bool					m_isFinished = { false };
+
+	_uint					m_iLoadingPercent = { 0 };
 
 private:
 	HRESULT Loading_For_Logo();

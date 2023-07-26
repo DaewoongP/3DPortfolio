@@ -22,15 +22,22 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 	switch (m_eNextLevelID)
 	{
 	case LEVEL_LOGO:
-		if (FAILED(Initialize_Logo()))
+		if (FAILED(Loading_Logo(TEXT("Layer_Loading"))))
 		{
-			MSG_BOX("Failed Loading Logo Texture");
+			MSG_BOX("Failed Loading Logo Object");
 			return E_FAIL;
 		}
 		break;
 	case LEVEL_STAGE1:
+		if (FAILED(Loading_Stage1(TEXT("Layer_Loading"))))
+		{
+			MSG_BOX("Failed Loading Stage1 Object");
+			return E_FAIL;
+		}
 		break;
 	case LEVEL_STAGE2:
+		break;
+	case LEVEL_BOSS:
 		break;
 	}
 	
@@ -38,7 +45,7 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 
 	if(nullptr == m_pLoader)
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -86,33 +93,91 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 		Safe_Release(pGameInstance);
 		return;
 	}
-
-	if (nullptr != m_pLoadingObject)
-		m_pLoadingObject->Tick(dTimeDelta);
-
-#ifdef _DEBUG
-	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
-#endif //_DEBUG
 }
 
 HRESULT CLevel_Loading::Render()
 {
-	if (nullptr != m_pLoadingObject)
-		if (FAILED(m_pLoadingObject->Render()))
-			return E_FAIL;
+	if (LEVEL_LOGO == m_eNextLevelID)
+		return S_OK;
 
-	if (FAILED(__super::Render()))
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	_uint iPercent = m_pLoader->Get_LoadingPercent();
+
+	_tchar szPercent[MAX_STR] = TEXT("");
+	_itow_s(iPercent, szPercent, MAX_STR, 10);
+
+	_float2 vPos;
+	if (10 > iPercent)
+		vPos = _float2(g_iWinSizeX * 0.485f, g_iWinSizeY * 0.768f);
+	else if (10 <= iPercent && 
+		100 > iPercent)
+		vPos = _float2(g_iWinSizeX * 0.475f, g_iWinSizeY * 0.768f);
+	else
+		vPos = _float2(g_iWinSizeX * 0.465f, g_iWinSizeY * 0.768f);
+
+	if (FAILED(pGameInstance->Render_Font(TEXT("Font_135"), szPercent, vPos)))
+	{
+		Safe_Release(pGameInstance);
 		return E_FAIL;
-	
+	}
+
+	Safe_Release(pGameInstance);
+
+#ifdef _DEBUG
+	SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
+#endif //_DEBUG
+
 	return S_OK;
 }
 
-HRESULT CLevel_Loading::Initialize_Logo()
+HRESULT CLevel_Loading::Loading_Logo(const _tchar* pLayerTag)
 {
-	m_pLoadingObject = CLoading_Logo::Create(m_pDevice, m_pContext);
-	
-	if (nullptr == m_pLoadingObject)
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, TEXT("Prototype_Object_Loading_Logo"), pLayerTag, TEXT("GameObject_Logo"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Logo)");
 		return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Loading::Loading_Stage1(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, TEXT("Prototype_GameObject_GhostRunner_Logo"), pLayerTag, TEXT("GameObject_GhostRunner_Logo"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_GhostRunner_Logo)");
+		return E_FAIL;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, TEXT("Prototype_GameObject_OuterCycle"), pLayerTag, TEXT("GameObject_Loading_OuterCycle"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Loading_OuterCycle)");
+		return E_FAIL;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, TEXT("Prototype_GameObject_InnerCycle"), pLayerTag, TEXT("GameObject_Loading_InnerCycle"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Loading_InnerCycle)");
+		return E_FAIL;
+	}
+	
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_LOADING, TEXT("Prototype_GameObject_Black_BackGround"), pLayerTag, TEXT("GameObject_Black_BackGround"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Black_BackGround)");
+		return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -134,5 +199,4 @@ void CLevel_Loading::Free()
 	__super::Free();
 
 	Safe_Release(m_pLoader);
-	Safe_Release(m_pLoadingObject);
 }

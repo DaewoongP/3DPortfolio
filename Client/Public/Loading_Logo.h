@@ -16,10 +16,12 @@ class CLoading_Logo final : public CGameObject
 {
 private:
 	explicit CLoading_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CLoading_Logo(const CLoading_Logo& rhs);
 	virtual ~CLoading_Logo() = default;
 
 public:
-	HRESULT Initialize();
+	HRESULT Initialize_Prototype() override;
+	HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
 
@@ -49,7 +51,7 @@ private:
 
 public:
 	static CLoading_Logo* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
-	virtual CGameObject* Clone(void* pArg) override { return nullptr; }
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };
 
