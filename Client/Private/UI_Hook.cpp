@@ -88,18 +88,25 @@ GAMEEVENT CUI_Hook::Late_Tick(_double dTimeDelta)
 		XMMatrixScaling(5.f, 5.f, 5.f) *
 		XMMatrixInverse(nullptr, XMLoadFloat4x4(&BillMatrixY)));
 
-	vector<_float4x4>	InstanceMatricies;
+	_float4x4	InstanceMatricies[8];
+	_float4 vCamPos = *pGameInstance->Get_CamPosition();
 
+	_uint iIndex = { 0 };
 	for (auto& vPosition : m_HookPositions)
 	{
-		_float4x4 InstanceMatrix;
-		XMStoreFloat4x4(&InstanceMatrix, XMLoadFloat4x4(&WorldMatrix) * XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z));
-		InstanceMatricies.push_back(InstanceMatrix);
+		if (100.f > XMVectorGetX(XMVector3Length(XMVectorSet(vCamPos.x, vCamPos.y, vCamPos.z, vCamPos.w) - XMLoadFloat3(&vPosition))))
+		{
+			_float4x4 InstanceMatrix;
+			XMStoreFloat4x4(&InstanceMatrix, XMLoadFloat4x4(&WorldMatrix) * XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z));
+			InstanceMatricies[iIndex] = InstanceMatrix;
+		}
+		
+		++iIndex;
 	}
 
 	Safe_Release(pGameInstance);
 
-	m_pBufferCom->Tick(InstanceMatricies.data());
+	m_pBufferCom->Tick(InstanceMatricies);
 
 	return GAME_NOEVENT;
 }

@@ -65,7 +65,13 @@ HRESULT CObject_Manager::Add_GameObject(_uint iLevelIndex, const _tchar* pProtot
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
 	pGameObject->Set_LayerTag(pLayerTag);
-	pGameObject->Initialize_Level(iLevelIndex);
+
+	if (FAILED(pGameObject->Initialize_Level(iLevelIndex)))
+	{
+		Safe_Release(pGameObject);
+		MSG_BOX("Failed Initailize_Level");
+		return E_FAIL;
+	}
 
 	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
 
@@ -193,6 +199,20 @@ CLayer* CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+CLayer* CObject_Manager::Make_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, pLayerTag);
+
+	if (nullptr != pLayer)
+		return pLayer;
+
+	pLayer = CLayer::Create();
+
+	m_pLayers[iLevelIndex].emplace(pLayerTag, pLayer);
+
+	return pLayer;
 }
 
 HRESULT CObject_Manager::Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)

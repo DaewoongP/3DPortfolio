@@ -22,7 +22,7 @@ private:
 	HRESULT Ready_Layer_Enemy(const _tchar * pLayerTag);
 	HRESULT Ready_Layer_Props(const _tchar* pFilePath);
 	HRESULT Ready_Layer_BackGround(const _tchar * pLayerTag);
-	HRESULT Ready_UI(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_UI(const _tchar* pLayerTag);
 
 public:
 	static CLevel_Boss* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

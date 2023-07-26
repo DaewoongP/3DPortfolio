@@ -50,6 +50,7 @@ public: /* For.Object_Manager */
 	class CGameObject* Clone_GameObject(const _tchar * pPrototypeTag, void* pArg);
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pGameObjectTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
+	class CLayer* Make_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
 	HRESULT Delete_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pGameObjectTag);
 	HRESULT Clear_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
 	HRESULT Clear_DeadObjects(_uint iLevelIndex, const _tchar * pLayerTag);

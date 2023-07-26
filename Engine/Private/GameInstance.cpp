@@ -214,6 +214,13 @@ CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
 	return m_pObject_Manager->Find_Layer(iLevelIndex, pLayerTag);
 }
 
+CLayer* CGameInstance::Make_Layer(_uint iLevelIndex, const _tchar* pLayerTag)
+{
+	NULL_CHECK_RETURN_MSG(m_pObject_Manager, nullptr, TEXT("Object_Manager NULL"));
+
+	return m_pObject_Manager->Make_Layer(iLevelIndex, pLayerTag);
+}
+
 HRESULT CGameInstance::Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
 {
 	NULL_CHECK_RETURN_MSG(m_pObject_Manager, E_FAIL, TEXT("Object_Manager NULL"));

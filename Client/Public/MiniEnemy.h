@@ -2,6 +2,10 @@
 #include "UI.h"
 #include "Client_Defines.h"
 
+BEGIN(Engine)
+class CLayer;
+END
+
 BEGIN(Client)
 
 class CMiniEnemy final : public CUI
@@ -20,6 +24,8 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	CLayer*					m_pEnemyLayer = { nullptr };
+	CLayer*					m_pBossLayer = { nullptr };
 	_float					m_fMaxEnemyDistance = { 0.f };
 	// 미니맵 센터 포지션
 	_float2					m_vUIPos;

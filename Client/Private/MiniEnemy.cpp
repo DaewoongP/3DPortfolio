@@ -47,27 +47,9 @@ HRESULT CMiniEnemy::Initialize_Level(_uint iLevelIndex)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	CLayer* pLayer = pGameInstance->Find_Layer(iLevelIndex, TEXT("Layer_Enemy"));
-
-	if (nullptr == pLayer)
-	{
-		Safe_Release(pGameInstance);
-		return E_FAIL;
-	}
-
-	for (auto& pair : pLayer->Get_AllGameObject())
-	{
-		CTransform* pTransform = pair.second->Get_Transform();
-		m_EnemyTransforms.push_back(pTransform);
-		Safe_AddRef(pTransform);
-	}
-
+	m_pEnemyLayer = pGameInstance->Make_Layer(iLevelIndex, TEXT("Layer_Enemy"));
 	if (LEVEL_BOSS == iLevelIndex)
-	{
-		CTransform* pTransform = pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Boss"), TEXT("GameObject_Boss"))->Get_Transform();
-		m_EnemyTransforms.push_back(pTransform);
-		Safe_AddRef(pTransform);
-	}
+		m_pBossLayer = pGameInstance->Make_Layer(iLevelIndex, TEXT("Layer_Boss"));
 
 	Safe_Release(pGameInstance);
 
@@ -77,6 +59,26 @@ HRESULT CMiniEnemy::Initialize_Level(_uint iLevelIndex)
 void CMiniEnemy::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
+
+	if (nullptr != m_pEnemyLayer)
+	{
+		for (auto& pair : m_pEnemyLayer->Get_AllGameObject())
+		{
+			CTransform* pTransform = pair.second->Get_Transform();
+			m_EnemyTransforms.push_back(pTransform);
+			Safe_AddRef(pTransform);
+		}
+	}
+	
+	if (nullptr != m_pBossLayer)
+	{
+		for (auto& pair : m_pBossLayer->Get_AllGameObject())
+		{
+			CTransform* pTransform = pair.second->Get_Transform();
+			m_EnemyTransforms.push_back(pTransform);
+			Safe_AddRef(pTransform);
+		}
+	}
 }
 
 GAMEEVENT CMiniEnemy::Late_Tick(_double dTimeDelta)
@@ -92,6 +94,8 @@ GAMEEVENT CMiniEnemy::Late_Tick(_double dTimeDelta)
 	for (auto& pTransform : m_EnemyTransforms)
 	{
 		_vector vEnemyPos = pTransform->Get_State(CTransform::STATE_POSITION);
+		// continue 전 삭제.
+		Safe_Release(pTransform);
 		// 거리 50이 넘으면 패스 및 연산 감소를 위해 아직 뷰스페이스로 넘기지 않음.
 		if (m_fMaxEnemyDistance < XMVectorGetX(XMVector4Length(vEnemyPos - vCamPos)))
 			continue;
@@ -103,6 +107,8 @@ GAMEEVENT CMiniEnemy::Late_Tick(_double dTimeDelta)
 			m_vUIPos.x + XMVectorGetX(vEnemyViewPosition) * m_vOffSet.x,
 			m_vUIPos.y + XMVectorGetZ(vEnemyViewPosition) * m_vOffSet.y * -1.f));
 	}
+
+	m_EnemyTransforms.clear();
 
 	Safe_Release(pGameInstance);
 

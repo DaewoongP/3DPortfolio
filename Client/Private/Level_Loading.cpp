@@ -38,6 +38,11 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 	case LEVEL_STAGE2:
 		break;
 	case LEVEL_BOSS:
+		if (FAILED(Loading_Stage1(TEXT("Layer_Loading"))))
+		{
+			MSG_BOX("Failed Loading Stage1 Object");
+			return E_FAIL;
+		}
 		break;
 	}
 	

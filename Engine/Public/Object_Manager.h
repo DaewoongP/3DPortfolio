@@ -24,6 +24,7 @@ public:
 	
 	class CGameObject*	Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
 	class CLayer*		Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
+	class CLayer*		Make_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 	HRESULT				Delete_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
 	// 레벨에 맞는 레이어안의 게임오브젝트들을 모두 삭제.
 	HRESULT				Clear_Layer(_uint iLevelIndex, const _tchar* pLayerTag);

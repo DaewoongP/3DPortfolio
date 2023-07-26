@@ -18,6 +18,7 @@ HRESULT CLevel_Boss::Initialize()
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("..\\..\\Resources\\GameData\\Map\\NonAnim\\Boss.Map")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_UI(TEXT("Layer_UI")), E_FAIL);
 
 	return S_OK;
 }
@@ -237,14 +238,32 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Boss::Ready_UI(const _tchar* pLayerTag)
+HRESULT CLevel_Boss::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_Crosshair"), pLayerTag, TEXT("GameObject_Crosshair"))))
 	{
-		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Crosshair)");
+		MSG_BOX("Failed Add_GameObject : (GameObject_Crosshair)");
+		return E_FAIL;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_UI_Dash"), pLayerTag, TEXT("GameObject_UI_Dash"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_UI_Dash)");
+		return E_FAIL;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_UI_Minimap"), pLayerTag, TEXT("GameObject_MiniMap"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MiniMap)");
+		return E_FAIL;
+	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_UI_MiniEnemy"), pLayerTag, TEXT("GameObject_MiniEnemy"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MiniEnemy)");
 		return E_FAIL;
 	}
 
