@@ -190,6 +190,9 @@
     <Filter Include="02. GameObjects\05. UI\GamePlay\03. Hook%28Instancing%29">
       <UniqueIdentifier>{dcf273d4-b194-433f-beb6-c38d1a78ee93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\04. BossHP">
+      <UniqueIdentifier>{22c9e38f-7451-447b-90ad-cae6d4fbd93c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -452,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UI_Hook.h">
       <Filter>02. GameObjects\05. UI\GamePlay\03. Hook%28Instancing%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Hp.h">
+      <Filter>02. GameObjects\05. UI\GamePlay\04. BossHP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -716,6 +722,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UI_Hook.cpp">
       <Filter>02. GameObjects\05. UI\GamePlay\03. Hook%28Instancing%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Hp.cpp">
+      <Filter>02. GameObjects\05. UI\GamePlay\04. BossHP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

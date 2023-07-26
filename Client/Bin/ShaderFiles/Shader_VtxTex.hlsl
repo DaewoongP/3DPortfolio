@@ -113,6 +113,19 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_COLOR_UI();
     }
 
+    pass NonBlendUI
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_UI();
+    }
+
 	pass Effect
 	{
         SetRasterizerState(RS_Default);

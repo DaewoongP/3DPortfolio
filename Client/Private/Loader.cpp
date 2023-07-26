@@ -7,7 +7,6 @@
 #include "Mouse.h"
 #include "Sword.h"
 #include "Hammer.h"
-#include "Shuriken.h"
 #include "Player.h"
 #include "Pistol.h"
 #include "Bullet.h"
@@ -17,6 +16,8 @@
 #include "Texture.h"
 #include "UI_Dash.h"
 #include "UI_Hook.h"
+#include "Boss_Hp.h"
+#include "Shuriken.h"
 #include "Crosshair.h"
 #include "MiniEnemy.h"
 #include "Boss_Sword.h"
@@ -693,6 +694,14 @@ HRESULT CLoader::Loading_For_Boss()
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
+	/* For.Prototype_Component_Texture_Boss_Hp*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boss_Hp"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Boss/Boss_Hp.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_Hp)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();
@@ -789,6 +798,14 @@ HRESULT CLoader::Loading_For_Boss()
 		CBomb::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Bomb)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Boss_Hp */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Hp"),
+		CBoss_Hp::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Hp)");
 		return E_FAIL;
 	}
 
