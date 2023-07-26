@@ -199,6 +199,9 @@
     <Filter Include="01. Utility\03. Components\11. BehaviorTree\Behavior\Random">
       <UniqueIdentifier>{5760ada8-6a73-4899-b987-5be12eafccfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance">
+      <UniqueIdentifier>{25a97a7a-9418-461f-af41-99bdb8e63243}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="..\public\RandomChoose.h">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Random</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -592,6 +598,9 @@
     </ClCompile>
     <ClCompile Include="..\private\RandomChoose.cpp">
       <Filter>01. Utility\03. Components\11. BehaviorTree\Behavior\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -80,7 +80,7 @@ HRESULT CVIBuffer_Rect_Instance::Initialize_Prototype(const INSTANCEDESC* pInsta
 
 	_uint		iNumIndices = { 0 };
 
-	for (size_t i = 0; i < m_iNumInstance; i++)
+	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
 		pIndices[iNumIndices++] = 0;
 		pIndices[iNumIndices++] = 1;
@@ -142,7 +142,7 @@ void CVIBuffer_Rect_Instance::Tick(_double dTimeDelta)
 
 HRESULT CVIBuffer_Rect_Instance::Make_InstanceLogic(const INSTANCEDESC* pInstanceDesc)
 {
-	memcpy(&m_InstanceDesc, pInstanceDesc, sizeof(INSTANCEDESC));
+	m_InstanceDesc = *pInstanceDesc;
 
 	// 어떤 '객체'에서든 동일한 형태로 그려주기 위해 동적할당하여 포인터를 공유하는 형태로 복사 (얕은복사 처리.).
 	m_pInstanceSpeed = new _float[m_iNumInstance];

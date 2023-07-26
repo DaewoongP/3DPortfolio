@@ -4,6 +4,7 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 vector			g_vCamPosition;
 texture2D		g_Texture;
+vector			g_vColor;
 
 struct VS_IN
 {
@@ -103,21 +104,21 @@ float4	PS_MAIN(PS_IN In) : SV_TARGET0
 
 	vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
 
-	if (vColor.a < 0.1f)
+	if (vColor.a > 0.1f)
+        vColor = vColor * g_vColor;
+	else
 		discard;
-
-	vColor.rgb = float3(1.f, 0.f, 0.f);
 
 	return vColor;
 }
 
 technique11		DefaultTechnique
 {
-	pass Default
+	pass GameUI
 	{
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = compile gs_5_0 GS_MAIN();

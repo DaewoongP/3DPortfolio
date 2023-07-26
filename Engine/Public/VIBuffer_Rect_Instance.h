@@ -19,8 +19,8 @@ public:
 	}INSTANCEDESC;
 
 private:
-	CVIBuffer_Rect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CVIBuffer_Rect_Instance(const CVIBuffer_Rect_Instance& rhs);
+	explicit CVIBuffer_Rect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CVIBuffer_Rect_Instance(const CVIBuffer_Rect_Instance& rhs);
 	virtual ~CVIBuffer_Rect_Instance() = default;
 
 public:

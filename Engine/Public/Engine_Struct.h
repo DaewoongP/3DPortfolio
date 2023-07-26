@@ -157,6 +157,12 @@ namespace Engine
 		XMFLOAT4		vTranslation;
 	}VTXINSTANCE;
 
+	typedef struct tagVertex_Position_Size
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vPSize;
+	}VTXPOINT;
+
 	typedef struct ENGINE_DLL tagVertex_Rect_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = { 6 };

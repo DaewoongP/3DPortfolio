@@ -299,22 +299,33 @@ HRESULT CLoader::Loading_For_Stage1()
 
 #ifdef _DEBUG
 
-	CVIBuffer_Rect_Instance::INSTANCEDESC InstanceDesc;
-	ZEROMEM(&InstanceDesc);
-	InstanceDesc.vExtents = _float3(10.f, 4.f, 10.f);
-	InstanceDesc.vSpeed = _uint2(2, 10);
-	InstanceDesc.fLifeTime = 10.f;
-	InstanceDesc.fHeight = 10.f;
+	CVIBuffer_Rect_Instance::INSTANCEDESC RectInstanceDesc;
+	ZEROMEM(&RectInstanceDesc);
+	RectInstanceDesc.vExtents = _float3(10.f, 4.f, 10.f);
+	RectInstanceDesc.vSpeed = _uint2(2, 10);
+	RectInstanceDesc.fLifeTime = 10.f;
+	RectInstanceDesc.fHeight = 10.f;
 
 	/*For.Prototype_Component_VIBuffer_Rect_Instance*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
-		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &InstanceDesc, 30))))
+		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &RectInstanceDesc, 30))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Instance)");
 		return E_FAIL;
 	}
 
 #endif // _DEBUG
+
+	CVIBuffer_Point_Instance::INSTANCEDESC PointInstanceDesc;
+	ZEROMEM(&PointInstanceDesc);
+
+	/*For.Prototype_Component_VIBuffer_Point_Instance*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Instance"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &PointInstanceDesc, 8))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Instance)");
+		return E_FAIL;
+	}
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, -4.f, -0.5f);
 	/* For.Prototype_Component_Model_Player */
@@ -445,6 +456,15 @@ HRESULT CLoader::Loading_For_Stage1()
 			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxAnimMesh)");
+		return E_FAIL;
+	}
+
+	/* Prototype_Component_Shader_VtxPointInstance */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPointInstance.hlsl"),
+			VTXPOINTINSTANCE_DECL::Elements, VTXPOINTINSTANCE_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxPointInstance)");
 		return E_FAIL;
 	}
 

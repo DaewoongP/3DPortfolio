@@ -6,7 +6,7 @@ BEGIN(Engine)
 class CShader;
 class CTexture;
 class CRenderer;
-class CVIBuffer_Rect;
+class CVIBuffer_Point_Instance;
 END
 
 BEGIN(Client)
@@ -27,10 +27,10 @@ public:
 	virtual HRESULT Render() override;
 
 private: /* Hook Texture */
-	CShader*			m_pShaderCom = { nullptr };
-	CTexture*			m_pTextureCom = { nullptr };
-	CRenderer*			m_pRendererCom = { nullptr };
-	CVIBuffer_Rect*		m_pBufferCom = { nullptr };
+	CShader*						m_pShaderCom = { nullptr };
+	CTexture*						m_pTextureCom = { nullptr };
+	CRenderer*						m_pRendererCom = { nullptr };
+	CVIBuffer_Point_Instance*		m_pBufferCom = { nullptr };
 
 private:
 	list<_float3>		m_HookPositions;

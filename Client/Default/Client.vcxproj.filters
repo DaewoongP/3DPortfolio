@@ -187,7 +187,7 @@
     <Filter Include="02. GameObjects\05. UI\GamePlay\02. Minimap\MiniEnemy">
       <UniqueIdentifier>{8ca84763-476b-401e-9bf0-fd23871bc40f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\05. UI\GamePlay\03. Hook">
+    <Filter Include="02. GameObjects\05. UI\GamePlay\03. Hook%28Instancing%29">
       <UniqueIdentifier>{dcf273d4-b194-433f-beb6-c38d1a78ee93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -451,7 +451,7 @@
       <Filter>02. GameObjects\05. UI\GamePlay\02. Minimap\MiniEnemy</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UI_Hook.h">
-      <Filter>02. GameObjects\05. UI\GamePlay\03. Hook</Filter>
+      <Filter>02. GameObjects\05. UI\GamePlay\03. Hook%28Instancing%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -715,7 +715,7 @@
       <Filter>02. GameObjects\05. UI\GamePlay\02. Minimap\MiniEnemy</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UI_Hook.cpp">
-      <Filter>02. GameObjects\05. UI\GamePlay\03. Hook</Filter>
+      <Filter>02. GameObjects\05. UI\GamePlay\03. Hook%28Instancing%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
