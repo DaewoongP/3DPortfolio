@@ -94,7 +94,7 @@ GAMEEVENT CUI_Hook::Late_Tick(_double dTimeDelta)
 	_uint iIndex = { 0 };
 	for (auto& vPosition : m_HookPositions)
 	{
-		if (100.f > XMVectorGetX(XMVector3Length(XMVectorSet(vCamPos.x, vCamPos.y, vCamPos.z, vCamPos.w) - XMLoadFloat3(&vPosition))))
+		if (85.f > XMVectorGetX(XMVector3Length(XMVectorSet(vCamPos.x, vCamPos.y, vCamPos.z, vCamPos.w) - XMLoadFloat3(&vPosition))))
 		{
 			_float4x4 InstanceMatrix;
 			XMStoreFloat4x4(&InstanceMatrix, XMLoadFloat4x4(&WorldMatrix) * XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z));
