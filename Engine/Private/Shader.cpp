@@ -188,6 +188,7 @@ CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, c
 		MSG_BOX("Failed to Created CShader");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -200,6 +201,7 @@ CComponent* CShader::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CShader");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

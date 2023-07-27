@@ -27,6 +27,9 @@ private:
 	virtual ~CBoss() = default;
 
 public:
+	_float Get_HpPercent() const { return (_float)m_iHp / m_iMaxHp; }
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick(_double dTimeDelta) override;
@@ -93,6 +96,7 @@ private:
 
 private:
 	_int						m_iHp = { 0 };
+	_int						m_iMaxHp = { 0 };
 	_double						m_dDeadAnimAcc = { 0.0 };
 	_double						m_dDeadTime = { 0.0 };
 

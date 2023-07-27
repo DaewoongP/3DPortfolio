@@ -33,7 +33,7 @@ void CFrustum::Tick()
 	_matrix			ProjMatrixInv = pPipeLine->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_PROJ);
 	_matrix			ViewMatrixInv = pPipeLine->Get_TransformMatrix_Inverse(CPipeLine::D3DTS_VIEW);
 
-	for (size_t i = 0; i < 8; i++)
+	for (_uint i = 0; i < 8; ++i)
 	{
 		vPoints[i] = XMVector3TransformCoord(XMLoadFloat3(&m_vOriginal_Points[i]), ProjMatrixInv);
 		vPoints[i] = XMVector3TransformCoord(vPoints[i], ViewMatrixInv);
@@ -48,13 +48,16 @@ void CFrustum::Tick()
 	XMStoreFloat4(&m_vWorldPlanes[5], XMPlaneFromPoints(vPoints[0], vPoints[1], vPoints[2]));
 
 	Safe_Release(pPipeLine);
+
+	// 컬링된 포지션 미리 초기화.
+	m_CulledPositions.clear();
 }
 
 void CFrustum::Transform_ToLocalSpace(_fmatrix WorldMatrix)
 {
 	_matrix		WorldMatrixInv = XMMatrixInverse(nullptr, WorldMatrix);
 
-	for (size_t i = 0; i < 6; i++)
+	for (_uint i = 0; i < 6; ++i)
 	{
 		XMStoreFloat4(&m_vLocalPlanes[i],
 			XMPlaneTransform(XMLoadFloat4(&m_vWorldPlanes[i]), WorldMatrixInv));
@@ -63,10 +66,17 @@ void CFrustum::Transform_ToLocalSpace(_fmatrix WorldMatrix)
 
 _bool CFrustum::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
 {
-	for (size_t i = 0; i < 6; i++)
+	_float4 vCulledPos;
+
+	for (_uint i = 0; i < 6; ++i)
 	{
 		if (fRange < XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_vWorldPlanes[i]), vWorldPos)))
+		{
+			ZEROMEM(&vCulledPos);
+			XMStoreFloat4(&vCulledPos, vWorldPos);
+			m_CulledPositions.push_back(vCulledPos);
 			return false;
+		}
 	}
 
 	return true;
@@ -74,7 +84,7 @@ _bool CFrustum::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
 
 _bool CFrustum::isIn_LocalSpace(_fvector vLocalPos, _float fRange)
 {
-	for (size_t i = 0; i < 6; i++)
+	for (_uint i = 0; i < 6; ++i)
 	{
 		if (fRange < XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_vLocalPlanes[i]), vLocalPos)))
 			return false;

@@ -165,7 +165,7 @@ void CModel::Reset_Animation(_uint iAnimIndex)
 	}
 }
 
-void CModel::Play_Animation(_double dTimeDelta, _bool bPassLerp)
+void CModel::Play_Animation(_double dTimeDelta, _bool bPassLerp, _double dLerpTime)
 {
 	if (0 < m_iNumAnimations)
 	{
@@ -174,7 +174,7 @@ void CModel::Play_Animation(_double dTimeDelta, _bool bPassLerp)
 			false == bPassLerp)
 		{
 			// 이전 애니메이션 상태에서 현재 애니메이션 첫프레임으로 선형보간 처리.
-			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta, 0.1);
+			m_eAnimationFlag = m_Animations[m_iPreviousAnimIndex]->Lerp_TransformMatrix(m_Bones, m_Animations[m_iCurrentAnimIndex], dTimeDelta, dLerpTime);
 		}
 		else
 		{

@@ -139,6 +139,7 @@ CVIBuffer_Rect_Dynamic* CVIBuffer_Rect_Dynamic::Create(ID3D11Device* pDevice, ID
 		MSG_BOX("Failed to Created CVIBuffer_Rect_Dynamic");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -151,6 +152,7 @@ CComponent* CVIBuffer_Rect_Dynamic::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CVIBuffer_Rect_Dynamic");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

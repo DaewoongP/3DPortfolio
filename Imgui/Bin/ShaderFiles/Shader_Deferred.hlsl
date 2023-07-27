@@ -203,7 +203,7 @@ PS_OUT_LIGHT PS_MAIN_SPOTLIGHT(PS_IN In)
     float fSpot = pow(max(dot(normalize(vLightDir), g_vLightDir), 0.0f), g_fSpotPower);
 
 	// 감쇠 효과
-    // 실제 거리에 따른 공식처리 -> fSpot / fDistance * fDistance
+    // 실제 거리에 따른 공식처리 -> fSpot / fDistance * fDistance // -> f
     float fAtt = fSpot / fDistance * fDistance;
 	
     Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;

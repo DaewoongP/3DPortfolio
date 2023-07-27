@@ -49,7 +49,8 @@ HRESULT CBoss::Initialize(void* pArg)
 	m_pModelCom->Delete_AnimationTranslation(21);
 
 	m_dDeadTime = 4.0;
-	m_iHp = 3;
+	m_iMaxHp = 4;
+	m_iHp = m_iMaxHp;
 
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::Aquamarine);
@@ -204,6 +205,8 @@ HRESULT CBoss::Reset()
 		m_eCurState = STATE_FLY_IDLE;
 	else
 		m_eCurState = STATE_IDLE;
+
+	m_iHp = m_iMaxHp;
 
 	/* BlackBoard Reset */
 	m_iCurPatternCnt = 0;
@@ -513,7 +516,10 @@ void CBoss::AnimationState(_double dTimeDelta)
 
 	Motion_Change(m_eCurrentAnimationFlag);
 
-	m_pModelCom->Play_Animation(dTimeDelta);
+	if (STATE_DEAD == m_eCurState)
+		m_pModelCom->Play_Animation(dTimeDelta, false, 0.5);
+	else
+		m_pModelCom->Play_Animation(dTimeDelta);
 }
 
 void CBoss::Motion_Change(ANIMATIONFLAG eAnimationFlag)
@@ -589,7 +595,7 @@ void CBoss::Knockback(_double dTimeDelta)
 
 	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
 
-	if (0.7f < fCurrentFramePercent)
+	if (0.6f < fCurrentFramePercent)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);

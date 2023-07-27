@@ -193,6 +193,9 @@
     <Filter Include="02. GameObjects\05. UI\GamePlay\04. BossHP">
       <UniqueIdentifier>{22c9e38f-7451-447b-90ad-cae6d4fbd93c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\05. Indicator">
+      <UniqueIdentifier>{80755ff5-0cd1-4396-8ca8-2b442a39496a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -458,6 +461,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss_Hp.h">
       <Filter>02. GameObjects\05. UI\GamePlay\04. BossHP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Indicator.h">
+      <Filter>02. GameObjects\05. UI\GamePlay\05. Indicator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -725,6 +731,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_Hp.cpp">
       <Filter>02. GameObjects\05. UI\GamePlay\04. BossHP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Indicator.cpp">
+      <Filter>02. GameObjects\05. UI\GamePlay\05. Indicator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

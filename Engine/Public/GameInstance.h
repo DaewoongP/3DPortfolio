@@ -94,6 +94,7 @@ public: /* For. Font_Manager */
 
 public: /* For. Frustum */
 	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRange = 0.f);
+	vector<_float4> Get_CulledPositions() const;
 
 public: /* For.Light_Manager */
 	const CLight::LIGHTDESC* Get_Light(_uint iIndex);

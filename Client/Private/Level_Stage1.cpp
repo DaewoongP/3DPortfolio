@@ -102,7 +102,9 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 
 	CloseHandle(hFile);
 
+#ifdef _DEBUG
 	MSG_BOX("Light File Load Success");
+#endif // _DEBUG
 
 	Safe_Release(pGameInstance);
 
@@ -384,6 +386,12 @@ HRESULT CLevel_Stage1::Ready_UI(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_UI_Hook"), pLayerTag, TEXT("GameObject_UI_Hook"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_UI_Hook)");
+		return E_FAIL;
+	}
+	
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Indicator"), pLayerTag, TEXT("GameObject_Indicator"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Indicator)");
 		return E_FAIL;
 	}
 

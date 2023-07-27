@@ -217,7 +217,7 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	}
 
 	if (CollisionDesc.pMyCollider == m_pBlockColliderCom &&
-		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_BossWeapon")))
+		COLLISIONDESC::COLTYPE_PARRYING == CollisionDesc.ColType)
 	{
 		// 보스 패링 패턴.
 		m_BlockEnemyWeapons.push_back(CollisionDesc.pOtherOwner);

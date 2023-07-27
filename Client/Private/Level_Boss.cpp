@@ -273,6 +273,12 @@ HRESULT CLevel_Boss::Ready_Layer_UI(const _tchar* pLayerTag)
 		return E_FAIL;
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_BOSS, TEXT("Prototype_GameObject_Indicator"), pLayerTag, TEXT("GameObject_Indicator"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Indicator)");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;

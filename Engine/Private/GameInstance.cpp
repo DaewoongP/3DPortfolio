@@ -422,6 +422,11 @@ _bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
 	return m_pFrustum->isIn_WorldFrustum(vWorldPos, fRange);
 }
 
+vector<_float4> CGameInstance::Get_CulledPositions() const
+{
+	return m_pFrustum->Get_CulledPositions();
+}
+
 const CLight::LIGHTDESC* CGameInstance::Get_Light(_uint iIndex)
 {
 	if (nullptr == m_pLight_Manager)

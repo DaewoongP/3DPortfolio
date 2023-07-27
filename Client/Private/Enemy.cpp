@@ -54,7 +54,7 @@ GAMEEVENT CEnemy::Late_Tick(_double dTimeDelta)
 	Safe_AddRef(pGameInstance);
 
 	if (nullptr != m_pRendererCom &&
-		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 4.f))
+		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 #ifdef _DEBUG

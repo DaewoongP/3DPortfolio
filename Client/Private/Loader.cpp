@@ -18,6 +18,7 @@
 #include "UI_Hook.h"
 #include "Boss_Hp.h"
 #include "Shuriken.h"
+#include "Indicator.h"
 #include "Crosshair.h"
 #include "MiniEnemy.h"
 #include "Boss_Sword.h"
@@ -279,6 +280,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/GrapplingPoint/Grappling_point.png")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Hook)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_Indicator */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Indicator"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/EnemyIndicator/hud_enemy_directional_marker.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Indicator)");
 		return E_FAIL;
 	}
 
@@ -660,6 +669,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Hook)");
 		return E_FAIL;
 	}
+	
+	/* For.Prototype_GameObject_Indicator */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Indicator"),
+		CIndicator::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Indicator)");
+		return E_FAIL;
+	}
 
 #ifdef _DEBUG
 
@@ -699,6 +716,14 @@ HRESULT CLoader::Loading_For_Boss()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Boss/Boss_Hp.png")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_Hp)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Boss_HpBar*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boss_HpBar"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Boss/Boss_HpBar.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_HpBar)");
 		return E_FAIL;
 	}
 

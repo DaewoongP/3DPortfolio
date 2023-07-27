@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\public\GhostRunner_Logo.h" />
     <ClInclude Include="..\public\Hammer.h" />
+    <ClInclude Include="..\public\Indicator.h" />
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\Level_Boss.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\GhostRunner_Logo.cpp" />
     <ClCompile Include="..\private\Hammer.cpp" />
+    <ClCompile Include="..\private\Indicator.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\Level_Boss.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />
