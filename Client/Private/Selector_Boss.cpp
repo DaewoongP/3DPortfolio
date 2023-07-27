@@ -24,7 +24,10 @@ HRESULT CSelector_Boss::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDecora
 
 				// 타겟이 없으면 false
 				void* pTarget = pDecoBlackBoard->Find_Value(TEXT("Value_Target"));
-				if (nullptr == *reinterpret_cast<CGameObject**>(pTarget))
+				CGameObject* pObject = *reinterpret_cast<CGameObject**>(pTarget);
+				if (nullptr == pObject)
+					return false;
+				else if (GAME_OBJECT_DEAD == pObject->Get_GameEvent())
 					return false;
 
 				return true;

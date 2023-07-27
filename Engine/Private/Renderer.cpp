@@ -254,6 +254,10 @@ HRESULT CRenderer::Render_Deferred()
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
+	
+	// GrayScale
+	if (FAILED(m_pShader->Bind_RawValue("g_isGrayScale", &m_isGrayScale, sizeof(_bool))))
+		return E_FAIL;
 
 	m_pShader->Begin(4);
 

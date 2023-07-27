@@ -15,6 +15,7 @@ vector g_vLightDir;
 vector g_vLightPos;
 float g_fLightRange;
 float g_fSpotPower;
+bool g_isGrayScale;
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
@@ -254,6 +255,12 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
     vSpecular = (vector) 0;
     Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular);
+
+    if (true == g_isGrayScale)
+    {
+        float fGrayScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3;
+        Out.vColor = fGrayScale;
+    }
 
     return Out;
 }

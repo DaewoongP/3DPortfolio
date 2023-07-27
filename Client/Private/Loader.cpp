@@ -16,6 +16,7 @@
 #include "Texture.h"
 #include "UI_Dash.h"
 #include "UI_Hook.h"
+#include "UI_Dead.h"
 #include "Boss_Hp.h"
 #include "Shuriken.h"
 #include "Indicator.h"
@@ -288,6 +289,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/EnemyIndicator/hud_enemy_directional_marker.png")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Indicator)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Dead */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dead"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Dead/Dead.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dead)");
 		return E_FAIL;
 	}
 
@@ -675,6 +684,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CIndicator::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Indicator)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_UI_Dead*/
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dead"),
+		CUI_Dead::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Dead)");
 		return E_FAIL;
 	}
 

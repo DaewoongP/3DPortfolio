@@ -8,9 +8,12 @@ class ENGINE_DLL CRenderer final : public CComponent
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
 
-protected:
+private:
 	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
+
+public:
+	void Set_GrayScale(_bool isGrayScale) { m_isGrayScale = isGrayScale; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -47,6 +50,8 @@ private:
 	_bool							m_isDebugRender = { true };
 #endif // _DEBUG
 
+private:
+	_bool							m_isGrayScale = { false };
 
 private:
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };

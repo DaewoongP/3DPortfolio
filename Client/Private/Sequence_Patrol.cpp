@@ -27,9 +27,15 @@ HRESULT CSequence_Patrol::Initialize(CBlackBoard* pBlackBoard, CDecorator* pDeco
 
 				// Å¸°ÙÀ» Ã£À¸¸é false
 				void* pTarget = pDecoBlackBoard->Find_Value(TEXT("Value_Target"));
-				if (nullptr != *reinterpret_cast<CGameObject**>(pTarget))
+				CGameObject* pObject = *reinterpret_cast<CGameObject**>(pTarget);
+				if (nullptr != pObject)
+				{
+					// Å¸°ÙÀÌ Á×¾îÀÖÀ¸¸é true
+					if (GAME_OBJECT_DEAD == pObject->Get_GameEvent())
+						return true;
 					return false;
-
+				}
+				
 				return true;
 			})
 	);

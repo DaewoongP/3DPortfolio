@@ -112,6 +112,14 @@ void CPlayer::Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 
+	// 정확히 이위치가 맞는듯.
+	if (GAME_OBJECT_DEAD == m_eGameEvent)
+	{
+		m_pRendererCom->Set_GrayScale(true);
+		dTimeDelta *= 0.1f;
+		m_pTransformCom->ZeroVelocity();
+	}
+
 	m_pTransformCom->Crouch(m_isCrouch, dTimeDelta, 4.f, 2.f, 1.5f);
 	
 	Attack(dTimeDelta);
@@ -138,8 +146,7 @@ void CPlayer::Tick(_double dTimeDelta)
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
-	if (GAME_OBJECT_DEAD != m_eGameEvent &&
-		GAME_STAGE_RESET != m_eGameEvent &&
+	if (GAME_STAGE_RESET != m_eGameEvent &&
 		nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
@@ -152,6 +159,9 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	}
 
 	__super::Late_Tick(dTimeDelta);
+
+	if (GAME_OBJECT_DEAD == m_eGameEvent)
+		return GAME_NOEVENT;
 
 	if (true == m_pTransformCom->IsJumping() &&
 		STATE_RUN == m_eCurState)
@@ -324,6 +334,9 @@ HRESULT CPlayer::Reset()
 	m_pPlayerCameraCom->Set_CameraWorldMatrix(XMLoadFloat4x4(m_pTransformCom->Get_WorldFloat4x4()));
 	// 모델의 애니메이션 인덱스 설정
 	m_pModelCom->Set_AnimIndex(95);
+
+	m_pRendererCom->Set_GrayScale(false);
+
 	m_eCurState = STATE_IDLE;
 	
 	m_InRangeEnemyColliders.clear();
@@ -511,6 +524,9 @@ HRESULT CPlayer::Initailize_Skills()
 
 void CPlayer::Key_Input(_double dTimeDelta)
 {
+	if (GAME_OBJECT_DEAD == m_eGameEvent)
+		return;
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
@@ -754,6 +770,9 @@ void CPlayer::Key_Input(_double dTimeDelta)
 
 void CPlayer::Fix_Mouse()
 {
+	if (GAME_OBJECT_DEAD == m_eGameEvent)
+		return;
+
 #ifdef _DEBUG
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -799,6 +818,8 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 	// 모션 변경 처리 전 예외처리.
 	if (false == (ANIM_PLAYING == eAnimationFlag || ANIM_FINISHED == eAnimationFlag))
 		return;
+	if (GAME_OBJECT_DEAD == m_eGameEvent)
+		m_eCurState = STATE_DEAD;
 
 	if (m_ePreState != m_eCurState)
 	{
@@ -855,9 +876,8 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			else if (WEAPON_SHURIKEN == m_eCurWeapon)
 				m_pModelCom->Set_AnimIndex(147, false);
 			break;
-		case STATE_CLIMB:
-			break;
-		case STATE_DRONRIDE:
+		case STATE_DEAD:
+			m_pModelCom->Set_AnimIndex(171, false);
 			break;
 		}
 

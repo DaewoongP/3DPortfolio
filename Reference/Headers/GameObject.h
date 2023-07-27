@@ -16,6 +16,7 @@ public:
 	class CTransform* Get_Transform() const { return m_pTransformCom; }
 	const _tchar*	Get_Tag() const { return m_pTag; }
 	const _tchar*	Get_LayerTag() const { return m_pLayerTag; }
+	GAMEEVENT		Get_GameEvent() const { return m_eGameEvent; }
 	void			Set_Dead() { m_isDead = true; }
 	void			Set_Tag(const _tchar * pTag) { lstrcpy(m_pTag, pTag); }
 	void			Set_LayerTag(const _tchar* pTag) { lstrcpy(m_pLayerTag, pTag); }

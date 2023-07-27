@@ -59,7 +59,7 @@ public:
 	ANIMATIONFLAG Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
 	void Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
-	ANIMATIONFLAG Lerp_TransformMatrix(CModel::BONES& Bones, class CAnimation* pCurrentAnimation, _double TimeDelta, _double dDuration = 0.2);
+	ANIMATIONFLAG Lerp_TransformMatrix(CModel::BONES& Bones, class CAnimation* pCurrentAnimation, _double TimeDelta, _double dDuration);
 
 private:
 	_tchar						m_szName[MAX_STR] = TEXT("");
