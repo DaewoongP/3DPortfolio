@@ -12,7 +12,7 @@ HRESULT CLevel_Boss::Initialize()
 {
 	
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Test4.Light")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Boss.Light")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Boss(TEXT("Layer_Boss")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
@@ -52,7 +52,7 @@ HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
 	ZEROMEM(&DirLightDesc);
 	DirLightDesc.eType = CLight::TYPE_DIRECTIONAL;
 	DirLightDesc.vDir = _float4(1.f, -1.f, 1.f, 0.f);
-	DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	DirLightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
 	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
 	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
 
@@ -61,6 +61,35 @@ HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
 		Safe_Release(pGameInstance);
 		return E_FAIL;
 	}
+
+	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+		return E_FAIL;
+
+	_ulong	dwByte = 0;
+
+	_uint iSize = { 0 };
+	ReadFile(hFile, &iSize, sizeof(_uint), &dwByte, nullptr);
+
+	CLight::LIGHTDESC LightDesc;
+
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		ZEROMEM(&LightDesc);
+		ReadFile(hFile, &LightDesc, sizeof(CLight::LIGHTDESC), &dwByte, nullptr);
+
+		if (FAILED(pGameInstance->Add_Lights(LightDesc)))
+			return E_FAIL;
+	}
+
+	CloseHandle(hFile);
+
+#ifdef _DEBUG
+	MSG_BOX("Light File Load Success");
+#endif // _DEBUG
+
+	Safe_Release(pGameInstance);
 		
 	Safe_Release(pGameInstance);
 	return S_OK;

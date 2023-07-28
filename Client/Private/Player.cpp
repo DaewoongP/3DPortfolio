@@ -877,7 +877,7 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 				m_pModelCom->Set_AnimIndex(147, false);
 			break;
 		case STATE_DEAD:
-			m_pModelCom->Set_AnimIndex(171, false);
+			m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
 			break;
 		}
 

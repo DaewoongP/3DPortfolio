@@ -159,8 +159,9 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 		ImGui::InputFloat3("Light Direction", reinterpret_cast<_float*>(&m_LightDesc.vDir)) ||
 		ImGui::InputFloat("Light Power", &m_LightDesc.fSpotPower, 1.f))
 	{
-		if (-1 != m_iCurrentListBoxIndex &&
+		if (0 > m_iCurrentListBoxIndex &&
 			0 < m_Lights.size() &&
+			m_iCurrentListBoxIndex < m_Lights.size() &&
 			true == m_isModifyMode)
 		{
 			m_Lights[m_iCurrentListBoxIndex].second = m_LightDesc;

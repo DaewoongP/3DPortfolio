@@ -89,6 +89,7 @@ GAMEEVENT CUI_Hook::Late_Tick(_double dTimeDelta)
 		XMMatrixInverse(nullptr, XMLoadFloat4x4(&BillMatrixY)));
 
 	_float4x4	InstanceMatricies[8];
+	ZeroMemory(InstanceMatricies, sizeof(_float4x4) * 8);
 	_float4 vCamPos = *pGameInstance->Get_CamPosition();
 
 	_uint iIndex = { 0 };
