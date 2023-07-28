@@ -75,9 +75,7 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 	//DirLightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
 	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
-
-	if (FAILED(pGameInstance->Add_Lights(DirLightDesc)))
-		return E_FAIL;
+	pGameInstance->Add_Lights(DirLightDesc);
 
 	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
@@ -95,9 +93,7 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 	{
 		ZEROMEM(&LightDesc);
 		ReadFile(hFile, &LightDesc, sizeof(CLight::LIGHTDESC), &dwByte, nullptr);
-
-		if (FAILED(pGameInstance->Add_Lights(LightDesc)))
-			return E_FAIL;
+		pGameInstance->Add_Lights(LightDesc);
 	}
 
 	CloseHandle(hFile);

@@ -11,22 +11,32 @@ const CLight::LIGHTDESC * CLight_Manager::Get_Light(_uint iIndex)
 {
 	auto	iter = m_Lights.begin();
 
-	for (size_t i = 0; i < iIndex; i++)
+	for (size_t i = 0; i < iIndex; ++i)
 		++iter;
 
 	return (*iter)->Get_LightDesc();	
 }
 
-HRESULT CLight_Manager::Add_Lights(const CLight::LIGHTDESC & LightDesc)
+void CLight_Manager::Set_Light(_uint iIndex, CLight::LIGHTDESC LightDesc)
+{
+	auto	iter = m_Lights.begin();
+
+	for (size_t i = 0; i < iIndex; ++i)
+		++iter;
+
+	(*iter)->Set_LightDesc(LightDesc);
+}
+
+CLight* CLight_Manager::Add_Lights(const CLight::LIGHTDESC & LightDesc)
 {
 	CLight*		pLight = CLight::Create(LightDesc);
 
 	if (nullptr == pLight)
-		return E_FAIL;
+		return nullptr;
 
 	m_Lights.push_back(pLight);
 
-	return S_OK;
+	return pLight;
 }
 
 HRESULT CLight_Manager::Clear_Lights()

@@ -199,6 +199,9 @@
     <Filter Include="02. GameObjects\05. UI\GamePlay\06. Dead">
       <UniqueIdentifier>{af00e9c8-15da-4f84-800e-d9631158c05e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss\Shield">
+      <UniqueIdentifier>{bb1b992c-da09-49dc-978d-096194585ada}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UI_Dead.h">
       <Filter>02. GameObjects\05. UI\GamePlay\06. Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_Shield.h">
+      <Filter>02. GameObjects\01. Enemy\Boss\Shield</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -743,6 +749,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UI_Dead.cpp">
       <Filter>02. GameObjects\05. UI\GamePlay\06. Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_Shield.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss\Shield</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -55,12 +55,7 @@ HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
 	DirLightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
 	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
 	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
-
-	if (FAILED(pGameInstance->Add_Lights(DirLightDesc)))
-	{
-		Safe_Release(pGameInstance);
-		return E_FAIL;
-	}
+	pGameInstance->Add_Lights(DirLightDesc);
 
 	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
@@ -78,9 +73,7 @@ HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
 	{
 		ZEROMEM(&LightDesc);
 		ReadFile(hFile, &LightDesc, sizeof(CLight::LIGHTDESC), &dwByte, nullptr);
-
-		if (FAILED(pGameInstance->Add_Lights(LightDesc)))
-			return E_FAIL;
+		pGameInstance->Add_Lights(LightDesc);
 	}
 
 	CloseHandle(hFile);
@@ -89,8 +82,6 @@ HRESULT CLevel_Boss::Ready_Lights(const _tchar* pFilePath)
 	MSG_BOX("Light File Load Success");
 #endif // _DEBUG
 
-	Safe_Release(pGameInstance);
-		
 	Safe_Release(pGameInstance);
 	return S_OK;
 }

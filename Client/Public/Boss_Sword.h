@@ -36,8 +36,6 @@ public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 	void Attack();
-	void AttackEnd();
-	void Blocked();
 
 public:
 	static CBoss_Sword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

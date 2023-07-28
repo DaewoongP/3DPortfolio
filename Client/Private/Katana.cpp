@@ -95,7 +95,7 @@ HRESULT CKatana::Render()
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
 
-		m_pShaderCom->Begin(0);
+		m_pShaderCom->Begin(3);
 
 		m_pModelCom->Render(i);
 	}
@@ -168,6 +168,9 @@ HRESULT CKatana::SetUp_ShaderResources()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pModelCom->Get_ORMTexture(0)->Bind_ShaderResource(m_pShaderCom, "g_ORMTexture")))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

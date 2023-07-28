@@ -12,9 +12,10 @@ private:
 
 public:
 	const CLight::LIGHTDESC* Get_Light(_uint iIndex);
+	void Set_Light(_uint iIndex, CLight::LIGHTDESC LightDesc);
 
 public:
-	HRESULT Add_Lights(const CLight::LIGHTDESC& LightDesc);
+	CLight* Add_Lights(const CLight::LIGHTDESC& LightDesc);
 	HRESULT Clear_Lights();
 	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 

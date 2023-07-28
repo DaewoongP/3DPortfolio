@@ -1,6 +1,7 @@
 #include "../Public/Shuriken.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Light.h"
 
 CShuriken::CShuriken(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPart(pDevice, pContext)
@@ -30,18 +31,34 @@ HRESULT CShuriken::Initialize(void* pArg)
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
+	// 형광파랑
+	m_vEmissive = _float4(0.062f, 0.988f, 0.99f, 1.f);
 
 	return S_OK;
 }
 
 HRESULT CShuriken::Initialize_Level(_uint iLevelIndex)
 {
-	if (FAILED(Add_Components_Level(iLevelIndex)))
-		return E_FAIL;
-
 	m_dSpeed = 100.0;
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_dSpeed, XMConvertToRadians(0.0f));
 	m_pTransformCom->Set_Desc(TransformDesc);
+
+	CLight::LIGHTDESC LightDesc;
+	ZEROMEM(&LightDesc);
+	LightDesc.eType = CLight::TYPE_POINT;
+	LightDesc.fRange = 0.2f;
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = LightDesc.vDiffuse;
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+	_float3 vColPos = m_pColliderCom->Get_BoundingCenterPosition();
+	LightDesc.vPos = _float4(vColPos.x, vColPos.y, vColPos.z, 1.f);
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	m_pLight = pGameInstance->Add_Lights(LightDesc);
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -85,6 +102,9 @@ GAMEEVENT CShuriken::Late_Tick(_double dTimeDelta)
 	
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
+	_float3 vColPos = m_pColliderCom->Get_BoundingCenterPosition();
+	m_pLight->Set_Position(_float4(vColPos.x, vColPos.y, vColPos.z, 1.f));
+
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
@@ -111,7 +131,7 @@ HRESULT CShuriken::Render()
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
 
-		m_pShaderCom->Begin(0);
+		m_pShaderCom->Begin(2);
 
 		m_pModelCom->Render(i);
 	}
@@ -159,13 +179,6 @@ HRESULT CShuriken::Add_Components()
 	return S_OK;
 }
 
-HRESULT CShuriken::Add_Components_Level(_uint iLevelIndex)
-{
-	
-
-	return S_OK;
-}
-
 HRESULT CShuriken::SetUp_ShaderResources()
 {
 	// Part의 경우 월드행렬을 다 저장된거로 던져야함.
@@ -184,6 +197,9 @@ HRESULT CShuriken::SetUp_ShaderResources()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vEmissive", &m_vEmissive, sizeof(_float4))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -208,11 +224,6 @@ void CShuriken::AttackEnd()
 
 	m_isAttacked = false;
 	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
-}
-
-void CShuriken::Reset_Collider()
-{
-	
 }
 
 CShuriken* CShuriken::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -245,6 +256,7 @@ void CShuriken::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pLight);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);

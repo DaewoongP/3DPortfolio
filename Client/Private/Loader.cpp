@@ -25,6 +25,7 @@
 #include "Boss_Sword.h"
 #include "BackGround.h"
 #include "Enemy_Sword.h"
+#include "Boss_Shield.h"
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
 #include "GhostRunner_Logo.h"
@@ -744,6 +745,14 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_Component_Texture_Boss_Emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boss_Emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/M_Adam_Boss_Body_01_Emit.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_Emissive)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();
@@ -763,6 +772,24 @@ HRESULT CLoader::Loading_For_Boss()
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Bakunin_Sword.dat"), PivotMatrix))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Sword)");
+		return E_FAIL;
+	}
+
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	/* For.Prototype_Component_Model_Bakunin_Shield */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bakunin_Shield"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Bakunin_ArmShield.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Shield)");
+		return E_FAIL;
+	}
+
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	/* For.Prototype_Component_Model_Bakunin_Force_Field */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bakunin_Force_Field"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Bakunin_Force_Field.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Force_Field)");
 		return E_FAIL;
 	}
 
@@ -832,6 +859,14 @@ HRESULT CLoader::Loading_For_Boss()
 		CBoss_Sword::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Sword)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Boss_Shield */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Shield"),
+		CBoss_Shield::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Shield)");
 		return E_FAIL;
 	}
 

@@ -164,14 +164,6 @@ void CBoss_Sword::Attack()
 	Safe_Release(pGameInstance);
 }
 
-void CBoss_Sword::AttackEnd()
-{
-}
-
-void CBoss_Sword::Blocked()
-{
-}
-
 CBoss_Sword* CBoss_Sword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBoss_Sword* pInstance = new CBoss_Sword(pDevice, pContext);

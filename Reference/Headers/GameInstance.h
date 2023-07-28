@@ -98,7 +98,8 @@ public: /* For. Frustum */
 
 public: /* For.Light_Manager */
 	const CLight::LIGHTDESC* Get_Light(_uint iIndex);
-	HRESULT Add_Lights(const CLight::LIGHTDESC & LightDesc);
+	void Set_Light(_uint iIndex, CLight::LIGHTDESC LightDesc);
+	class CLight* Add_Lights(const CLight::LIGHTDESC & LightDesc);
 	HRESULT Clear_Lights();
 
 private:

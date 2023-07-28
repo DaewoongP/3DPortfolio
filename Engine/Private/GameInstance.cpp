@@ -392,32 +392,28 @@ _uint CGameInstance::RandomChoose(vector<_float> Weights, _uint iChooseSize)
 
 HRESULT CGameInstance::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CCollider* pCollider)
 {
-	if (nullptr == m_pCollision_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(m_pCollision_Manager, E_FAIL, TEXT("Collision NULL"));
 
 	return m_pCollision_Manager->Add_Collider(eCollisionType, pCollider);
 }
 
 HRESULT CGameInstance::Add_Fonts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath)
 {
-	if (nullptr == m_pFont_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(m_pFont_Manager, E_FAIL, TEXT("Font NULL"));
 
 	return m_pFont_Manager->Add_Fonts(pDevice, pContext, pFontTag, pFontFilePath);
 }
 
 HRESULT CGameInstance::Render_Font(const _tchar* pFontTag, const _tchar* pText, const _float2& Position, _fvector vColor, _float fRotation, const _float2& vOrigin, _float fScale)
 {
-	if (nullptr == m_pFont_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(m_pFont_Manager, E_FAIL, TEXT("Font NULL"));
 
 	return m_pFont_Manager->Render_Font(pFontTag, pText, Position, vColor, fRotation, vOrigin, fScale);
 }
 
 _bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRange)
 {
-	if (nullptr == m_pFrustum)
-		return false;
+	NULL_CHECK_RETURN_MSG(m_pFrustum, false, TEXT("Frustum NULL"));
 
 	return m_pFrustum->isIn_WorldFrustum(vWorldPos, fRange);
 }
@@ -429,24 +425,28 @@ vector<_float4> CGameInstance::Get_CulledPositions() const
 
 const CLight::LIGHTDESC* CGameInstance::Get_Light(_uint iIndex)
 {
-	if (nullptr == m_pLight_Manager)
-		return nullptr;
+	NULL_CHECK_RETURN_MSG(m_pLight_Manager, nullptr, TEXT("Light NULL"));
 
 	return m_pLight_Manager->Get_Light(iIndex);
 }
 
-HRESULT CGameInstance::Add_Lights(const CLight::LIGHTDESC& LightDesc)
+void CGameInstance::Set_Light(_uint iIndex, CLight::LIGHTDESC LightDesc)
 {
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(m_pLight_Manager, , TEXT("Light NULL"));
+
+	return m_pLight_Manager->Set_Light(iIndex, LightDesc);
+}
+
+CLight* CGameInstance::Add_Lights(const CLight::LIGHTDESC& LightDesc)
+{
+	NULL_CHECK_RETURN_MSG(m_pLight_Manager, nullptr, TEXT("Light NULL"));
 
 	return m_pLight_Manager->Add_Lights(LightDesc);
 }
 
 HRESULT CGameInstance::Clear_Lights()
 {
-	if (nullptr == m_pLight_Manager)
-		return E_FAIL;
+	NULL_CHECK_RETURN_MSG(m_pLight_Manager, E_FAIL, TEXT("Light NULL"));
 
 	return m_pLight_Manager->Clear_Lights();
 }

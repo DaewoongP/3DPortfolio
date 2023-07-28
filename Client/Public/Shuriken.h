@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CModel;
 class CShader;
+class CLight;
 class CRenderer;
 class CCollider;
 END
@@ -28,27 +29,28 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CModel*			m_pModelCom = { nullptr };
-	CShader*		m_pShaderCom = { nullptr };
-	CRenderer*		m_pRendererCom = { nullptr };
-	CCollider*		m_pColliderCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	CLight*				m_pLight = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
+	CRenderer*			m_pRendererCom = { nullptr };
+	CCollider*			m_pColliderCom = { nullptr };
 
 private:
-	_bool			m_isAttacked = { false };
-	_float4x4		m_OriginWorldMatrix;
-	_float3			m_vAttackDir;
+	_bool				m_isAttacked = { false };
+	_float4x4			m_OriginWorldMatrix;
+	_float3				m_vAttackDir;
 
-	_double			m_dTimeAcc = { 0.0 };
-	_double			m_dSpeed = { 0.0 };
+	_double				m_dTimeAcc = { 0.0 };
+	_double				m_dSpeed = { 0.0 };
+
+	_float4				m_vEmissive;
 
 private:
 	HRESULT Add_Components();
-	HRESULT Add_Components_Level(_uint iLevelIndex);
 	HRESULT SetUp_ShaderResources();
 public:
 	void Attack(_fvector vDirection);
 	void AttackEnd();
-	void Reset_Collider();
 
 public:
 	static CShuriken* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

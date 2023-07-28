@@ -30,6 +30,8 @@ public:
 	const LIGHTDESC* Get_LightDesc() const {
 		return &m_LightDesc;
 	}
+	void Set_LightDesc(LIGHTDESC LightDesc) { m_LightDesc = LightDesc; }
+	void Set_Position(_float4 vPosition) { m_LightDesc.vPos = vPosition; }
 
 public:
 	HRESULT Initialize(const LIGHTDESC& LightDesc);

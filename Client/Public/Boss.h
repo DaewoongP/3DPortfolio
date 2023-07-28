@@ -4,6 +4,7 @@
 BEGIN(Engine)
 class CModel;
 class CShader;
+class CTexture;
 class CCollider;
 class CBehaviorTree;
 END
@@ -46,6 +47,7 @@ public:
 private:
 	CModel*						m_pModelCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
+	CTexture*					m_pEmissiveTextureCom = { nullptr };
 	CCollider*					m_pColliderCom = { nullptr };
 	CCollider*					m_pVisionColliderCom = { nullptr };
 	CCollider*					m_pKnockBackColliderCom = { nullptr };

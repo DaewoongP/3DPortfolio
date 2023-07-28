@@ -224,9 +224,7 @@ HRESULT CWindow_Light::SetUp_LightDesc()
 			LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 			LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 			LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-			if (FAILED(m_pGameInstance->Add_Lights(LightDesc)))
-				return E_FAIL;
+			m_pGameInstance->Add_Lights(LightDesc);
 		}
 		else
 		{
@@ -551,9 +549,7 @@ void CWindow_Light::Add_DirectionalLight()
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-	if (FAILED(m_pGameInstance->Add_Lights(LightDesc)))
-		return;
+	m_pGameInstance->Add_Lights(LightDesc);
 }
 
 void CWindow_Light::Remake_Lights()
@@ -571,13 +567,11 @@ void CWindow_Light::Remake_Lights()
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(0.2f, 0.2f, 0.2f, 1.f);
 
-	if (FAILED(m_pGameInstance->Add_Lights(LightDesc)))
-		return;
+	m_pGameInstance->Add_Lights(LightDesc);
 
 	for (auto& pair : m_Lights)
 	{
-		if (FAILED(m_pGameInstance->Add_Lights(pair.second)))
-			return;
+		m_pGameInstance->Add_Lights(pair.second);
 	}
 }
 
