@@ -46,7 +46,7 @@ public:
 	// Lerp를 진행하지 않고 해당 애니메이션 초기상태로 바로 세팅한다.
 	void	Reset_Animation(_uint iAnimIndex);
 	void	Play_Animation(_double dTimeDelta, _bool bPassLerp = false, _double dLerpTime = 0.1);
-	void	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
+	_bool	Invalidate_AnimationCamera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex);
 	HRESULT SetUp_AnimationNotifies(_uint iAnimationIndex, vector<NOTIFY> Notifies);
 

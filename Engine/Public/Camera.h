@@ -43,9 +43,6 @@ public:
 	void Rotation(_fvector vAxis, _float fRadian, _bool bUseCurrentRotation = false) { m_pTransform->Rotation(vAxis, fRadian, bUseCurrentRotation); }
 	void Set_Position(_fvector vPosition) { m_pTransform->Set_State(CTransform::STATE_POSITION, vPosition); }
 
-public:
-	void Shake(_float3 fShakePower, _float fEpsilon = 0.01f);
-
 protected:
 	class CTransform*	m_pTransform = { nullptr };
 	class CPipeLine*	m_pPipeLine = { nullptr };
@@ -55,9 +52,6 @@ protected:
 private:
 	_float3				m_fShakePower;
 	_float				m_fEpsilon = { 0.f };
-
-private:
-	void Do_Shake(_double dTimeDelta);
 
 public:
 	static CCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

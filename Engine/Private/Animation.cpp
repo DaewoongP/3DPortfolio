@@ -155,14 +155,16 @@ ANIMATIONFLAG CAnimation::Invalidate_TransformationMatrix(CModel::BONES& Bones, 
 	return ANIM_PLAYING;
 }
 
-void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
+_bool CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
 {
 	// 카메라 컴포넌트를 받아서 처리.
 	// 현재 노티파이에있는 카메라 상태를 처리해준다.
 	NOTIFY Notify = m_AnimationNotify[m_ChannelCurrentKeyFrames[m_iMaxFrameChannelIndex]];
 
+	if (3.f > Notify.vEye.y)
+		return false;
 	if (XMVectorGetX(XMVectorEqual(XMLoadFloat4(&Notify.vEye), XMLoadFloat4(&Notify.vAt))))
-		return;
+		return false;
 
 	_vector vCamPos = pCamera->Get_TransformState(CTransform::STATE_POSITION);
 	_vector vCamDir = pCamera->Get_TransformState(CTransform::STATE_LOOK);
@@ -174,7 +176,7 @@ void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransfor
 	_float fRad = acosf(XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 0.f, 1.f, 0.f), vNotifyDir)));
 	// 연산최소화
 	if (0.f == fRad)
-		return;
+		return false;
 	_vector vDirAxis = XMVector3Cross(XMVectorSet(0.f, 0.f, 1.f, 0.f), vNotifyDir);
 
 	_matrix matNotify = XMMatrixIdentity();
@@ -182,11 +184,13 @@ void CAnimation::Invalidate_Camera(CCamera* pCamera, CTransform* pPlayerTransfor
 
 	_vector vInvalidateDir = XMVector3Normalize(XMVector3TransformNormal(vCamDir, matNotify));
 
-	_matrix InvalidateMatrix = 
-		XMMatrixInverse(nullptr, 
+	_matrix InvalidateMatrix =
+		XMMatrixInverse(nullptr,
 			XMMatrixLookAtLH(vCamPos, vCamPos + vInvalidateDir, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	pCamera->Set_CameraWorldMatrix(InvalidateMatrix);
+
+	return true;
 }
 
 HRESULT CAnimation::SetUp_AnimationNotifies(vector<NOTIFY> Notifies)

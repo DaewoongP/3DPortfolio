@@ -200,12 +200,12 @@ void CModel::Play_Animation(_double dTimeDelta, _bool bPassLerp, _double dLerpTi
 	}
 }
 
-void CModel::Invalidate_AnimationCamera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
+_bool CModel::Invalidate_AnimationCamera(CCamera* pCamera, CTransform* pPlayerTransform, _double dTimeDelta)
 {
 	if (nullptr == pCamera)
-		return;
+		return false;
 
-	m_Animations[m_iCurrentAnimIndex]->Invalidate_Camera(pCamera, pPlayerTransform, dTimeDelta);
+	return m_Animations[m_iCurrentAnimIndex]->Invalidate_Camera(pCamera, pPlayerTransform, dTimeDelta);
 }
 
 HRESULT CModel::Find_BoneIndex(const _tchar* pBoneName, _uint* iIndex)

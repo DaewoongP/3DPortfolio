@@ -57,7 +57,7 @@ public:
 public:
 	HRESULT Initialize(Engine::ANIMATION* pAnimation, const CModel::BONES& Bones);
 	ANIMATIONFLAG Invalidate_TransformationMatrix(CModel::BONES& Bones, _double TimeDelta);
-	void Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
+	_bool Invalidate_Camera(class CCamera* pCamera, class CTransform* pPlayerTransform, _double dTimeDelta);
 	HRESULT SetUp_AnimationNotifies(vector<NOTIFY> Notifies);
 	ANIMATIONFLAG Lerp_TransformMatrix(CModel::BONES& Bones, class CAnimation* pCurrentAnimation, _double TimeDelta, _double dDuration);
 

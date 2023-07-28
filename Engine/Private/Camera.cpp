@@ -91,19 +91,6 @@ void CCamera::Tick_Camera(_double dTimeDelta)
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 }
 
-void CCamera::Shake(_float3 fShakePower, _float fEpsilon)
-{
-	// 1/2 제곱을 통해 진폭을 줄여나가는 형태
-	//y = sin(x) * powf(0.5f, x)
-	m_fShakePower = fShakePower;
-	m_fEpsilon = fEpsilon;
-}
-
-void CCamera::Do_Shake(_double dTimeDelta)
-{
-
-}
-
 CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CCamera* pInstance = new CCamera(pDevice, pContext);

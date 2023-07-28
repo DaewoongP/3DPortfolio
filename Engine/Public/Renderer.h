@@ -47,7 +47,7 @@ private:
 #ifdef _DEBUG
 private:
 	list<class CComponent*>			m_DebugObject;
-	_bool							m_isDebugRender = { true };
+	_bool							m_isDebugRender = { false };
 #endif // _DEBUG
 
 private:
