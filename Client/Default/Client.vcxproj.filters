@@ -208,6 +208,9 @@
     <Filter Include="02. GameObjects\00. Player\Surge">
       <UniqueIdentifier>{5147ca88-c251-4cae-aafa-8f8b39e6b67e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\08. BlinkTarget">
+      <UniqueIdentifier>{cd18d571-0c6a-4ced-984e-ea233c3b3bc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -488,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Surge.h">
       <Filter>02. GameObjects\00. Player\Surge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlinkTarget.h">
+      <Filter>02. GameObjects\05. UI\GamePlay\08. BlinkTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -770,6 +776,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Surge.cpp">
       <Filter>02. GameObjects\00. Player\Surge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlinkTarget.cpp">
+      <Filter>02. GameObjects\05. UI\GamePlay\08. BlinkTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

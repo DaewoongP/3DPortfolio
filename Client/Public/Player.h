@@ -45,6 +45,7 @@ private:
 public:
 	STATE Get_CurrentState() const { return m_eCurState; }
 	SKILL Get_CurrentSkill() const { return m_eCurrentSkill; }
+	vector<const class CGameObject*> Get_BlinkTarget() const { return m_BlinkEnemys; }
 	_float Get_SkillStackPercent() const { return (_float)m_iSkillStack / m_iSkillMaxStack; }
 	_bool IsDashCoolTime() const { return m_Dash.isCoolTime; }
 	void Gain_SkillStack() { 
@@ -111,6 +112,8 @@ private: // Skill
 	_uint					m_iSkillMaxStack = { 0 };
 	SKILL					m_eCurrentSkill = { SKILL_END };
 	_bool					m_isBlink = { false };
+	_double					m_dBlinkTimeAcc = { 0.0 };
+	_double					m_dBlinkTime = { 0.0 };
 
 private: // WallRun
 	_float					m_fWallRunY = { 0.f };

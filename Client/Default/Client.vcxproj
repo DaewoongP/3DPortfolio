@@ -171,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
     <ClInclude Include="..\public\Black_BackGround.h" />
+    <ClInclude Include="..\public\BlinkTarget.h" />
     <ClInclude Include="..\public\Bomb.h" />
     <ClInclude Include="..\public\Boss.h" />
     <ClInclude Include="..\public\Boss_Hp.h" />
@@ -265,6 +266,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Black_BackGround.cpp" />
+    <ClCompile Include="..\private\BlinkTarget.cpp" />
     <ClCompile Include="..\private\Bomb.cpp" />
     <ClCompile Include="..\private\Boss.cpp" />
     <ClCompile Include="..\private\Boss_Hp.cpp" />

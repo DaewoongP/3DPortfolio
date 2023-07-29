@@ -22,10 +22,12 @@ private:
 public:
 	_vector Get_TransformState(CTransform::STATE eState) { return m_pTransform->Get_State(eState); }
 	_matrix Get_CameraWorldMatrix() const { return m_pTransform->Get_WorldMatrix(); }
+	_float	Get_FOV() const { return m_fFovy; }
 	void	Set_TransformDesc(CTransform::TRANSFORMDESC TransformDesc) { m_pTransform->Set_Desc(TransformDesc); }
 	void	Set_CameraDesc(CAMERADESC CameraDesc);
 	void	Set_CameraWorldMatrix(_fmatrix CamWorldMatrix) { m_pTransform->Set_WorldMatrix(CamWorldMatrix); }
 	void	Set_LookAtLH(_float4 vEye, _float4 vAt, _float4 vUp = _float4(0.f, 1.f, 0.f, 0.f));
+	void	Set_FOV(_float fFov) { m_fFovy = fFov; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

@@ -17,6 +17,7 @@ vector g_vLightPos;
 float g_fLightRange;
 float g_fSpotPower;
 bool g_isGrayScale;
+bool g_isRedScale;
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
@@ -260,10 +261,17 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 
     if (true == g_isGrayScale)
     {
-        float fGrayScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3;
+        float fGrayScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3.f;
         Out.vColor = fGrayScale;
     }
-
+    
+    if (true == g_isRedScale)
+    {
+        float fRedScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3.f;
+        Out.vColor.yz = fRedScale / 2.f;
+        Out.vColor.x = fRedScale;
+    }
+    
     return Out;
 }
 

@@ -37,6 +37,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fJumpPower = 20.f;
 	m_fWallRunVelocity = 0.6f;
 	m_fHookPower = 2.2f;
+	m_dBlinkTime = 3.0;
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_fSpeed, XMConvertToRadians(3.f));
 
@@ -254,9 +255,6 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
 	{
 		m_BlinkEnemys.push_back(CollisionDesc.pOtherOwner);
-#ifdef _DEBUG
-		cout << "Enter Enemy" << endl;
-#endif // _DEBUG
 	}
 	
 	Safe_Release(pGameInstance);
@@ -353,6 +351,19 @@ HRESULT CPlayer::Render()
 
 HRESULT CPlayer::Reset()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CCamera::CAMERADESC CameraDesc;
+
+	CameraDesc.fFovy = XMConvertToRadians(90.f);
+	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 1000.f;
+	CameraDesc.TransformDesc.dSpeedPerSec = m_pTransformCom->Get_Desc().dSpeedPerSec;
+	CameraDesc.TransformDesc.dRotationPerSec = m_pTransformCom->Get_Desc().dRotationPerSec;
+	m_pPlayerCameraCom->Set_CameraDesc(CameraDesc);
+
 	m_pTransformCom->Set_WorldMatrix(XMMatrixIdentity());
 	m_pTransformCom->Rotation(m_vInitRotation);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_vInitPosition));
@@ -362,12 +373,16 @@ HRESULT CPlayer::Reset()
 	m_pModelCom->Set_AnimIndex(95);
 
 	m_pRendererCom->Set_GrayScale(false);
+	m_pRendererCom->Set_RedScale(false);
 
 	m_eCurState = STATE_IDLE;
 	m_iSkillStack = 0;
-	
+	pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
+	m_dBlinkTimeAcc = 0.0;
+
 	m_InRangeEnemyColliders.clear();
 	m_BlockEnemyWeapons.clear();
+	m_BlinkEnemys.clear();
 
 	// 표창 -> 검
 	if (WEAPON_SHURIKEN == m_eCurWeapon)
@@ -382,6 +397,8 @@ HRESULT CPlayer::Reset()
 	}
 
 	m_bSwapWeapon = false;
+	
+	Safe_Release(pGameInstance);
 
 	// 컴포넌트 리셋들 모두 호출해주려면 부모 불러줘야함.
 	if (FAILED(__super::Reset()))
@@ -1084,7 +1101,7 @@ void CPlayer::Add_Collisions()
 {
 	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 10.f);
 	_matrix BlockMatrix = XMMatrixTranslation(0.f, 0.f, 3.f);
-	_matrix BlinkMatrix = XMMatrixTranslation(0.f, 0.f, 50.f);
+	_matrix BlinkMatrix = XMMatrixTranslation(0.f, 0.f, 35.f);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(VisionMatrix * m_pTransformCom->Get_WorldMatrix());
@@ -1092,7 +1109,7 @@ void CPlayer::Add_Collisions()
 	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
 	ZEROMEM(&AABBDesc);
 	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
-	AABBDesc.vExtents = _float3(25.f, 10.f, 25.f);
+	AABBDesc.vExtents = _float3(35.f, 25.f, 35.f);
 	m_pBlinkColliderCom->Set_BoundingDesc(&AABBDesc);
 	m_pBlinkColliderCom->Tick(BlinkMatrix * m_pTransformCom->Get_WorldMatrix());
 
@@ -1301,15 +1318,38 @@ void CPlayer::Blink(_double dTimeDelta)
 		0 == m_BlinkEnemys.size())
 		return;
 
+	// 시간값을 1/10으로 줄였으므로 10배  처리해서 시간을 더해줘야함.
+	m_dBlinkTimeAcc += dTimeDelta * 10.0;
+
+	_float fFOV = m_pPlayerCameraCom->Get_FOV();
+	m_pPlayerCameraCom->Set_FOV(fFOV - (_float)dTimeDelta);
+	m_pRendererCom->Set_RedScale(true);
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-
+	
 	pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
 	m_pTransformCom->ZeroVelocity();
 	m_isBlink = true;
 
+	// 시간초과
+	if (m_dBlinkTimeAcc > m_dBlinkTime)
+	{
+		m_pRendererCom->Set_RedScale(false);
+		m_pPlayerCameraCom->Set_FOV(XMConvertToRadians(90.f));
+		m_eCurState = STATE_IDLE;
+		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
+		m_BlinkEnemys.clear();
+		m_isBlink = false;
+		m_dBlinkTimeAcc = 0.0;
+		Safe_Release(pGameInstance);
+		return;
+	}
+
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
+		m_pRendererCom->Set_RedScale(false);
+		m_pPlayerCameraCom->Set_FOV(XMConvertToRadians(90.f));
 		m_isBlink = false;
 
 		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -1339,6 +1379,7 @@ void CPlayer::Blink(_double dTimeDelta)
 		m_eCurState = STATE_ATTACK;
 
 		// Finish
+		m_dBlinkTimeAcc = 0.0;
 		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
 		m_BlinkEnemys.clear();
 	}

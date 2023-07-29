@@ -26,6 +26,7 @@
 #include "MiniEnemy.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
+#include "BlinkTarget.h"
 #include "Enemy_Sword.h"
 #include "Boss_Shield.h"
 #include "Enemy_Pistol.h"
@@ -316,6 +317,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Surge_Main.png")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Surge_Main)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Blink_Target */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blink_Target"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Blink_Target.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blink_Target)");
 		return E_FAIL;
 	}
 
@@ -746,6 +755,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CMainSlot::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MainSlot)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_BlinkTarget*/
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BlinkTarget"),
+		CBlinkTarget::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BlinkTarget)");
 		return E_FAIL;
 	}
 

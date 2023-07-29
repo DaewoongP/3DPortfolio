@@ -281,6 +281,9 @@ HRESULT CRenderer::Render_Deferred()
 	// GrayScale
 	if (FAILED(m_pShader->Bind_RawValue("g_isGrayScale", &m_isGrayScale, sizeof(_bool))))
 		return E_FAIL;
+	// RedScale
+	if (FAILED(m_pShader->Bind_RawValue("g_isRedScale", &m_isRedScale, sizeof(_bool))))
+		return E_FAIL;
 
 	m_pShader->Begin(4);
 

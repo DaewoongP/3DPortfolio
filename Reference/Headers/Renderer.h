@@ -13,6 +13,7 @@ private:
 	virtual ~CRenderer() = default;
 
 public:
+	void Set_RedScale(_bool isRedScale) { m_isRedScale = isRedScale; }
 	void Set_GrayScale(_bool isGrayScale) { m_isGrayScale = isGrayScale; }
 
 public:
@@ -52,6 +53,7 @@ private:
 
 private:
 	_bool							m_isGrayScale = { false };
+	_bool							m_isRedScale = { false };
 
 private:
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };

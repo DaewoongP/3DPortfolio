@@ -309,6 +309,13 @@ HRESULT CLevel_Boss::Ready_Layer_UI(const _tchar* pLayerTag)
 		MSG_BOX("Failed Add_GameObject : (GameObject_MainSlot)");
 		return E_FAIL;
 	}
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_BlinkTarget"), pLayerTag, TEXT("GameObject_BlinkTarget"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_BlinkTarget)");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
