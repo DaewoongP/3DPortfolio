@@ -47,7 +47,12 @@ public:
 	SKILL Get_CurrentSkill() const { return m_eCurrentSkill; }
 	_float Get_SkillStackPercent() const { return (_float)m_iSkillStack / m_iSkillMaxStack; }
 	_bool IsDashCoolTime() const { return m_Dash.isCoolTime; }
-	void Gain_SkillStack() { ++m_iSkillStack; }
+	void Gain_SkillStack() { 
+		if (m_iSkillStack > m_iSkillMaxStack)
+			m_iSkillStack = m_iSkillMaxStack;
+		else
+			++m_iSkillStack; 
+	}
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -76,6 +81,7 @@ private:
 private:
 	class CKatana*			m_pKatana = { nullptr };
 	class CShuriken*		m_pShuriken = { nullptr };
+	class CSurge*			m_pSurge = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
 	CCollider*				m_pBlockColliderCom = { nullptr };
 	CCollider*				m_pBlinkColliderCom = { nullptr };

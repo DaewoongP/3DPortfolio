@@ -97,8 +97,6 @@ HRESULT CBullet::Render()
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-
 		m_pShaderCom->Begin(2);
 
 		m_pModelCom->Render(i);

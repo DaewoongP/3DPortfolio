@@ -5,6 +5,7 @@
 #include "Katana.h"
 #include "Shuriken.h"
 #include "Sword.h"
+#include "Surge.h"
 #include "Bullet.h"
 #include "ColProp.h"
 
@@ -523,6 +524,19 @@ HRESULT CPlayer::Add_Parts(_uint iLevelIndex)
 	if (FAILED(__super::Delete_Component(TEXT("Part_Shuriken"))))
 		return E_FAIL;
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_Surge"), TEXT("Layer_Skill"), TEXT("GameObject_Surge"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_Surge)");
+		return E_FAIL;
+	}
+
+	m_pSurge = dynamic_cast<CSurge*>(pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Skill"), TEXT("GameObject_Surge")));
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 
@@ -750,6 +764,51 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		}
 	}
 
+	// Time Slow
+	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_DOWN))
+	{
+		m_pTransformCom->ZeroVelocity();
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_Z))
+	{
+		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
+	}
+	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_UP))
+	{
+		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
+	}
+
+	// Swap Skill
+	if (pGameInstance->Get_DIKeyState(DIK_TAB, CInput_Device::KEY_DOWN))
+	{
+		if (SKILL_BLINK == m_eCurrentSkill)
+			m_eCurrentSkill = SKILL_SURGE;
+		else if (SKILL_SURGE == m_eCurrentSkill)
+			m_eCurrentSkill = SKILL_BLINK;
+	}
+	// Use Skill
+	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
+	{
+		if (m_iSkillStack >= m_iSkillMaxStack)
+		{
+			if (SKILL_BLINK == m_eCurrentSkill)
+			{
+				m_eCurState = STATE_BLINK;
+				m_iSkillStack = 0;
+			}
+			else if (SKILL_SURGE == m_eCurrentSkill)
+			{
+				_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+				m_pSurge->Fire(vPos, vPos + m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+				m_eCurState = STATE_ATTACK;
+				m_iSkillStack = 0;
+			}
+		}
+	}
+
+	m_pSurge->Tick(dTimeDelta);
+	m_pSurge->Late_Tick(dTimeDelta);
+
 	_long		dwMouseMove = 0;
 
 #ifdef _DEBUG
@@ -791,45 +850,6 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-	}
-	// Time Slow
-	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_DOWN))
-	{
-		m_pTransformCom->ZeroVelocity();
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_Z))
-	{
-		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
-	}
-	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_UP))
-	{
-		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
-	}
-
-	// Swap Skill
-	if (pGameInstance->Get_DIKeyState(DIK_TAB, CInput_Device::KEY_DOWN))
-	{
-		if (SKILL_BLINK == m_eCurrentSkill)
-			m_eCurrentSkill = SKILL_SURGE;
-		else if (SKILL_SURGE == m_eCurrentSkill)
-			m_eCurrentSkill = SKILL_BLINK;
-	}
-	// Use Skill
-	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
-	{
-		if (m_iSkillStack == m_iSkillMaxStack)
-		{
-			if (SKILL_BLINK == m_eCurrentSkill)
-			{
-				m_eCurState = STATE_BLINK;
-				m_iSkillStack = 0;
-			}
-			else if (SKILL_SURGE == m_eCurrentSkill)
-			{
-				m_eCurState = STATE_ATTACK;
-				m_iSkillStack = 0;
-			}
-		}
 	}
 
 	Safe_Release(pGameInstance);
@@ -1505,6 +1525,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pSurge);
 	Safe_Release(m_pShuriken);
 	Safe_Release(m_pKatana);
 	Safe_Release(m_pModelCom);

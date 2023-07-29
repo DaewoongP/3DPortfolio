@@ -6,6 +6,7 @@
 #include "Bomb.h"
 #include "Mouse.h"
 #include "Sword.h"
+#include "Surge.h"
 #include "Hammer.h"
 #include "Player.h"
 #include "Pistol.h"
@@ -391,6 +392,15 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 
+	PivotMatrix = XMMatrixScaling(1.f, 5.f, 20.f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
+	/* For.Prototype_Component_Model_Surge */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Surge"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Skill_Surge.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Surge)");
+		return E_FAIL;
+	}
+
 	/* For.Prototype_Component_Model_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Sky"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/SM_sky_01.dat")))))
@@ -584,6 +594,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CShuriken::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Shuriken)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Surge */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Surge"),
+		CSurge::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Surge)");
 		return E_FAIL;
 	}
 
