@@ -18,6 +18,7 @@
 #include "UI_Hook.h"
 #include "UI_Dead.h"
 #include "Boss_Hp.h"
+#include "MainSlot.h"
 #include "Shuriken.h"
 #include "Indicator.h"
 #include "Crosshair.h"
@@ -300,6 +301,22 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dead)");
 		return E_FAIL;
 	}
+	
+	/* For.Prototype_Component_Texture_Blink_Main */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blink_Main"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Blink_Main.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blink_Main)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Surge_Main */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Surge_Main"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Surge_Main.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Surge_Main)");
+		return E_FAIL;
+	}
 
 #ifdef _DEBUG
 
@@ -409,6 +426,16 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Pistol)");
 		return E_FAIL;
 	}
+
+	PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.4f);
+	/* For.Prototype_Component_Model_Bullet */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Bullet"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/DefaultMesh/Cylinder.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bullet)");
+		return E_FAIL;
+	}
+
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Sword */
@@ -693,6 +720,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CUI_Dead::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Dead)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_MainSlot*/
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainSlot"),
+		CMainSlot::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MainSlot)");
 		return E_FAIL;
 	}
 

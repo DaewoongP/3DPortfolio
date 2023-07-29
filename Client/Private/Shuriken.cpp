@@ -57,6 +57,7 @@ HRESULT CShuriken::Initialize_Level(_uint iLevelIndex)
 	Safe_AddRef(pGameInstance);
 
 	m_pLight = pGameInstance->Add_Lights(LightDesc);
+	Safe_AddRef(m_pLight);
 
 	Safe_Release(pGameInstance);
 

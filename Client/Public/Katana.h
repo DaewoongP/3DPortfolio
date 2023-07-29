@@ -23,6 +23,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual HRESULT Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc) override;
+	virtual void OnCollisionEnter(COLLISIONDESC CollisionDesc) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;

@@ -396,6 +396,12 @@ HRESULT CLevel_Stage1::Ready_UI(const _tchar* pLayerTag)
 		MSG_BOX("Failed Add_GameObject : (GameObject_UI_Dead)");
 		return E_FAIL;
 	}
+	
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_MainSlot"), pLayerTag, TEXT("GameObject_MainSlot"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MainSlot)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 

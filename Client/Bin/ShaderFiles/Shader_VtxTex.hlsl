@@ -4,7 +4,7 @@ Texture2D g_Texture;
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 float4 g_vColor;
-float g_fUVPercentX;
+float g_fUVPercent;
 
 struct VS_IN
 {
@@ -79,8 +79,20 @@ float4 PS_MAIN_SIZE_UI(PS_IN In) : SV_TARGET0
     
     vColor = g_Texture.Sample(PointSampler, In.vTexUV);
 
-    if (g_fUVPercentX < In.vTexUV.x)
+    if (g_fUVPercent < In.vTexUV.x)
         discard;
+    
+    return vColor;
+}
+
+float4 PS_MAIN_VERTICAL_COLOR(PS_IN In) : SV_TARGET0
+{
+    float4 vColor = (float4) 0;
+    
+    vColor = g_Texture.Sample(PointSampler, In.vTexUV);
+
+    if (g_fUVPercent > 1.f - In.vTexUV.y && 0.2f < vColor.r)
+        vColor = g_vColor;
     
     return vColor;
 }
@@ -150,6 +162,19 @@ technique11 DefaultTechnique
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
         DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
         PixelShader = compile ps_5_0 PS_MAIN_SIZE_UI();
+    }
+
+    pass VerticalColorUI
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_VERTICAL_COLOR();
     }
 
 	pass Effect

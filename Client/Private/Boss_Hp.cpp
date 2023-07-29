@@ -95,7 +95,7 @@ HRESULT CBoss_Hp::Render()
 		return E_FAIL;
 
 	_float fHpPercent = m_pBoss->Get_HpPercent();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVPercentX", &fHpPercent, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVPercent", &fHpPercent, sizeof(_float))))
 		return E_FAIL;
 
 	m_pShaderCom->Begin(4);

@@ -202,6 +202,7 @@
     <ClInclude Include="..\public\Loading_Logo.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\public\Enemy.h" />
+    <ClInclude Include="..\public\MainSlot.h" />
     <ClInclude Include="..\public\MiniEnemy.h" />
     <ClInclude Include="..\public\MiniMap.h" />
     <ClInclude Include="..\public\Mouse.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="..\public\Sequence_SlowLookAttack.h" />
     <ClInclude Include="..\public\Shuriken.h" />
     <ClInclude Include="..\public\Sky.h" />
+    <ClInclude Include="..\public\Surge.h" />
     <ClInclude Include="..\public\Sword.h" />
     <ClInclude Include="..\Public\Task_Attack.h" />
     <ClInclude Include="..\public\Task_AttackSequence1.h" />
@@ -293,6 +295,7 @@
     <ClCompile Include="..\private\Loading_Logo.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\private\Enemy.cpp" />
+    <ClCompile Include="..\private\MainSlot.cpp" />
     <ClCompile Include="..\private\MiniEnemy.cpp" />
     <ClCompile Include="..\private\MiniMap.cpp" />
     <ClCompile Include="..\private\Mouse.cpp" />
@@ -317,6 +320,7 @@
     <ClCompile Include="..\private\Sequence_SlowLookAttack.cpp" />
     <ClCompile Include="..\private\Shuriken.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
+    <ClCompile Include="..\private\Surge.cpp" />
     <ClCompile Include="..\private\Sword.cpp" />
     <ClCompile Include="..\Private\Task_Attack.cpp" />
     <ClCompile Include="..\private\Task_AttackSequence1.cpp" />

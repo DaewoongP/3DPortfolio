@@ -50,6 +50,12 @@ HRESULT CKatana::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 	return S_OK;
 }
 
+void CKatana::OnCollisionEnter(COLLISIONDESC CollisionDesc)
+{
+	if (COLLISIONDESC::COLTYPE_ENEMY == CollisionDesc.ColType)
+		dynamic_cast<CPlayer*>(m_pOwner)->Gain_SkillStack();
+}
+
 void CKatana::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);

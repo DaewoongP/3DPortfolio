@@ -202,6 +202,12 @@
     <Filter Include="02. GameObjects\01. Enemy\Boss\Shield">
       <UniqueIdentifier>{bb1b992c-da09-49dc-978d-096194585ada}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\07. MainSlot">
+      <UniqueIdentifier>{d43392f2-102c-4655-aff1-7b9bb8b8fea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\00. Player\Surge">
+      <UniqueIdentifier>{5147ca88-c251-4cae-aafa-8f8b39e6b67e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -476,6 +482,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss_Shield.h">
       <Filter>02. GameObjects\01. Enemy\Boss\Shield</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MainSlot.h">
+      <Filter>02. GameObjects\05. UI\GamePlay\07. MainSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Surge.h">
+      <Filter>02. GameObjects\00. Player\Surge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -752,6 +764,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_Shield.cpp">
       <Filter>02. GameObjects\01. Enemy\Boss\Shield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MainSlot.cpp">
+      <Filter>02. GameObjects\05. UI\GamePlay\07. MainSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Surge.cpp">
+      <Filter>02. GameObjects\00. Player\Surge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

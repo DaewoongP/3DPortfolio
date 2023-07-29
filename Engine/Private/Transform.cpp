@@ -442,7 +442,6 @@ void CTransform::Jump(_fvector vDir, _float fJumpForce, _double dTimeDelta)
 	XMStoreFloat3(&m_vForce, XMLoadFloat3(&m_vForce) + vDir * fJumpForce / (_float)dTimeDelta);
 }
 
-
 void CTransform::Crouch(_bool isCrouching, _double dTimeDelta, _float fCrouchSpeed, _float fCrouchSize, _float fSlidingSpeed)
 {
 	// 점프상태일경우 리턴

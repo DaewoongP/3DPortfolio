@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CModel;
 class CShader;
 class CRenderer;
 class CCollider;
@@ -32,6 +33,7 @@ public:
 	virtual HRESULT Reset() override;
 
 private:
+	CModel*			m_pModelCom = { nullptr };
 	CShader*		m_pShaderCom = { nullptr };
 	CRenderer*		m_pRendererCom = { nullptr };
 	CCollider*		m_pColliderCom = { nullptr };
@@ -39,6 +41,9 @@ private:
 private:
 	_double			m_dDeleteTimeAcc = { 0.0 };
 	_double			m_dDeleteTime = { 5.0 };
+
+private:
+	_float4			m_vEmissiveColor;
 
 private:
 	COLLISIONDESC::COLTYPE	m_eColType = { COLLISIONDESC::COLTYPE_END };

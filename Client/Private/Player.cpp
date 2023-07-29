@@ -51,6 +51,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Initailize_Skills()))
 		return E_FAIL;
 
+	m_eCurrentSkill = SKILL_BLINK;
+
 	return S_OK;
 }
 
@@ -95,9 +97,12 @@ HRESULT CPlayer::Initialize_Level(_uint iLevelIndex)
 
 	m_eCurWeapon = WEAPON_KATANA;
 
+	m_iSkillMaxStack = 4;
+
 #ifdef _DEBUG
 	m_pVisionColliderCom->Set_Color(DirectX::Colors::AntiqueWhite);
 	m_pBlockColliderCom->Set_Color(DirectX::Colors::DarkRed);
+	m_pBlinkColliderCom->Set_Color(DirectX::Colors::Yellow);
 #endif // _DEBUG
 		
 	return S_OK;
@@ -111,6 +116,15 @@ void CPlayer::Tick(_double dTimeDelta)
 	SwapWeapon();
 
 	AnimationState(dTimeDelta);
+
+#ifdef _DEBUG
+	if (m_isInvisible)
+	{
+		m_eGameEvent = GAME_NOEVENT;
+		if (STATE_DEAD == m_eCurState)
+			m_eCurState = m_ePreState;
+	}
+#endif // _DEBUG
 
 	// 정확히 이위치가 맞는듯.
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
@@ -146,6 +160,11 @@ void CPlayer::Tick(_double dTimeDelta)
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
+#ifdef _DEBUG
+	if (m_isInvisible)
+		m_eGameEvent = GAME_NOEVENT;
+#endif // _DEBUG
+
 	if (GAME_STAGE_RESET != m_eGameEvent &&
 		nullptr != m_pRendererCom)
 	{
@@ -154,6 +173,7 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
 		m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
 		m_pRendererCom->Add_DebugGroup(m_pBlockColliderCom);
+		m_pRendererCom->Add_DebugGroup(m_pBlinkColliderCom);
 		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
 #endif // _DEBUG
 	}
@@ -166,11 +186,6 @@ GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 	if (true == m_pTransformCom->IsJumping() &&
 		STATE_RUN == m_eCurState)
 		m_eCurState = STATE_IDLE;
-
-#ifdef _DEBUG
-	if (m_isInvisible)
-		m_eGameEvent = GAME_NOEVENT;
-#endif // _DEBUG
 
 	return m_eGameEvent;
 }
@@ -231,6 +246,16 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	{
 		// 보스 패링 패턴.
 		m_BlockEnemyWeapons.push_back(CollisionDesc.pOtherOwner);
+	}
+
+	/* Player Blink Collider */
+	if (m_pBlinkColliderCom == CollisionDesc.pMyCollider &&
+		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
+	{
+		m_BlinkEnemys.push_back(CollisionDesc.pOtherOwner);
+#ifdef _DEBUG
+		cout << "Enter Enemy" << endl;
+#endif // _DEBUG
 	}
 	
 	Safe_Release(pGameInstance);
@@ -338,6 +363,7 @@ HRESULT CPlayer::Reset()
 	m_pRendererCom->Set_GrayScale(false);
 
 	m_eCurState = STATE_IDLE;
+	m_iSkillStack = 0;
 	
 	m_InRangeEnemyColliders.clear();
 	m_BlockEnemyWeapons.clear();
@@ -442,6 +468,18 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 	}
 
+	CBounding_AABB::BOUNDINGAABBDESC BlinkAABBDesc;
+	// 사용당시의 Look 기준으로 재계산 할예정.
+	BlinkAABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	BlinkAABBDesc.vExtents = _float3(1.f, 1.f, 1.f);
+	/* For.Com_BlinkCollider */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_BlinkCollider"), reinterpret_cast<CComponent**>(&m_pBlinkColliderCom), &BlinkAABBDesc)))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_BlinkCollider)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -524,7 +562,8 @@ HRESULT CPlayer::Initailize_Skills()
 
 void CPlayer::Key_Input(_double dTimeDelta)
 {
-	if (GAME_OBJECT_DEAD == m_eGameEvent)
+	if (GAME_OBJECT_DEAD == m_eGameEvent ||
+		STATE_BLINK == m_eCurState)
 		return;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -668,7 +707,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		if (0 < m_BlockEnemyWeapons.size() && 
 			STATE_BLOCK != m_eCurState &&
 			STATE_ATTACK != m_eCurState &&
-			STATE_WEAPON != m_eCurState)
+			STATE_WEAPON != m_eCurState &&
+			STATE_BLINK != m_eCurState)
 		{
 			m_isBlocked = true;
 			m_eCurState = STATE_BLOCK;
@@ -678,7 +718,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		{
 			if (STATE_ATTACK != m_eCurState &&
 				STATE_CLIMB != m_eCurState &&
-				STATE_WEAPON != m_eCurState)
+				STATE_WEAPON != m_eCurState &&
+				STATE_BLINK != m_eCurState)
 				m_eCurState = STATE_ATTACK;
 
 			if (STATE_ATTACK == m_eCurState && 
@@ -751,7 +792,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 
 		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
 	}
-
+	// Time Slow
 	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_DOWN))
 	{
 		m_pTransformCom->ZeroVelocity();
@@ -765,6 +806,32 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
 	}
 
+	// Swap Skill
+	if (pGameInstance->Get_DIKeyState(DIK_TAB, CInput_Device::KEY_DOWN))
+	{
+		if (SKILL_BLINK == m_eCurrentSkill)
+			m_eCurrentSkill = SKILL_SURGE;
+		else if (SKILL_SURGE == m_eCurrentSkill)
+			m_eCurrentSkill = SKILL_BLINK;
+	}
+	// Use Skill
+	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
+	{
+		if (m_iSkillStack == m_iSkillMaxStack)
+		{
+			if (SKILL_BLINK == m_eCurrentSkill)
+			{
+				m_eCurState = STATE_BLINK;
+				m_iSkillStack = 0;
+			}
+			else if (SKILL_SURGE == m_eCurrentSkill)
+			{
+				m_eCurState = STATE_ATTACK;
+				m_iSkillStack = 0;
+			}
+		}
+	}
+
 	Safe_Release(pGameInstance);
 }
 
@@ -776,8 +843,8 @@ void CPlayer::Fix_Mouse()
 #ifdef _DEBUG
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_Q, CInput_Device::KEY_DOWN))
+	// 키보드 ` 키
+	if (pGameInstance->Get_DIKeyState(DIK_GRAVE, CInput_Device::KEY_DOWN))
 	{
 		if (m_isMouseFixed)
 			m_isMouseFixed = false;
@@ -878,6 +945,9 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			break;
 		case STATE_DEAD:
 			m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
+			break;
+		case STATE_BLINK:
+			m_pModelCom->Set_AnimIndex(118, false);
 			break;
 		}
 
@@ -994,10 +1064,17 @@ void CPlayer::Add_Collisions()
 {
 	_matrix VisionMatrix = XMMatrixTranslation(0.f, 0.f, 10.f);
 	_matrix BlockMatrix = XMMatrixTranslation(0.f, 0.f, 3.f);
+	_matrix BlinkMatrix = XMMatrixTranslation(0.f, 0.f, 50.f);
 	// 충돌처리
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(VisionMatrix * m_pTransformCom->Get_WorldMatrix());
 	m_pBlockColliderCom->Tick(BlockMatrix * m_pTransformCom->Get_WorldMatrix());
+	CBounding_AABB::BOUNDINGAABBDESC AABBDesc;
+	ZEROMEM(&AABBDesc);
+	AABBDesc.vPosition = _float3(0.f, 0.f, 0.f);
+	AABBDesc.vExtents = _float3(25.f, 10.f, 25.f);
+	m_pBlinkColliderCom->Set_BoundingDesc(&AABBDesc);
+	m_pBlinkColliderCom->Tick(BlinkMatrix * m_pTransformCom->Get_WorldMatrix());
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -1005,6 +1082,11 @@ void CPlayer::Add_Collisions()
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pVisionColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pBlockColliderCom);
+
+	if (STATE_BLINK == m_eCurState)
+	{
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pBlinkColliderCom);
+	}
 
 	Safe_Release(pGameInstance);
 }
@@ -1126,6 +1208,7 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 void CPlayer::Tick_Skills(_double dTimeDelta)
 {
 	Dash(dTimeDelta);
+	Blink(dTimeDelta);
 }
 
 void CPlayer::CameraMove(_double dTimeDelta)
@@ -1163,7 +1246,6 @@ void CPlayer::CameraOffset(_double dTimeDelta)
 void CPlayer::Dash(_double dTimeDelta)
 {
 	// 스킬 현재 시간 초기화는 사용하였을때 딱한번 처리.
-	
 	if (0.0 < m_Dash.dCoolTime)
 	{
 		// 쿨타임이라 사용 불가.
@@ -1191,6 +1273,57 @@ void CPlayer::Dash(_double dTimeDelta)
 		m_Dash.dCurTime = 0.0;
 		m_Dash.dCoolTime = m_Dash.dOriginCoolTime;
 	}
+}
+
+void CPlayer::Blink(_double dTimeDelta)
+{
+	if (STATE_BLINK != m_eCurState ||
+		0 == m_BlinkEnemys.size())
+		return;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
+	m_pTransformCom->ZeroVelocity();
+	m_isBlink = true;
+
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
+	{
+		m_isBlink = false;
+
+		_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+		_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+		_float fDist = 0.f;
+		_vector vFarEnemyPos;
+
+		for (auto& pEnemy : m_BlinkEnemys)
+		{
+			_vector vEnemyPos = pEnemy->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+			_float fLength = XMVectorGetX(XMVector3Length(vEnemyPos - vPos));
+
+			if (fDist < fLength)
+			{
+				vFarEnemyPos = vEnemyPos;
+				fDist = fLength;
+			}
+			const_cast<CGameObject*>(pEnemy)->Set_GameEvent(GAME_OBJECT_DEAD);
+		}
+
+		if (0.1f < fDist)
+		{
+			m_pTransformCom->Jump(vLook, fDist + 5.f, dTimeDelta);
+		}
+
+		m_eCurState = STATE_ATTACK;
+
+		// Finish
+		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
+		m_BlinkEnemys.clear();
+	}
+
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
@@ -1380,6 +1513,7 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pVisionColliderCom);
+	Safe_Release(m_pBlinkColliderCom);
 	Safe_Release(m_pBlockColliderCom);
 	Safe_Release(m_pPlayerCameraCom);
 }

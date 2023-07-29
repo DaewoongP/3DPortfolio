@@ -21,7 +21,7 @@ public:
 		STATE_RUNWALL_L, STATE_RUNWALL_R, STATE_DASH, 
 		STATE_CROUCH, STATE_HOOK, STATE_CLIMB,
 		STATE_DRONRIDE, STATE_BLOCK, STATE_DEAD, 
-		STATE_WEAPON,
+		STATE_WEAPON, STATE_BLINK,
 		STATE_END 
 	};
 
@@ -29,6 +29,12 @@ public:
 		WEAPON_KATANA,
 		WEAPON_SHURIKEN,
 		WEAPON_END
+	};
+	
+	enum SKILL {
+		SKILL_BLINK,
+		SKILL_SURGE,
+		SKILL_END
 	};
 
 private:
@@ -38,7 +44,10 @@ private:
 
 public:
 	STATE Get_CurrentState() const { return m_eCurState; }
+	SKILL Get_CurrentSkill() const { return m_eCurrentSkill; }
+	_float Get_SkillStackPercent() const { return (_float)m_iSkillStack / m_iSkillMaxStack; }
 	_bool IsDashCoolTime() const { return m_Dash.isCoolTime; }
+	void Gain_SkillStack() { ++m_iSkillStack; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -64,11 +73,12 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
 
-private: // 사실 이거 굳이 가지고 있을 필요는 없음. 이미 컴포넌트로 Tick을 돌고있음,
+private:
 	class CKatana*			m_pKatana = { nullptr };
 	class CShuriken*		m_pShuriken = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
 	CCollider*				m_pBlockColliderCom = { nullptr };
+	CCollider*				m_pBlinkColliderCom = { nullptr };
 
 private:
 	_float3					m_vInitRotation;
@@ -90,6 +100,12 @@ private:
 	_float					m_fHookPower = { 0.f };
 	DASHDESC				m_Dash;
 
+private: // Skill
+	_uint					m_iSkillStack = { 0 };
+	_uint					m_iSkillMaxStack = { 0 };
+	SKILL					m_eCurrentSkill = { SKILL_END };
+	_bool					m_isBlink = { false };
+
 private: // WallRun
 	_float					m_fWallRunY = { 0.f };
 	_float					m_fWallRunAngle = { 0.f };
@@ -103,6 +119,7 @@ private: // Block
 private:
 	vector<const CCollider*>	m_InRangeEnemyColliders;
 	vector<const CGameObject*>	m_BlockEnemyWeapons;
+	vector<const CGameObject*>	m_BlinkEnemys;
 	_float3					m_vAttackPositon;
 
 private:
@@ -149,6 +166,7 @@ private: /* Collisions */
 private: /* Skills */
 	void Tick_Skills(_double dTimeDelta);
 	void Dash(_double dTimeDelta);
+	void Blink(_double dTimeDelta);
 
 private: /* Setup Files */
 	HRESULT Add_Notifies();
@@ -164,6 +182,8 @@ public:
 END
 
 /*
+
+118 - Blink aim
 
 169~178 - Dead
 
