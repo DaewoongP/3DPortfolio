@@ -90,9 +90,8 @@ HRESULT CBomb::Render()
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
 
-		m_pShaderCom->Begin(0);
+		m_pShaderCom->Begin(3);
 
 		m_pModelCom->Render(i);
 	}
@@ -147,6 +146,15 @@ HRESULT CBomb::Add_Components()
 		return E_FAIL;
 	}
 
+	/* For.Com_Texture */
+	if (FAILED(CComposite::Add_Component(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Bomb_Emissive"),
+		TEXT("Com_EmissiveTexture"), reinterpret_cast<CComponent**>(&m_pEmissiveTextureCom))))
+	{
+		MSG_BOX("Failed CBoss Add_Component : (Com_EmissiveTexture)");
+		return E_FAIL;
+	}
+
+
 	return S_OK;
 }
 
@@ -160,6 +168,8 @@ HRESULT CBomb::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+	if (FAILED(m_pEmissiveTextureCom->Bind_ShaderResource(m_pShaderCom, "g_EmissiveTexture")))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -207,4 +217,5 @@ void CBomb::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pEmissiveTextureCom);
 }

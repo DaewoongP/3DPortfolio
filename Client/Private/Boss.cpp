@@ -164,8 +164,7 @@ HRESULT CBoss::Render()
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
 
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
-		m_pShaderCom->Begin(1);
+		m_pShaderCom->Begin(2);
 
 		m_pModelCom->Render(i);
 	}
@@ -304,7 +303,6 @@ HRESULT CBoss::Add_Component()
 		return E_FAIL;
 	}
 
-
 	return S_OK;
 }
 
@@ -408,6 +406,11 @@ HRESULT CBoss::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPos", pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+	_float fRimWidth = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimWidth", &fRimWidth, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pEmissiveTextureCom->Bind_ShaderResource(m_pShaderCom, "g_EmissiveTexture")))
 		return E_FAIL;

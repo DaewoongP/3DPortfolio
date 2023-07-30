@@ -12,8 +12,18 @@ public:
 	enum SOUNDCHANNEL {
 		SOUND_BGM,
 		SOUND_01,
+
 		SOUND_END
 	};
+
+	typedef struct tagSoundNotify 
+	{
+		SOUNDCHANNEL	eChannel;
+		_tchar			szSoundTag[MAX_PATH] = TEXT("");
+		_float			fVolume = { 0.5f };
+		_bool			bForcePlay = { false };
+	}SOUNDNOTIFY;
+
 private:
     explicit CSound_Manager() = default;
     virtual ~CSound_Manager() = default;

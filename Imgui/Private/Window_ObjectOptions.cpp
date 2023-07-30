@@ -3,6 +3,7 @@
 #include "NonAnimModel.h"
 #include "ImWindow_Manager.h"
 #include "AnimationNotify.h"
+#include "Sound_Manager.h"
 
 CWindow_ObjectOptions::CWindow_ObjectOptions(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -76,6 +77,17 @@ void CWindow_ObjectOptions::Tick(_double dTimeDelta)
 				AddCollider();
 
 				ColliderSaveLoad();
+			}
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Sound"))
+		{
+			if (nullptr != m_pCurrentModel &&
+				CDummy::DUMMY_ANIM == m_eCurrentDummyType)
+			{
+
 			}
 
 			ImGui::EndTabItem();

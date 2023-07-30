@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CModel;
 class CShader;
+class CTexture;
 class CRenderer;
 class CCollider;
 END
@@ -29,6 +30,7 @@ public:
 private:
 	CModel*			m_pModelCom = { nullptr };
 	CShader*		m_pShaderCom = { nullptr };
+	CTexture*		m_pEmissiveTextureCom = { nullptr };
 	CRenderer*		m_pRendererCom = { nullptr };
 	CCollider*		m_pColliderCom = { nullptr };
 
