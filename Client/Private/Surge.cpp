@@ -52,23 +52,21 @@ GAMEEVENT CSurge::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	/*m_dDeleteTimeAcc += dTimeDelta;
+	m_dDeleteTimeAcc += dTimeDelta;
 	
-	if (true == m_isDead ||
-		m_dDeleteTimeAcc > m_dDeleteTime)
-	{
-		m_eGameEvent = GAME_OBJECT_DEAD;
-		return m_eGameEvent;
-	}*/
+	if (m_dDeleteTimeAcc > m_dDeleteTime)
+		m_isAttacked = false;
+
+	if (false == m_isAttacked)
+		return GAME_NOEVENT;
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERWEAPON, m_pColliderCom);
-
-	Safe_Release(pGameInstance);
-
-	if (nullptr != m_pRendererCom)
+	
+	if (nullptr != m_pRendererCom &&
+		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 5.f))
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 #ifdef _DEBUG
@@ -77,13 +75,15 @@ GAMEEVENT CSurge::Late_Tick(_double dTimeDelta)
 #endif // _DEBUG
 	}
 
+	Safe_Release(pGameInstance);
+
 	return m_eGameEvent;
 }
 
 void CSurge::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_ENEMY == CollisionDesc.ColType)
-		m_isDead = true;
+		m_isAttacked = false;
 }
 
 HRESULT CSurge::Render()
@@ -184,6 +184,9 @@ HRESULT CSurge::SetUp_ShaderResources()
 
 void CSurge::Fire(_fvector vInitPosition, _fvector vTargetPosition)
 {
+	m_isAttacked = true;
+	m_dDeleteTimeAcc = 0.0;
+
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vInitPosition);
 	m_pTransformCom->LookAt(vTargetPosition);
 }

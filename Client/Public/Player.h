@@ -45,7 +45,7 @@ private:
 public:
 	STATE Get_CurrentState() const { return m_eCurState; }
 	SKILL Get_CurrentSkill() const { return m_eCurrentSkill; }
-	vector<const class CGameObject*> Get_BlinkTarget() const { return m_BlinkEnemys; }
+	const vector<const class CGameObject*>* Get_BlinkTarget() const { return &m_BlinkEnemys; }
 	_float Get_SkillStackPercent() const { return (_float)m_iSkillStack / m_iSkillMaxStack; }
 	_bool IsDashCoolTime() const { return m_Dash.isCoolTime; }
 	void Gain_SkillStack() { 
@@ -106,6 +106,8 @@ private:
 	_float					m_fWallRunVelocity = { 0.f };
 	_float					m_fHookPower = { 0.f };
 	DASHDESC				m_Dash;
+
+	_float					m_fAttackCamMove = { 0.f };
 
 private: // Skill
 	_uint					m_iSkillStack = { 0 };
@@ -176,6 +178,7 @@ private: /* Skills */
 	void Tick_Skills(_double dTimeDelta);
 	void Dash(_double dTimeDelta);
 	void Blink(_double dTimeDelta);
+	void Surge(_double dTimeDelta);
 
 private: /* Setup Files */
 	HRESULT Add_Notifies();

@@ -72,6 +72,8 @@ public:
 	// 각도값 고정
 	// 각각의 X,Y,Z 의 각도 값을 받아 처리.
 	void Rotation(_float3 vDegrees);
+	// 로테이션 Roll, Pitch, Yaw
+	void Turn(_float fRoll, _float fPitch, _float fYaw);
 	void Turn(_fvector vAxis, _double dTimeDelta);
 	// 시간당 각도값으로 회전하는 함수
 	void Turn(_fvector vAxis, _float fRadian, _double dTimeDelta);

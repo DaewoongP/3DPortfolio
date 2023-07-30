@@ -202,6 +202,9 @@
     <Filter Include="01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance">
       <UniqueIdentifier>{25a97a7a-9418-461f-af41-99bdb8e63243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. System\02. Sound">
+      <UniqueIdentifier>{17836efe-f4ec-4c13-a864-5e165ba6ca07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -411,6 +414,9 @@
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
       <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>00. System\02. Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -601,6 +607,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp">
       <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>00. System\02. Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

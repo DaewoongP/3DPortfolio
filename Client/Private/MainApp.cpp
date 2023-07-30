@@ -47,6 +47,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 	}
 
+	/*if (FAILED(m_pGameInstance->Add_Sounds(TEXT("../../Resources/Sounds/"))))
+		return E_FAIL;*/
+
 	return S_OK;
 }
 

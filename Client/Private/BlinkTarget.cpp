@@ -74,7 +74,7 @@ GAMEEVENT CBlinkTarget::Late_Tick(_double dTimeDelta)
 	__super::Late_Tick(dTimeDelta);
 	
 	if (nullptr != m_pRendererCom &&
-		0 != m_pPlayer->Get_BlinkTarget().size())
+		0 != (*m_pPlayer->Get_BlinkTarget()).size())
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;
@@ -91,7 +91,7 @@ HRESULT CBlinkTarget::Render()
 	_matrix ViewMatrix = pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
 	_matrix ProjMatrix = pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
 
-	for (auto& pTarget : m_pPlayer->Get_BlinkTarget())
+	for (auto& pTarget : *m_pPlayer->Get_BlinkTarget())
 	{
 		_vector vTargetPos = pTarget->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 		_vector vTargetViewPosition = XMVector3TransformCoord(XMVectorSetY(vTargetPos, XMVectorGetY(vTargetPos) + 2.f), ViewMatrix);

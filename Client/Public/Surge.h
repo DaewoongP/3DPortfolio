@@ -39,6 +39,7 @@ private:
 
 private:
 	_float4			m_vEmissiveColor;
+	_bool			m_isAttacked = { false };
 
 public:
 	HRESULT Add_Components();

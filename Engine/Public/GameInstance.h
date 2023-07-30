@@ -2,6 +2,7 @@
 #include "PipeLine.h"
 #include "Input_Device.h"
 #include "Light_Manager.h"
+#include "Sound_Manager.h"
 #include "Component_Manager.h"
 #include "Collision_Manager.h"
 
@@ -84,6 +85,7 @@ public: /* For. Calculator */
 	HRESULT Get_WorldMouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);
 	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
 	_uint RandomChoose(vector<_float> Weights, _uint iChooseSize);
+	_bool Timer(_double dAlarmTime, _double dTimeDelta);
 
 public: /* For. Collision_Manager */
 	HRESULT Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, class CCollider* pCollider);
@@ -102,6 +104,16 @@ public: /* For.Light_Manager */
 	class CLight* Add_Lights(const CLight::LIGHTDESC & LightDesc);
 	HRESULT Clear_Lights();
 
+public: /* For.Sound_Manager */
+	HRESULT Add_Sounds(const _tchar * szSoundFilePath);
+	HRESULT Play_Sound(const _tchar * szSoundTag, CSound_Manager::SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay = false);
+	HRESULT Play_BGM(const _tchar * szSoundTag, _float fVolume);
+	HRESULT Stop_Sound(CSound_Manager::SOUNDCHANNEL eChannel);
+	HRESULT Pause_Sound(CSound_Manager::SOUNDCHANNEL eChannel);
+	HRESULT Restart_Sound(CSound_Manager::SOUNDCHANNEL eChannel);
+	HRESULT Stop_AllSound();
+	HRESULT Set_ChannelVolume(CSound_Manager::SOUNDCHANNEL eChannel, _float fVolume);
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CInput_Device*			m_pInput_Device = { nullptr };
@@ -116,6 +128,7 @@ private:
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
+	class CSound_Manager*			m_pSound_Manager = { nullptr };
 
 public:
 	static void Release_Engine();

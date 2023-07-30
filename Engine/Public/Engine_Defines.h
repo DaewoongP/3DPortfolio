@@ -27,6 +27,9 @@
 #include "DirectXTK\SpriteBatch.h"
 #include "DirectXTK\SpriteFont.h"
 
+#include "fmod\fmod.h"
+#include "fmod\fmod.hpp"
+
 #include <iostream>
 #include <vector>
 #include <list>

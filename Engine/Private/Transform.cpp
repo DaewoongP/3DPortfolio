@@ -398,6 +398,19 @@ void CTransform::Rotation(_float3 vDegrees)
 	Set_State(STATE::STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 }
 
+void CTransform::Turn(_float fRoll, _float fPitch, _float fYaw)
+{
+	_vector vRight = Get_State(STATE::STATE_RIGHT);
+	_vector vUp = Get_State(STATE::STATE_UP);
+	_vector vLook = Get_State(STATE::STATE_LOOK);
+
+	_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(fRoll, fPitch, fYaw);
+
+	Set_State(STATE::STATE_RIGHT,	XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE::STATE_UP,		XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE::STATE_LOOK,	XMVector3TransformNormal(vLook, RotationMatrix));
+}
+
 void CTransform::Turn(_fvector vAxis, _double dTimeDelta)
 {
 	_vector vRight = Get_State(STATE::STATE_RIGHT);

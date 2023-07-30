@@ -24,6 +24,7 @@ CGameInstance::CGameInstance()
 	, m_pFrustum{ CFrustum::GetInstance() }
 	, m_pRenderTarget_Manager{ CRenderTarget_Manager::GetInstance() }
 	, m_pLight_Manager{ CLight_Manager::GetInstance() }
+	, m_pSound_Manager{ CSound_Manager::GetInstance() }
 {
 	Safe_AddRef(m_pFrustum);
 	Safe_AddRef(m_pFont_Manager);
@@ -38,6 +39,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pCollision_Manager);
 	Safe_AddRef(m_pRenderTarget_Manager);
 	Safe_AddRef(m_pLight_Manager);
+	Safe_AddRef(m_pSound_Manager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, const GRAPHICDESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
@@ -54,6 +56,9 @@ HRESULT CGameInstance::Initialize_Engine(HINSTANCE hInst, _uint iNumLevels, cons
 		return E_FAIL;
 
 	if (FAILED(m_pFrustum->Initialize()))
+		return E_FAIL;
+
+	if (FAILED(m_pSound_Manager->Initialize()))
 		return E_FAIL;
 
 	return S_OK;
@@ -390,6 +395,13 @@ _uint CGameInstance::RandomChoose(vector<_float> Weights, _uint iChooseSize)
 	return m_pCalculator->RandomChoose(Weights, iChooseSize);
 }
 
+_bool CGameInstance::Timer(_double dAlarmTime, _double dTimeDelta)
+{
+	NULL_CHECK_RETURN_MSG(m_pCalculator, false, TEXT("Calculator NULL"));
+
+	return m_pCalculator->Timer(dAlarmTime, dTimeDelta);
+}
+
 HRESULT CGameInstance::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CCollider* pCollider)
 {
 	NULL_CHECK_RETURN_MSG(m_pCollision_Manager, E_FAIL, TEXT("Collision NULL"));
@@ -451,6 +463,62 @@ HRESULT CGameInstance::Clear_Lights()
 	return m_pLight_Manager->Clear_Lights();
 }
 
+HRESULT CGameInstance::Add_Sounds(const _tchar* szSoundFilePath)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Add_Sounds(szSoundFilePath);
+}
+
+HRESULT CGameInstance::Play_Sound(const _tchar* szSoundTag, CSound_Manager::SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Play_Sound(szSoundTag, eChannel, fVolume, bForcePlay);
+}
+
+HRESULT CGameInstance::Play_BGM(const _tchar* szSoundTag, _float fVolume)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Play_BGM(szSoundTag, fVolume);
+}
+
+HRESULT CGameInstance::Stop_Sound(CSound_Manager::SOUNDCHANNEL eChannel)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Stop_Sound(eChannel);
+}
+
+HRESULT CGameInstance::Pause_Sound(CSound_Manager::SOUNDCHANNEL eChannel)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Pause_Sound(eChannel);
+}
+
+HRESULT CGameInstance::Restart_Sound(CSound_Manager::SOUNDCHANNEL eChannel)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Restart_Sound(eChannel);
+}
+
+HRESULT CGameInstance::Stop_AllSound()
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Stop_AllSound();
+}
+
+HRESULT CGameInstance::Set_ChannelVolume(CSound_Manager::SOUNDCHANNEL eChannel, _float fVolume)
+{
+	NULL_CHECK_RETURN_MSG(m_pSound_Manager, E_FAIL, TEXT("Sound NULL"));
+
+	return m_pSound_Manager->Set_ChannelVolume(eChannel, fVolume);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -475,6 +543,8 @@ void CGameInstance::Release_Engine()
 
 	CRenderTarget_Manager::GetInstance()->DestroyInstance();
 
+	CSound_Manager::GetInstance()->DestroyInstance();
+
 	CLight_Manager::GetInstance()->DestroyInstance();
 
 	CInput_Device::GetInstance()->DestroyInstance();
@@ -484,6 +554,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {
+	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pRenderTarget_Manager);
 	Safe_Release(m_pFrustum);

@@ -38,6 +38,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_fWallRunVelocity = 0.6f;
 	m_fHookPower = 2.2f;
 	m_dBlinkTime = 3.0;
+	m_fAttackCamMove = 7.f;
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(m_fSpeed, XMConvertToRadians(3.f));
 
@@ -148,10 +149,10 @@ void CPlayer::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 
 	// 카메라 포지션 고정, 카메라 회전처리 이후 포지션 변경
-	CameraOffset(dTimeDelta);
 	//m_pModelCom->Invalidate_AnimationCamera(m_pPlayerCameraCom, m_pTransformCom, dTimeDelta);
+	CameraOffset(dTimeDelta);
 
-	//CameraMove(dTimeDelta);
+	CameraMove(dTimeDelta);
 	// 객체포지션 -> 카메라 오프셋 고정 -> 카메라 상태행렬 갱신 -> 이후 처리 순서를 맞추기위해 함수이름 바꿈.
 	m_pPlayerCameraCom->Tick_Camera(dTimeDelta);
 
@@ -227,7 +228,6 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	}
 
 	/* Player Vision Collider */
-
 	if (WEAPON_KATANA == m_eCurWeapon &&
 		CollisionDesc.pMyCollider == m_pVisionColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_Enemy")))
@@ -823,9 +823,6 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		}
 	}
 
-	m_pSurge->Tick(dTimeDelta);
-	m_pSurge->Late_Tick(dTimeDelta);
-
 	_long		dwMouseMove = 0;
 
 #ifdef _DEBUG
@@ -1258,14 +1255,70 @@ void CPlayer::CameraMove(_double dTimeDelta)
 		return;
 
 	/*
-	84 - Att R1
-	85 - Att R2
-	86 - Att R3
-	87 - Att L1
-	88 - Att L2
-	89 - Att L3
+	84 - Att R1 down
+	85 - Att R2 - 
+	86 - Att R3 up 
+	87 - Att L1 down
+	88 - Att L2 - 
+	89 - Att L3 up
 	*/
-	
+
+	enum ATTNUM
+	{
+		RDOWN = 84,
+		RNORM,
+		RUP,
+		LDOWN,
+		LNORM,
+		LUP,
+	};
+
+	_float fVerticalMove = 0.f;
+	_float fHorizentalMove = 0.f;
+
+	_uint iCurrentAnimIndex = m_pModelCom->Get_CurrentAnimIndex();
+
+	switch (iCurrentAnimIndex)
+	{
+	case RDOWN:
+		fVerticalMove = m_fAttackCamMove;
+		fHorizentalMove = -m_fAttackCamMove;
+		break;
+	case RNORM:
+		fVerticalMove = 0.f;
+		fHorizentalMove = -m_fAttackCamMove;
+		break;
+	case RUP:
+		fVerticalMove = -m_fAttackCamMove;
+		fHorizentalMove = -m_fAttackCamMove;
+		break;
+	case LDOWN:
+		fVerticalMove = m_fAttackCamMove;
+		fHorizentalMove = m_fAttackCamMove;
+		break;
+	case LNORM:
+		fVerticalMove = 0.f;
+		fHorizentalMove = m_fAttackCamMove;
+		break;
+	case LUP:
+		fVerticalMove = -m_fAttackCamMove;
+		fHorizentalMove = m_fAttackCamMove;
+		break;
+	default:
+		break;
+	}
+
+	_vector	vCamRight = XMVector3Normalize(m_pPlayerCameraCom->Get_TransformState(CTransform::STATE_RIGHT));
+	m_pTransformCom->Turn(vCamRight, fVerticalMove * m_fMouseSensitivity, dTimeDelta);
+	_vector vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
+
+	if (XMConvertToRadians(30.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
+	{
+		m_pTransformCom->Turn(vCamRight, -1.f * fVerticalMove * m_fMouseSensitivity, dTimeDelta);
+	}
+
+	_vector	vAxisUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	m_pTransformCom->Turn(vAxisUp, fHorizentalMove * m_fMouseSensitivity, dTimeDelta);
 }
 
 void CPlayer::CameraOffset(_double dTimeDelta)
