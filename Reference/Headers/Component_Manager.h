@@ -20,6 +20,7 @@
 #include "Bounding_Sphere.h"
 #include "VIBuffer_Terrain.h"
 #include "VIBuffer_Instance.h"
+#include "VIBuffer_Rect_Trail.h"
 #include "VIBuffer_Rect_Dynamic.h"
 #include "VIBuffer_Rect_Instance.h"
 #include "VIBuffer_Point_Instance.h"

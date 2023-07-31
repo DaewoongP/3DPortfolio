@@ -328,6 +328,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blink_Target)");
 		return E_FAIL;
 	}
+	
+	/* For.Prototype_Component_Texture_Trail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Trail"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/TrailTest.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Trail)");
+		return E_FAIL;
+	}
 
 #ifdef _DEBUG
 
@@ -372,6 +380,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &PointInstanceDesc, 8))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Instance)");
+		return E_FAIL;
+	}
+	
+	/*For.Prototype_Component_VIBuffer_Rect_Trail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
+		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext, 50, 1.f))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Trail)");
 		return E_FAIL;
 	}
 

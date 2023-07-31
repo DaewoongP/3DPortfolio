@@ -76,6 +76,7 @@
     <ClInclude Include="..\Public\Sound_Manager.h" />
     <ClInclude Include="..\public\Task.h" />
     <ClInclude Include="..\Public\Texture.h" />
+    <ClInclude Include="..\public\Trail.h" />
     <ClInclude Include="..\public\Transform.h" />
     <ClInclude Include="..\public\VIBuffer_Cell.h" />
     <ClInclude Include="..\public\VIBuffer_Cube.h" />
@@ -84,6 +85,7 @@
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Dynamic.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Instance.h" />
+    <ClInclude Include="..\public\VIBuffer_Rect_Trail.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
@@ -142,6 +144,7 @@
     <ClCompile Include="..\Private\Sound_Manager.cpp" />
     <ClCompile Include="..\private\Task.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
+    <ClCompile Include="..\private\Trail.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cube.cpp" />
@@ -150,6 +153,7 @@
     <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Dynamic.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Instance.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Rect_Trail.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />

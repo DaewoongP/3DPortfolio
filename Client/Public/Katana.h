@@ -5,8 +5,10 @@
 BEGIN(Engine)
 class CModel;
 class CShader;
+class CTexture;
 class CRenderer;
 class CCollider;
+class CVIBuffer_Rect_Trail;
 END
 
 BEGIN(Client)
@@ -31,8 +33,15 @@ public:
 private:
 	CModel*					m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
+	CShader*				m_pTrailShaderCom = { nullptr };
+	CTexture*				m_pTrailTextureCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
+	CVIBuffer_Rect_Trail*	m_pTrailBufferCom = { nullptr };
+
+private:
+	_uint					m_iTrailFrontIndex = { 0 };
+	_uint					m_iTrailBackIndex = { 0 };
 
 private:
 	HRESULT Add_Components();
