@@ -83,6 +83,7 @@ private:
 	class CKatana*			m_pKatana = { nullptr };
 	class CShuriken*		m_pShuriken = { nullptr };
 	class CSurge*			m_pSurge = { nullptr };
+	class CWire*			m_pWire = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
 	CCollider*				m_pBlockColliderCom = { nullptr };
 	CCollider*				m_pBlinkColliderCom = { nullptr };

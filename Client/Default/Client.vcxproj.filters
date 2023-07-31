@@ -217,6 +217,9 @@
     <Filter Include="02. GameObjects\01. Enemy\Boss\Bomb\ExplodeRange">
       <UniqueIdentifier>{93ee6599-ed91-4e76-b3fd-aeb91ab378aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\00. Player\Wire">
+      <UniqueIdentifier>{c899c8fb-7d40-4b2c-be94-e5361708be1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -503,6 +506,9 @@
     </ClInclude>
     <ClInclude Include="..\public\ExplodeRange.h">
       <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeRange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Wire.h">
+      <Filter>02. GameObjects\00. Player\Wire</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -791,6 +797,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ExplodeRange.cpp">
       <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeRange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Wire.cpp">
+      <Filter>02. GameObjects\00. Player\Wire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

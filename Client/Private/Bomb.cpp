@@ -37,8 +37,9 @@ HRESULT CBomb::Initialize(void* pArg)
 
 	m_eGameEvent = GAME_NOEVENT;
 	
-
+#ifdef _DEBUG
 	m_pColliderCom->Set_Color(DirectX::Colors::Red);
+#endif // _DEBUG
 
 	return S_OK;
 }

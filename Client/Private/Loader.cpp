@@ -4,6 +4,7 @@
 #include "Sky.h"
 #include "Boss.h"
 #include "Bomb.h"
+#include "Wire.h"
 #include "Mouse.h"
 #include "Sword.h"
 #include "Surge.h"
@@ -483,6 +484,15 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 
+	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(270.f));
+	/* For.Prototype_Component_Model_Wire */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Wire"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Wire.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Wire)");
+		return E_FAIL;
+	}
+
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
@@ -763,6 +773,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CBlinkTarget::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BlinkTarget)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Wire */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wire"),
+		CWire::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Wire)");
 		return E_FAIL;
 	}
 

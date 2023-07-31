@@ -59,7 +59,7 @@ const _float2 CTexture::Get_TextureSize(_uint iTextureIndex)
 
 HRESULT CTexture::Initialize_Prototype(const _tchar* pTextureFilePath, _uint iNumTextures)
 {
-	FAILED_CHECK_RETURN(CoInitializeEx(nullptr, 0), E_FAIL);
+	//FAILED_CHECK_RETURN(CoInitializeEx(nullptr, 0), E_FAIL);
 
 	_tchar			szTextureFilePath[MAX_PATH] = TEXT("");
 	

@@ -5,6 +5,7 @@
 #include "Katana.h"
 #include "Shuriken.h"
 #include "Sword.h"
+#include "Wire.h"
 #include "Surge.h"
 #include "Bullet.h"
 #include "ColProp.h"
@@ -552,6 +553,19 @@ HRESULT CPlayer::Add_Parts(_uint iLevelIndex)
 	m_pSurge = dynamic_cast<CSurge*>(pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Skill"), TEXT("GameObject_Surge")));
 
 	Safe_Release(pGameInstance);
+
+	// Wire
+	ZEROMEM(&ParentMatrixDesc);
+	pBone = m_pModelCom->Get_Bone(TEXT("Weapon_l"));
+
+	ParentMatrixDesc.PivotMatrix = m_pModelCom->Get_PivotFloat4x4();
+	ParentMatrixDesc.OffsetMatrix = pBone->Get_OffsetMatrix();
+	ParentMatrixDesc.pCombindTransformationMatrix = pBone->Get_CombinedTransformationMatrixPtr();
+	ParentMatrixDesc.pParentWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	if (FAILED(__super::Add_Part(iLevelIndex, TEXT("Prototype_GameObject_Wire"), TEXT("Layer_PlayerProps"),
+		TEXT("Part_Wire"), reinterpret_cast<CGameObject**>(&m_pWire), &ParentMatrixDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -1211,7 +1225,9 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 		Safe_Release(pGameInstance);
 		return false;
 	}
+
 	Safe_Release(pGameInstance);
+
 	CLayer* pHookLayer = pGameInstance->Find_Layer(LEVEL_STAGE1, TEXT("Layer_Hook"));
 
 	if (nullptr == pHookLayer)
@@ -1229,6 +1245,8 @@ _bool CPlayer::Check_Hook(_double dTimeDelta)
 		{
 			if (80.f > fDist)
 			{
+				_float3 vHookCenter = pCollider->Get_BoundingCenterPosition();
+				m_pWire->Render_Wire(XMVectorSet(vHookCenter.x, vHookCenter.y, vHookCenter.z, 1.f), 0.3);
 				m_pTransformCom->Jump(XMVector4Normalize(XMLoadFloat4(&vRayDir)), fDist * m_fHookPower, dTimeDelta);
 				return true;
 			}
@@ -1618,6 +1636,7 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pWire);
 	Safe_Release(m_pSurge);
 	Safe_Release(m_pShuriken);
 	Safe_Release(m_pKatana);

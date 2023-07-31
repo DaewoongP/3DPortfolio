@@ -260,6 +260,7 @@
     <ClInclude Include="..\public\UI_Dash.h" />
     <ClInclude Include="..\public\UI_Dead.h" />
     <ClInclude Include="..\public\UI_Hook.h" />
+    <ClInclude Include="..\public\Wire.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -355,6 +356,7 @@
     <ClCompile Include="..\private\UI_Dash.cpp" />
     <ClCompile Include="..\private\UI_Dead.cpp" />
     <ClCompile Include="..\private\UI_Hook.cpp" />
+    <ClCompile Include="..\private\Wire.cpp" />
     <ClCompile Include="..\Public\Client_Struct.h" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

@@ -25,6 +25,7 @@ HRESULT CVIBuffer_Line::Initialize(void* pArg)
 		MSG_BOX("Wrong Line Argument");
 		return E_FAIL;
 	}
+
 	m_iNumVertexBuffers = { 1 };
 	m_iStride = { sizeof(VTXPOSTEX) };
 	m_iNumVertices = { lines->iNum * 2 };
@@ -56,6 +57,7 @@ HRESULT CVIBuffer_Line::Initialize(void* pArg)
 
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
+
 	Safe_Delete_Array(pVertices);
 
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
@@ -80,6 +82,7 @@ HRESULT CVIBuffer_Line::Initialize(void* pArg)
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
 		return E_FAIL;
+
 	Safe_Delete_Array(pIndices);
 
 	return S_OK;
@@ -94,6 +97,7 @@ CVIBuffer_Line* CVIBuffer_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 		MSG_BOX("Failed to Created CVIBuffer_Line");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
@@ -106,6 +110,7 @@ CComponent* CVIBuffer_Line::Clone(void* pArg)
 		MSG_BOX("Failed to Cloned CVIBuffer_Line");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 
