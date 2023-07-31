@@ -70,6 +70,18 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 	DeadCollision();
 }
 
+HRESULT CCollider::Reset()
+{
+	// 리셋할때 콜라이더 클리어
+	m_Collisions.clear();
+	m_isDead.clear();
+
+	if (FAILED(__super::Reset()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {

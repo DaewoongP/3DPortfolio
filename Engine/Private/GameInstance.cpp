@@ -409,6 +409,13 @@ HRESULT CGameInstance::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CColl
 	return m_pCollision_Manager->Add_Collider(eCollisionType, pCollider);
 }
 
+void CGameInstance::ClearColliders()
+{
+	NULL_CHECK_RETURN_MSG(m_pCollision_Manager, , TEXT("Collision NULL"));
+
+	return m_pCollision_Manager->ClearColliders();
+}
+
 HRESULT CGameInstance::Add_Fonts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontTag, const _tchar* pFontFilePath)
 {
 	NULL_CHECK_RETURN_MSG(m_pFont_Manager, E_FAIL, TEXT("Font NULL"));

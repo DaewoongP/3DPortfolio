@@ -355,7 +355,6 @@ HRESULT CPlayer::Reset()
 	Safe_AddRef(pGameInstance);
 
 	CCamera::CAMERADESC CameraDesc;
-
 	CameraDesc.fFovy = XMConvertToRadians(90.f);
 	CameraDesc.fAspect = static_cast<_float>(g_iWinSizeX) / g_iWinSizeY;
 	CameraDesc.fNear = 0.1f;

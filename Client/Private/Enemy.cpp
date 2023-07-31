@@ -100,6 +100,7 @@ HRESULT CEnemy::Reset()
 {
 	m_pTransformCom->Set_Scale(m_EnemyDesc.vScale);
 	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
+	m_EnemyDesc.vPosition.y = m_pNavigationCom->Get_CurrentCellY(XMLoadFloat4(&m_EnemyDesc.vPosition));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_EnemyDesc.vPosition));
 
 	if (FAILED(__super::Reset()))

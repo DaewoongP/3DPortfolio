@@ -89,6 +89,7 @@ public: /* For. Calculator */
 
 public: /* For. Collision_Manager */
 	HRESULT Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, class CCollider* pCollider);
+	void ClearColliders();
 
 public: /* For. Font_Manager */
 	HRESULT Add_Fonts(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pFontTag, const _tchar * pFontFilePath);

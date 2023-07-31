@@ -21,6 +21,13 @@ HRESULT CBomb::Initialize_Prototype()
 
 HRESULT CBomb::Initialize(void* pArg)
 {
+	m_bCreatedRange = true;
+
+	m_fExplodeSize = 50.f;
+	m_dExplodeTime = 3.0;
+	// 콜라이더를 띄우기 위한 시간.
+	m_dDeleteTime = m_dExplodeTime + 0.5;
+
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(100.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
@@ -29,6 +36,9 @@ HRESULT CBomb::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eGameEvent = GAME_NOEVENT;
+	
+
+	m_pColliderCom->Set_Color(DirectX::Colors::Red);
 
 	return S_OK;
 }
@@ -41,21 +51,35 @@ void CBomb::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
+
+	if (1.f > XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
+	{
+		if (true == m_bCreatedRange)
+		{
+			m_pExplodeRange = CExplodeRange::Create(m_pDevice, m_pContext, m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_fExplodeSize, m_dExplodeTime);
+			m_bCreatedRange = false;
+		}
+
+		m_dExplodeTimeAcc += dTimeDelta;
+	}
+
+	if (nullptr != m_pExplodeRange)
+		m_pExplodeRange->Tick(dTimeDelta);
 }
 
 GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (1.f > XMVectorGetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION)))
-		m_dExplodeTimeAcc += dTimeDelta;
-
+	if (nullptr != m_pExplodeRange)
+		m_pExplodeRange->Late_Tick(dTimeDelta);
+	
 	if (m_dExplodeTimeAcc > m_dDeleteTime)
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
 		return m_eGameEvent;
 	}
-	else if (m_dExplodeTimeAcc > m_dExplodeTime)
+	if (m_dExplodeTimeAcc > m_dExplodeTime)
 	{
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
@@ -69,7 +93,6 @@ GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 #ifdef _DEBUG
-		m_pColliderCom->Set_Color(DirectX::Colors::Red);
 		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
 #endif // _DEBUG
 	}
@@ -135,7 +158,7 @@ HRESULT CBomb::Add_Components()
 
 	CBounding_Sphere::BOUNDINGSPHEREDESC SphereDesc;
 
-	SphereDesc.fRadius = 20.f;
+	SphereDesc.fRadius = m_fExplodeSize * 0.5f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_Collider */
@@ -153,7 +176,6 @@ HRESULT CBomb::Add_Components()
 		MSG_BOX("Failed CBoss Add_Component : (Com_EmissiveTexture)");
 		return E_FAIL;
 	}
-
 
 	return S_OK;
 }
@@ -212,6 +234,8 @@ CGameObject* CBomb::Clone(void* pArg)
 void CBomb::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pExplodeRange);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

@@ -24,7 +24,11 @@ HRESULT CEnemy_Hammer::Initialize_Prototype()
 HRESULT CEnemy_Hammer::Initialize(void* pArg)
 {
 	if (nullptr != pArg)
+	{
+		// 문자열은 항상 복사처리할것.
 		m_EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
+		lstrcpy(m_EnemyDesc.pModelPrototypeTag, (static_cast<ENEMYDESC*>(pArg))->pModelPrototypeTag);
+	}
 	else
 	{
 		MSG_BOX("Failed Read EnemyDesc");

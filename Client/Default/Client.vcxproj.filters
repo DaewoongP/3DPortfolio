@@ -211,6 +211,12 @@
     <Filter Include="02. GameObjects\05. UI\GamePlay\08. BlinkTarget">
       <UniqueIdentifier>{cd18d571-0c6a-4ced-984e-ea233c3b3bc2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\BlockEffect">
+      <UniqueIdentifier>{88ce6450-5edc-4faa-ada9-fcbf8e31a59f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss\Bomb\ExplodeRange">
+      <UniqueIdentifier>{93ee6599-ed91-4e76-b3fd-aeb91ab378aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -494,6 +500,9 @@
     </ClInclude>
     <ClInclude Include="..\public\BlinkTarget.h">
       <Filter>02. GameObjects\05. UI\GamePlay\08. BlinkTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ExplodeRange.h">
+      <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeRange</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -779,6 +788,9 @@
     </ClCompile>
     <ClCompile Include="..\private\BlinkTarget.cpp">
       <Filter>02. GameObjects\05. UI\GamePlay\08. BlinkTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ExplodeRange.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeRange</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

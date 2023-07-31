@@ -49,7 +49,7 @@ HRESULT CBoss::Initialize(void* pArg)
 	m_pModelCom->Delete_AnimationTranslation(21);
 
 	m_dDeadTime = 4.0;
-	m_iMaxHp = 4;
+	m_iMaxHp = 8;
 	m_iHp = m_iMaxHp;
 
 #ifdef _DEBUG
@@ -181,7 +181,7 @@ HRESULT CBoss::Reset()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Clear_Layer(LEVEL_BOSS, TEXT("Layer_Enemy"));
+	//pGameInstance->Clear_Layer(LEVEL_BOSS, TEXT("Layer_Enemy"));
 	pGameInstance->Clear_DeadObjects(LEVEL_BOSS, TEXT("Layer_Enemy"));
 
 	Safe_Release(pGameInstance);
@@ -203,8 +203,6 @@ HRESULT CBoss::Reset()
 		m_eCurState = STATE_FLY_IDLE;
 	else
 		m_eCurState = STATE_IDLE;
-
-	m_iHp = m_iMaxHp;
 
 	/* BlackBoard Reset */
 	m_iCurPatternCnt = 0;

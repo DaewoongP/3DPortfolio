@@ -24,7 +24,10 @@ HRESULT CEnemy_Pistol::Initialize_Prototype()
 HRESULT CEnemy_Pistol::Initialize(void* pArg)
 {
 	if (nullptr != pArg)
+	{
 		m_EnemyDesc = *(static_cast<ENEMYDESC*>(pArg));
+		lstrcpy(m_EnemyDesc.pModelPrototypeTag, (static_cast<ENEMYDESC*>(pArg))->pModelPrototypeTag);
+	}
 	else
 	{
 		MSG_BOX("Failed Read EnemyDesc");

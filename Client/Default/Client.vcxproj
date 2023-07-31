@@ -187,6 +187,7 @@
     <ClInclude Include="..\public\Enemy_Hammer.h" />
     <ClInclude Include="..\public\Enemy_Pistol.h" />
     <ClInclude Include="..\public\Enemy_Sword.h" />
+    <ClInclude Include="..\public\ExplodeRange.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\public\GhostRunner_Logo.h" />
     <ClInclude Include="..\public\Hammer.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="..\private\Enemy_Hammer.cpp" />
     <ClCompile Include="..\private\Enemy_Pistol.cpp" />
     <ClCompile Include="..\private\Enemy_Sword.cpp" />
+    <ClCompile Include="..\private\ExplodeRange.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\GhostRunner_Logo.cpp" />
     <ClCompile Include="..\private\Hammer.cpp" />

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Client_Defines.h"
+#include "ExplodeRange.h"
 
 BEGIN(Engine)
 class CModel;
@@ -36,8 +37,13 @@ private:
 
 private:
 	_double			m_dExplodeTimeAcc = { 0.0 };
-	_double			m_dExplodeTime = { 3.0 };
-	_double			m_dDeleteTime = { 3.5 };
+	_double			m_dExplodeTime = { 0.0 };
+	_double			m_dDeleteTime = { 0.0 };
+
+private:
+	CExplodeRange*	m_pExplodeRange = { nullptr };
+	_bool			m_bCreatedRange = { false };
+	_float			m_fExplodeSize = { 0.f };
 
 public:
 	HRESULT Add_Components();

@@ -95,12 +95,6 @@ HRESULT CRenderer::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CRenderer::Reset()
-{
-
-	return S_OK;
-}
-
 void CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pGameObject)
 {
 	if (eRenderGroup < RENDERGROUP::RENDER_PRIORITY ||

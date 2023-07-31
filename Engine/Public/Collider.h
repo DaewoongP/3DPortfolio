@@ -25,6 +25,7 @@ public:
 	virtual HRESULT Initialize_Prototype(TYPE eColliderType);
 	virtual HRESULT Initialize(class CBounding* pBounding, void* pArg);
 	virtual void	Tick(_fmatrix TransformMatrix);
+	virtual HRESULT Reset() override;
 
 #ifdef _DEBUG
 public:
