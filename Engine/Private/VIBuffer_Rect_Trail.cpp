@@ -9,14 +9,14 @@ CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(ID3D11Device* pDevice, ID3D11DeviceCo
 CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(const CVIBuffer_Rect_Trail& rhs)
 	: CVIBuffer(rhs)
 	, m_iTrailNum(rhs.m_iTrailNum)
-	, m_fDistance(rhs.m_fDistance)
+	, m_fSizeX(rhs.m_fSizeX)
 {
 }
 
-HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum, _float fDistance)
+HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum, _float fSizeX)
 {
 	m_iTrailNum = iTrailNum;
-	m_fDistance = fDistance;
+	m_fSizeX = fSizeX;
 
 	m_iNumVertexBuffers = { 1 };
 	m_iStride = { sizeof(VTXPOSTEX) };
@@ -147,11 +147,11 @@ void CVIBuffer_Rect_Trail::Tick(_float3 vLocalHighPosition, _float3 vLocalLowPos
 	m_pContext->Unmap(m_pVB, 0);
 }
 
-CVIBuffer_Rect_Trail* CVIBuffer_Rect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iTrailNum, _float fDistance)
+CVIBuffer_Rect_Trail* CVIBuffer_Rect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iTrailNum, _float fSizeX)
 {
 	CVIBuffer_Rect_Trail* pInstance = new CVIBuffer_Rect_Trail(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(iTrailNum, fDistance)))
+	if (FAILED(pInstance->Initialize_Prototype(iTrailNum, fSizeX)))
 	{
 		MSG_BOX("Failed to Created CVIBuffer_Rect_Trail");
 		Safe_Release(pInstance);

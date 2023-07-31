@@ -206,7 +206,7 @@
       <UniqueIdentifier>{53c2db70-b423-4c28-b85b-6fb6e33bc6d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Utility\03. Components\12. Trail">
-      <UniqueIdentifier>{dc744463-f090-4e16-b7c3-5b9eb1dec05f}</UniqueIdentifier>
+      <UniqueIdentifier>{2f62f69f-2a7b-4b84-8de4-16bc75438876}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -420,11 +420,11 @@
     <ClInclude Include="..\Public\Sound_Manager.h">
       <Filter>00. System\02. Sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Trail.h">
-      <Filter>01. Utility\03. Components\12. Trail</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Rect_Trail.h">
       <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trail.h">
+      <Filter>01. Utility\03. Components\12. Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -620,11 +620,11 @@
     <ClCompile Include="..\Private\Sound_Manager.cpp">
       <Filter>00. System\02. Sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Trail.cpp">
-      <Filter>01. Utility\03. Components\12. Trail</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Rect_Trail.cpp">
       <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trail.cpp">
+      <Filter>01. Utility\03. Components\12. Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
