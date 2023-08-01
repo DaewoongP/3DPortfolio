@@ -1,0 +1,103 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Particles/Mara_Boss/T_mara_boss_lightning.T_mara_boss_lightning'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Noise speed }
+                    ParameterInfos[1] = { Name=X }
+                    ParameterInfos[2] = { Name=Noise_Frequency }
+                    ParameterInfos[3] = { Name=Spread }
+                    ParameterInfos[4] = { Name=2 }
+                    ParameterInfos[5] = { Name=VIS }
+                    ParameterInfos[6] = { Name=noise size }
+                    ParameterInfos[7] = { Name=1 }
+                    ParameterInfos[8] = { Name=Y }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Color2 }
+                    ParameterInfos[1] = { Name=Color1 }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] =
+        {
+            ScalarValues[0] = 0.5
+            ScalarValues[1] = 1
+            ScalarValues[2] = 778.944
+            ScalarValues[3] = 74.5015
+            ScalarValues[4] = 18.4947
+            ScalarValues[5] = 1
+            ScalarValues[6] = 222
+            ScalarValues[7] = 173.304
+            ScalarValues[8] = 2.89954
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1.03842, G=3.60999, B=12, A=1 }
+            VectorValues[1] = { R=0.025355, G=0.088144, B=0.293, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Particles/Mara_Boss/T_mara_boss_lightning.T_mara_boss_lightning'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0.5, Name=Noise speed, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=X, Group=None }
+    CollectedScalarParameters[2] = { Value=778.944, Name=Noise_Frequency, Group=None }
+    CollectedScalarParameters[3] = { Value=74.5015, Name=Spread, Group=None }
+    CollectedScalarParameters[4] = { Value=18.4947, Name=2, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=VIS, Group=None }
+    CollectedScalarParameters[6] = { Value=222, Name=noise size, Group=None }
+    CollectedScalarParameters[7] = { Value=173.304, Name=1, Group=None }
+    CollectedScalarParameters[8] = { Value=2.89954, Name=Y, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1.03842, G=3.60999, B=12, A=1 }
+        Name = Color2
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.025355, G=0.088144, B=0.293, A=1 }
+        Name = Color1
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

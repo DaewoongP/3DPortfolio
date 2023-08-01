@@ -1,0 +1,50 @@
+Materials[3] =
+{
+    Materials[0] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+    Materials[1] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+    Materials[2] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[3] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = M_GR_DL_Sword_02_Black
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 30.6661, 88.9858, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = M_Flame_FX
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 12.7303, 88.9979, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = M_Katana_rigged_swoosh_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 4.69891, 89.4048, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=5.51939e-05, Y=-46.7225, Z=-0.0638328 }
+    BoxExtent = { X=1.68166, Y=40.0327, Z=4.93326 }
+    SphereRadius = 40.1102
+}

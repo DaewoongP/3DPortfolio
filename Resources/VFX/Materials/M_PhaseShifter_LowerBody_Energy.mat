@@ -1,0 +1,6 @@
+Normal=T_Enemy_Meele_Shifter_LowerBody_Normal
+Emissive=T_Enemy_Meele_Shifter_LowerBody_Emissive
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=T_PhaseShifter_Energy
+Other[2]=T_Enemy_Meele_Shifter_LowerBody_BaseColor
+Other[3]=T_Enemy_Meele_Shifter_LowerBody_ORM

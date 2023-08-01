@@ -1,0 +1,4 @@
+Diffuse=Liquid_Base
+Normal=Liquid_Base_Normal
+Opacity=T_Bubble_Opacity
+Other[0]=T_NoiseContrasted

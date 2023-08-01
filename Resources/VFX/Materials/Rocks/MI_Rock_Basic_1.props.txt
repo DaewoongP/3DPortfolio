@@ -1,0 +1,90 @@
+Parent = Material3'/Game/VFX/Materials/Rocks/MM_Rocks_Parent.MM_Rocks_Parent'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Albedo }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_albedo.T_Rock_Basic_1_albedo'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Metallic }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_metallic.T_Rock_Basic_1_metallic'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=NormalMap }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_normal.T_Rock_Basic_1_normal'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Roughness }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_roughness.T_Rock_Basic_1_roughness'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_albedo
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_metallic
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_roughness
+    }
+}

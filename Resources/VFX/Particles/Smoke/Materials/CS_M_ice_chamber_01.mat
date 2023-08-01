@@ -1,0 +1,5 @@
+Diffuse=T_PlayerTest_density_private
+Other[0]=T_ice_smoke_a_01
+Other[1]=T_ice_smoke_v_01
+Other[2]=DefaultTexture
+Other[3]=T_PlayerTest_velocity_private

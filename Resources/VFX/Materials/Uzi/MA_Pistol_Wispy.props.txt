@@ -1,0 +1,91 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/ParagonDrongo/FX/Materials/MaterialFunctions/Textures/Noise/T_TileNoise.T_TileNoise'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Blood/Screen/T_Gradient_Swipe_Flipped.T_Gradient_Swipe_Flipped'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Blood/T_Blood_Reflections_Edge.T_Blood_Reflections_Edge'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Uzi/Noise03.Noise03'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] = { ParameterInfos[0]={} }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Color }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[0] = {}
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=26.7943, G=64.0889, B=255, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Uzi/Noise03.Noise03'
+        ReferencedTextures[1] = Texture2D'/Game/ParagonDrongo/FX/Materials/MaterialFunctions/Textures/Noise/T_TileNoise.T_TileNoise'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Blood/T_Blood_Reflections_Edge.T_Blood_Reflections_Edge'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Blood/Screen/T_Gradient_Swipe_Flipped.T_Gradient_Swipe_Flipped'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[0] = {}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=26.7943, G=64.0889, B=255, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = Noise03
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Blood_Reflections_Edge
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Gradient_Swipe_Flipped
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_TileNoise
+    }
+}

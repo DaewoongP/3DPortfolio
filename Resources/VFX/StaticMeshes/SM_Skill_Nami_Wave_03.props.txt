@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/Levels/Industrial/Level_Geo/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/Levels/Industrial/Level_Geo/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 56.8758, 58.1114, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-12.2515, Y=9.53674e-07, Z=0 }
+    BoxExtent = { X=9.02837, Y=13.9992, Z=14.9211 }
+    SphereRadius = 22.3636
+}

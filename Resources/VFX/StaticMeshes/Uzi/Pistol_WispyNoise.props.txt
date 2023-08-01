@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/Materials/Uzi/MA_Pistol_Wispy.MA_Pistol_Wispy'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/Materials/Uzi/MA_Pistol_Wispy.MA_Pistol_Wispy'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 17.4507, 17.7379, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.0454264, Y=1.21691, Z=0.00402975 }
+    BoxExtent = { X=7.29306, Y=3.6233, Z=7.20474 }
+    SphereRadius = 8.21562
+}

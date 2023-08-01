@@ -1,0 +1,124 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[8] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/ArtTools/RenderToTexture/Textures/127grey.127grey'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/DebugNumberStrip.DebugNumberStrip'
+    ReferencedTextures[3] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/DebugNumberPeriod.DebugNumberPeriod'
+    ReferencedTextures[4] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/flipbook.flipbook'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_a_03.T_steam_a_03'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_m_03.T_steam_m_03'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_n_03.T_steam_n_03'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=columns }
+                    ParameterInfos[1] = { Name=Power }
+                    ParameterInfos[2] = { Name=rows }
+                    ParameterInfos[3] = { Name=TestAlpha }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=normal }
+                    ParameterInfos[1] = { Name=motion_vector }
+                    ParameterInfos[2] = { Name=texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[4] = { 6, 1, 6, 0 }
+        VectorValues[0] = {}
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_n_03.T_steam_n_03'
+            TextureValues[1] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_m_03.T_steam_m_03'
+            TextureValues[2] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_a_03.T_steam_a_03'
+        }
+    }
+    ReferencedTextures[9] =
+    {
+        ReferencedTextures[1] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/flipbook.flipbook'
+        ReferencedTextures[2] = Texture2D'/Engine/ArtTools/RenderToTexture/Textures/127grey.127grey'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[4] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/DebugNumberStrip.DebugNumberStrip'
+        ReferencedTextures[5] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/DebugNumberPeriod.DebugNumberPeriod'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_a_03.T_steam_a_03'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_m_03.T_steam_m_03'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_n_03.T_steam_n_03'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_n_03.T_steam_n_03'
+        Name = normal
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_m_03.T_steam_m_03'
+        Name = motion_vector
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_steam_a_03.T_steam_a_03'
+        Name = texture
+        Group = None
+    }
+}
+CollectedScalarParameters[4] =
+{
+    CollectedScalarParameters[0] = { Value=6, Name=columns, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Power, Group=None }
+    CollectedScalarParameters[2] = { Value=6, Name=rows, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=TestAlpha, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.171875
+        UVChannelIndex = 0
+        TextureName = T_steam_a_03
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.171875
+        UVChannelIndex = 0
+        TextureName = T_steam_m_03
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.171875
+        UVChannelIndex = 0
+        TextureName = T_steam_n_03
+    }
+}

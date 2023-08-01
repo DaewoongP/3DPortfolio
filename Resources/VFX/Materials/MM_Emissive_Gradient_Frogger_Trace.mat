@@ -1,0 +1,5 @@
+Diffuse=T_Frogger_MotionBlur
+Normal=T_RadialNormal
+Other[0]=T_LinearMask
+Other[1]=T_Masks
+Other[2]=T_NoiseNormal

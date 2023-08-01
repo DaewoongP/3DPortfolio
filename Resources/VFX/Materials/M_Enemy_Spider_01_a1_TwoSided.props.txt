@@ -1,0 +1,146 @@
+Parent = Material3'/Game/Visual/_Materials/Master_Materials/M_Master_Enemy.M_Master_Enemy'
+ScalarParameterValues[4] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Emit_Base_Desaturation }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emit_Strenght_Basic_Shading }
+        ParameterValue = 4925.9
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=SSS_Opacity }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[5] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Color_Texture }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Spider_01/Mat/Tex/T_Enemy_Spider_01_a_BaseColor.T_Enemy_Spider_01_a_BaseColor'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Normal_Texture }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Spider_01/Mat/Tex/T_Enemy_Spider_01_a_Normal.T_Enemy_Spider_01_a_Normal'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Packed_Texture }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Spider_01/Mat/Tex/T_Enemy_Spider_01_a_ORM.T_Enemy_Spider_01_a_ORM'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Emit_Texture }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Spider_01/Mat/Tex/T_Enemy_Spider_01_Emissive.T_Enemy_Spider_01_Emissive'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Skin_Mask }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Spider_01/Mat/Tex/T_Enemy_Spider_01_a_Subsurface.T_Enemy_Spider_01_a_Subsurface'
+        ParameterName = None
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Emit_Mask }
+        ParameterValue = { R=1, G=0, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emit_Color_Basic_Shading }
+        ParameterValue = { R=1, G=0, B=0, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = true
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = true
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[7] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Spider_01_a_BaseColor
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Spider_01_a_Normal
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Spider_01_a_ORM
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Spider_01_a_Subsurface
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Spider_01_Emissive
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 4.10938
+        UVChannelIndex = 0
+        TextureName = T_noise_placeholder
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 5
+        UVChannelIndex = 0
+        TextureName = T_Placeholder_Noise_N_02
+    }
+}

@@ -1,0 +1,107 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Ribbon_01.TX_Blood_Ribbon_01'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Ribbon_NRM_01.TX_Blood_Ribbon_NRM_01'
+    ReferencedTextures[2] = TextureCube4'/Game/VFX/Textures/Blood/TX_Blood_Reflections_Glint.TX_Blood_Reflections_Glint'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Reflec }
+                    ParameterInfos[1] = { Name=Param }
+                    ParameterInfos[2] = { Name=NormalIntensity }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Dark Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=NormalMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[3] = { 2, 0.08, 1 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.010417, G=0.000225, B=0, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Ribbon_NRM_01.TX_Blood_Ribbon_NRM_01'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Ribbon_01.TX_Blood_Ribbon_01'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Ribbon_NRM_01.TX_Blood_Ribbon_NRM_01'
+        ReferencedTextures[2] = TextureCube4'/Game/VFX/Textures/Blood/TX_Blood_Reflections_Glint.TX_Blood_Reflections_Glint'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Ribbon_NRM_01.TX_Blood_Ribbon_NRM_01'
+        Name = NormalMap
+        Group = None
+    }
+}
+CollectedScalarParameters[3] =
+{
+    CollectedScalarParameters[0] = { Value=2, Name=Reflec, Group=None }
+    CollectedScalarParameters[1] = { Value=0.08, Name=Param, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=NormalIntensity, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.010417, G=0.000225, B=0, A=1 }
+        Name = Dark Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = TX_Blood_Ribbon_01
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = TX_Blood_Ribbon_NRM_01
+    }
+}

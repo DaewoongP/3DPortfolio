@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Materials/Uzi/MI_Pistol_Cap_Outer.MI_Pistol_Cap_Outer'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Materials/Uzi/MI_Pistol_Cap_Outer.MI_Pistol_Cap_Outer'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 37.1831, 37.773, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.43051e-06, Y=-4.96034, Z=-4.76837e-07 }
+    BoxExtent = { X=7.34748, Y=17.2277, Z=7.34748 }
+    SphereRadius = 17.7694
+}

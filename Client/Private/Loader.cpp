@@ -332,7 +332,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	
 	/* For.Prototype_Component_Texture_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Trail"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/TrailTest.png")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_SwordElite_Katana_MotionBlur.dds")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Trail)");
 		return E_FAIL;
@@ -386,7 +386,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	
 	/*For.Prototype_Component_VIBuffer_Rect_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
-		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext, 100))))
+		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext, 20))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Trail)");
 		return E_FAIL;

@@ -1,0 +1,74 @@
+Materials[5] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Handle.M_Sword_4_Handle'
+    Materials[1] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Lights.M_Sword_4_Lights'
+    Materials[2] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Blade.M_Sword_4_Blade'
+    Materials[3] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Lights.M_Sword_4_Lights'
+    Materials[4] = MaterialInstanceConstant'/Game/Visual/Characters/FFP_View_Models/Weapons/Katana_rigged/M_Katana_rigged_swoosh_Inst.M_Katana_rigged_swoosh_Inst'
+}
+SourceModels[0] = {}
+StaticMaterials[5] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Handle.M_Sword_4_Handle'
+        MaterialSlotName = M_Sword_4_Handle
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 19.0034, 77.3271, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Lights.M_Sword_4_Lights'
+        MaterialSlotName = M_Sword_4_Lights
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0.790702, 73.4781, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Blade.M_Sword_4_Blade'
+        MaterialSlotName = M_Sword_4_Blade
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 24.1908, 77.1434, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_04_Skins/Default/M_Sword_4_Lights.M_Sword_4_Lights'
+        MaterialSlotName = M_Sword_4_Lights
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0.996132, 56.0545, 0, 0 }
+        }
+    }
+    StaticMaterials[4] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/FFP_View_Models/Weapons/Katana_rigged/M_Katana_rigged_swoosh_Inst.M_Katana_rigged_swoosh_Inst'
+        MaterialSlotName = M_Katana_rigged_swoosh_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 4.92724, 79.6879, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-4.76837e-07, Y=-27.2071, Z=-0.744811 }
+    BoxExtent = { X=1.58618, Y=51.3302, Z=3.05807 }
+    SphereRadius = 51.3499
+}

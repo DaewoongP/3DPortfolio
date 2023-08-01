@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/GR_DL_Sword_01/Default/M_GR_DL_Sword_01.M_GR_DL_Sword_01'
+    Materials[1] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/GR_DL_Sword_01/Default/M_GR_DL_Sword_01_Swoosh.M_GR_DL_Sword_01_Swoosh'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/GR_DL_Sword_01/Default/M_GR_DL_Sword_01.M_GR_DL_Sword_01'
+        MaterialSlotName = M_GR_DL_Sword_01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 36.5372, 64.5134, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/GR_DL_Sword_01/Default/M_GR_DL_Sword_01_Swoosh.M_GR_DL_Sword_01_Swoosh'
+        MaterialSlotName = M_GR_DL_Sword_01_Swoosh
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 4.28131, 63.8246, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.0252e-05, Y=-40.3785, Z=3.16785 }
+    BoxExtent = { X=2.21711, Y=33.4054, Z=9.64438 }
+    SphereRadius = 34.7697
+}

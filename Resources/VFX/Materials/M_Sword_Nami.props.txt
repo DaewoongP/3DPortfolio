@@ -1,0 +1,124 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/ParagonDrongo/Characters/Global/MaterialLayers/Water/Textures/T_Water_Caustics01.T_Water_Caustics01'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_Smoke_Tiled_D.T_Smoke_Tiled_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[11] =
+                {
+                    ParameterInfos[0] = { Name=FresnelExponentEdgeOpacity }
+                    ParameterInfos[1] = { Name=FresnelExponent }
+                    ParameterInfos[2] = { Name=Contrast }
+                    ParameterInfos[3] = { Name=Darkness-1 }
+                    ParameterInfos[4] = { Name=Distortion }
+                    ParameterInfos[5] = { Name=WeaponFov }
+                    ParameterInfos[6] = { Name=Distortion_1 }
+                    ParameterInfos[7] = { Name=Phase }
+                    ParameterInfos[8] = { Name=RotationAngle }
+                    ParameterInfos[9] = { Name=FresnelBaseRFI }
+                    ParameterInfos[10] = { Name=str }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Emissive }
+                    ParameterInfos[1] = { Name=EnergyEmissive }
+                    ParameterInfos[2] = { Name=Emissive2 }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[11] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0.5
+            ScalarValues[2] = 0.05
+            ScalarValues[3] = 0.5
+            ScalarValues[4] = 0.1
+            ScalarValues[5] = 85
+            ScalarValues[6] = 0.3
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0.25
+            ScalarValues[9] = -0.1
+            ScalarValues[10] = 1
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0, G=1, B=10, A=1 }
+            VectorValues[1] = { R=0.5, G=0, B=100, A=1 }
+            VectorValues[2] = { R=1, G=0.1, B=1, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_Smoke_Tiled_D.T_Smoke_Tiled_D'
+        ReferencedTextures[1] = Texture2D'/Game/ParagonDrongo/Characters/Global/MaterialLayers/Water/Textures/T_Water_Caustics01.T_Water_Caustics01'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[11] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1
+        Name = FresnelExponentEdgeOpacity
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=0.5, Name=FresnelExponent, Group=None }
+    CollectedScalarParameters[2] = { Value=0.05, Name=Contrast, Group=None }
+    CollectedScalarParameters[3] = { Value=0.5, Name=Darkness-1, Group=None }
+    CollectedScalarParameters[4] = { Value=0.1, Name=Distortion, Group=None }
+    CollectedScalarParameters[5] = { Value=85, Name=WeaponFov, Group=None }
+    CollectedScalarParameters[6] = { Value=0.3, Name=Distortion_1, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Phase, Group=None }
+    CollectedScalarParameters[8] = { Value=0.25, Name=RotationAngle, Group=None }
+    CollectedScalarParameters[9] = { Value=-0.1, Name=FresnelBaseRFI, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=str, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=1, B=10, A=1 }
+        Name = Emissive
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.5, G=0, B=100, A=1 }
+        Name = EnergyEmissive
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=0.1, B=1, A=1 }
+        Name = Emissive2
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

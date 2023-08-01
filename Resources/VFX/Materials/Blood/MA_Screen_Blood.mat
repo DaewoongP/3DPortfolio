@@ -1,0 +1,4 @@
+Diffuse=T_BloodScreen_01
+Normal=T_BloodScreen_01_NRM
+Other[0]=T_Gradient_Swipe
+Other[1]=TX_Blood_Reflections_Glint

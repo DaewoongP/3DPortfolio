@@ -1,0 +1,96 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Bokeh_NRM.TX_Blood_Bokeh_NRM'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Blood/TX_Blood_Bokeh.TX_Blood_Bokeh'
+    ReferencedTextures[2] = TextureCube4'/Game/VFX/Textures/Blood/TX_Blood_Reflections_Glint.TX_Blood_Reflections_Glint'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Spec }
+                    ParameterInfos[1] = { Name=NormalIntensity }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                    ParameterInfos[1] = { Name=NormalMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[2] = { 1, 0.8 }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Blood/TX_Blood_Bokeh.TX_Blood_Bokeh'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Bokeh_NRM.TX_Blood_Bokeh_NRM'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Blood/TX_Blood_Bokeh.TX_Blood_Bokeh'
+        ReferencedTextures[1] = TextureCube4'/Game/VFX/Textures/Blood/TX_Blood_Reflections_Glint.TX_Blood_Reflections_Glint'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Bokeh_NRM.TX_Blood_Bokeh_NRM'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Blood/TX_Blood_Bokeh.TX_Blood_Bokeh'
+        Name = Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Blood/Erosion_Textures/TX_Blood_Bokeh_NRM.TX_Blood_Bokeh_NRM'
+        Name = NormalMap
+        Group = None
+    }
+}
+CollectedScalarParameters[2] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Spec, Group=None }
+    CollectedScalarParameters[1] = { Value=0.8, Name=NormalIntensity, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = TX_Blood_Bokeh
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = TX_Blood_Bokeh_NRM
+    }
+}

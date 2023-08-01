@@ -1,0 +1,23 @@
+Materials[1] = {  }
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = None
+        MaterialSlotName = M_enemy_mele_01_m02
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 206.103, 258.981, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-6.16597, Y=0.771826, Z=-17.4969 }
+    BoxExtent = { X=41.3932, Y=25.2503, Z=29.3564 }
+    SphereRadius = 50.8975
+}

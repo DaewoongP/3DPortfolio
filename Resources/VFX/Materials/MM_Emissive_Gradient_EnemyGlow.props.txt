@@ -1,0 +1,61 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_LinearMask.T_LinearMask'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=DepthFadeDistance }
+                    ParameterInfos[1] = { Name=GradientMultiply }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[2] = { 50, 0.5 }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_LinearMask.T_LinearMask'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[2] =
+{
+    CollectedScalarParameters[0] = { Value=50, Name=DepthFadeDistance, Group=None }
+    CollectedScalarParameters[1] = { Value=0.5, Name=GradientMultiply, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.046875
+        UVChannelIndex = 0
+        TextureName = T_LinearMask
+    }
+}

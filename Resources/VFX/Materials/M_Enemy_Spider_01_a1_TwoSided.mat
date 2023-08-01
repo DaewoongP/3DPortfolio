@@ -1,0 +1,16 @@
+Diffuse=T_Enemy_Spider_01_a_BaseColor
+Normal=T_Enemy_Spider_01_a_Normal
+Other[0]=T_Enemy_Spider_01_a_ORM
+Other[1]=T_Enemy_Spider_01_Emissive
+Other[2]=T_Enemy_Spider_01_a_Subsurface
+Other[3]=DefaultDiffuse
+Other[4]=Good64x64TilingNoiseHighFreq
+Other[5]=T_noise_placeholder
+Other[6]=T_Placeholder_Linear_packed
+Other[7]=T_Placeholder_Noise_N_02
+Other[8]=T_Placeholder_NormalMap
+Other[9]=T_Placeholder_SRGB_mask
+Other[10]=T_Placeholder_SRGB_replace
+Other[11]=T_Placeholder_SRGB_white
+Other[12]=T_Enemy_Pistol_01_UpperBody_Skin
+Other[13]=T_interior_map_01

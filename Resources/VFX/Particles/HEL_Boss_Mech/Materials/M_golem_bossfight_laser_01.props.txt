@@ -1,0 +1,122 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/ParagonDrongo/FX/Textures/Masks/T_TankMoteNoise.T_TankMoteNoise'
+    ReferencedTextures[1] = Texture2D'/Game/Visual/_Materials/Master_Materials/Texture_Placeholders/T_noise_placeholder.T_noise_placeholder'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=wave_01_scale }
+                    ParameterInfos[1] = { Name=Refraction }
+                    ParameterInfos[2] = { Name=wave_intensity }
+                    ParameterInfos[3] = { Name=Start glow }
+                    ParameterInfos[4] = { Name=10 }
+                    ParameterInfos[5] = { Name=Power }
+                    ParameterInfos[6] = { Name=wave_01_Speed }
+                    ParameterInfos[7] = { Name=wave_02_scale }
+                    ParameterInfos[8] = { Name=Lenght }
+                    ParameterInfos[9] = { Name=Thic }
+                    ParameterInfos[10] = { Name=wave_02_Speed }
+                    ParameterInfos[11] = { Name=Start glow power }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=c1 }
+                    ParameterInfos[1] = { Name=c2 }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[12] =
+        {
+            ScalarValues[0] = 0.01
+            ScalarValues[1] = -0.116016
+            ScalarValues[2] = 0.604762
+            ScalarValues[3] = 33
+            ScalarValues[4] = 54.0226
+            ScalarValues[5] = 30
+            ScalarValues[6] = 10
+            ScalarValues[7] = 0.04
+            ScalarValues[8] = 1
+            ScalarValues[9] = 30
+            ScalarValues[10] = 10
+            ScalarValues[11] = 0.4
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=0, B=0, A=1 }
+            VectorValues[1] = { R=1, G=0.114957, B=0, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Visual/_Materials/Master_Materials/Texture_Placeholders/T_noise_placeholder.T_noise_placeholder'
+        ReferencedTextures[1] = Texture2D'/Game/ParagonDrongo/FX/Textures/Masks/T_TankMoteNoise.T_TankMoteNoise'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[12] =
+{
+    CollectedScalarParameters[0] = { Value=0.01, Name=wave_01_scale, Group=None }
+    CollectedScalarParameters[1] = { Value=-0.116016, Name=Refraction, Group=None }
+    CollectedScalarParameters[2] = { Value=0.604762, Name=wave_intensity, Group=None }
+    CollectedScalarParameters[3] = { Value=33, Name=Start glow, Group=None }
+    CollectedScalarParameters[4] = { Value=54.0226, Name=10, Group=None }
+    CollectedScalarParameters[5] = { Value=30, Name=Power, Group=None }
+    CollectedScalarParameters[6] = { Value=10, Name=wave_01_Speed, Group=None }
+    CollectedScalarParameters[7] = { Value=0.04, Name=wave_02_scale, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Lenght, Group=None }
+    CollectedScalarParameters[9] = { Value=30, Name=Thic, Group=None }
+    CollectedScalarParameters[10] = { Value=10, Name=wave_02_Speed, Group=None }
+    CollectedScalarParameters[11] = { Value=0.4, Name=Start glow power, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=0, B=0, A=1 }
+        Name = c1
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=0.114957, B=0, A=1 }
+        Name = c2
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.15625
+        UVChannelIndex = 0
+        TextureName = T_noise_placeholder
+    }
+}

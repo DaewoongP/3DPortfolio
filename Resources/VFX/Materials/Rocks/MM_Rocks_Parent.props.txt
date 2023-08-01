@@ -1,0 +1,143 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_albedo.T_Rock_Basic_1_albedo'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_metallic.T_Rock_Basic_1_metallic'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_normal.T_Rock_Basic_1_normal'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_roughness.T_Rock_Basic_1_roughness'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=TilingV }
+                    ParameterInfos[1] = { Name=TilingU }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Metallic }
+                    ParameterInfos[2] = { Name=Albedo }
+                    ParameterInfos[3] = { Name=NormalMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[2] = { 1, 1 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_roughness.T_Rock_Basic_1_roughness'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_metallic.T_Rock_Basic_1_metallic'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_albedo.T_Rock_Basic_1_albedo'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_normal.T_Rock_Basic_1_normal'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_metallic.T_Rock_Basic_1_metallic'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_roughness.T_Rock_Basic_1_roughness'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_normal.T_Rock_Basic_1_normal'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_albedo.T_Rock_Basic_1_albedo'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_roughness.T_Rock_Basic_1_roughness'
+        Name = Roughness
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_metallic.T_Rock_Basic_1_metallic'
+        Name = Metallic
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_albedo.T_Rock_Basic_1_albedo'
+        Name = Albedo
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Rocks/T_Rock_Basic_1_normal.T_Rock_Basic_1_normal'
+        Name = NormalMap
+        Group = None
+    }
+}
+CollectedScalarParameters[2] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=TilingV, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=TilingU, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_albedo
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_metallic
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Rock_Basic_1_roughness
+    }
+}

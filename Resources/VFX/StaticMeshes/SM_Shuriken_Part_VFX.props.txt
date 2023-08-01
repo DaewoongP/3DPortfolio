@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/Visual/Characters/Hero_Swords/Shuriken/M_Shuriken.M_Shuriken'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/Visual/Characters/Hero_Swords/Shuriken/M_Shuriken.M_Shuriken'
+        MaterialSlotName = M_Shuriken
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 10.0369, 5.02626, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-0.512872, Z=0.286937 }
+    BoxExtent = { X=0.118638, Y=1.44325, Z=1.57284 }
+    SphereRadius = 2.13467
+}

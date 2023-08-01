@@ -1,0 +1,96 @@
+Parent = Material3'/Game/VFX/Materials/M_PhaseShifter_LowerBody_Energy.M_PhaseShifter_LowerBody_Energy'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Albedo }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_UpperBody_BaseColor.T_Enemy_Meele_Shifter_UpperBody_BaseColor'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emissive }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_UpperBody_Emissive.T_Enemy_Meele_Shifter_UpperBody_Emissive'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Normal }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_UpperBody_Normal.T_Enemy_Meele_Shifter_UpperBody_Normal'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=ORM }
+        ParameterValue = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_UpperBody_ORM.T_Enemy_Meele_Shifter_UpperBody_ORM'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[5] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_UpperBody_BaseColor
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_UpperBody_Emissive
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_UpperBody_Normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_UpperBody_ORM
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_PhaseShifter_Energy
+    }
+}

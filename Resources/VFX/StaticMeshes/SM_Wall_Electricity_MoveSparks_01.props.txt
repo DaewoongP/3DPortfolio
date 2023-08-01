@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = M_huge_wall_electric_panel
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 46.8338, 1.15686, 1.65506, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=8.24017, Y=17.3671, Z=-9.47723 }
+    BoxExtent = { X=66.1653, Y=60.3856, Z=402.85 }
+    SphereRadius = 405.537
+}

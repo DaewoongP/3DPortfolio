@@ -1,0 +1,66 @@
+Parent = Material3'/Game/VFX/Materials/Blood/MA_Blood_Dots.MA_Blood_Dots'
+ScalarParameterValues[2] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=NormalIntensity }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[2] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=NormalMap }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Water/T_Water_Drops_Sheet_NRM.T_Water_Drops_Sheet_NRM'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Water/T_Water_Drops_Sheet_Alpha.T_Water_Drops_Sheet_Alpha'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Water_Drops_Sheet_Alpha
+    }
+}

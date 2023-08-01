@@ -1,0 +1,4 @@
+Normal=T_Rusted_Metal_wall_normal
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=T_Rusted_Metal_wall_basecolor
+Other[2]=T_Rusted_Metal_wall_Packed

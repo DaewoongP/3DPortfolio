@@ -1,0 +1,104 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[8] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[1] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/DebugNumberStrip.DebugNumberStrip'
+    ReferencedTextures[2] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/DebugNumberPeriod.DebugNumberPeriod'
+    ReferencedTextures[3] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/flipbook.flipbook'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Explosions/T_Aerial_Explosion_9_Alpha.T_Aerial_Explosion_9_Alpha'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Explosions/T_Fireball_Alpha.T_Fireball_Alpha'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Explosions/T_Smoke_Dark_Cloud_01.T_Smoke_Dark_Cloud_01'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Explosions/T_Smoke_PoisonGas_Opaque_Loop_01_Normal.T_Smoke_PoisonGas_Opaque_Loop_01_Normal'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Playback Rate }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Alpha }
+                    ParameterInfos[1] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[1] = { 0.3 }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Explosions/T_Fireball_Alpha.T_Fireball_Alpha'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Explosions/T_Aerial_Explosion_9_Alpha.T_Aerial_Explosion_9_Alpha'
+        }
+    }
+    ReferencedTextures[9] =
+    {
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[2] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/DebugNumberStrip.DebugNumberStrip'
+        ReferencedTextures[3] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/DebugNumberPeriod.DebugNumberPeriod'
+        ReferencedTextures[4] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/flipbook.flipbook'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Explosions/T_Aerial_Explosion_9_Alpha.T_Aerial_Explosion_9_Alpha'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Explosions/T_Fireball_Alpha.T_Fireball_Alpha'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Explosions/T_Smoke_Dark_Cloud_01.T_Smoke_Dark_Cloud_01'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Explosions/T_Smoke_PoisonGas_Opaque_Loop_01_Normal.T_Smoke_PoisonGas_Opaque_Loop_01_Normal'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Explosions/T_Fireball_Alpha.T_Fireball_Alpha'
+        Name = Alpha
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Explosions/T_Aerial_Explosion_9_Alpha.T_Aerial_Explosion_9_Alpha'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[1] =
+{
+    CollectedScalarParameters[0] = { Value=0.3, Name=Playback Rate, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.125
+        UVChannelIndex = 0
+        TextureName = T_Smoke_Dark_Cloud_01
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.125
+        UVChannelIndex = 0
+        TextureName = T_Smoke_PoisonGas_Opaque_Loop_01_Normal
+    }
+}

@@ -1,0 +1,62 @@
+Materials[4] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_05_Skins/Default/M_Sword_05_Blade.M_Sword_05_Blade'
+    Materials[1] = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_05_Skins/Default/M_Sword_05_Lights.M_Sword_05_Lights'
+    Materials[2] = Material3'/Game/Visual/Characters/Hero_Swords/Mat/Sword_05_Skins/Default/M_Sword_05_Glasss.M_Sword_05_Glasss'
+    Materials[3] = MaterialInstanceConstant'/Game/Visual/Characters/FFP_View_Models/Weapons/Katana_rigged/M_Katana_rigged_swoosh_Inst.M_Katana_rigged_swoosh_Inst'
+}
+SourceModels[0] = {}
+StaticMaterials[4] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_05_Skins/Default/M_Sword_05_Blade.M_Sword_05_Blade'
+        MaterialSlotName = M_Sword_05_Blade
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 21.3011, 57.2943, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/Hero_Swords/Mat/Sword_05_Skins/Default/M_Sword_05_Lights.M_Sword_05_Lights'
+        MaterialSlotName = M_Sword_05_Lights
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 3.12242, 58.1953, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = Material3'/Game/Visual/Characters/Hero_Swords/Mat/Sword_05_Skins/Default/M_Sword_05_Glasss.M_Sword_05_Glasss'
+        MaterialSlotName = M_Sword_05_Glasss
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 21.3106, 57.4766, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Visual/Characters/FFP_View_Models/Weapons/Katana_rigged/M_Katana_rigged_swoosh_Inst.M_Katana_rigged_swoosh_Inst'
+        MaterialSlotName = M_Katana_rigged_swoosh_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 3.40156, 58.1913, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-6.55651e-07, Y=-41.4829, Z=-0.2988 }
+    BoxExtent = { X=0.928726, Y=33.4829, Z=2.12907 }
+    SphereRadius = 33.5424
+}

@@ -1,0 +1,161 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_PhaseShifter_Energy.T_PhaseShifter_Energy'
+    ReferencedTextures[2] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_BaseColor.T_Enemy_Meele_Shifter_LowerBody_BaseColor'
+    ReferencedTextures[3] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Emissive.T_Enemy_Meele_Shifter_LowerBody_Emissive'
+    ReferencedTextures[4] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Normal.T_Enemy_Meele_Shifter_LowerBody_Normal'
+    ReferencedTextures[5] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_ORM.T_Enemy_Meele_Shifter_LowerBody_ORM'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveStrength }
+                    ParameterInfos[1] = { Name=Phase }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveColor }
+                    ParameterInfos[1] = { Name=FresnelColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=ORM }
+                    ParameterInfos[1] = { Name=Emissive }
+                    ParameterInfos[2] = { Name=Normal }
+                    ParameterInfos[3] = { Name=Albedo }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[2] = { 150, 0 }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0.64448, G=0, B=1, A=1 }
+            VectorValues[1] = { R=20, G=0, B=40, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_ORM.T_Enemy_Meele_Shifter_LowerBody_ORM'
+            TextureValues[1] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Emissive.T_Enemy_Meele_Shifter_LowerBody_Emissive'
+            TextureValues[2] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Normal.T_Enemy_Meele_Shifter_LowerBody_Normal'
+            TextureValues[3] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_BaseColor.T_Enemy_Meele_Shifter_LowerBody_BaseColor'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_PhaseShifter_Energy.T_PhaseShifter_Energy'
+        ReferencedTextures[1] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_BaseColor.T_Enemy_Meele_Shifter_LowerBody_BaseColor'
+        ReferencedTextures[2] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Emissive.T_Enemy_Meele_Shifter_LowerBody_Emissive'
+        ReferencedTextures[3] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_ORM.T_Enemy_Meele_Shifter_LowerBody_ORM'
+        ReferencedTextures[4] = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Normal.T_Enemy_Meele_Shifter_LowerBody_Normal'
+        ReferencedTextures[5] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_ORM.T_Enemy_Meele_Shifter_LowerBody_ORM'
+        Name = ORM
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Emissive.T_Enemy_Meele_Shifter_LowerBody_Emissive'
+        Name = Emissive
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_Normal.T_Enemy_Meele_Shifter_LowerBody_Normal'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Visual/Characters/Enemy_Phase_Shifter_01/Tex/T_Enemy_Meele_Shifter_LowerBody_BaseColor.T_Enemy_Meele_Shifter_LowerBody_BaseColor'
+        Name = Albedo
+        Group = None
+    }
+}
+CollectedScalarParameters[2] =
+{
+    CollectedScalarParameters[0] = { Value=150, Name=EmissiveStrength, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Phase, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.64448, G=0, B=1, A=1 }
+        Name = EmissiveColor
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=20, G=0, B=40, A=1 }
+        Name = FresnelColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[5] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_LowerBody_BaseColor
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_LowerBody_Emissive
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_LowerBody_Normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Enemy_Meele_Shifter_LowerBody_ORM
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 0.09375
+        UVChannelIndex = 0
+        TextureName = T_PhaseShifter_Energy
+    }
+}

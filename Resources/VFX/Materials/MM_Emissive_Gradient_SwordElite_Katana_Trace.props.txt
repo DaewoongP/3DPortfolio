@@ -1,0 +1,108 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_LinearMask.T_LinearMask'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_Masks.T_Masks'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/T_NoiseNormal.T_NoiseNormal'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/T_RadialNormal.T_RadialNormal'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/T_SwordElite_Katana_MotionBlur.T_SwordElite_Katana_MotionBlur'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/T_SwordElite_MotionBlur_Streaks.T_SwordElite_MotionBlur_Streaks'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=DepthFadeDistance }
+                    ParameterInfos[1] = { Name=GradientMultiply }
+                    ParameterInfos[2] = { Name=RotationAngle }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=StreaksColor }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[3] = { 50, 1, 0.25 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=50, G=0, B=0, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_NoiseNormal.T_NoiseNormal'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_LinearMask.T_LinearMask'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/T_SwordElite_Katana_MotionBlur.T_SwordElite_Katana_MotionBlur'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/T_RadialNormal.T_RadialNormal'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/T_Masks.T_Masks'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/T_SwordElite_MotionBlur_Streaks.T_SwordElite_MotionBlur_Streaks'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[3] =
+{
+    CollectedScalarParameters[0] = { Value=50, Name=DepthFadeDistance, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=GradientMultiply, Group=None }
+    CollectedScalarParameters[2] = { Value=0.25, Name=RotationAngle, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=50, G=0, B=0, A=1 }
+        Name = StreaksColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_LinearMask
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.09375
+        UVChannelIndex = 0
+        TextureName = T_NoiseNormal
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_SwordElite_Katana_MotionBlur
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_SwordElite_MotionBlur_Streaks
+    }
+}

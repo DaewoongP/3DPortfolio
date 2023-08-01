@@ -1,0 +1,4 @@
+Diffuse=T_Blood_Directional_04
+Normal=T_Blood_Omni_NRM
+Other[0]=T_Omni
+Other[1]=TX_Blood_Reflections_Glint

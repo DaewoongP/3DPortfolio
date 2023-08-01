@@ -1,0 +1,6 @@
+Diffuse=T_LinearMask
+Normal=T_RadialNormal
+Other[0]=T_Masks
+Other[1]=T_NoiseNormal
+Other[2]=T_SwordElite_MotionBlur
+Other[3]=T_SwordElite_MotionBlur_Streaks

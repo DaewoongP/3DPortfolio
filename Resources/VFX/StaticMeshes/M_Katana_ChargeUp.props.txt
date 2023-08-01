@@ -1,0 +1,23 @@
+Materials[1] = { Material3'/Game/ThirdPersonBP/Katana2/2.2' }
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/ThirdPersonBP/Katana2/2.2'
+        MaterialSlotName = M_Katana_01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 81.2571, 48.3768, 60.1468, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=5.30481e-06, Y=-3.25228, Z=52.2745 }
+    BoxExtent = { X=0.418818, Y=5.66654, Z=40.6656 }
+    SphereRadius = 41.0585
+}

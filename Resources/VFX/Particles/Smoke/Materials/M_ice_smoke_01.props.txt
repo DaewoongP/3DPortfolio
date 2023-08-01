@@ -1,0 +1,122 @@
+Parent = Material3'/Game/VFX/Particles/Smoke/Master_Materials/MM_FluidNinja_AtlasPlay_01.MM_FluidNinja_AtlasPlay_01'
+ScalarParameterValues[5] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Contrast }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=AlphaStrength }
+        ParameterValue = 3
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=PlaySpeed }
+        ParameterValue = 4
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=VeloStrength }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[2] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=DensityMap }
+        ParameterValue = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_ice_smoke_a_01.T_ice_smoke_a_01'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=VelocityMap }
+        ParameterValue = Texture2D'/Game/VFX/Particles/Smoke/Materials/Textures/T_ice_smoke_v_01.T_ice_smoke_v_01'
+        ParameterName = None
+    }
+}
+VectorParameterValues[4] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Color 1 }
+        ParameterValue = { R=0.36932, G=3, B=1.42917, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Color 2 }
+        ParameterValue = { R=0.242281, G=0.83077, B=0.665387, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Color3 }
+        ParameterValue = { R=0.090842, G=0.737911, B=0.351533, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[3] =
+    {
+        ParameterInfo = { Name=EmissiveMultiplier }
+        ParameterValue = { R=1, G=1, B=1, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[3] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=2ndColor }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=3rdColor }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = true
+            ParameterInfo = { Name=VelocityInterpolation }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

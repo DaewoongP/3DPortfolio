@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Materials/M_Enemy_Spider_01_a1_TwoSided.M_Enemy_Spider_01_a1_TwoSided'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Materials/M_Enemy_Spider_01_a1_TwoSided.M_Enemy_Spider_01_a1_TwoSided'
+        MaterialSlotName = M_Enemy_Spider_01_a
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 174.857, 140.076, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.00425148, Y=9.47892, Z=49.3406 }
+    BoxExtent = { X=20.8078, Y=36.1639, Z=21.5995 }
+    SphereRadius = 38.9269
+}

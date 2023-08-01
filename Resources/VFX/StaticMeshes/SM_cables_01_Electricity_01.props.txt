@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/Materials/M_Boss_Totem_Cables_Electricity.M_Boss_Totem_Cables_Electricity'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/Materials/M_Boss_Totem_Cables_Electricity.M_Boss_Totem_Cables_Electricity'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 4761.55, 1042.15, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=4.85981, Y=3.15715, Z=1.35596 }
+    BoxExtent = { X=64.3657, Y=68.0847, Z=1701.58 }
+    SphereRadius = 1701.67
+}

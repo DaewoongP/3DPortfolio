@@ -1,0 +1,6 @@
+Normal=T_RadialNormal
+Other[0]=FlowMap_Swirl_Detailed_A
+Other[1]=T_LinearMask
+Other[2]=T_Masks
+Other[3]=T_NoiseNormal
+Other[4]=T_SwordElite_MotionBlur_Streaks
