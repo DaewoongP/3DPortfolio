@@ -151,10 +151,10 @@ PS_OUT PS_MAIN_RIMLIGHT(PS_IN In)
     
      // RimLight
     vector vCamDir = normalize(In.vWorldPos - g_vCamPos);
-    float fRimLight = smoothstep(1.f - g_fRimWidth, 1.f, pow(1.f - max(0.f, dot(vNormal, vCamDir.xyz)), 5.f));
+    float fRimLight = smoothstep(1.f - g_fRimWidth, 1.f, pow(1.f - max(0.f, dot(vNormal, vCamDir.xyz)), 2.f));
 
     Out.vDiffuse = vDiffuse;
-    Out.vEmissive.r += fRimLight * 0.7f;
+    Out.vDiffuse.r += fRimLight;
     // UNORM 4개 타입에 값을 넣으므로 여기서 0~1로 보정처리하고 나중에 받을때 -1~1로 보정처리를 다시한다.
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     // SV_POSITION으로 설정되지 않았던 투영포지션 값이므로 w나누기를 수행한 z값 (투영스페이스) 값을 r, 

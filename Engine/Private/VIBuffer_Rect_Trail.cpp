@@ -1,5 +1,7 @@
 #include "..\Public\VIBuffer_Rect_Trail.h"
-#include "Calculator.h"
+#include "Shader.h"
+#include "Texture.h"
+#include "PipeLine.h"
 
 CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -8,21 +10,16 @@ CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(ID3D11Device* pDevice, ID3D11DeviceCo
 
 CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(const CVIBuffer_Rect_Trail& rhs)
 	: CVIBuffer(rhs)
-	, m_iTrailNum(rhs.m_iTrailNum)
-	, m_fSizeX(rhs.m_fSizeX)
 {
 }
 
-HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum, _float fSizeX)
+HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum)
 {
-	m_iTrailNum = iTrailNum;
-	m_fSizeX = fSizeX;
-
 	m_iNumVertexBuffers = { 1 };
 	m_iStride = { sizeof(VTXPOSTEX) };
-	m_iNumVertices = { 2 * (m_iTrailNum + 1) };
+	m_iNumVertices = { 2 * (iTrailNum + 1) };
 	m_iIndexStride = { sizeof(_ushort) };
-	m_iNumIndices = { 6 * m_iTrailNum };
+	m_iNumIndices = { 6 * iTrailNum };
 	m_eFormat = DXGI_FORMAT_R16_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
@@ -52,15 +49,15 @@ HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum, _float fSize
 		if (1 == i % 2)
 		{
 			iVertexIndex = (i - 1) >> 1;
-			pVertices[i].vPosition = _float3(-1.f * iVertexIndex, 1.f, 0.f);
-			pVertices[i].vTexCoord = _float2((_float)iVertexIndex / m_iTrailNum, 1.f);
+			pVertices[i].vPosition = _float3(0.f, 0.f, 0.f);
+			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / iTrailNum, 1.f);
 		}
 		// 짝수 ... 8 6 4 2 0
 		else
 		{
 			iVertexIndex = i >> 1;
-			pVertices[i].vPosition = _float3(-1.f * iVertexIndex, 0.f, 0.f);
-			pVertices[i].vTexCoord = _float2((_float)iVertexIndex / m_iTrailNum, 0.f);
+			pVertices[i].vPosition = _float3(0.f, 0.f, 0.f);
+			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / iTrailNum, 0.f);
 		}
 	}
 
@@ -121,37 +118,131 @@ HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum, _float fSize
 
 HRESULT CVIBuffer_Rect_Trail::Initialize(void* pArg)
 {
+	if (nullptr == pArg)
+	{
+		MSG_BOX("Trail Desc NULL");
+		return E_FAIL;
+	}
+
+	m_TrailDesc = *reinterpret_cast<TRAILDESC*>(pArg);
+
 	return S_OK;
 }
 
-void CVIBuffer_Rect_Trail::Tick(_float3 vLocalHighPosition, _float3 vLocalLowPosition, _fmatrix WorldMatrix, _double dTimeDelta)
+void CVIBuffer_Rect_Trail::Tick(_double dTimeDelta)
 {
+	// Local Position
+	_vector vHighPos = (XMLoadFloat4x4(m_TrailDesc.pHighLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
+	_vector vLowPos = (XMLoadFloat4x4(m_TrailDesc.pLowLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
+	// World Position
+	_vector vHighWorldPos = XMVector3TransformCoord(vHighPos, XMLoadFloat4x4(m_TrailDesc.pWorldMatrix));
+	_vector vLowWorldPos = XMVector3TransformCoord(vLowPos, XMLoadFloat4x4(m_TrailDesc.pWorldMatrix));
+
 	D3D11_MAPPED_SUBRESOURCE	MappedSubResource;
 
 	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
 
 	VTXPOSTEX* pData = static_cast<VTXPOSTEX*>(MappedSubResource.pData);
 
-	VTXPOSTEX* pCopyData = pData;
-
-	for (_uint i = 2; i < m_iNumVertices; ++i)
+	for (_uint i = m_iNumVertices - 1; i >= 2 ; --i)
 	{
-		pData[i].vPosition = pCopyData[i - 2].vPosition;
+		_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[i].vPosition) - XMLoadFloat3(&pData[i - 2].vPosition)));
+		if (m_TrailDesc.fMinVertexDistance > fLength)
+		{
+			_vector vLerpPos = XMVectorLerp(
+				XMLoadFloat3(&pData[i].vPosition), XMLoadFloat3(&pData[i - 2].vPosition),
+				(m_TrailDesc.fMinVertexDistance - fLength) / m_TrailDesc.fMinVertexDistance);
+
+			XMStoreFloat3(&pData[i].vPosition, vLerpPos);
+
+			continue;
+		}
+
+		pData[i].vPosition = pData[i - 2].vPosition;
 	}
 
-	XMStoreFloat3(&pData[0].vPosition,
-		XMVector3TransformCoord(XMLoadFloat3(&vLocalLowPosition), WorldMatrix));
-	XMStoreFloat3(&pData[1].vPosition,
-		XMVector3TransformCoord(XMLoadFloat3(&vLocalHighPosition), WorldMatrix));
+	// 0번에 Low 월드 포지션을 대입한다
+	if (m_TrailDesc.fMinVertexDistance < XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[0].vPosition) - vLowWorldPos)))
+		XMStoreFloat3(&pData[0].vPosition, vLowWorldPos);
+	// 1번에 High 월드 포지션을 대입한다
+	if (m_TrailDesc.fMinVertexDistance < XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[0].vPosition) - vHighWorldPos)))
+		XMStoreFloat3(&pData[1].vPosition, vHighWorldPos);
 
 	m_pContext->Unmap(m_pVB, 0);
+
+	// 첫위치와 마지막위치 비교
+	if (m_TrailDesc.fMinVertexDistance > XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[m_iNumVertices - 1].vPosition) - XMLoadFloat3(&pData[1].vPosition))) &&
+		m_TrailDesc.fMinVertexDistance > XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[m_iNumVertices - 2].vPosition) - XMLoadFloat3(&pData[0].vPosition))))
+		m_isClose = true;
+	else
+		m_isClose = false;
 }
 
-CVIBuffer_Rect_Trail* CVIBuffer_Rect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iTrailNum, _float fSizeX)
+HRESULT CVIBuffer_Rect_Trail::Render(const _char* pConstantName, _float4 vColor, CShader* pShader, _uint iPassIndex)
+{
+	// 첫위치와 마지막위치가 최소거리보다 짧을 경우 렌더링 자체를 포기함.
+	if (true == m_isClose)
+		return S_OK;
+
+	if (FAILED(Setup_ShaderResources(pShader)))
+		return E_FAIL;
+
+	if (FAILED(pShader->Bind_RawValue(pConstantName, &vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	if (FAILED(pShader->Begin(iPassIndex)))
+		return E_FAIL;
+
+	return __super::Render();
+}
+
+HRESULT CVIBuffer_Rect_Trail::Render(const _char* pConstantName, CTexture* pTexture, CShader* pShader, _uint iPassIndex)
+{
+	// 첫위치와 마지막위치가 최소거리보다 짧을 경우 렌더링 자체를 포기함.
+	if (true == m_isClose)
+		return S_OK;
+
+	if (FAILED(Setup_ShaderResources(pShader)))
+		return E_FAIL;
+
+	if (FAILED(pTexture->Bind_ShaderResource(pShader, "g_Texture")))
+		return E_FAIL;
+
+	if (FAILED(pShader->Begin(iPassIndex)))
+		return E_FAIL;
+
+	return __super::Render();
+}
+
+HRESULT CVIBuffer_Rect_Trail::Setup_ShaderResources(class CShader* pShader)
+{
+	CPipeLine* pPipeLine = CPipeLine::GetInstance();
+	Safe_AddRef(pPipeLine);
+
+	// 월드를 곱해서 쉐이더로 전달해줄거라 따로 처리하지않음.
+	_float4x4 WorldMatrix;
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+	if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
+		return E_FAIL;
+
+	if (FAILED(pShader->Bind_Matrix("g_ViewMatrix",
+		pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+
+	if (FAILED(pShader->Bind_Matrix("g_ProjMatrix",
+		pPipeLine->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	Safe_Release(pPipeLine);
+
+	return S_OK;
+}
+
+CVIBuffer_Rect_Trail* CVIBuffer_Rect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iTrailNum)
 {
 	CVIBuffer_Rect_Trail* pInstance = new CVIBuffer_Rect_Trail(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(iTrailNum, fSizeX)))
+	if (FAILED(pInstance->Initialize_Prototype(iTrailNum)))
 	{
 		MSG_BOX("Failed to Created CVIBuffer_Rect_Trail");
 		Safe_Release(pInstance);

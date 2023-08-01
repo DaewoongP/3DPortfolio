@@ -128,9 +128,9 @@ float4 PS_MAIN_TRAIL(PS_IN In) : SV_TARGET0
     float4 vColor = (float4) 0;
 	
     vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
-	
-    vColor = float4(1.f, 1.f, 1.f, 1.f);
     
+    vColor.r += 0.5f;
+	
     return vColor;
 }
 

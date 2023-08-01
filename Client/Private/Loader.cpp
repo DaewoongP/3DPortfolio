@@ -25,6 +25,7 @@
 #include "Indicator.h"
 #include "Crosshair.h"
 #include "MiniEnemy.h"
+#include "SwordTrail.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
 #include "BlinkTarget.h"
@@ -385,7 +386,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	
 	/*For.Prototype_Component_VIBuffer_Rect_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
-		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext, 50, 1.f))))
+		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext, 100))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Trail)");
 		return E_FAIL;
@@ -797,6 +798,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CWire::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Wire)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_SwordTrail */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SwordTrail"),
+		CSwordTrail::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_SwordTrail)");
 		return E_FAIL;
 	}
 

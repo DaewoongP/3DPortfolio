@@ -81,6 +81,11 @@ const CBone* CModel::Get_Bone(const _tchar* pBoneName)
 	return (*iter);
 }
 
+const _float4x4* CModel::Get_BoneCombinedTransformationMatrixPtr(_uint iIndex)
+{
+	return m_Bones[iIndex]->Get_CombinedTransformationMatrixPtr();
+}
+
 _float4x4 CModel::Get_BoneCombinedTransformationMatrix(_uint iIndex)
 {
 	return m_Bones[iIndex]->Get_CombinedTransformationMatrix();

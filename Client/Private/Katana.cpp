@@ -1,5 +1,6 @@
 #include "..\Public\Katana.h"
 #include "GameInstance.h"
+#include "VIBuffer_Rect_Trail.h"
 #include "Player.h"
 
 CKatana::CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -32,16 +33,38 @@ HRESULT CKatana::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Find_BoneIndex(TEXT("Swoosh_Back"), &m_iTrailBackIndex);
-	m_pModelCom->Find_BoneIndex(TEXT("Swoosh_Front"), &m_iTrailFrontIndex);
-
 	return S_OK;
 }
 
 HRESULT CKatana::Initialize_Level(_uint iLevelIndex)
 {
-	if (FAILED(Add_Components_Level(iLevelIndex)))
+	_uint iTrailFrontIndex = { 0 };
+	_uint iTrailBackIndex = { 0 };
+
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("Swoosh_Front"), &iTrailFrontIndex)))
 		return E_FAIL;
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("Swoosh_Back"), &iTrailBackIndex)))
+		return E_FAIL;
+
+	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
+	ZEROMEM(&TrailDesc);
+	TrailDesc.fMinVertexDistance = 0.1f;
+	TrailDesc.pHighLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailFrontIndex);
+	TrailDesc.pLowLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailBackIndex);
+	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
+	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_SwordTrail"),
+		TEXT("Layer_Trail"), TEXT("GameObject_KatanaTrail"), &TrailDesc)))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_KatanaTrail)");
+		return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
@@ -71,20 +94,6 @@ void CKatana::Tick(_double dTimeDelta)
 
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
-	_float4x4 FrontMatrix = 
-		m_pModelCom->Get_BoneCombinedTransformationMatrix(m_iTrailFrontIndex);
-	_float4x4 BackMatrix =
-		m_pModelCom->Get_BoneCombinedTransformationMatrix(m_iTrailBackIndex);
-
-	XMStoreFloat4x4(&FrontMatrix, XMLoadFloat4x4(&FrontMatrix) * m_pModelCom->Get_PivotMatrix());
-	XMStoreFloat4x4(&BackMatrix, XMLoadFloat4x4(&BackMatrix) * m_pModelCom->Get_PivotMatrix());
-
-	_float3 vHighPos, vLowPos;
-	memcpy(&vHighPos, FrontMatrix.m[3], sizeof(_float3));
-	memcpy(&vLowPos, BackMatrix.m[3], sizeof(_float3));
-	
-	m_pTrailBufferCom->Tick(vHighPos, vLowPos, XMLoadFloat4x4(&m_CombinedWorldMatrix), dTimeDelta);
-	
 	m_pModelCom->Play_Animation(dTimeDelta);
 }
 
@@ -122,9 +131,6 @@ HRESULT CKatana::Render()
 
 		m_pModelCom->Render(i);
 	}
-
-	m_pTrailShaderCom->Begin(7);
-	m_pTrailBufferCom->Render();
 
 	return S_OK;
 }
@@ -166,35 +172,6 @@ HRESULT CKatana::Add_Components()
 		return E_FAIL;
 	}
 
-	/* For.Com_TrailShader */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"),
-		TEXT("Com_TrailShader"), (CComponent**)&m_pTrailShaderCom)))
-	{
-		MSG_BOX("Failed CKatana Add_Component : (Com_Shader)");
-		return E_FAIL;
-	}
-	
-	/* For.Com_TrailBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
-		TEXT("Com_TrailBuffer"), reinterpret_cast<CComponent**>(&m_pTrailBufferCom))))
-	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_TrailBuffer)");
-		return E_FAIL;
-	}
-	
-	/* For.Com_TrailTexture */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Trail"),
-		TEXT("Com_TrailTexture"), reinterpret_cast<CComponent**>(&m_pTrailTextureCom))))
-	{
-		MSG_BOX("Failed CPlayer Add_Component : (Com_TrailTexture)");
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-HRESULT CKatana::Add_Components_Level(_uint iLevelIndex)
-{
 	return S_OK;
 }
 
@@ -215,23 +192,6 @@ HRESULT CKatana::SetUp_ShaderResources()
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", pGameInstance->Get_CamFar(), sizeof(_float))))
-		return E_FAIL;
-
-	// Trail
-	_float4x4 WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-	if (FAILED(m_pTrailShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pTrailShaderCom->Bind_Matrix("g_ViewMatrix",
-		pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-
-	if (FAILED(m_pTrailShaderCom->Bind_Matrix("g_ProjMatrix",
-		pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
-
-	if (FAILED(m_pTrailTextureCom->Bind_ShaderResource(m_pTrailShaderCom, "g_Texture")))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -283,7 +243,4 @@ void CKatana::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
 	Safe_Release(m_pColliderCom);
-	Safe_Release(m_pTrailShaderCom);
-	Safe_Release(m_pTrailBufferCom);
-	Safe_Release(m_pTrailTextureCom);
 }

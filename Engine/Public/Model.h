@@ -17,6 +17,7 @@ public:
 	_float Get_CurrentNotifySpeed() const;
 	class CTexture* Get_ORMTexture(_uint iIndex) { return m_ORMs[iIndex]; }
 	_float Get_CurrentFramePercent();
+	const _float4x4* Get_PivotFloat4x4Ptr() const { return &m_PivotMatrix; }
 	_float4x4 Get_PivotFloat4x4() const { return m_PivotMatrix; }
 	_matrix Get_PivotMatrix() { return XMLoadFloat4x4(&m_PivotMatrix); }
 	_uint Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
@@ -29,6 +30,7 @@ public:
 	// 현재 실행중인 애니메이션
 	class CAnimation* Get_Animation() const { return m_Animations[m_iCurrentAnimIndex]; }
 	class CAnimation* Get_Animation(_uint iAnimationIndex) const { return m_Animations[iAnimationIndex]; }
+	const _float4x4* Get_BoneCombinedTransformationMatrixPtr(_uint iIndex);
 	_float4x4 Get_BoneCombinedTransformationMatrix(_uint iIndex);
 	// 애니메이션 인덱스 설정하면서 루프도 같이 설정
 	void Set_AnimIndex(_uint iAnimIndex, _bool isLoop = true);

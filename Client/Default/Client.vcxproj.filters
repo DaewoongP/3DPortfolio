@@ -220,6 +220,9 @@
     <Filter Include="02. GameObjects\00. Player\Wire">
       <UniqueIdentifier>{c899c8fb-7d40-4b2c-be94-e5361708be1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\00. Player\Katana\SwordTrail">
+      <UniqueIdentifier>{09e600ae-a5ce-4028-9e49-3684f09948bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -509,6 +512,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Wire.h">
       <Filter>02. GameObjects\00. Player\Wire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SwordTrail.h">
+      <Filter>02. GameObjects\00. Player\Katana\SwordTrail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -800,6 +806,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Wire.cpp">
       <Filter>02. GameObjects\00. Player\Wire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SwordTrail.cpp">
+      <Filter>02. GameObjects\00. Player\Katana\SwordTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
