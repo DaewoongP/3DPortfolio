@@ -46,6 +46,10 @@ private:
 	_float4				m_vEmissive;
 
 private:
+	_float4x4			m_TrailLeftMatrix;
+	_float4x4			m_TrailRightMatrix;
+
+private:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 public:

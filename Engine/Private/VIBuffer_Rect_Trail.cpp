@@ -13,13 +13,26 @@ CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(const CVIBuffer_Rect_Trail& rhs)
 {
 }
 
-HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum)
+HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype()
 {
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Rect_Trail::Initialize(void* pArg)
+{
+	if (nullptr == pArg)
+	{
+		MSG_BOX("Trail Desc NULL");
+		return E_FAIL;
+	}
+
+	m_TrailDesc = *reinterpret_cast<TRAILDESC*>(pArg);
+
 	m_iNumVertexBuffers = { 1 };
 	m_iStride = { sizeof(VTXPOSTEX) };
-	m_iNumVertices = { 2 * (iTrailNum + 1) };
+	m_iNumVertices = { 2 * (m_TrailDesc.iTrailNum + 1) };
 	m_iIndexStride = { sizeof(_ushort) };
-	m_iNumIndices = { 6 * iTrailNum };
+	m_iNumIndices = { 6 * m_TrailDesc.iTrailNum };
 	m_eFormat = DXGI_FORMAT_R16_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
@@ -50,14 +63,14 @@ HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum)
 		{
 			iVertexIndex = (i - 1) >> 1;
 			pVertices[i].vPosition = _float3(0.f, 0.f, 0.f);
-			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / iTrailNum, 1.f);
+			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / m_TrailDesc.iTrailNum, 1.f);
 		}
 		// Â¦¼ö ... 8 6 4 2 0
 		else
 		{
 			iVertexIndex = i >> 1;
 			pVertices[i].vPosition = _float3(0.f, 0.f, 0.f);
-			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / iTrailNum, 0.f);
+			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / m_TrailDesc.iTrailNum, 0.f);
 		}
 	}
 
@@ -116,20 +129,7 @@ HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype(_uint iTrailNum)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Rect_Trail::Initialize(void* pArg)
-{
-	if (nullptr == pArg)
-	{
-		MSG_BOX("Trail Desc NULL");
-		return E_FAIL;
-	}
-
-	m_TrailDesc = *reinterpret_cast<TRAILDESC*>(pArg);
-
-	return S_OK;
-}
-
-void CVIBuffer_Rect_Trail::Tick(_double dTimeDelta)
+void CVIBuffer_Rect_Trail::Tick()
 {
 	// Local Position
 	_vector vHighPos = (XMLoadFloat4x4(m_TrailDesc.pHighLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
@@ -154,7 +154,6 @@ void CVIBuffer_Rect_Trail::Tick(_double dTimeDelta)
 				(m_TrailDesc.fMinVertexDistance - fLength) / m_TrailDesc.fMinVertexDistance);
 
 			XMStoreFloat3(&pData[i].vPosition, vLerpPos);
-
 			continue;
 		}
 
@@ -238,11 +237,11 @@ HRESULT CVIBuffer_Rect_Trail::Setup_ShaderResources(class CShader* pShader)
 	return S_OK;
 }
 
-CVIBuffer_Rect_Trail* CVIBuffer_Rect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iTrailNum)
+CVIBuffer_Rect_Trail* CVIBuffer_Rect_Trail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CVIBuffer_Rect_Trail* pInstance = new CVIBuffer_Rect_Trail(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(iTrailNum)))
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created CVIBuffer_Rect_Trail");
 		Safe_Release(pInstance);

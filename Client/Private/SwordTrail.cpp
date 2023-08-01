@@ -50,6 +50,8 @@ GAMEEVENT CSwordTrail::Late_Tick(_double dTimeDelta)
 
 HRESULT CSwordTrail::Render()
 {
+	m_pTrailBufferCom->Tick();
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 

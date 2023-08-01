@@ -59,6 +59,25 @@ HRESULT CShuriken::Initialize_Level(_uint iLevelIndex)
 	m_pLight = pGameInstance->Add_Lights(LightDesc);
 	Safe_AddRef(m_pLight);
 
+	//Trail
+	XMStoreFloat4x4(&m_TrailRightMatrix, XMMatrixTranslation(0.f, 0.1f, 0.f));
+	XMStoreFloat4x4(&m_TrailLeftMatrix, XMMatrixTranslation(0.f, -0.1f, 0.f));
+	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
+	ZEROMEM(&TrailDesc);
+	TrailDesc.iTrailNum = 50;
+	TrailDesc.fMinVertexDistance = 0.0f;
+	TrailDesc.pHighLocalMatrix = &m_TrailRightMatrix;
+	TrailDesc.pLowLocalMatrix = &m_TrailLeftMatrix;
+	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
+	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
+
+	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_SwordTrail"),
+		TEXT("Layer_Trail"), TEXT("GameObject_ShurikenTrail"), &TrailDesc)))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_ShurikenTrail)");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;

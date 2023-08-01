@@ -223,6 +223,9 @@
     <Filter Include="02. GameObjects\00. Player\Katana\SwordTrail">
       <UniqueIdentifier>{09e600ae-a5ce-4028-9e49-3684f09948bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\00. Player\Shuriken\ShurikenTrail">
+      <UniqueIdentifier>{3d4c58be-c8fd-4ba5-a331-91bf3be19272}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -515,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="..\public\SwordTrail.h">
       <Filter>02. GameObjects\00. Player\Katana\SwordTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShurikenTrail.h">
+      <Filter>02. GameObjects\00. Player\Shuriken\ShurikenTrail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -809,6 +815,9 @@
     </ClCompile>
     <ClCompile Include="..\private\SwordTrail.cpp">
       <Filter>02. GameObjects\00. Player\Katana\SwordTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ShurikenTrail.cpp">
+      <Filter>02. GameObjects\00. Player\Shuriken\ShurikenTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

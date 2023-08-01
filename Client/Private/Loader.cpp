@@ -386,7 +386,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	
 	/*For.Prototype_Component_VIBuffer_Rect_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
-		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext, 20))))
+		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Trail)");
 		return E_FAIL;

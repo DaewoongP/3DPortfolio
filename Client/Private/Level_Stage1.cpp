@@ -76,7 +76,7 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 	DirLightDesc.vSpecular = DirLightDesc.vDiffuse;
 	DirLightDesc.vAmbient = DirLightDesc.vDiffuse;
 	pGameInstance->Add_Lights(DirLightDesc);
-
+	
 	HANDLE hFile = CreateFile(pFilePath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (INVALID_HANDLE_VALUE == hFile)
