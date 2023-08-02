@@ -45,6 +45,13 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 		}
 		break;
 	}
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Stop_AllSound();
+
+	Safe_Release(pGameInstance);
 	
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevelID);
 

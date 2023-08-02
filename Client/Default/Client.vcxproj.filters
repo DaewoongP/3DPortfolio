@@ -226,6 +226,15 @@
     <Filter Include="02. GameObjects\00. Player\Shuriken\ShurikenTrail">
       <UniqueIdentifier>{3d4c58be-c8fd-4ba5-a331-91bf3be19272}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Behaviors\02. Task\02. Effect">
+      <UniqueIdentifier>{4be95e64-7d3d-4c9b-a02f-30a1a3f335cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\LensFlare">
+      <UniqueIdentifier>{0390b437-2202-4fea-a734-87a6e9a305a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. Trigger\LevelChange">
+      <UniqueIdentifier>{8bf05b91-3abb-4814-86e8-b12e895c7d7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -521,6 +530,18 @@
     </ClInclude>
     <ClInclude Include="..\public\ShurikenTrail.h">
       <Filter>02. GameObjects\00. Player\Shuriken\ShurikenTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlockEffect.h">
+      <Filter>02. GameObjects\03. Effects\Instancing\BlockEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LensFlare.h">
+      <Filter>02. GameObjects\03. Effects\Instancing\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Task_LensFlare.h">
+      <Filter>03. Behaviors\02. Task\02. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LevelChange_Trigger.h">
+      <Filter>02. GameObjects\06. Trigger\LevelChange</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -818,6 +839,18 @@
     </ClCompile>
     <ClCompile Include="..\private\ShurikenTrail.cpp">
       <Filter>02. GameObjects\00. Player\Shuriken\ShurikenTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlockEffect.cpp">
+      <Filter>02. GameObjects\03. Effects\Instancing\BlockEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LensFlare.cpp">
+      <Filter>02. GameObjects\03. Effects\Instancing\LensFlare</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Task_LensFlare.cpp">
+      <Filter>03. Behaviors\02. Task\02. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LevelChange_Trigger.cpp">
+      <Filter>02. GameObjects\06. Trigger\LevelChange</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

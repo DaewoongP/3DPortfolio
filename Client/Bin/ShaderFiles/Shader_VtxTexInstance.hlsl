@@ -17,15 +17,12 @@ struct VS_IN
 	float4		vTranslation : TEXCOORD4;
 };
 
-
 struct VS_OUT
 {
 	float4		vPosition : SV_POSITION;
 	float2		vTexUV : TEXCOORD0;
 };
 
-
-/* 정점을 받고 변환하고 정점을 리턴한다. */
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;

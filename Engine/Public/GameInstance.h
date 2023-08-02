@@ -49,6 +49,7 @@ public: /* For.Object_Manager */
 	HRESULT Add_Prototype(const _tchar * pPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const _tchar * pPrototypeTag, const _tchar * pLayerTag, const _tchar * pGameObjectTag, void* pArg = nullptr);
 	class CGameObject* Clone_GameObject(const _tchar * pPrototypeTag, void* pArg);
+	class CGameObject* Find_Prototype(const _tchar * pPrototypeTag);
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const _tchar * pLayerTag, const _tchar * pGameObjectTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
 	class CLayer* Make_Layer(_uint iLevelIndex, const _tchar * pLayerTag);
@@ -86,6 +87,7 @@ public: /* For. Calculator */
 	_bool IsMouseInClient(ID3D11DeviceContext * pContext, HWND hWnd);
 	_uint RandomChoose(vector<_float> Weights, _uint iChooseSize);
 	_bool Timer(_double dAlarmTime, _double dTimeDelta);
+	_fvector Get_RandomVectorInSphere(_float fRadius);
 
 public: /* For. Collision_Manager */
 	HRESULT Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, class CCollider* pCollider);

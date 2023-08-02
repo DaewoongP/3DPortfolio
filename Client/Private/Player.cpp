@@ -9,6 +9,7 @@
 #include "Surge.h"
 #include "Bullet.h"
 #include "ColProp.h"
+#include "BlockEffect.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -108,7 +109,7 @@ HRESULT CPlayer::Initialize_Level(_uint iLevelIndex)
 	m_pBlockColliderCom->Set_Color(DirectX::Colors::DarkRed);
 	m_pBlinkColliderCom->Set_Color(DirectX::Colors::Yellow);
 #endif // _DEBUG
-		
+
 	return S_OK;
 }
 
@@ -495,6 +496,14 @@ HRESULT CPlayer::Add_Component()
 		TEXT("Com_BlinkCollider"), reinterpret_cast<CComponent**>(&m_pBlinkColliderCom), &BlinkAABBDesc)))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_BlinkCollider)");
+		return E_FAIL;
+	}
+
+	/* For.Com_BlockEffect */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BlockEffect"),
+		TEXT("Com_BlockEffect"), reinterpret_cast<CComponent**>(&m_pBlockEffect))))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_BlockEffect)");
 		return E_FAIL;
 	}
 
@@ -1030,6 +1039,9 @@ void CPlayer::Attack(_double dTimeDelta)
 		90 <= m_pModelCom->Get_CurrentAnimIndex())
 		return;
 
+	if (WEAPON_KATANA == m_eCurWeapon)
+		m_pKatana->Add_TrailRender();
+
 	_float fAnimFramePercent = m_pModelCom->Get_CurrentFramePercent();
 
 	if (0.15f > fAnimFramePercent)
@@ -1080,6 +1092,12 @@ void CPlayer::Block(_double dTimeDelta)
 		 0 == m_BlockEnemyWeapons.size())
 		return;
 
+	if (0.7f < m_pModelCom->Get_CurrentFramePercent())
+	{
+		m_BlockEnemyWeapons.clear();
+		return;
+	}
+	
 	for (auto iter = m_BlockEnemyWeapons.begin(); iter != m_BlockEnemyWeapons.end();)
 	{
 		if (wcswcs((*iter)->Get_Tag(), TEXT("Bullet")))
@@ -1105,6 +1123,15 @@ void CPlayer::Block(_double dTimeDelta)
 			iter = m_BlockEnemyWeapons.erase(iter);
 		}
 	}
+	
+	_float4 vWeaponPos;
+	if (WEAPON_SHURIKEN == m_eCurWeapon)
+		memcpy(&vWeaponPos, m_pShuriken->Get_CombinedWorldMatrix().m[3], sizeof(_float4));
+	else
+		memcpy(&vWeaponPos, m_pKatana->Get_CombinedWorldMatrix().m[3], sizeof(_float4));
+
+	m_pBlockEffect->Render_Effect(XMLoadFloat4(&vWeaponPos) + m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+	m_pPlayerCameraCom->Shake_RollPitchYaw(0.f, 10.f, 0.f, 4.0, 0.2);
 }
 
 void CPlayer::Add_Collisions()
@@ -1635,6 +1662,8 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pBlockEffect);
 
 	Safe_Release(m_pWire);
 	Safe_Release(m_pSurge);

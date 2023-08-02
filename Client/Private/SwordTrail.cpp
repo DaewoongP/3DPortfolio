@@ -40,11 +40,7 @@ GAMEEVENT CSwordTrail::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
-	}
-
+	
 	return GAME_NOEVENT;
 }
 
@@ -54,8 +50,8 @@ HRESULT CSwordTrail::Render()
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-
-	if (FAILED(m_pTrailBufferCom->Render("g_Texture", m_pTextureCom, m_pShaderCom, 7)))
+	
+	if (FAILED(m_pTrailBufferCom->Render("g_vColor", _float4(1.f, 0.1f, 0.1f, 0.3f), m_pShaderCom, 8)))
 		return E_FAIL;
 
 	return S_OK;
@@ -96,6 +92,14 @@ HRESULT CSwordTrail::Add_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CSwordTrail::Add_Render()
+{
+	if (nullptr != m_pRendererCom)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+	}
 }
 
 CSwordTrail* CSwordTrail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

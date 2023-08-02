@@ -103,6 +103,7 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 	AnimationState(dTimeDelta);
 
 	__super::Late_Tick(dTimeDelta);
+
 #ifdef _DEBUG
 	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
 	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);

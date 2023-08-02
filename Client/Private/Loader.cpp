@@ -25,18 +25,22 @@
 #include "Indicator.h"
 #include "Crosshair.h"
 #include "MiniEnemy.h"
+#include "LensFlare.h"
 #include "SwordTrail.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
+#include "BlockEffect.h"
 #include "BlinkTarget.h"
 #include "Enemy_Sword.h"
 #include "Boss_Shield.h"
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
+#include "ShurikenTrail.h"
 #include "GhostRunner_Logo.h"
 #include "Black_BackGround.h"
 #include "Loading_OuterCycle.h"
 #include "Loading_InnerCycle.h"
+#include "LevelChange_Trigger.h"
 
 #ifdef _DEBUG
 #include "Terrain.h"
@@ -337,6 +341,38 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Trail)");
 		return E_FAIL;
 	}
+	
+	/* For.Prototype_Component_Texture_Smoke_Trail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Trail"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/VFX_PNG/Textures/Uzi/T_Smoke_Trail_Thin_Wide.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Smoke_Trail)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Large_Smoke_Trail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Large_Smoke_Trail"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/VFX_PNG/Textures/Uzi/T_Smoke_Trail_Large.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Large_Smoke_Trail)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_LensFlare */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_LensFlare"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Lensflare.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_LensFlare)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Block_Particle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Block_Particle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_VFX_Circle_01.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Block_Particle)");
+		return E_FAIL;
+	}
 
 #ifdef _DEBUG
 
@@ -354,31 +390,9 @@ HRESULT CLoader::Loading_For_Stage1()
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
 	_matrix		PivotMatrix = XMMatrixIdentity();
 
-#ifdef _DEBUG
-
-	CVIBuffer_Rect_Instance::INSTANCEDESC RectInstanceDesc;
-	ZEROMEM(&RectInstanceDesc);
-	RectInstanceDesc.vExtents = _float3(10.f, 4.f, 10.f);
-	RectInstanceDesc.vSpeed = _uint2(2, 10);
-	RectInstanceDesc.fLifeTime = 10.f;
-	RectInstanceDesc.fHeight = 10.f;
-
-	/*For.Prototype_Component_VIBuffer_Rect_Instance*/
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
-		CVIBuffer_Rect_Instance::Create(m_pDevice, m_pContext, &RectInstanceDesc, 30))))
-	{
-		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Instance)");
-		return E_FAIL;
-	}
-
-#endif // _DEBUG
-
-	CVIBuffer_Point_Instance::INSTANCEDESC PointInstanceDesc;
-	ZEROMEM(&PointInstanceDesc);
-
 	/*For.Prototype_Component_VIBuffer_Point_Instance*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Instance"),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &PointInstanceDesc, 8))))
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Instance)");
 		return E_FAIL;
@@ -806,6 +820,40 @@ HRESULT CLoader::Loading_For_Stage1()
 		CSwordTrail::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_SwordTrail)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_ShurikenTrail */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShurikenTrail"),
+		CShurikenTrail::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShurikenTrail)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_LensFlare */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_LensFlare"),
+		CLensFlare::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_LensFlare)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_LevelChange_Trigger */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_LevelChange_Trigger"),
+		CLevelChange_Trigger::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_LevelChange_Trigger)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("이펙트 로딩 중."));
+	
+	/* For.Prototype_GameObject_BlockEffect */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BlockEffect"),
+		CBlockEffect::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BlockEffect)");
 		return E_FAIL;
 	}
 

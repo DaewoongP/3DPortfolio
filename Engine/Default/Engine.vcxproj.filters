@@ -420,6 +420,12 @@
     <ClInclude Include="..\public\VIBuffer_Rect_Trail.h">
       <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Rect_Matrix.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Point_Instance_World.h">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -616,6 +622,12 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Rect_Trail.cpp">
       <Filter>01. Utility\03. Components\07. VIBuffer\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Rect_Matrix.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Rect_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Point_Instance_World.cpp">
+      <Filter>01. Utility\03. Components\07. VIBuffer\Instance\Point_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

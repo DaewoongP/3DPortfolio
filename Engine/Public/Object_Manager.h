@@ -22,6 +22,7 @@ public:
 	class CGameObject* Clone_GameObject(const _tchar* pPrototypeTag, void* pArg);
 	void	Clear_LevelResources(_uint iLevelIndex);
 	
+	class CGameObject*	Find_Prototype(const _tchar* pPrototypeTag);
 	class CGameObject*	Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag);
 	class CLayer*		Find_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
 	class CLayer*		Make_Layer(_uint iLevelIndex, const _tchar* pLayerTag);
@@ -45,9 +46,6 @@ private:
 	_uint				m_iNumLevels = { 0 };
 
 	class CGameObject*	m_pLastGameObject = { nullptr };
-
-private:
-	class CGameObject*	Find_Prototype(const _tchar* pPrototypeTag);
 
 public:
 	virtual void Free() override;

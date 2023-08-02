@@ -35,10 +35,6 @@ HRESULT CTrigger::Initialize(void* pArg)
 
 void CTrigger::Tick(_double dTimeDelta)
 {
-#ifdef _DEBUG
-	m_pColliderCom->Set_Color(XMLoadFloat4(&m_vColliderColor));
-#endif // _DEBUG
-
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());;
@@ -46,7 +42,7 @@ void CTrigger::Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_TRIGGER, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
 }
@@ -90,7 +86,7 @@ HRESULT CTrigger::Render()
 
 HRESULT CTrigger::Reset()
 {
-	if (FAILED(Reset()))
+	if (FAILED(__super::Reset()))
 		return E_FAIL;
 
 	return S_OK;
@@ -104,7 +100,7 @@ HRESULT CTrigger::Add_Component()
 	AABBDesc.vPosition = _float3(0.f, AABBDesc.vExtents.y, 0.f);
 
 	/* For.Com_Collider */
-	if (FAILED(CComposite::Add_Component(LEVEL_STAGE1, TEXT("Prototype_Component_Collider_AABB"),
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 	{
 		MSG_BOX("Failed CTrigger Add_Component : (Com_Collider)");
@@ -112,7 +108,7 @@ HRESULT CTrigger::Add_Component()
 	}
 
 #ifdef _DEBUG
-	/* For.Com_Collider */
+	/* For.Com_Renderer */
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRenderer))))
 	{
@@ -130,4 +126,8 @@ void CTrigger::Free()
 	__super::Free();
 
 	Safe_Release(m_pColliderCom);
+	
+#ifdef _DEBUG
+	Safe_Release(m_pRenderer);
+#endif // _DEBUG
 }

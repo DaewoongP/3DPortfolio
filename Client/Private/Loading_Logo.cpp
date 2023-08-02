@@ -25,7 +25,7 @@ HRESULT CLoading_Logo::Initialize(void* pArg)
 {
 	if (FAILED(Add_Components()))
 		return E_FAIL;
-
+	
 	if (FAILED(m_pVIBufferCom->Change_TexCoord(720.f, 0.f, 720.f, 300.f, m_pTextureCom, 0)))
 	{
 		MSG_BOX("Failed Change TexCoord");

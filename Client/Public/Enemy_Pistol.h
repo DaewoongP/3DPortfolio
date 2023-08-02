@@ -42,7 +42,6 @@ private:
 private:
 	class CPistol*			m_pPistol = { nullptr };
 	_float					m_fVisionRange = { 0.f };
-	
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };

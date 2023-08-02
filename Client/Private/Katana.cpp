@@ -1,6 +1,6 @@
 #include "..\Public\Katana.h"
 #include "GameInstance.h"
-#include "VIBuffer_Rect_Trail.h"
+#include "SwordTrail.h"
 #include "Player.h"
 
 CKatana::CKatana(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -64,6 +64,9 @@ HRESULT CKatana::Initialize_Level(_uint iLevelIndex)
 		MSG_BOX("Failed Add_GameObject : (GameObject_KatanaTrail)");
 		return E_FAIL;
 	}
+
+	m_pSwordTrail = static_cast<CSwordTrail*>(pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Trail"), TEXT("GameObject_KatanaTrail")));
+	Safe_AddRef(m_pSwordTrail);
 
 	Safe_Release(pGameInstance);
 
@@ -206,8 +209,14 @@ void CKatana::Attack()
 	Safe_AddRef(pGameInstance);
 
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERWEAPON, m_pColliderCom);
-
+	
 	Safe_Release(pGameInstance);
+}
+
+void CKatana::Add_TrailRender()
+{
+	if (nullptr != m_pSwordTrail)
+		m_pSwordTrail->Add_Render();
 }
 
 CKatana* CKatana::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -239,6 +248,8 @@ CGameObject* CKatana::Clone(void* pArg)
 void CKatana::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pSwordTrail);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

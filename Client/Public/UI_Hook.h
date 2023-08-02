@@ -34,6 +34,7 @@ private: /* Hook Texture */
 
 private:
 	list<_float3>		m_HookPositions;
+	_uint				m_iAllHookCnt = { 0 };
 
 private:
 	HRESULT Add_Components();
@@ -42,7 +43,8 @@ private:
 public:
 	static CUI_Hook* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
-	virtual void Free() override;
+	virtual void Free(
+	) override;
 };
 
 END

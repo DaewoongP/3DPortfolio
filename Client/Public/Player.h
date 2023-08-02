@@ -140,12 +140,15 @@ private:
 private:
 	vector<class CGameObject*>	m_Shurikens;
 
+private: /* Effects */
+	class CBlockEffect*		m_pBlockEffect = { nullptr };
+
 #ifdef _DEBUG
 	_bool					m_isMouseFixed = { true };
 	_bool					m_isInvisible = { false };
 #endif // _DEBUG
 
-private: /* Tick */
+private:
 	HRESULT Add_Component();
 	HRESULT Add_Component_Level(_uint iLevelIndex);
 	HRESULT Add_Parts(_uint iLevelIndex);
@@ -169,7 +172,7 @@ private: /* Tick */
 
 	void Check_Fall();
 
-private: /* Late_Tick */
+private:
 	void CameraOffset(_double dTimeDelta);
 
 private: /* Collisions */

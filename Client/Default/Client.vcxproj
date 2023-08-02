@@ -172,6 +172,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Shader_Client_Defines.hpp" />
     <ClInclude Include="..\public\Black_BackGround.h" />
     <ClInclude Include="..\public\BlinkTarget.h" />
+    <ClInclude Include="..\public\BlockEffect.h" />
     <ClInclude Include="..\public\Bomb.h" />
     <ClInclude Include="..\public\Boss.h" />
     <ClInclude Include="..\public\Boss_Hp.h" />
@@ -193,6 +194,8 @@
     <ClInclude Include="..\public\Hammer.h" />
     <ClInclude Include="..\public\Indicator.h" />
     <ClInclude Include="..\public\Katana.h" />
+    <ClInclude Include="..\public\LensFlare.h" />
+    <ClInclude Include="..\public\LevelChange_Trigger.h" />
     <ClInclude Include="..\public\ShurikenTrail.h" />
     <ClInclude Include="..\public\SwordTrail.h" />
     <ClInclude Include="..\public\Level_Boss.h" />
@@ -242,6 +245,7 @@
     <ClInclude Include="..\public\Task_FailedWait.h" />
     <ClInclude Include="..\public\Task_Fly.h" />
     <ClInclude Include="..\public\Task_Landing.h" />
+    <ClInclude Include="..\public\Task_LensFlare.h" />
     <ClInclude Include="..\public\Task_LookAt.h" />
     <ClInclude Include="..\public\Task_MoveBack.h" />
     <ClInclude Include="..\Public\Task_MoveForward.h" />
@@ -271,6 +275,7 @@
   <ItemGroup>
     <ClCompile Include="..\private\Black_BackGround.cpp" />
     <ClCompile Include="..\private\BlinkTarget.cpp" />
+    <ClCompile Include="..\private\BlockEffect.cpp" />
     <ClCompile Include="..\private\Bomb.cpp" />
     <ClCompile Include="..\private\Boss.cpp" />
     <ClCompile Include="..\private\Boss_Hp.cpp" />
@@ -291,6 +296,8 @@
     <ClCompile Include="..\private\Hammer.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
+    <ClCompile Include="..\private\LensFlare.cpp" />
+    <ClCompile Include="..\private\LevelChange_Trigger.cpp" />
     <ClCompile Include="..\private\ShurikenTrail.cpp" />
     <ClCompile Include="..\private\SwordTrail.cpp" />
     <ClCompile Include="..\private\Level_Boss.cpp" />
@@ -340,6 +347,7 @@
     <ClCompile Include="..\private\Task_FailedWait.cpp" />
     <ClCompile Include="..\private\Task_Fly.cpp" />
     <ClCompile Include="..\private\Task_Landing.cpp" />
+    <ClCompile Include="..\private\Task_LensFlare.cpp" />
     <ClCompile Include="..\private\Task_LookAt.cpp" />
     <ClCompile Include="..\private\Task_MoveBack.cpp" />
     <ClCompile Include="..\Private\Task_MoveForward.cpp" />

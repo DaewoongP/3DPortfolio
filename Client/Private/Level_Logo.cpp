@@ -17,6 +17,13 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_Mouse(TEXT("Layer_Mouse"))))
 		return E_FAIL;
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Play_BGM(TEXT("Logo.ogg"), 0.3f);
+
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

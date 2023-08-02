@@ -19,13 +19,11 @@ struct VS_IN
 	float4		vTranslation : TEXCOORD4;
 };
 
-
 struct VS_OUT
 {
 	float4		vPosition : POSITION;
 	float2		vPSize : PSIZE;
 };
-
 
 /* 정점을 받고 변환하고 정점을 리턴한다. */
 VS_OUT VS_MAIN(VS_IN In)
@@ -112,6 +110,23 @@ float4	PS_MAIN(PS_IN In) : SV_TARGET0
 	return vColor;
 }
 
+float4 PS_MAIN_COLOR(PS_IN In) : SV_TARGET0
+{
+    float4 vColor = (float4) 0;
+
+    vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
+
+    if (vColor.r < 0.1f &&
+		vColor.g < 0.1f &&
+		vColor.b < 0.1f &&
+		vColor.a < 0.1f)
+        discard;
+        
+
+
+    return vColor;
+}
+
 technique11		DefaultTechnique
 {
 	pass GameUI
@@ -126,4 +141,17 @@ technique11		DefaultTechnique
 		DomainShader = NULL/*compile ds_5_0 DS_MAIN()*/;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
+
+    pass BlockEffect
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_COLOR();
+    }
 }

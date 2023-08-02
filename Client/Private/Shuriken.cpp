@@ -1,5 +1,6 @@
 #include "../Public/Shuriken.h"
 #include "GameInstance.h"
+#include "ShurikenTrail.h"
 #include "Player.h"
 #include "Light.h"
 
@@ -64,19 +65,22 @@ HRESULT CShuriken::Initialize_Level(_uint iLevelIndex)
 	XMStoreFloat4x4(&m_TrailLeftMatrix, XMMatrixTranslation(0.f, -0.1f, 0.f));
 	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
 	ZEROMEM(&TrailDesc);
-	TrailDesc.iTrailNum = 50;
-	TrailDesc.fMinVertexDistance = 0.0f;
+	TrailDesc.iTrailNum = 30;
+	TrailDesc.fMinVertexDistance = 0.1f;
 	TrailDesc.pHighLocalMatrix = &m_TrailRightMatrix;
 	TrailDesc.pLowLocalMatrix = &m_TrailLeftMatrix;
 	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
 	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
 
-	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_SwordTrail"),
+	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_ShurikenTrail"),
 		TEXT("Layer_Trail"), TEXT("GameObject_ShurikenTrail"), &TrailDesc)))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_ShurikenTrail)");
 		return E_FAIL;
 	}
+
+	m_pTrail = static_cast<CShurikenTrail*>(pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Trail"), TEXT("GameObject_ShurikenTrail")));
+	Safe_AddRef(m_pTrail);
 
 	Safe_Release(pGameInstance);
 
@@ -114,6 +118,8 @@ GAMEEVENT CShuriken::Late_Tick(_double dTimeDelta)
 		XMStoreFloat4x4(&m_CombinedWorldMatrix,
 			XMLoadFloat4x4(&m_CombinedWorldMatrix) * XMMatrixTranslation(XMVectorGetX(vDir), XMVectorGetY(vDir), XMVectorGetZ(vDir)));
 		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERWEAPON, m_pColliderCom);
+
+		m_pTrail->Add_Render();
 	}
 	else
 		__super::Late_Tick(dTimeDelta);
@@ -275,6 +281,8 @@ CGameObject* CShuriken::Clone(void* pArg)
 void CShuriken::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTrail);
 
 	Safe_Release(m_pLight);
 	Safe_Release(m_pModelCom);

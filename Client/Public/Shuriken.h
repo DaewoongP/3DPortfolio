@@ -46,6 +46,7 @@ private:
 	_float4				m_vEmissive;
 
 private:
+	class CShurikenTrail*	m_pTrail = { nullptr };
 	_float4x4			m_TrailLeftMatrix;
 	_float4x4			m_TrailRightMatrix;
 

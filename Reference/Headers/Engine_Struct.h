@@ -166,12 +166,12 @@ namespace Engine
 	typedef struct ENGINE_DLL tagVertex_Rect_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = { 6 };
-		static const D3D11_INPUT_ELEMENT_DESC			Elements[iNumElements];
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXRECTINSTANCE_DECL;
 
 	typedef struct ENGINE_DLL tagVertex_Point_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = { 6 };
-		static const D3D11_INPUT_ELEMENT_DESC			Elements[iNumElements];
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXPOINTINSTANCE_DECL;
 }

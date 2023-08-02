@@ -82,8 +82,10 @@
     <ClInclude Include="..\public\VIBuffer_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Line.h" />
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h" />
+    <ClInclude Include="..\public\VIBuffer_Point_Instance_World.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Dynamic.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Instance.h" />
+    <ClInclude Include="..\public\VIBuffer_Rect_Matrix.h" />
     <ClInclude Include="..\public\VIBuffer_Rect_Trail.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
     <ClInclude Include="..\Public\Timer.h" />
@@ -149,8 +151,10 @@
     <ClCompile Include="..\private\VIBuffer_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Line.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Point_Instance.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Point_Instance_World.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Dynamic.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Instance.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Rect_Matrix.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect_Trail.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />

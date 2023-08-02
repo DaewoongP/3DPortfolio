@@ -25,6 +25,9 @@ public:
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	void Add_Render();
+
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };

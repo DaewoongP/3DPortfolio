@@ -40,9 +40,6 @@ GAMEEVENT CShurikenTrail::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
-
 	return GAME_NOEVENT;
 }
 
@@ -57,6 +54,12 @@ HRESULT CShurikenTrail::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CShurikenTrail::Add_Render()
+{
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CShurikenTrail::Add_Components(void* pArg)
@@ -86,7 +89,7 @@ HRESULT CShurikenTrail::Add_Components(void* pArg)
 	}
 
 	/* For.Com_TrailTexture */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Trail"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Trail"),
 		TEXT("Com_TrailTexture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed CPlayer Add_Component : (Com_TrailTexture)");

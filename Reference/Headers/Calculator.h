@@ -27,6 +27,7 @@ public:
 	_int RandomChoose(vector<_float> Weights, _uint iChooseSize);
 	// 특정 시간마다 true 반환
 	_bool Timer(_double dAlarmTime, _double dTimeDelta);
+	_fvector Get_RandomVectorInSphere(_float fRadius);
 
 private:
 	_double			m_dAlarmTimeAcc = { 0.0 };

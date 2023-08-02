@@ -30,6 +30,8 @@ HRESULT CUI_Hook::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_Scale(_float3(5.f, 5.f, 5.f));
+
 	return S_OK;
 }
 
@@ -53,6 +55,16 @@ HRESULT CUI_Hook::Initialize_Level(_uint iLevelIndex)
 		m_HookPositions.push_back(pHook->Get_Collider()->Get_BoundingCenterPosition());
 	}
 
+	m_iAllHookCnt = (_uint)m_HookPositions.size();
+
+	/* For.Com_VIBuffer */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Instance"),
+		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom), &m_iAllHookCnt)))
+	{
+		MSG_BOX("Failed BackGround Add_Component : (Com_VIBuffer)");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -73,23 +85,10 @@ GAMEEVENT CUI_Hook::Late_Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	_float4x4 WorldMatrix, ViewMatrix, BillMatrixY;
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&BillMatrixY, XMMatrixIdentity());
+	vector<_float4x4>	InstanceMatricies;
+	InstanceMatricies.resize(m_iAllHookCnt);
 
-	ViewMatrix = *pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
-
-	BillMatrixY._11 = ViewMatrix._11;
-	BillMatrixY._13 = ViewMatrix._13;
-	BillMatrixY._31 = ViewMatrix._31;
-	BillMatrixY._33 = ViewMatrix._33;
-
-	XMStoreFloat4x4(&WorldMatrix,
-		XMMatrixScaling(5.f, 5.f, 5.f) *
-		XMMatrixInverse(nullptr, XMLoadFloat4x4(&BillMatrixY)));
-
-	_float4x4	InstanceMatricies[8];
-	ZeroMemory(InstanceMatricies, sizeof(_float4x4) * 8);
+	ZeroMemory(InstanceMatricies.data(), sizeof(_float4x4) * 8);
 	_float4 vCamPos = *pGameInstance->Get_CamPosition();
 
 	_uint iIndex = { 0 };
@@ -98,7 +97,7 @@ GAMEEVENT CUI_Hook::Late_Tick(_double dTimeDelta)
 		if (85.f > XMVectorGetX(XMVector3Length(XMVectorSet(vCamPos.x, vCamPos.y, vCamPos.z, vCamPos.w) - XMLoadFloat3(&vPosition))))
 		{
 			_float4x4 InstanceMatrix;
-			XMStoreFloat4x4(&InstanceMatrix, XMLoadFloat4x4(&WorldMatrix) * XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z));
+			XMStoreFloat4x4(&InstanceMatrix, m_pTransformCom->Get_WorldMatrix() * XMMatrixTranslation(vPosition.x, vPosition.y, vPosition.z));
 			InstanceMatricies[iIndex] = InstanceMatrix;
 		}
 		
@@ -107,7 +106,7 @@ GAMEEVENT CUI_Hook::Late_Tick(_double dTimeDelta)
 
 	Safe_Release(pGameInstance);
 
-	m_pBufferCom->Tick(InstanceMatricies);
+	m_pBufferCom->Tick(InstanceMatricies.data());
 
 	return GAME_NOEVENT;
 }
@@ -142,14 +141,6 @@ HRESULT CUI_Hook::Add_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Shader)");
-		return E_FAIL;
-	}
-
-	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Instance"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pBufferCom))))
-	{
-		MSG_BOX("Failed BackGround Add_Component : (Com_VIBuffer)");
 		return E_FAIL;
 	}
 

@@ -11,6 +11,13 @@ CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 HRESULT CLevel_Stage1::Initialize()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	pGameInstance->Play_BGM(TEXT("Stage1.ogg"), 0.3f);
+
+	Safe_Release(pGameInstance);
+
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Stage1.Light")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
@@ -18,6 +25,7 @@ HRESULT CLevel_Stage1::Initialize()
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
 	FAILED_CHECK_RETURN(Ready_Layer_Props(TEXT("..\\..\\Resources\\GameData\\Map\\NonAnim\\Stage1.Map")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_BackGround(TEXT("Layer_BackGround")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Trigger(TEXT("Layer_Trigger")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_UI(TEXT("Layer_UI")), E_FAIL);
 	
 	
@@ -342,6 +350,22 @@ HRESULT CLevel_Stage1::Ready_Layer_BackGround(const _tchar* pLayerTag)
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_Sky"), pLayerTag, TEXT("GameObject_Sky"))))
 	{
 		MSG_BOX("Failed Add_GameObject : (Prototype_GameObject_Sky)");
+		return E_FAIL;
+	}
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_Layer_Trigger(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_LevelChange_Trigger"), pLayerTag, TEXT("GameObject_LevelChange_Trigger"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_LevelChange_Trigger)");
 		return E_FAIL;
 	}
 

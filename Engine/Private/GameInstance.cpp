@@ -205,6 +205,13 @@ CGameObject* CGameInstance::Clone_GameObject(const _tchar* pPrototypeTag, void* 
 	return m_pObject_Manager->Clone_GameObject(pPrototypeTag, pArg);
 }
 
+CGameObject* CGameInstance::Find_Prototype(const _tchar* pPrototypeTag)
+{
+	NULL_CHECK_RETURN_MSG(m_pObject_Manager, nullptr, TEXT("Object_Manager NULL"));
+
+	return m_pObject_Manager->Find_Prototype(pPrototypeTag);
+}
+
 CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const _tchar* pLayerTag, const _tchar* pGameObjectTag)
 {
 	NULL_CHECK_RETURN_MSG(m_pObject_Manager, nullptr, TEXT("Object_Manager NULL"));
@@ -400,6 +407,13 @@ _bool CGameInstance::Timer(_double dAlarmTime, _double dTimeDelta)
 	NULL_CHECK_RETURN_MSG(m_pCalculator, false, TEXT("Calculator NULL"));
 
 	return m_pCalculator->Timer(dAlarmTime, dTimeDelta);
+}
+
+_fvector CGameInstance::Get_RandomVectorInSphere(_float fRadius)
+{
+	NULL_CHECK_RETURN_MSG(m_pCalculator, XMVectorZero(), TEXT("Calculator NULL"));
+
+	return m_pCalculator->Get_RandomVectorInSphere(fRadius);
 }
 
 HRESULT CGameInstance::Add_Collider(COLLISIONDESC::COLTYPE eCollisionType, CCollider* pCollider)
