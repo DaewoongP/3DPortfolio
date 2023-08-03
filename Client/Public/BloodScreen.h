@@ -1,0 +1,51 @@
+#pragma once
+#include "GameObject.h"
+#include "Client_Defines.h"
+
+BEGIN(Engine)
+class CShader;
+class CTexture;
+class CRenderer;
+class CVIBuffer_Rect;
+END
+
+BEGIN(Client)
+
+class CBloodScreen final : public CGameObject
+{
+private:
+	explicit CBloodScreen(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CBloodScreen(const CBloodScreen& rhs);
+	virtual ~CBloodScreen() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double dTimeDelta) override;
+	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
+	virtual HRESULT Render() override;
+
+public:
+	void Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix);
+
+private:
+	CShader*					m_pShaderCom = { nullptr };
+	CTexture*					m_pTextureCom = { nullptr };
+	CRenderer*					m_pRendererCom = { nullptr };
+	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+
+private:
+	_double						m_dRenderTimeAcc = { 0.0 };
+	_double						m_dRenderTime = { 0.0 };
+
+private:
+	HRESULT Add_Components();
+	HRESULT SetUp_ShaderResources();
+
+public:
+	static CBloodScreen* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
+	virtual void Free() override;
+};
+
+END

@@ -40,6 +40,7 @@ public:
 protected:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
+	class CLensFlare*		m_pLensFlareEffect = { nullptr };
 
 protected:
 	ENEMYDESC				m_EnemyDesc;

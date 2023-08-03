@@ -24,6 +24,9 @@ private:
 	CTransform*				m_pTransformCom = { nullptr };
 	_float4x4*				m_LensMatrix = { nullptr };
 
+private:
+	_float4x4				m_OutMatrix;
+
 public:
 	static CTask_LensFlare* Create(class CBlackBoard* pBlackBoard);
 	virtual void Free() override;

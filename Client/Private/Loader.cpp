@@ -29,6 +29,7 @@
 #include "SwordTrail.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
+#include "BulletTrail.h"
 #include "BlockEffect.h"
 #include "BlinkTarget.h"
 #include "Enemy_Sword.h"
@@ -36,6 +37,7 @@
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
 #include "ShurikenTrail.h"
+#include "BloodDirectional.h"
 #include "GhostRunner_Logo.h"
 #include "Black_BackGround.h"
 #include "Loading_OuterCycle.h"
@@ -368,9 +370,25 @@ HRESULT CLoader::Loading_For_Stage1()
 	
 	/* For.Prototype_Component_Texture_Block_Particle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Block_Particle"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_VFX_Circle_01.png")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Tri%d.dds"), 6))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Block_Particle)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Circle_Particle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Circle_Particle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/VFX_PNG/Textures/T_VFX_Circle_01.png")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Circle_Particle)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Blood_Directional */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Directional"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Blood_Directional_0%d.dds"), 6))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Directional)");
 		return E_FAIL;
 	}
 
@@ -816,7 +834,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 	/* For.Prototype_GameObject_SwordTrail */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SwordTrail"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_SwordTrail"),
 		CSwordTrail::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_SwordTrail)");
@@ -824,7 +842,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 	
 	/* For.Prototype_GameObject_ShurikenTrail */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShurikenTrail"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_ShurikenTrail"),
 		CShurikenTrail::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShurikenTrail)");
@@ -832,7 +850,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 
 	/* For.Prototype_GameObject_LensFlare */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_LensFlare"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_LensFlare"),
 		CLensFlare::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_LensFlare)");
@@ -854,6 +872,22 @@ HRESULT CLoader::Loading_For_Stage1()
 		CBlockEffect::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BlockEffect)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_BulletTrail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BulletTrail"),
+		CBulletTrail::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BulletTrail)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_BloodDirectional */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodDirectional"),
+		CBloodDirectional::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodDirectional)");
 		return E_FAIL;
 	}
 

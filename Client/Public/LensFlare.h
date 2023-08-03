@@ -6,7 +6,7 @@ BEGIN(Engine)
 class CShader;
 class CTexture;
 class CRenderer;
-class CVIBuffer_Point_Instance;
+class CVIBuffer_Rect;
 END
 
 BEGIN(Client)
@@ -26,17 +26,20 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Render_Effect(_double dRenderTime, _fvector vPos);
+	void Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix);
 
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CTexture*					m_pTextureCom = { nullptr };
 	CRenderer*					m_pRendererCom = { nullptr };
-	CVIBuffer_Point_Instance*	m_pVIBufferCom = { nullptr };
+	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 
 private:
 	_double						m_dRenderTimeAcc = { 0.0 };
 	_double						m_dRenderTime = { 0.0 };
+
+private:
+	_float4x4*					m_WorldMatrix = { nullptr };
 
 private:
 	HRESULT Add_Components();

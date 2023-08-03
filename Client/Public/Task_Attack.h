@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 class CPart;
+class CTransform;
 END
 
 BEGIN(Client)
@@ -23,6 +24,11 @@ private:
 	_double*				m_dAttackCoolTime = { nullptr };
 	_bool*					m_isAttack = { nullptr };
 	CPart*					m_pWeapon = { nullptr };
+
+	class CLensFlare*		m_pLensFlare = { nullptr };
+	CTransform*				m_pTransformCom = { nullptr };
+	_float4x4*				m_LensMatrix = { nullptr };
+	_float4x4				m_OutMatrix;
 
 public:
 	static CTask_Attack* Create(class CBlackBoard* pBlackBoard);

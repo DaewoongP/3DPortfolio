@@ -42,14 +42,6 @@ GAMEEVENT CLensFlare::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	m_dRenderTimeAcc += dTimeDelta;
-
-	if (m_dRenderTimeAcc < m_dRenderTime)
-	{
-		if (nullptr != m_pRendererCom)
-			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
-	}
-	
 	return GAME_NOEVENT;
 }
 
@@ -61,19 +53,22 @@ HRESULT CLensFlare::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(1);
+	m_pShaderCom->Begin(9);
 
 	m_pVIBufferCom->Render();
 
 	return S_OK;
 }
 
-void CLensFlare::Render_Effect(_double dRenderTime, _fvector vPos)
+void CLensFlare::Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix)
 {
 	m_dRenderTime = dRenderTime;
 	m_dRenderTimeAcc = 0.0;
 
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
+	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(pWorldMatrix));
+
+	if (nullptr != m_pRendererCom)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CLensFlare::Add_Components()
@@ -84,7 +79,7 @@ HRESULT CLensFlare::Add_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Instance"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
@@ -116,7 +111,9 @@ HRESULT CLensFlare::SetUp_ShaderResources()
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
-
+	_float4 vColor = _float4(1.f, 0.f, 0.f, 0.5f);
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
+		return E_FAIL;
 	if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_Texture")))
 		return E_FAIL;
 

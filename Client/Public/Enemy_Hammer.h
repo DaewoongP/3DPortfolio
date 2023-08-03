@@ -53,6 +53,7 @@ private: /* BehaviorTree */
 	_double						m_dAttackCoolTime = { 0.0 };
 	_bool						m_isAttack = { false };
 	_double						m_dWaitTime = { 0.0 };
+	_float4x4					m_LensOffsetMatrix;
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.

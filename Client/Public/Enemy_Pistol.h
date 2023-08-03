@@ -38,6 +38,7 @@ private:
 	CCollider*				m_pColliderCom = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
 	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
+	class CBloodDirectional*	m_pBloodEffect = { nullptr };
 
 private:
 	class CPistol*			m_pPistol = { nullptr };
@@ -50,6 +51,7 @@ private: /* BehaviorTree */
 	_double						m_dAttackCoolTime = { 0.0 };
 	_double						m_dPatrolWaitTime = { 0.0 };
 	_bool						m_isWait = { false };
+	_float4x4					m_LensOffsetMatrix;
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.

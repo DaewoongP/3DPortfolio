@@ -235,6 +235,18 @@
     <Filter Include="02. GameObjects\06. Trigger\LevelChange">
       <UniqueIdentifier>{8bf05b91-3abb-4814-86e8-b12e895c7d7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Bullet\BulletTrail">
+      <UniqueIdentifier>{f445bae0-692f-4c0b-ab45-162e91c53e6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\BulletSpark">
+      <UniqueIdentifier>{341018e1-3e97-4769-9b40-40f4957cde23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\BloodScreen">
+      <UniqueIdentifier>{71a3bde5-802f-4c7b-94ca-39f28cd98af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\BloodDirectional">
+      <UniqueIdentifier>{c711cf10-d0f9-4ddb-91bf-21a8f8172993}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -542,6 +554,18 @@
     </ClInclude>
     <ClInclude Include="..\public\LevelChange_Trigger.h">
       <Filter>02. GameObjects\06. Trigger\LevelChange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BulletTrail.h">
+      <Filter>02. GameObjects\01. Enemy\Bullet\BulletTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BulletSpark.h">
+      <Filter>02. GameObjects\03. Effects\Instancing\BulletSpark</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BloodScreen.h">
+      <Filter>02. GameObjects\03. Effects\BloodScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BloodDirectional.h">
+      <Filter>02. GameObjects\03. Effects\Instancing\BloodDirectional</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -851,6 +875,18 @@
     </ClCompile>
     <ClCompile Include="..\private\LevelChange_Trigger.cpp">
       <Filter>02. GameObjects\06. Trigger\LevelChange</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BulletTrail.cpp">
+      <Filter>02. GameObjects\01. Enemy\Bullet\BulletTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BulletSpark.cpp">
+      <Filter>02. GameObjects\03. Effects\Instancing\BulletSpark</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BloodScreen.cpp">
+      <Filter>02. GameObjects\03. Effects\BloodScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BloodDirectional.cpp">
+      <Filter>02. GameObjects\03. Effects\Instancing\BloodDirectional</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

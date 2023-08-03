@@ -13,6 +13,37 @@ CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(const CVIBuffer_Rect_Trail& rhs)
 {
 }
 
+HRESULT CVIBuffer_Rect_Trail::Reset_Trail()
+{
+	// Local Position
+	_vector vHighPos = (XMLoadFloat4x4(m_TrailDesc.pHighLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
+	_vector vLowPos = (XMLoadFloat4x4(m_TrailDesc.pLowLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
+	// World Position
+	_float3 vHighWorldPos;
+	XMStoreFloat3(&vHighWorldPos, XMVector3TransformCoord(vHighPos, XMLoadFloat4x4(m_TrailDesc.pWorldMatrix)));
+	_float3 vLowWorldPos;
+	XMStoreFloat3(&vLowWorldPos, XMVector3TransformCoord(vLowPos, XMLoadFloat4x4(m_TrailDesc.pWorldMatrix)));
+
+
+	D3D11_MAPPED_SUBRESOURCE	MappedSubResource;
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
+
+	VTXPOSTEX* pData = static_cast<VTXPOSTEX*>(MappedSubResource.pData);
+
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		if (1 == i % 2)
+			pData->vPosition = vHighWorldPos;
+		else
+			pData->vPosition = vLowWorldPos;
+	}
+
+	m_pContext->Unmap(m_pVB, 0);
+
+	return S_OK;
+}
+
 HRESULT CVIBuffer_Rect_Trail::Initialize_Prototype()
 {
 	return S_OK;
@@ -55,6 +86,15 @@ HRESULT CVIBuffer_Rect_Trail::Initialize(void* pArg)
 	8 6 4 2 0
 	*/
 
+	// Local Position
+	_vector vHighPos = (XMLoadFloat4x4(m_TrailDesc.pHighLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
+	_vector vLowPos = (XMLoadFloat4x4(m_TrailDesc.pLowLocalMatrix) * XMLoadFloat4x4(m_TrailDesc.pPivotMatrix)).r[3];
+	// World Position
+	_float3 vHighWorldPos;
+	XMStoreFloat3(&vHighWorldPos, XMVector3TransformCoord(vHighPos, XMLoadFloat4x4(m_TrailDesc.pWorldMatrix)));
+	_float3 vLowWorldPos;
+	XMStoreFloat3(&vLowWorldPos, XMVector3TransformCoord(vLowPos, XMLoadFloat4x4(m_TrailDesc.pWorldMatrix)));
+
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		// 홀수 ... 9 7 5 3 1
@@ -62,14 +102,14 @@ HRESULT CVIBuffer_Rect_Trail::Initialize(void* pArg)
 		if (1 == i % 2)
 		{
 			iVertexIndex = (i - 1) >> 1;
-			pVertices[i].vPosition = _float3(0.f, 0.f, 0.f);
+			pVertices[i].vPosition = vHighWorldPos;
 			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / m_TrailDesc.iTrailNum, 1.f);
 		}
 		// 짝수 ... 8 6 4 2 0
 		else
 		{
 			iVertexIndex = i >> 1;
-			pVertices[i].vPosition = _float3(0.f, 0.f, 0.f);
+			pVertices[i].vPosition = vLowWorldPos;
 			pVertices[i].vTexCoord = _float2(-1.f * (_float)iVertexIndex / m_TrailDesc.iTrailNum, 0.f);
 		}
 	}
@@ -161,11 +201,9 @@ void CVIBuffer_Rect_Trail::Tick()
 	}
 
 	// 0번에 Low 월드 포지션을 대입한다
-	if (m_TrailDesc.fMinVertexDistance < XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[0].vPosition) - vLowWorldPos)))
-		XMStoreFloat3(&pData[0].vPosition, vLowWorldPos);
+	XMStoreFloat3(&pData[0].vPosition, vLowWorldPos);
 	// 1번에 High 월드 포지션을 대입한다
-	if (m_TrailDesc.fMinVertexDistance < XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[0].vPosition) - vHighWorldPos)))
-		XMStoreFloat3(&pData[1].vPosition, vHighWorldPos);
+	XMStoreFloat3(&pData[1].vPosition, vHighWorldPos);
 
 	m_pContext->Unmap(m_pVB, 0);
 

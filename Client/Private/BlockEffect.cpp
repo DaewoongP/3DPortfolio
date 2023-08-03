@@ -140,7 +140,7 @@ HRESULT CBlockEffect::Add_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	m_iParticleNum = { 20 };
+	m_iParticleNum = { 30 };
 	m_Particles.resize(m_iParticleNum);
 
 	/* For.Com_VIBuffer */
@@ -177,10 +177,10 @@ HRESULT CBlockEffect::SetUp_ShaderResources()
 
 	Safe_Release(pGameInstance);
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", rand() % 6)))
 		return E_FAIL;
 
-	_float4 vColor = _float4(0.5f, 0.5f, 0.f, 1.f);
+	_float4 vColor = _float4(1.f, 0.64705f, 0.f, 1.f);
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
 		return E_FAIL;
 

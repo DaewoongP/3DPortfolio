@@ -1,5 +1,6 @@
 #include "..\Public\Enemy.h"
 #include "GameInstance.h"
+#include "LensFlare.h"
 
 CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -119,6 +120,14 @@ HRESULT CEnemy::Add_Component()
 		return E_FAIL;
 	}
 
+	/* For.Com_LensFlare */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_LensFlare"),
+		TEXT("Com_LensFlare"), reinterpret_cast<CComponent**>(&m_pLensFlareEffect))))
+	{
+		MSG_BOX("Failed CEnemy Add_Component : (Com_LensFlare)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -141,6 +150,8 @@ HRESULT CEnemy::Add_Component_Level(_uint iLevelIndex)
 void CEnemy::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pLensFlareEffect);
 
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pRendererCom);

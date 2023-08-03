@@ -22,6 +22,7 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc) override;
+	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
@@ -31,6 +32,9 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
+
+private:
+	class CSwordTrail*		m_pSwordTrail = { nullptr };
 
 public:
 	HRESULT Add_Components();

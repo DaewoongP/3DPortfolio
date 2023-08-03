@@ -71,6 +71,8 @@ HRESULT CVIBuffer_Point_Instance_World::Initialize_Prototype(_uint iNumInstance)
 		return E_FAIL;
 	Safe_Delete_Array(pIndices);
 #pragma endregion
+
+	return S_OK;
 }
 
 HRESULT CVIBuffer_Point_Instance_World::Initialize(void* pArg)

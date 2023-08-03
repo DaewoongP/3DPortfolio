@@ -1,6 +1,7 @@
 #include "..\Public\Sword.h"
 #include "GameInstance.h"
 #include "Enemy_Sword.h"
+#include "SwordTrail.h"
 #include "Player.h"
 
 CSword::CSword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -39,6 +40,36 @@ HRESULT CSword::Initialize(void* pArg)
 HRESULT CSword::Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc)
 {
 	m_ParentMatrixDesc = ParentDesc;
+
+	return S_OK;
+}
+
+HRESULT CSword::Initialize_Level(_uint iLevelIndex)
+{
+	_uint iTrailFrontIndex = { 0 };
+	_uint iTrailBackIndex = { 0 };
+
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("Swoosh_Front"), &iTrailFrontIndex)))
+		return E_FAIL;
+	if (FAILED(m_pModelCom->Find_BoneIndex(TEXT("Swoosh_Back"), &iTrailBackIndex)))
+		return E_FAIL;
+
+	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
+	ZEROMEM(&TrailDesc);
+	TrailDesc.iTrailNum = 10;
+	TrailDesc.fMinVertexDistance = 0.1f;
+	TrailDesc.pHighLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailFrontIndex);
+	TrailDesc.pLowLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailBackIndex);
+	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
+	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
+
+	/* For.Com_Trail */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_SwordTrail"),
+		TEXT("Com_Trail"), (CComponent**)&m_pSwordTrail, &TrailDesc)))
+	{
+		MSG_BOX("Failed CKatana Add_Component : (Com_Trail)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -205,6 +236,8 @@ CGameObject* CSword::Clone(void* pArg)
 void CSword::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pSwordTrail);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

@@ -22,6 +22,9 @@ private:
 	virtual ~CVIBuffer_Rect_Trail() = default;
 
 public:
+	HRESULT Reset_Trail();
+
+public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Tick();

@@ -53,6 +53,7 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 		if (FAILED(m_pDevice->CreateInputLayout(pElements, iNumElements, 
 			PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pInputLayout)))
 			return E_FAIL;
+
 		if (nullptr == pInputLayout)
 			return E_FAIL;
 

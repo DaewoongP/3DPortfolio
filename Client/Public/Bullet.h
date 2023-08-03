@@ -39,11 +39,18 @@ private:
 	CCollider*		m_pColliderCom = { nullptr };
 
 private:
+	class CBulletTrail*		m_pBulletTrail = { nullptr };
+
+private:
 	_double			m_dDeleteTimeAcc = { 0.0 };
 	_double			m_dDeleteTime = { 5.0 };
 
 private:
 	_float4			m_vEmissiveColor;
+
+private:
+	_float4x4		m_TrailLeftMatrix;
+	_float4x4		m_TrailRightMatrix;
 
 private:
 	COLLISIONDESC::COLTYPE	m_eColType = { COLLISIONDESC::COLTYPE_END };

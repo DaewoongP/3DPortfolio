@@ -255,6 +255,11 @@ HRESULT CEnemy_Hammer::SetUp_BehaviorTree()
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
 	pBlackBoard->Add_Value(TEXT("Value_isDead"), &m_isDead);
 	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
+
+	pBlackBoard->Add_Value(TEXT("Value_LensFlare"), m_pLensFlareEffect);
+	XMStoreFloat4x4(&m_LensOffsetMatrix, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.3f, 4.f, 0.5f));
+	pBlackBoard->Add_Value(TEXT("Value_LensMatrix"), &m_LensOffsetMatrix);
+
 	/* Sequence Patrol */
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
 	pBlackBoard->Add_Value(TEXT("Value_Navigation"), m_pNavigationCom);

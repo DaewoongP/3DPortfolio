@@ -60,28 +60,6 @@ HRESULT CShuriken::Initialize_Level(_uint iLevelIndex)
 	m_pLight = pGameInstance->Add_Lights(LightDesc);
 	Safe_AddRef(m_pLight);
 
-	//Trail
-	XMStoreFloat4x4(&m_TrailRightMatrix, XMMatrixTranslation(0.f, 0.1f, 0.f));
-	XMStoreFloat4x4(&m_TrailLeftMatrix, XMMatrixTranslation(0.f, -0.1f, 0.f));
-	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
-	ZEROMEM(&TrailDesc);
-	TrailDesc.iTrailNum = 30;
-	TrailDesc.fMinVertexDistance = 0.1f;
-	TrailDesc.pHighLocalMatrix = &m_TrailRightMatrix;
-	TrailDesc.pLowLocalMatrix = &m_TrailLeftMatrix;
-	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
-	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
-
-	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_ShurikenTrail"),
-		TEXT("Layer_Trail"), TEXT("GameObject_ShurikenTrail"), &TrailDesc)))
-	{
-		MSG_BOX("Failed Add_GameObject : (GameObject_ShurikenTrail)");
-		return E_FAIL;
-	}
-
-	m_pTrail = static_cast<CShurikenTrail*>(pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Trail"), TEXT("GameObject_ShurikenTrail")));
-	Safe_AddRef(m_pTrail);
-
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -199,6 +177,25 @@ HRESULT CShuriken::Add_Components()
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Collider)");
+		return E_FAIL;
+	}
+
+	//Trail
+	XMStoreFloat4x4(&m_TrailRightMatrix, XMMatrixTranslation(0.f, 0.1f, 0.f));
+	XMStoreFloat4x4(&m_TrailLeftMatrix, XMMatrixTranslation(0.f, -0.1f, 0.f));
+	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
+	ZEROMEM(&TrailDesc);
+	TrailDesc.iTrailNum = 30;
+	TrailDesc.fMinVertexDistance = 0.1f;
+	TrailDesc.pHighLocalMatrix = &m_TrailRightMatrix;
+	TrailDesc.pLowLocalMatrix = &m_TrailLeftMatrix;
+	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
+	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_ShurikenTrail"),
+		TEXT("Com_Trail"), reinterpret_cast<CComponent**>(&m_pTrail), &TrailDesc)))
+	{
+		MSG_BOX("Failed CShuriken Add_Component : (Com_Trail)");
 		return E_FAIL;
 	}
 

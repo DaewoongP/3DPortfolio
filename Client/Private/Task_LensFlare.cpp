@@ -20,10 +20,9 @@ CBehavior::STATE CTask_LensFlare::Tick(_double dTimeDelta)
 		nullptr == m_pLensFlare)
 		return STATE_FAILED;
 
-	_vector vLensLocalPos = XMLoadFloat4(reinterpret_cast<_float4*>(m_LensMatrix->m[3]));
-	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+	XMStoreFloat4x4(&m_OutMatrix, XMLoadFloat4x4(m_LensMatrix) * m_pTransformCom->Get_WorldMatrix());
 
-	m_pLensFlare->Render_Effect(0.2, XMVector3TransformCoord(vLensLocalPos, WorldMatrix));
+	m_pLensFlare->Render_Effect(0.2, &m_OutMatrix);
 
 	return STATE_SUCCESS;
 }

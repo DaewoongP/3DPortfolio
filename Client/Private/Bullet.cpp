@@ -1,5 +1,6 @@
 #include "..\Public\Bullet.h"
 #include "GameInstance.h"
+#include "BulletTrail.h"
 
 CBullet::CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -69,6 +70,7 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 	if (nullptr != m_pRendererCom)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pBulletTrail->Render_Effect();
 #ifdef _DEBUG
 		m_pColliderCom->Set_Color(DirectX::Colors::Red);
 		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
@@ -152,6 +154,26 @@ HRESULT CBullet::Add_Components()
 		return E_FAIL;
 	}
 
+	XMStoreFloat4x4(&m_TrailRightMatrix, XMMatrixTranslation(0.f, 0.5f, 0.f));
+	XMStoreFloat4x4(&m_TrailLeftMatrix, XMMatrixTranslation(0.f, -0.5f, 0.f));
+
+	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
+	ZEROMEM(&TrailDesc);
+	TrailDesc.iTrailNum = 30;
+	TrailDesc.fMinVertexDistance = 0.1f;
+	TrailDesc.pHighLocalMatrix = &m_TrailRightMatrix;
+	TrailDesc.pLowLocalMatrix = &m_TrailLeftMatrix;
+	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
+	TrailDesc.pWorldMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	/* For.Com_BulletTrail */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BulletTrail"),
+		TEXT("Com_BulletTrail"), reinterpret_cast<CComponent**>(&m_pBulletTrail), &TrailDesc)))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BulletTrail)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -185,6 +207,7 @@ void CBullet::Fire(_fvector vInitPosition, _fvector vTargetPosition)
 {
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vInitPosition);
 	m_pTransformCom->LookAt(vTargetPosition);
+	m_pBulletTrail->Reset_Trail();
 }
 
 CBullet* CBullet::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -216,6 +239,8 @@ CGameObject* CBullet::Clone(void* pArg)
 void CBullet::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pBulletTrail);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

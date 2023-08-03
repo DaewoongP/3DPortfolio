@@ -1,6 +1,7 @@
 #include "..\Public\Enemy_Pistol.h"
 #include "GameInstance.h"
 #include "Selector_FindTargetToAttack.h"
+#include "BloodDirectional.h"
 #include "Pistol.h"
 
 CEnemy_Pistol::CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -220,6 +221,14 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_VisionCollider)");
 		return E_FAIL;
 	}
+	
+	/* For.Com_BloodEffect */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodDirectional"),
+		TEXT("Com_BloodEffect"), reinterpret_cast<CComponent**>(&m_pBloodEffect))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodEffect)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -248,6 +257,11 @@ HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
 	CBlackBoard* pBlackBoard = CBlackBoard::Create();
 	pBlackBoard->Add_Value(TEXT("Value_Transform"), m_pTransformCom);
 	pBlackBoard->Add_Value(TEXT("Value_Navigation"), m_pNavigationCom);
+	
+	pBlackBoard->Add_Value(TEXT("Value_LensFlare"), m_pLensFlareEffect);
+	XMStoreFloat4x4(&m_LensOffsetMatrix, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.3f, 4.2f, 0.8f));
+	pBlackBoard->Add_Value(TEXT("Value_LensMatrix"), &m_LensOffsetMatrix);
+
 	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
 	pBlackBoard->Add_Value(TEXT("Value_isWalk"), &m_isWalk);
 	pBlackBoard->Add_Value(TEXT("Value_isDead"), &m_isDead);
@@ -357,6 +371,7 @@ GAMEEVENT CEnemy_Pistol::PlayEvent(_double dTimeDelta)
 {
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
+		m_pBloodEffect->Render_Effect(1.0, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 1.f));
 		m_eCurState = STATE_DEAD;
 		m_isDead = true;
 
@@ -396,6 +411,8 @@ CGameObject* CEnemy_Pistol::Clone(void* pArg)
 void CEnemy_Pistol::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pBloodEffect);
 
 	Safe_Release(m_pPistol);
 	Safe_Release(m_pModelCom);

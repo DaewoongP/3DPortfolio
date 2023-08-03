@@ -55,20 +55,13 @@ HRESULT CKatana::Initialize_Level(_uint iLevelIndex)
 	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
 	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObject(iLevelIndex, TEXT("Prototype_GameObject_SwordTrail"),
-		TEXT("Layer_Trail"), TEXT("GameObject_KatanaTrail"), &TrailDesc)))
+	/* For.Com_Trail */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_SwordTrail"),
+		TEXT("Com_Trail"), (CComponent**)&m_pSwordTrail, &TrailDesc)))
 	{
-		MSG_BOX("Failed Add_GameObject : (GameObject_KatanaTrail)");
+		MSG_BOX("Failed CKatana Add_Component : (Com_Trail)");
 		return E_FAIL;
 	}
-
-	m_pSwordTrail = static_cast<CSwordTrail*>(pGameInstance->Find_GameObject(iLevelIndex, TEXT("Layer_Trail"), TEXT("GameObject_KatanaTrail")));
-	Safe_AddRef(m_pSwordTrail);
-
-	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
