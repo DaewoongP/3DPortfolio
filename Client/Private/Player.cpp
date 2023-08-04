@@ -165,6 +165,7 @@ void CPlayer::Tick(_double dTimeDelta)
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
+	m_pKatana->Add_TrailRender();
 #ifdef _DEBUG
 	if (m_isInvisible)
 		m_eGameEvent = GAME_NOEVENT;
@@ -1370,7 +1371,7 @@ void CPlayer::CameraOffset(_double dTimeDelta)
 	_float4 vEye, vAt;
 
 	// 위치값은 고정
-	XMStoreFloat4(&vEye, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+	XMStoreFloat4(&vEye, m_pTransformCom->Get_State(CTransform::STATE_POSITION) - XMVectorSet(5.f, -5.f, 0.f, 0.f));
 
 	XMStoreFloat4(&vAt, XMLoadFloat4(&vEye) + m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 

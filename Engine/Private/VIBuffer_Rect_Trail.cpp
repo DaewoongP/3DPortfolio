@@ -186,17 +186,6 @@ void CVIBuffer_Rect_Trail::Tick()
 
 	for (_uint i = m_iNumVertices - 1; i >= 2 ; --i)
 	{
-		_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[i].vPosition) - XMLoadFloat3(&pData[i - 2].vPosition)));
-		if (m_TrailDesc.fMinVertexDistance > fLength)
-		{
-			_vector vLerpPos = XMVectorLerp(
-				XMLoadFloat3(&pData[i].vPosition), XMLoadFloat3(&pData[i - 2].vPosition),
-				(m_TrailDesc.fMinVertexDistance - fLength) / m_TrailDesc.fMinVertexDistance);
-
-			XMStoreFloat3(&pData[i].vPosition, vLerpPos);
-			continue;
-		}
-
 		pData[i].vPosition = pData[i - 2].vPosition;
 	}
 
@@ -205,10 +194,27 @@ void CVIBuffer_Rect_Trail::Tick()
 	// 1번에 High 월드 포지션을 대입한다
 	XMStoreFloat3(&pData[1].vPosition, vHighWorldPos);
 
+	// Catmull - Rom 스플라인 보간
+	for (_uint i = 0; i < (m_iNumVertices / 2) - 4; ++i)
+	{
+		XMStoreFloat3(&pData[(i + 2) * 2].vPosition, 
+			XMVectorCatmullRom(
+			XMLoadFloat3(&pData[i * 2].vPosition),
+			XMLoadFloat3(&pData[(i + 1) * 2].vPosition),
+			XMLoadFloat3(&pData[(i + 3) * 2].vPosition),
+			XMLoadFloat3(&pData[(i + 4) * 2].vPosition),
+			0.5f));
+
+		XMStoreFloat3(&pData[(i + 2) * 2 + 1].vPosition,
+			XMVectorCatmullRom(
+				XMLoadFloat3(&pData[i * 2 + 1].vPosition),
+				XMLoadFloat3(&pData[(i + 1) * 2 + 1].vPosition),
+				XMLoadFloat3(&pData[(i + 3) * 2 + 1].vPosition),
+				XMLoadFloat3(&pData[(i + 4) * 2 + 1].vPosition),
+				0.5f));
+	}
+
 	m_pContext->Unmap(m_pVB, 0);
-
-	
-
 
 	// 첫위치와 마지막위치 비교
 	if (m_TrailDesc.fMinVertexDistance > XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[m_iNumVertices - 1].vPosition) - XMLoadFloat3(&pData[1].vPosition))) &&
