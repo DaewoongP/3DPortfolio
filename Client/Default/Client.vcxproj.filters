@@ -202,9 +202,6 @@
     <Filter Include="02. GameObjects\01. Enemy\Boss\Shield">
       <UniqueIdentifier>{bb1b992c-da09-49dc-978d-096194585ada}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\05. UI\GamePlay\07. MainSlot">
-      <UniqueIdentifier>{d43392f2-102c-4655-aff1-7b9bb8b8fea6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\00. Player\Surge">
       <UniqueIdentifier>{5147ca88-c251-4cae-aafa-8f8b39e6b67e}</UniqueIdentifier>
     </Filter>
@@ -246,6 +243,12 @@
     </Filter>
     <Filter Include="02. GameObjects\03. Effects\Instancing\BloodDirectional">
       <UniqueIdentifier>{c711cf10-d0f9-4ddb-91bf-21a8f8172993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\GamePlay\07. MainSlot">
+      <UniqueIdentifier>{d43392f2-102c-4655-aff1-7b9bb8b8fea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\00. Player\Shuriken\ShurikenParticle">
+      <UniqueIdentifier>{4603669c-c2be-47b7-8e0b-def19edbb96e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -567,6 +570,9 @@
     <ClInclude Include="..\public\BloodDirectional.h">
       <Filter>02. GameObjects\03. Effects\Instancing\BloodDirectional</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ShurikenParticle.h">
+      <Filter>02. GameObjects\00. Player\Shuriken\ShurikenParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -887,6 +893,9 @@
     </ClCompile>
     <ClCompile Include="..\private\BloodDirectional.cpp">
       <Filter>02. GameObjects\03. Effects\Instancing\BloodDirectional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ShurikenParticle.cpp">
+      <Filter>02. GameObjects\00. Player\Shuriken\ShurikenParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

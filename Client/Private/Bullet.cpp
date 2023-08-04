@@ -1,6 +1,7 @@
 #include "..\Public\Bullet.h"
 #include "GameInstance.h"
 #include "BulletTrail.h"
+#include "BulletSpark.h"
 
 CBullet::CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -84,7 +85,10 @@ void CBullet::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
 	if (COLLISIONDESC::COLTYPE_ENEMY == CollisionDesc.ColType ||
 		COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
+	{
+		m_pBulletSpark->Render_Effect(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 		m_isDead = true;
+	}
 }
 
 HRESULT CBullet::Render()
@@ -174,6 +178,14 @@ HRESULT CBullet::Add_Components()
 		return E_FAIL;
 	}
 
+	/* For.Com_BulletSpark */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BulletSpark"),
+		TEXT("Com_BulletSpark"), reinterpret_cast<CComponent**>(&m_pBulletSpark))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BulletSpark)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -241,6 +253,7 @@ void CBullet::Free()
 	__super::Free();
 
 	Safe_Release(m_pBulletTrail);
+	Safe_Release(m_pBulletSpark);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

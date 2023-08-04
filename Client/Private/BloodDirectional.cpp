@@ -30,6 +30,9 @@ HRESULT CBloodDirectional::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
+	m_iRandTextureNum = rand() % 6;
+	m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
+
 	return S_OK;
 }
 
@@ -38,7 +41,7 @@ void CBloodDirectional::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 
 	_float4x4 WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixScaling(2.f, 4.f, 1.f));
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixScaling(6.f, 6.f, 6.f));
 	m_pVIBufferCom->Tick(&WorldMatrix);
 }
 
@@ -65,7 +68,7 @@ HRESULT CBloodDirectional::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(9);
+	m_pShaderCom->Begin(2);
 
 	m_pVIBufferCom->Render();
 
@@ -121,11 +124,11 @@ HRESULT CBloodDirectional::SetUp_ShaderResources()
 
 	Safe_Release(pGameInstance);
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", rand() % 6)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iRandTextureNum)))
 		return E_FAIL;
 
-	_float4 vColor = _float4(0.7f, 0.1f, 0.1f, 0.5f);
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
+	m_vColor.w -= (_float)g_TimeDelta;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
 		return E_FAIL;
 
 	return S_OK;

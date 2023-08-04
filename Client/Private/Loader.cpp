@@ -29,6 +29,7 @@
 #include "SwordTrail.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
+#include "BulletSpark.h"
 #include "BulletTrail.h"
 #include "BlockEffect.h"
 #include "BlinkTarget.h"
@@ -37,6 +38,7 @@
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
 #include "ShurikenTrail.h"
+#include "ShurikenParticle.h"
 #include "BloodDirectional.h"
 #include "GhostRunner_Logo.h"
 #include "Black_BackGround.h"
@@ -376,9 +378,17 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 	
+	/* For.Prototype_Component_Texture_Spark_Particle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spark_Particle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_VFX_StarSpark_01.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Spark_Particle)");
+		return E_FAIL;
+	}
+	
 	/* For.Prototype_Component_Texture_Circle_Particle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Circle_Particle"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/VFX_PNG/Textures/T_VFX_Circle_01.png")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_VFX_Circle_01.dds")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Circle_Particle)");
 		return E_FAIL;
@@ -888,6 +898,22 @@ HRESULT CLoader::Loading_For_Stage1()
 		CBloodDirectional::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodDirectional)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_BulletSpark */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BulletSpark"),
+		CBulletSpark::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BulletSpark)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_ShurikenParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_ShurikenParticle"),
+		CShurikenParticle::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShurikenParticle)");
 		return E_FAIL;
 	}
 

@@ -50,13 +50,13 @@ void CVIBuffer_Point_Instance::Tick(_float4x4* InstanceMatrix)
 	D3D11_MAPPED_SUBRESOURCE	MappedSubResource;
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
-
+	VTXINSTANCE* pVtxInstance = static_cast<VTXINSTANCE*>(MappedSubResource.pData);
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		memcpy(&static_cast<VTXINSTANCE*>(MappedSubResource.pData)[i].vRight, &InstanceMatrix[i].m[0], sizeof(_float4));
-		memcpy(&static_cast<VTXINSTANCE*>(MappedSubResource.pData)[i].vUp, &InstanceMatrix[i].m[1], sizeof(_float4));
-		memcpy(&static_cast<VTXINSTANCE*>(MappedSubResource.pData)[i].vLook, &InstanceMatrix[i].m[2], sizeof(_float4));
-		memcpy(&static_cast<VTXINSTANCE*>(MappedSubResource.pData)[i].vTranslation, &InstanceMatrix[i].m[3], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vRight, &InstanceMatrix[i].m[0], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vUp, &InstanceMatrix[i].m[1], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vLook, &InstanceMatrix[i].m[2], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vTranslation, &InstanceMatrix[i].m[3], sizeof(_float4));
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);

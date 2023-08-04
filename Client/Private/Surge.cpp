@@ -120,7 +120,7 @@ HRESULT CSurge::Add_Components()
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Model_Surge"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 	{
-		MSG_BOX("Failed CBullet Add_Component : (Com_Model)");
+		MSG_BOX("Failed CSurge Add_Component : (Com_Model)");
 		return E_FAIL;
 	}
 
@@ -128,7 +128,7 @@ HRESULT CSurge::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
 		TEXT("Com_Renderer"), reinterpret_cast<CComponent**>(&m_pRendererCom))))
 	{
-		MSG_BOX("Failed CEnemy Add_Component : (Com_Renderer)");
+		MSG_BOX("Failed CSurge Add_Component : (Com_Renderer)");
 		return E_FAIL;
 	}
 
@@ -136,7 +136,7 @@ HRESULT CSurge::Add_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 	{
-		MSG_BOX("Failed CBullet Add_Component : (Com_Shader)");
+		MSG_BOX("Failed CSurge Add_Component : (Com_Shader)");
 		return E_FAIL;
 	}
 
@@ -144,12 +144,12 @@ HRESULT CSurge::Add_Components()
 
 	SphereDesc.fRadius = 1.f;
 	SphereDesc.vPosition = _float3(0.f, 0.f, 0.f);
-
+	
 	/* For.Com_Collider */
 	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 	{
-		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Collider)");
+		MSG_BOX("Failed CSurge Add_Component : (Com_Collider)");
 		return E_FAIL;
 	}
 

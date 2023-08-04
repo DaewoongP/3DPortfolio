@@ -40,6 +40,7 @@ private:
 
 private:
 	class CBulletTrail*		m_pBulletTrail = { nullptr };
+	class CBulletSpark*		m_pBulletSpark = { nullptr };
 
 private:
 	_double			m_dDeleteTimeAcc = { 0.0 };

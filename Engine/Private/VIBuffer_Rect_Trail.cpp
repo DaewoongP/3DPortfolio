@@ -207,6 +207,9 @@ void CVIBuffer_Rect_Trail::Tick()
 
 	m_pContext->Unmap(m_pVB, 0);
 
+	
+
+
 	// 첫위치와 마지막위치 비교
 	if (m_TrailDesc.fMinVertexDistance > XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[m_iNumVertices - 1].vPosition) - XMLoadFloat3(&pData[1].vPosition))) &&
 		m_TrailDesc.fMinVertexDistance > XMVectorGetX(XMVector3Length(XMLoadFloat3(&pData[m_iNumVertices - 2].vPosition) - XMLoadFloat3(&pData[0].vPosition))))

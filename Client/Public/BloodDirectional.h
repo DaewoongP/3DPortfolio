@@ -36,10 +36,14 @@ private:
 
 private:
 	_uint							m_iParticleNum = { 0 };
+	_uint							m_iRandTextureNum = { 0 };
 
 private:
 	_double							m_dRenderTime = { 0.0 };
 	_double							m_dRenderTimeAcc = { 0.0 };
+
+private:
+	_float4							m_vColor;
 
 public:
 	HRESULT Add_Components();

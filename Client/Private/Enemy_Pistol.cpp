@@ -105,6 +105,12 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 
 	__super::Late_Tick(dTimeDelta);
 
+	const CBone* pBone = m_pModelCom->Get_Bone(TEXT("head_end"));
+	XMStoreFloat4x4(&m_LensOffsetMatrix, 
+		XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixRotationY(XMConvertToRadians(90.f)) *
+		XMLoadFloat4x4(pBone->Get_CombinedTransformationMatrixPtr()) * m_pModelCom->Get_PivotMatrix() 
+		* XMMatrixTranslation(0.f, -0.2f, 0.35f));
+
 #ifdef _DEBUG
 	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
 	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
@@ -171,6 +177,7 @@ HRESULT CEnemy_Pistol::Reset()
 	m_isWait = false;
 	m_isAttack = false;
 	m_isWalk = false;
+	m_bBloodEffect = false;
 
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
@@ -259,7 +266,6 @@ HRESULT CEnemy_Pistol::SetUp_BehaviorTree()
 	pBlackBoard->Add_Value(TEXT("Value_Navigation"), m_pNavigationCom);
 	
 	pBlackBoard->Add_Value(TEXT("Value_LensFlare"), m_pLensFlareEffect);
-	XMStoreFloat4x4(&m_LensOffsetMatrix, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.3f, 4.2f, 0.8f));
 	pBlackBoard->Add_Value(TEXT("Value_LensMatrix"), &m_LensOffsetMatrix);
 
 	pBlackBoard->Add_Value(TEXT("Value_Target"), &m_pTargetPlayer);
@@ -371,7 +377,12 @@ GAMEEVENT CEnemy_Pistol::PlayEvent(_double dTimeDelta)
 {
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
-		m_pBloodEffect->Render_Effect(1.0, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 1.f));
+		if (false == m_bBloodEffect)
+		{
+			m_pBloodEffect->Render_Effect(0.2, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 1.f));
+			m_bBloodEffect = true;
+		}
+		
 		m_eCurState = STATE_DEAD;
 		m_isDead = true;
 

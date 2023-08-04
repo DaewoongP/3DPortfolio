@@ -61,6 +61,9 @@ private:
 	STATE					m_ePreState = { STATE_END };
 	STATE					m_eCurState = { STATE_IDLE };
 
+private:
+	_bool					m_bBloodEffect = { false };
+
 private: /* Tick */
 	HRESULT Add_Component(ENEMYDESC& EnemyDesc);
 	HRESULT Add_Parts(_uint iLevelIndex);

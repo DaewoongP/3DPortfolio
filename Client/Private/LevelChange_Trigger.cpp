@@ -32,10 +32,9 @@ HRESULT CLevelChange_Trigger::Initialize(void* pArg)
 	m_pColliderCom->Set_BoundingDesc(&AABBDesc);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(529.5f, 9.f, 102.5f, 1.f));
-
-	m_vColliderColor = _float4(1.f, 1.f, 1.f, 1.f);
-
+	
 #ifdef _DEBUG
+	m_vColliderColor = _float4(1.f, 1.f, 1.f, 1.f);
 	m_pColliderCom->Set_Color(XMLoadFloat4(&m_vColliderColor));
 #endif // _DEBUG
 

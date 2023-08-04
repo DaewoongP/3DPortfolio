@@ -1,6 +1,7 @@
 #include "../Public/Shuriken.h"
 #include "GameInstance.h"
 #include "ShurikenTrail.h"
+#include "ShurikenParticle.h"
 #include "Player.h"
 #include "Light.h"
 
@@ -34,7 +35,7 @@ HRESULT CShuriken::Initialize(void* pArg)
 		return E_FAIL;
 	// Çü±¤ÆÄ¶û
 	m_vEmissive = _float4(0.062f, 0.988f, 0.99f, 1.f);
-
+	
 	return S_OK;
 }
 
@@ -103,6 +104,9 @@ GAMEEVENT CShuriken::Late_Tick(_double dTimeDelta)
 		__super::Late_Tick(dTimeDelta);
 
 	Safe_Release(pGameInstance);
+
+	_vector vPos = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
+	m_pParticle->Render_Effect(vPos);
 	
 	m_pColliderCom->Tick(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
@@ -198,6 +202,13 @@ HRESULT CShuriken::Add_Components()
 		MSG_BOX("Failed CShuriken Add_Component : (Com_Trail)");
 		return E_FAIL;
 	}
+	
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_ShurikenParticle"),
+		TEXT("Com_Particle"), reinterpret_cast<CComponent**>(&m_pParticle))))
+	{
+		MSG_BOX("Failed CShuriken Add_Component : (Com_Particle)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -234,7 +245,7 @@ void CShuriken::Attack(_fvector vDirection)
 {
 	if (true == m_isAttacked)
 		return;
-
+	m_pParticle->Reset_Effect();
 	m_dTimeAcc = 0.0;
 	m_isAttacked = true;
 	XMStoreFloat3(&m_vAttackDir, vDirection);
@@ -280,6 +291,7 @@ void CShuriken::Free()
 	__super::Free();
 
 	Safe_Release(m_pTrail);
+	Safe_Release(m_pParticle);
 
 	Safe_Release(m_pLight);
 	Safe_Release(m_pModelCom);

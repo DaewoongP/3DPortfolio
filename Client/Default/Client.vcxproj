@@ -200,6 +200,7 @@
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\LensFlare.h" />
     <ClInclude Include="..\public\LevelChange_Trigger.h" />
+    <ClInclude Include="..\public\ShurikenParticle.h" />
     <ClInclude Include="..\public\ShurikenTrail.h" />
     <ClInclude Include="..\public\SwordTrail.h" />
     <ClInclude Include="..\public\Level_Boss.h" />
@@ -306,6 +307,7 @@
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\LensFlare.cpp" />
     <ClCompile Include="..\private\LevelChange_Trigger.cpp" />
+    <ClCompile Include="..\private\ShurikenParticle.cpp" />
     <ClCompile Include="..\private\ShurikenTrail.cpp" />
     <ClCompile Include="..\private\SwordTrail.cpp" />
     <ClCompile Include="..\private\Level_Boss.cpp" />

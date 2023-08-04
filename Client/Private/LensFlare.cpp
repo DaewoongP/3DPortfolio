@@ -42,6 +42,14 @@ GAMEEVENT CLensFlare::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
+	m_dRenderTimeAcc += dTimeDelta;
+
+	if (m_dRenderTimeAcc < m_dRenderTime)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+	}
+
 	return GAME_NOEVENT;
 }
 
@@ -66,9 +74,6 @@ void CLensFlare::Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix)
 	m_dRenderTimeAcc = 0.0;
 
 	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(pWorldMatrix));
-
-	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CLensFlare::Add_Components()

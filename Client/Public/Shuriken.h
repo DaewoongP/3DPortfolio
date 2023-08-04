@@ -47,6 +47,7 @@ private:
 
 private:
 	class CShurikenTrail*	m_pTrail = { nullptr };
+	class CShurikenParticle* m_pParticle = { nullptr };
 	_float4x4			m_TrailLeftMatrix;
 	_float4x4			m_TrailRightMatrix;
 

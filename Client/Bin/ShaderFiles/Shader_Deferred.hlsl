@@ -256,8 +256,8 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
     vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
     vector vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
-    vSpecular = (vector) 0;
-
+    //vSpecular = (vector) 0;
+    vSpecular *= 0.5f;
     
     Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular + vEmissive);
 
