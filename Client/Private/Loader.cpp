@@ -2,12 +2,14 @@
 #include "GameInstance.h"
 
 #include "Sky.h"
+#include "HOS.h"
 #include "Boss.h"
 #include "Bomb.h"
 #include "Wire.h"
 #include "Mouse.h"
 #include "Sword.h"
 #include "Surge.h"
+#include "Portal.h"
 #include "Hammer.h"
 #include "Player.h"
 #include "Pistol.h"
@@ -399,6 +401,22 @@ HRESULT CLoader::Loading_For_Stage1()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Blood_Directional_0%d.dds"), 6))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Directional)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_HOS_bg */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HOS_bg"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/HOS_bg.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_HOS_bg)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_HOS_in */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HOS_in"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/HOS_in.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_HOS_in)");
 		return E_FAIL;
 	}
 
@@ -872,6 +890,22 @@ HRESULT CLoader::Loading_For_Stage1()
 		CLevelChange_Trigger::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_LevelChange_Trigger)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_HOS_Portal */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_HOS_Portal"),
+		CPortal::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_HOS_Portal)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_HOS */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_HOS"),
+		CHOS::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_HOS)");
 		return E_FAIL;
 	}
 

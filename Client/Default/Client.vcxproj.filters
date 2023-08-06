@@ -250,6 +250,9 @@
     <Filter Include="02. GameObjects\00. Player\Shuriken\ShurikenParticle">
       <UniqueIdentifier>{4603669c-c2be-47b7-8e0b-def19edbb96e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\06. Trigger\LevelChange\HOSPortal">
+      <UniqueIdentifier>{782bbff6-c656-420a-be99-8ca1977ee2d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -572,6 +575,12 @@
     </ClInclude>
     <ClInclude Include="..\public\ShurikenParticle.h">
       <Filter>02. GameObjects\00. Player\Shuriken\ShurikenParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Portal.h">
+      <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HOS.h">
+      <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -896,6 +905,12 @@
     </ClCompile>
     <ClCompile Include="..\private\ShurikenParticle.cpp">
       <Filter>02. GameObjects\00. Player\Shuriken\ShurikenParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Portal.cpp">
+      <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HOS.cpp">
+      <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

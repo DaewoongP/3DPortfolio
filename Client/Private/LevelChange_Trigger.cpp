@@ -1,6 +1,7 @@
 #include "..\Public\LevelChange_Trigger.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Portal.h"
 
 CLevelChange_Trigger::CLevelChange_Trigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CTrigger(pDevice, pContext)
@@ -37,6 +38,11 @@ HRESULT CLevelChange_Trigger::Initialize(void* pArg)
 	m_vColliderColor = _float4(1.f, 1.f, 1.f, 1.f);
 	m_pColliderCom->Set_Color(XMLoadFloat4(&m_vColliderColor));
 #endif // _DEBUG
+
+	if (FAILED(Add_Components()))
+		return E_FAIL;
+
+	m_pPortal->Get_Transform()->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 	return S_OK;
 }
@@ -90,6 +96,16 @@ HRESULT CLevelChange_Trigger::Reset()
 	return S_OK;
 }
 
+HRESULT CLevelChange_Trigger::Add_Components()
+{
+	/* For.Com_Portal */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_HOS_Portal"),
+		TEXT("Com_Portal"), (CComponent**)&m_pPortal)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CLevelChange_Trigger* CLevelChange_Trigger::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CLevelChange_Trigger* pInstance = new CLevelChange_Trigger(pDevice, pContext);
@@ -119,4 +135,6 @@ CGameObject* CLevelChange_Trigger::Clone(void* pArg)
 void CLevelChange_Trigger::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pPortal);
 }

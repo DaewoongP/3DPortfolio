@@ -22,6 +22,12 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Reset() override;
 
+private:
+	class CPortal*		m_pPortal = { nullptr };
+
+private:
+	HRESULT Add_Components();
+
 public:
 	static CLevelChange_Trigger* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;

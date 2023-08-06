@@ -117,6 +117,10 @@ float4 PS_MAIN_COLOR(PS_IN In) : SV_TARGET0
     float4 vTexture = g_Texture.Sample(LinearSampler, In.vTexUV);
     
     vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
+	
+    //if (0.1f > vColor.a)
+    //    discard;
+	
     vColor.rgb = g_vColor.rgb;
     
     return vColor;

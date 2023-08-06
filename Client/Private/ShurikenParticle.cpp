@@ -70,13 +70,13 @@ void CShurikenParticle::Tick(_double dTimeDelta)
 
 		XMStoreFloat4(&vPos, XMLoadFloat4(&vPos) + vVelocity * _float(dTimeDelta));
 		
-		XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(0.05f, 0.05f, 0.05f)*
+		XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(0.05f, 0.05f, 0.05f) *
 			XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 
 		ParticleMatrices.push_back(Particle.WorldMatrix);
 	}
-
-	m_pVIBufferCom->Tick(ParticleMatrices.data());
+	
+	m_pVIBufferCom->Tick(ParticleMatrices.data(), true, m_pTransformCom->Get_WorldMatrix_Inverse());
 }
 
 GAMEEVENT CShurikenParticle::Late_Tick(_double dTimeDelta)
@@ -84,7 +84,7 @@ GAMEEVENT CShurikenParticle::Late_Tick(_double dTimeDelta)
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
 
 	return GAME_NOEVENT;
 }

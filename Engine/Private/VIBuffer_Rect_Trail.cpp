@@ -199,11 +199,11 @@ void CVIBuffer_Rect_Trail::Tick()
 	{
 		XMStoreFloat3(&pData[(i + 2) * 2].vPosition, 
 			XMVectorCatmullRom(
-			XMLoadFloat3(&pData[i * 2].vPosition),
-			XMLoadFloat3(&pData[(i + 1) * 2].vPosition),
-			XMLoadFloat3(&pData[(i + 3) * 2].vPosition),
-			XMLoadFloat3(&pData[(i + 4) * 2].vPosition),
-			0.5f));
+				XMLoadFloat3(&pData[i * 2].vPosition),
+				XMLoadFloat3(&pData[(i + 1) * 2].vPosition),
+				XMLoadFloat3(&pData[(i + 3) * 2].vPosition),
+				XMLoadFloat3(&pData[(i + 4) * 2].vPosition),
+				0.5f));
 
 		XMStoreFloat3(&pData[(i + 2) * 2 + 1].vPosition,
 			XMVectorCatmullRom(

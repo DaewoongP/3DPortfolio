@@ -40,7 +40,6 @@ GAMEEVENT CSwordTrail::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	
 	return GAME_NOEVENT;
 }
 

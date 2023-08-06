@@ -196,10 +196,12 @@
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\public\GhostRunner_Logo.h" />
     <ClInclude Include="..\public\Hammer.h" />
+    <ClInclude Include="..\public\HOS.h" />
     <ClInclude Include="..\public\Indicator.h" />
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\LensFlare.h" />
     <ClInclude Include="..\public\LevelChange_Trigger.h" />
+    <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\ShurikenParticle.h" />
     <ClInclude Include="..\public\ShurikenTrail.h" />
     <ClInclude Include="..\public\SwordTrail.h" />
@@ -303,10 +305,12 @@
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\GhostRunner_Logo.cpp" />
     <ClCompile Include="..\private\Hammer.cpp" />
+    <ClCompile Include="..\private\HOS.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\LensFlare.cpp" />
     <ClCompile Include="..\private\LevelChange_Trigger.cpp" />
+    <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\ShurikenParticle.cpp" />
     <ClCompile Include="..\private\ShurikenTrail.cpp" />
     <ClCompile Include="..\private\SwordTrail.cpp" />
