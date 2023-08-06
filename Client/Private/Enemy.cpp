@@ -1,6 +1,7 @@
 #include "..\Public\Enemy.h"
 #include "GameInstance.h"
 #include "LensFlare.h"
+#include "BloodScreen.h"
 
 CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -128,6 +129,14 @@ HRESULT CEnemy::Add_Component()
 		return E_FAIL;
 	}
 
+	/* For.Com_BloodScreen */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodScreen"),
+		TEXT("Com_BloodScreen"), reinterpret_cast<CComponent**>(&m_pBloodScreenEffect))))
+	{
+		MSG_BOX("Failed CEnemy Add_Component : (Com_BloodScreen)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -152,6 +161,7 @@ void CEnemy::Free()
 	__super::Free();
 
 	Safe_Release(m_pLensFlareEffect);
+	Safe_Release(m_pBloodScreenEffect);
 
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pRendererCom);

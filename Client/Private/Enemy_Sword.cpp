@@ -1,6 +1,7 @@
 #include "..\Public\Enemy_Sword.h"
 #include "GameInstance.h"
 #include "Selector_FindTargetToDashAttack.h"
+#include "BloodScreen.h"
 #include "Sword.h"
 
 CEnemy_Sword::CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -127,6 +128,10 @@ void CEnemy_Sword::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		else
 		{
 			m_eGameEvent = GAME_OBJECT_DEAD;
+			if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))
+			{
+				m_pBloodScreenEffect->Render_Effect(2.0);
+			}
 		}
 	}
 }

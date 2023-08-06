@@ -2,12 +2,12 @@
 #include "GameInstance.h"
 
 CBloodScreen::CBloodScreen(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CUI(pDevice, pContext)
 {
 }
 
 CBloodScreen::CBloodScreen(const CBloodScreen& rhs)
-	: CGameObject(rhs)
+	: CUI(rhs)
 {
 }
 
@@ -21,13 +21,18 @@ HRESULT CBloodScreen::Initialize_Prototype()
 
 HRESULT CBloodScreen::Initialize(void* pArg)
 {
-	CTransform::TRANSFORMDESC TransformDesc;
-	ZEROMEM(&TransformDesc);
-
-	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
+	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	if (FAILED(Add_Components()))
+	// 윈도우 창에 꽉채우게 설정함.
+	m_fSizeX = g_iWinSizeX;
+	m_fSizeY = g_iWinSizeY;
+
+	// 윈도우창의 중간에 표시하게 설정.
+	m_fX = g_iWinSizeX * 0.5f;
+	m_fY = g_iWinSizeY * 0.5f;
+
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -42,6 +47,14 @@ GAMEEVENT CBloodScreen::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
+	m_dRenderTimeAcc += dTimeDelta;
+
+	if (m_dRenderTimeAcc < m_dRenderTime)
+	{
+		if (nullptr != m_pRendererCom)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SCREEN, this);
+	}
+	
 	return GAME_NOEVENT;
 }
 
@@ -60,10 +73,11 @@ HRESULT CBloodScreen::Render()
 	return S_OK;
 }
 
-void CBloodScreen::Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix)
+void CBloodScreen::Render_Effect(_double dRenderTime)
 {
 	m_dRenderTime = dRenderTime;
 	m_dRenderTimeAcc = 0.0;
+	m_iTextureIndex = rand() % 6;
 }
 
 HRESULT CBloodScreen::Add_Components()
@@ -84,7 +98,7 @@ HRESULT CBloodScreen::Add_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_LensFlare"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Screen"),
 		TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
 
@@ -96,22 +110,17 @@ HRESULT CBloodScreen::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iTextureIndex)))
+		return E_FAIL;
 
-	_float4 vColor = _float4(1.f, 0.f, 0.f, 0.5f);
+	_float4 vColor = _float4(1.f, 0.f, 0.f, 1.f);
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
-		return E_FAIL;
-
-	if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_Texture")))
 		return E_FAIL;
 
 	return S_OK;

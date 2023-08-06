@@ -31,6 +31,7 @@
 #include "SwordTrail.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
+#include "BloodScreen.h"
 #include "BulletSpark.h"
 #include "BulletTrail.h"
 #include "BlockEffect.h"
@@ -417,6 +418,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/HOS_in.dds")))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_HOS_in)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_Blood_Screen */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Screen"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/BloodScreen/T_BloodScreen_0%d.dds"), 6))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Screen)");
 		return E_FAIL;
 	}
 
@@ -948,6 +957,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CShurikenParticle::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShurikenParticle)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_BloodScreen */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodScreen"),
+		CBloodScreen::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodScreen)");
 		return E_FAIL;
 	}
 

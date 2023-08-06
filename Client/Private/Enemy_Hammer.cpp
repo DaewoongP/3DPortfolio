@@ -1,6 +1,7 @@
 #include "..\Public\Enemy_Hammer.h"
 #include "GameInstance.h"
 #include "Hammer.h"
+#include "BloodScreen.h"
 #include "Selector_Hammer.h"
 
 CEnemy_Hammer::CEnemy_Hammer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -123,6 +124,11 @@ void CEnemy_Hammer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		COLLISIONDESC::COLTYPE_PLAYERWEAPON == CollisionDesc.ColType)
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
+
+		if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))
+		{
+			m_pBloodScreenEffect->Render_Effect(2.0);
+		}
 	}
 }
 

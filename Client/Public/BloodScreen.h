@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "UI.h"
 #include "Client_Defines.h"
 
 BEGIN(Engine)
@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CBloodScreen final : public CGameObject
+class CBloodScreen final : public CUI
 {
 private:
 	explicit CBloodScreen(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,7 +26,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix);
+	void Render_Effect(_double dRenderTime);
 
 private:
 	CShader*					m_pShaderCom = { nullptr };
@@ -37,6 +37,7 @@ private:
 private:
 	_double						m_dRenderTimeAcc = { 0.0 };
 	_double						m_dRenderTime = { 0.0 };
+	_uint						m_iTextureIndex = { 0 };
 
 private:
 	HRESULT Add_Components();

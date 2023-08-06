@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Selector_FindTargetToAttack.h"
 #include "BloodDirectional.h"
+#include "BloodScreen.h"
 #include "Pistol.h"
 
 CEnemy_Pistol::CEnemy_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -125,6 +126,11 @@ void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		COLLISIONDESC::COLTYPE_PLAYERWEAPON == CollisionDesc.ColType)
 	{
 		m_eGameEvent = GAME_OBJECT_DEAD;
+
+		if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))
+		{
+			m_pBloodScreenEffect->Render_Effect(2.0);
+		}
 	}	
 }
 

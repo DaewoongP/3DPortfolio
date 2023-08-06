@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Boss_Sword.h"
 #include "Selector_Boss.h"
+#include "BloodScreen.h"
 #include "Bomb.h"
 
 CBoss::CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -127,6 +128,10 @@ void CBoss::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 					Safe_Release(pGameInstance);
 
 					m_eGameEvent = GAME_OBJECT_DEAD;
+					if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))
+					{
+						m_pBloodScreenEffect->Render_Effect(2.0);
+					}
 				}
 			}
 		}

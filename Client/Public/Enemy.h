@@ -41,6 +41,7 @@ protected:
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
 	class CLensFlare*		m_pLensFlareEffect = { nullptr };
+	class CBloodScreen*		m_pBloodScreenEffect = { nullptr };
 
 protected:
 	ENEMYDESC				m_EnemyDesc;
