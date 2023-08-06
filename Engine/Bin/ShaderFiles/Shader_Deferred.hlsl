@@ -1,6 +1,8 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ViewMatrixInv, g_ProjMatrixInv;
+matrix g_LightViewMatrix;
+
 texture2D g_Texture;
 vector g_vCamPosition;
 float g_fCamFar;
@@ -11,6 +13,7 @@ texture2D g_ShadeTexture;
 texture2D g_DepthTexture;
 texture2D g_SpecularTexture;
 texture2D g_EmissiveTexture;
+texture2D g_LightDepthTexture;
 
 vector g_vLightDir;
 vector g_vLightPos;
@@ -261,6 +264,21 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     
     Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular + vEmissive);
 
+    // 빛기준 포지션 정렬
+    vPosition = mul(vPosition, g_LightViewMatrix);
+
+    vector vUVPos = mul(vPosition, g_ProjMatrix);
+    float2 vNewUV;
+	
+    vNewUV.x = (vUVPos.x / vUVPos.w) * 0.5f + 0.5f;
+    vNewUV.y = (vUVPos.y / vUVPos.w) * -0.5f + 0.5f;
+    
+    vector vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vNewUV);
+
+    // 투영행렬의 far를 다시곱해주어 포지션과 연산
+    if (vPosition.z > vLightDepth.r * 1000.0f)
+        Out.vColor = vector(0.f, 0.f, 0.f, 1.f);
+    
     if (true == g_isGrayScale)
     {
         float fGrayScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3.f;
@@ -273,7 +291,7 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         Out.vColor.yz = fRedScale / 2.f;
         Out.vColor.x = fRedScale;
     }
-    
+
     return Out;
 }
 

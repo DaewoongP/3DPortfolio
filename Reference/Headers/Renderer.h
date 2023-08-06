@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CComponent
 {
 public:
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_SCREEN, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_LIGHTDEPTH, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_SCREEN, RENDER_UI, RENDER_END };
 
 private:
 	explicit CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -30,6 +30,7 @@ public:
 
 private:
 	HRESULT Render_Priority();
+	HRESULT Render_LightDepth();
 	HRESULT Render_NonBlend();
 	HRESULT Render_Lights();
 	HRESULT Render_Deferred();
@@ -53,7 +54,7 @@ private:
 #ifdef _DEBUG
 private:
 	list<class CComponent*>			m_DebugObject;
-	_bool							m_isDebugRender = { false };
+	_bool							m_isDebugRender = { true };
 #endif // _DEBUG
 
 private:
@@ -68,6 +69,10 @@ private:
 	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
 	class CShader*					m_pShader = { nullptr };
 	_float4x4						m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+	ID3D11DepthStencilView*			m_pOriginal_DSV = { nullptr };
+	ID3D11RenderTargetView*			m_pRTV = { nullptr };
+	ID3D11DepthStencilView*			m_pDSV = { nullptr };
+	ID3D11Texture2D*				m_pShadowDepthTexture2D = { nullptr };
 
 public:
 	static CRenderer* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

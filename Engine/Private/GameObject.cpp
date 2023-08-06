@@ -59,6 +59,11 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+HRESULT CGameObject::Render_LightDepth()
+{
+	return S_OK;
+}
+
 HRESULT CGameObject::Reset()
 {
 	if (FAILED(__super::Reset()))

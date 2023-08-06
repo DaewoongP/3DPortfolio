@@ -65,6 +65,7 @@ public:
 	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
 	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_LightDepth() override;
 	virtual HRESULT Reset() override;
 
 private:
@@ -75,6 +76,7 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CCamera*				m_pPlayerCameraCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
+	CShader*				m_pShadowShaderCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
@@ -153,6 +155,7 @@ private:
 	HRESULT Add_Component_Level(_uint iLevelIndex);
 	HRESULT Add_Parts(_uint iLevelIndex);
 	HRESULT SetUp_ShaderResources();
+	HRESULT SetUp_ShadowShaderResources();
 	HRESULT Initailize_Skills();
 
 	void Key_Input(_double dTimeDelta);

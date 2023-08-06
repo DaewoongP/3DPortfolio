@@ -647,6 +647,15 @@ HRESULT CLoader::Loading_For_Stage1()
 		return E_FAIL;
 	}
 
+	/* Prototype_Component_Shader_AnimMesh_Shadow */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimMesh_Shadow"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_AnimShadow.hlsl"),
+			VTXANIMMESH_DECL::Elements, VTXANIMMESH_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_AnimMesh_Shadow)");
+		return E_FAIL;
+	}
+
 	lstrcpy(m_szLoading, TEXT("네비게이션정보 로딩 중."));
 
 	/* For.Prototype_Component_Navigation */

@@ -32,6 +32,7 @@ public:
 	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) {}
 	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) {}
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_LightDepth();
 	virtual HRESULT Reset() override;
 
 protected:
