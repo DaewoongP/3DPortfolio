@@ -157,21 +157,37 @@ namespace Engine
 		XMFLOAT4		vTranslation;
 	}VTXINSTANCE;
 
-	typedef struct tagVertex_Position_Size
-	{
-		XMFLOAT3		vPosition;
-		XMFLOAT2		vPSize;
-	}VTXPOINT;
-
+	// VTXPOSTEX
 	typedef struct ENGINE_DLL tagVertex_Rect_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = { 6 };
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXRECTINSTANCE_DECL;
 
+	typedef struct tagVertex_Position_Size
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT2		vPSize;
+	}VTXPOINT;
+
 	typedef struct ENGINE_DLL tagVertex_Point_Instance_Declaration
 	{
 		static const unsigned int				iNumElements = { 6 };
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 	}VTXPOINTINSTANCE_DECL;
+
+	typedef struct tagVertex_Color_Instance
+	{
+		XMFLOAT4		vRight;
+		XMFLOAT4		vUp;
+		XMFLOAT4		vLook;
+		XMFLOAT4		vTranslation;
+		XMFLOAT4		vColor;
+	}VTXCOLINSTANCE;
+
+	typedef struct ENGINE_DLL tagVertex_Point_Color_Instance_Declaration
+	{
+		static const unsigned int				iNumElements = { 7 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXPOINTCOLORINSTANCE_DECL;
 }

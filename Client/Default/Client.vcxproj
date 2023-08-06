@@ -399,6 +399,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxORMMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointColorInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTexInstance.hlsl" />

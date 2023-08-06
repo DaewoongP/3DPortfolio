@@ -39,7 +39,7 @@ void CShurikenParticle::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
 
-	vector<_float4x4>		ParticleMatrices;
+	vector<CVIBuffer_Point_Color_Instance::COLORINSTANCE>		ParticleInstances;
 
 	for (auto& Particle : m_Particles)
 	{
@@ -48,7 +48,11 @@ void CShurikenParticle::Tick(_double dTimeDelta)
 		if (Particle.dAge < Particle.dGenTime)
 		{
 			Reset_Particle(Particle);
-			ParticleMatrices.push_back(Particle.WorldMatrix);
+
+			CVIBuffer_Point_Color_Instance::COLORINSTANCE ColorInstance;
+			ColorInstance.InstanceLocalMatrix = Particle.WorldMatrix;
+			ColorInstance.vInstanceColor = Particle.vColor;
+			ParticleInstances.push_back(ColorInstance);
 			continue;
 		}
 
@@ -60,6 +64,8 @@ void CShurikenParticle::Tick(_double dTimeDelta)
 			Reset_Particle(Particle);
 		}
 
+		Particle.vColor.w = 1.f - _float(Particle.dAge / (Particle.dLifeTime + Particle.dGenTime));
+
 		_float4 vPos;
 		memcpy(&vPos, Particle.WorldMatrix.m[3], sizeof(_float4));
 		_vector vVelocity = XMLoadFloat4(&Particle.vVelocity);
@@ -70,13 +76,19 @@ void CShurikenParticle::Tick(_double dTimeDelta)
 
 		XMStoreFloat4(&vPos, XMLoadFloat4(&vPos) + vVelocity * _float(dTimeDelta));
 		
-		XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(0.05f, 0.05f, 0.05f) *
+		_float fScale;
+		fScale = 0.05f;
+
+		XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(fScale, fScale, fScale) *
 			XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 
-		ParticleMatrices.push_back(Particle.WorldMatrix);
+		CVIBuffer_Point_Color_Instance::COLORINSTANCE ColorInstance;
+		ColorInstance.InstanceLocalMatrix = Particle.WorldMatrix;
+		ColorInstance.vInstanceColor = Particle.vColor;
+		ParticleInstances.push_back(ColorInstance);
 	}
 	
-	m_pVIBufferCom->Tick(ParticleMatrices.data(), true, m_pTransformCom->Get_WorldMatrix_Inverse());
+	m_pVIBufferCom->Tick(ParticleInstances.data(), true, m_pTransformCom->Get_WorldMatrix_Inverse());
 }
 
 GAMEEVENT CShurikenParticle::Late_Tick(_double dTimeDelta)
@@ -117,11 +129,12 @@ void CShurikenParticle::Reset_Particle(PARTICLE& Particle)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	Particle.vColor = _float4(0.062f, 0.988f, 0.99f, 1.f);
 	Particle.dAge = { 0.0 };
 	Particle.dLifeTime = { 3.0 };
 	Particle.dGenTime = (rand() % 200) / 100.0;
 	Particle.isAlive = true;
-	XMStoreFloat4(&Particle.vVelocity, pGameInstance->Get_RandomVectorInSphere(0.2f));
+	XMStoreFloat4(&Particle.vVelocity, pGameInstance->Get_RandomVectorInSphere(0.1f));
 	Particle.vAccel = _float4(
 		Particle.vVelocity.x / (_float)Particle.dLifeTime * -1.f,
 		Particle.vVelocity.y / (_float)Particle.dLifeTime * -1.f,
@@ -149,12 +162,12 @@ HRESULT CShurikenParticle::Add_Components()
 	m_Particles.resize(m_iParticleNum);
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Instance"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Color_Instance"),
 		TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &m_iParticleNum)))
 		return E_FAIL;
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointColorInstance"),
 		TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
@@ -179,14 +192,13 @@ HRESULT CShurikenParticle::SetUp_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
+	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResources(m_pShaderCom, "g_Texture")))
-		return E_FAIL;
-
-	_float4 vColor = _float4(0.062f, 0.988f, 0.99f, 1.f);
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
 		return E_FAIL;
 
 	return S_OK;

@@ -6,7 +6,7 @@ BEGIN(Engine)
 class CShader;
 class CTexture;
 class CRenderer;
-class CVIBuffer_Point_Instance;
+class CVIBuffer_Point_Color_Instance;
 END
 
 BEGIN(Client)
@@ -17,6 +17,7 @@ public:
 	typedef struct tagParticle
 	{
 		_bool		isAlive;
+		_float4		vColor;
 		_float4		vAccel;
 		_float4		vVelocity;
 		_float4x4	WorldMatrix;
@@ -44,17 +45,17 @@ public:
 	void Render_Effect(_fvector vEffectPos);
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
-	CTexture*					m_pTextureCom = { nullptr };
-	CRenderer*					m_pRendererCom = { nullptr };
-	CVIBuffer_Point_Instance*	m_pVIBufferCom = { nullptr };
+	CShader*							m_pShaderCom = { nullptr };
+	CTexture*							m_pTextureCom = { nullptr };
+	CRenderer*							m_pRendererCom = { nullptr };
+	CVIBuffer_Point_Color_Instance*		m_pVIBufferCom = { nullptr };
 
 private:
-	_uint						m_iParticleNum = { 0 };
-	vector<PARTICLE>			m_Particles;
+	_uint								m_iParticleNum = { 0 };
+	vector<PARTICLE>					m_Particles;
 
 private:
-	_double						m_dGenTime = { 0.0 };
+	_double								m_dGenTime = { 0.0 };
 
 public:
 	HRESULT Add_Components();

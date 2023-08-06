@@ -452,6 +452,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Instance)");
 		return E_FAIL;
 	}
+
+	/*For.Prototype_Component_VIBuffer_Point_Color_Instance*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Color_Instance"),
+		CVIBuffer_Point_Color_Instance::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Color_Instance)");
+		return E_FAIL;
+	}
 	
 	/*For.Prototype_Component_VIBuffer_Rect_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
@@ -627,6 +635,15 @@ HRESULT CLoader::Loading_For_Stage1()
 			VTXPOINTINSTANCE_DECL::Elements, VTXPOINTINSTANCE_DECL::iNumElements))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxPointInstance)");
+		return E_FAIL;
+	}
+
+	/* Prototype_Component_Shader_VtxPointColorInstance */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointColorInstance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPointColorInstance.hlsl"),
+			VTXPOINTCOLORINSTANCE_DECL::Elements, VTXPOINTCOLORINSTANCE_DECL::iNumElements))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxPointColorInstance)");
 		return E_FAIL;
 	}
 

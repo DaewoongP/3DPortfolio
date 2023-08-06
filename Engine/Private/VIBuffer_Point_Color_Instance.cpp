@@ -1,23 +1,23 @@
-#include "..\Public\VIBuffer_Point_Instance.h"
+#include "..\Public\VIBuffer_Point_Color_Instance.h"
 #include "Texture.h"
 #include "PipeLine.h"
 
-CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
-	: CVIBuffer_Instance(pDevice, pContext)
+CVIBuffer_Point_Color_Instance::CVIBuffer_Point_Color_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CVIBuffer_Color_Instance(pDevice, pContext)
 {
 }
 
-CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(const CVIBuffer_Point_Instance & rhs)
-	: CVIBuffer_Instance(rhs)
+CVIBuffer_Point_Color_Instance::CVIBuffer_Point_Color_Instance(const CVIBuffer_Point_Color_Instance& rhs)
+	: CVIBuffer_Color_Instance(rhs)
 {
 }
 
-HRESULT CVIBuffer_Point_Instance::Initialize_Prototype()
+HRESULT CVIBuffer_Point_Color_Instance::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
+HRESULT CVIBuffer_Point_Color_Instance::Initialize(void* pArg)
 {
 	if (nullptr == pArg)
 	{
@@ -29,7 +29,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
 
 	if (FAILED(Make_Buffers()))
 		return E_FAIL;
-	
+
 	vector<_float4x4> InitializeMatrices;
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
@@ -46,34 +46,32 @@ HRESULT CVIBuffer_Point_Instance::Initialize(void * pArg)
 	return S_OK;
 }
 
-void CVIBuffer_Point_Instance::Tick(_float4x4* pInstanceMatrix, _bool isAlphaBlend, _fmatrix AlphaBlendObjectWorldMatrixInverse)
+void CVIBuffer_Point_Color_Instance::Tick(COLORINSTANCE* pInstances, _bool isAlphaBlend, _fmatrix AlphaBlendObjectWorldMatrixInverse)
 {
 	if (true == isAlphaBlend)
 	{
-		// 알파블렌딩 객체는 소팅 필수.
-		// 다른객체들은 렌더러에서 소팅하면 되지만, 인스턴스객체는 각 인스턴스들의 소팅을 진행해야함.
-		// 소팅하는 위치 -> 월드공간 (카메라 위치, 인스턴싱객체 실제 위치.)
-		Sort_AlphaBlend(pInstanceMatrix, AlphaBlendObjectWorldMatrixInverse);
+		Sort_AlphaBlend(pInstances, AlphaBlendObjectWorldMatrixInverse);
 	}
 
 	D3D11_MAPPED_SUBRESOURCE	MappedSubResource;
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &MappedSubResource);
 
-	VTXINSTANCE* pVtxInstance = static_cast<VTXINSTANCE*>(MappedSubResource.pData);
+	VTXCOLINSTANCE* pVtxInstance = static_cast<VTXCOLINSTANCE*>(MappedSubResource.pData);
 
 	for (_uint i = 0; i < m_iNumInstance; ++i)
 	{
-		memcpy(&pVtxInstance[i].vRight, &pInstanceMatrix[i].m[0], sizeof(_float4));
-		memcpy(&pVtxInstance[i].vUp, &pInstanceMatrix[i].m[1], sizeof(_float4));
-		memcpy(&pVtxInstance[i].vLook, &pInstanceMatrix[i].m[2], sizeof(_float4));
-		memcpy(&pVtxInstance[i].vTranslation, &pInstanceMatrix[i].m[3], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vRight, &pInstances[i].InstanceLocalMatrix.m[0], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vUp, &pInstances[i].InstanceLocalMatrix.m[1], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vLook, &pInstances[i].InstanceLocalMatrix.m[2], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vTranslation, &pInstances[i].InstanceLocalMatrix.m[3], sizeof(_float4));
+		memcpy(&pVtxInstance[i].vColor, &pInstances[i].vInstanceColor, sizeof(_float4));
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
-void CVIBuffer_Point_Instance::Sort_AlphaBlend(_float4x4* pInstanceMatrix, _fmatrix AlphaBlendObjectWorldMatrixInverse)
+void CVIBuffer_Point_Color_Instance::Sort_AlphaBlend(COLORINSTANCE* pInstances, _fmatrix AlphaBlendObjectWorldMatrixInverse)
 {
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);
@@ -83,15 +81,15 @@ void CVIBuffer_Point_Instance::Sort_AlphaBlend(_float4x4* pInstanceMatrix, _fmat
 
 	Safe_Release(pPipeLine);
 
-	vector<_float4x4> InstanceLocalMatrices;
-	InstanceLocalMatrices.resize(m_iNumInstance);
+	vector<COLORINSTANCE> ColorInstances;
+	ColorInstances.resize(m_iNumInstance);
 
-	memcpy(InstanceLocalMatrices.data(), pInstanceMatrix, sizeof(_float4x4) * m_iNumInstance);
+	memcpy(ColorInstances.data(), pInstances, sizeof(COLORINSTANCE) * m_iNumInstance);
 
-	sort(InstanceLocalMatrices.begin(), InstanceLocalMatrices.end(), [vCamLocalPos](_float4x4 SourInstanceMatrix, _float4x4 DestInstanceMatrix) {
+	sort(ColorInstances.begin(), ColorInstances.end(), [vCamLocalPos](COLORINSTANCE SourInstance, COLORINSTANCE DestInstance) {
 		_float4 vSourLocalPos, vDestLocalPos;
-		memcpy(&vSourLocalPos, SourInstanceMatrix.m[3], sizeof(_float4));
-		memcpy(&vDestLocalPos, DestInstanceMatrix.m[3], sizeof(_float4));
+		memcpy(&vSourLocalPos, SourInstance.InstanceLocalMatrix.m[3], sizeof(_float4));
+		memcpy(&vDestLocalPos, DestInstance.InstanceLocalMatrix.m[3], sizeof(_float4));
 
 		// 내림차순 (멀리있는거부터 그림.)
 		if (XMVectorGetX(XMVector3Length(XMLoadFloat4(&vSourLocalPos) - vCamLocalPos)) > XMVectorGetX(XMVector3Length(XMLoadFloat4(&vDestLocalPos) - vCamLocalPos)))
@@ -100,10 +98,10 @@ void CVIBuffer_Point_Instance::Sort_AlphaBlend(_float4x4* pInstanceMatrix, _fmat
 		return false;
 		});
 
-	memcpy(pInstanceMatrix, InstanceLocalMatrices.data(), sizeof(_float4x4) * m_iNumInstance);
+	memcpy(pInstances, ColorInstances.data(), sizeof(COLORINSTANCE) * m_iNumInstance);
 }
 
-HRESULT CVIBuffer_Point_Instance::Make_Buffers()
+HRESULT CVIBuffer_Point_Color_Instance::Make_Buffers()
 {
 	m_iIndexCountPerInstance = 1;
 	m_iNumVertexBuffers = { 2 };
@@ -165,33 +163,33 @@ HRESULT CVIBuffer_Point_Instance::Make_Buffers()
 	return S_OK;
 }
 
-CVIBuffer_Point_Instance * CVIBuffer_Point_Instance::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CVIBuffer_Point_Color_Instance* CVIBuffer_Point_Color_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CVIBuffer_Point_Instance*	pInstance = new CVIBuffer_Point_Instance(pDevice, pContext);
+	CVIBuffer_Point_Color_Instance* pInstance = new CVIBuffer_Point_Color_Instance(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CVIBuffer_Point_Instance");
+		MSG_BOX("Failed to Created CVIBuffer_Point_Color_Instance");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Point_Instance::Clone(void * pArg)
+CComponent* CVIBuffer_Point_Color_Instance::Clone(void* pArg)
 {
-	CVIBuffer_Point_Instance*	pInstance = new CVIBuffer_Point_Instance(*this);
+	CVIBuffer_Point_Color_Instance* pInstance = new CVIBuffer_Point_Color_Instance(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CVIBuffer_Point_Instance");
+		MSG_BOX("Failed to Cloned CVIBuffer_Point_Color_Instance");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CVIBuffer_Point_Instance::Free()
+void CVIBuffer_Point_Color_Instance::Free()
 {
 	__super::Free();
 
