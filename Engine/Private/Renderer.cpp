@@ -49,13 +49,12 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Specular"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
-
-	_uint		iShadowMapCX = (_uint)ViewportDesc.Width;
-	_uint		iShadowMapCY = (_uint)ViewportDesc.Height;
-
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
-		TEXT("Target_ShadowMap"), iShadowMapCX, iShadowMapCY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
+		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
+
+	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 10;
+	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 10;
 
 	/* ID3D11Resource */
 	D3D11_TEXTURE2D_DESC	TextureDesc;
@@ -81,7 +80,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	/* DepthStencil */
 	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
 	ZEROMEM(&DepthStencilViewDesc);
-
+	DepthStencilViewDesc.Flags = 0;
 	DepthStencilViewDesc.Format = TextureDesc.Format;
 	DepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	DepthStencilViewDesc.Texture2D.MipSlice = 0;
@@ -229,10 +228,14 @@ HRESULT CRenderer::Render_LightDepth()
 
 	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_LightDepth"))))
 		return E_FAIL;
+
+	ID3D11DepthStencilView* pOriginal_DepthStencilView = { nullptr };
+	ID3D11RenderTargetView* pOriginal_RenderTargetView = { nullptr };
+
 	// 그릴 렌더타겟(Begin 에서 생성함), 원래 깊이 저장
-	m_pContext->OMGetRenderTargets(1, &m_pRTV, &m_pOriginal_DSV);
+	m_pContext->OMGetRenderTargets(1, &pOriginal_RenderTargetView, &pOriginal_DepthStencilView);
 	// 받아온 렌더타겟, 깊이 저장할 DSV
-	m_pContext->OMSetRenderTargets(1, &m_pRTV, m_pDSV);
+	m_pContext->OMSetRenderTargets(1, &pOriginal_RenderTargetView, m_pDSV);
 	// depth 1로 초기화
 	m_pContext->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
 
@@ -250,8 +253,8 @@ HRESULT CRenderer::Render_LightDepth()
 	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
 
-	Safe_Release(m_pRTV);
-	Safe_Release(m_pOriginal_DSV);
+	Safe_Release(pOriginal_RenderTargetView);
+	Safe_Release(pOriginal_DepthStencilView);
 
 	return S_OK;
 }
@@ -353,9 +356,25 @@ HRESULT CRenderer::Render_Deferred()
 		return E_FAIL;
 
 	_float4x4 LightViewMatrix;
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(37.f, 5.f, 90.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(37.f, 8.f, 87.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	if (FAILED(m_pShader->Bind_Matrix("g_LightViewMatrix", &LightViewMatrix)))
 		return E_FAIL;
+	_float4x4 LightProjMatrix;
+	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), 1280.f / 720.f, 0.1f, 1000.f));
+	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", &LightProjMatrix)))
+		return E_FAIL;
+	CPipeLine* pPipeLine = CPipeLine::GetInstance();
+	Safe_AddRef(pPipeLine);
+
+	if (FAILED(m_pShader->Bind_RawValue("g_fCamFar", pPipeLine->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrixInv", pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrixInv", pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	Safe_Release(pPipeLine);
 
 	// GrayScale
 	if (FAILED(m_pShader->Bind_RawValue("g_isGrayScale", &m_isGrayScale, sizeof(_bool))))

@@ -1,7 +1,7 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_ViewMatrixInv, g_ProjMatrixInv;
-matrix g_LightViewMatrix;
+matrix g_LightViewMatrix, g_LightProjMatrix;
 
 texture2D g_Texture;
 vector g_vCamPosition;
@@ -234,7 +234,7 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     
     float fFogPower = 0.f;
     
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexUV);
+    vector vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
     float fViewZ = vDepthDesc.y * g_fCamFar;
     vector vPosition;
 
@@ -254,7 +254,7 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     if (vPosition.y >= 0.f)
         fFogPower = 0.f;
     else
-        fFogPower = saturate(vPosition.y / -30.f);
+        fFogPower = saturate(vPosition.y / -10.f);
     
     vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
     vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
@@ -267,16 +267,25 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     // 빛기준 포지션 정렬
     vPosition = mul(vPosition, g_LightViewMatrix);
 
-    vector vUVPos = mul(vPosition, g_ProjMatrix);
-    float2 vNewUV;
+    vector vUVPos = mul(vPosition, g_LightProjMatrix);
+    float2 vDepthTexUV;
 	
-    vNewUV.x = (vUVPos.x / vUVPos.w) * 0.5f + 0.5f;
-    vNewUV.y = (vUVPos.y / vUVPos.w) * -0.5f + 0.5f;
+    vDepthTexUV.x = (vUVPos.x / vUVPos.w) * 0.5f + 0.5f;
+    vDepthTexUV.y = (vUVPos.y / vUVPos.w) * -0.5f + 0.5f;
+    vector vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vDepthTexUV);
     
-    vector vLightDepth = g_LightDepthTexture.Sample(LinearSampler, vNewUV);
-
+    // 투영행렬을 곱해줬기때문에 w나누기 한 후 검사를 진행 해줘야한다.
+    float3 vProjTest = vUVPos.xyz / vUVPos.w;
+    if (-1.f > vProjTest.x ||
+		1.f < vProjTest.x ||
+		-1.f > vProjTest.y ||
+		1.f < vProjTest.y||
+        0.f > vProjTest.z ||
+		1.f < vProjTest.z)
+        Out.vColor = Out.vColor;
     // 투영행렬의 far를 다시곱해주어 포지션과 연산
-    if (vPosition.z > vLightDepth.r * 1000.0f)
+    // 현재 픽셀의 깊이값과 해당하는 픽셀이 존재하는 빛기준의 텍스처 UV좌표 깊이값과 비교하여 처리한다.
+    else if (vPosition.z - 0.1f > vLightDepth.r * g_fCamFar)
         Out.vColor = vector(0.f, 0.f, 0.f, 1.f);
     
     if (true == g_isGrayScale)

@@ -69,8 +69,8 @@ private:
 	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
 	class CShader*					m_pShader = { nullptr };
 	_float4x4						m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
-	ID3D11DepthStencilView*			m_pOriginal_DSV = { nullptr };
-	ID3D11RenderTargetView*			m_pRTV = { nullptr };
+
+private: /* Light Depth Target */
 	ID3D11DepthStencilView*			m_pDSV = { nullptr };
 	ID3D11Texture2D*				m_pShadowDepthTexture2D = { nullptr };
 
