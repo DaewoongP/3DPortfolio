@@ -29,12 +29,6 @@ public:
 	void Render_Effect(_double dRenderTime);
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
-	CTexture*					m_pTextureCom = { nullptr };
-	CRenderer*					m_pRendererCom = { nullptr };
-	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-
-private:
 	_double						m_dRenderTimeAcc = { 0.0 };
 	_double						m_dRenderTime = { 0.0 };
 	_uint						m_iTextureIndex = { 0 };

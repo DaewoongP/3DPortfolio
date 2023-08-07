@@ -638,11 +638,11 @@ HRESULT CPlayer::SetUp_ShadowShaderResources()
 	// 빛이 바라보는 기준으로 그릴것이므로
 	// 빛기준으로 돌린 행렬을 던진다.
 	_float4x4 LightViewMatrix;
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(37.f, 8.f, 87.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(30.f, 10.f, 80.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", &LightViewMatrix)))
 		return E_FAIL;
 	_float4x4 LightProjMatrix;
-	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
+	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
 	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", &LightProjMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShadowShaderCom->Bind_RawValue("g_fFar", pGameInstance->Get_CamFar(), sizeof(_float))))

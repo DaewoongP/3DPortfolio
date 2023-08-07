@@ -48,7 +48,7 @@ HRESULT CKatana::Initialize_Level(_uint iLevelIndex)
 
 	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
 	ZEROMEM(&TrailDesc);
-	TrailDesc.iTrailNum = 3;
+	TrailDesc.iTrailNum = 5;
 	TrailDesc.fMinVertexDistance = 0.1f;
 	TrailDesc.pHighLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailFrontIndex);
 	TrailDesc.pLowLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailBackIndex);

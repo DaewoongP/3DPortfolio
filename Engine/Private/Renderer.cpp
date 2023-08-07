@@ -53,13 +53,14 @@ HRESULT CRenderer::Initialize_Prototype()
 		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
-	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 10;
-	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 10;
+	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 12;
+	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 12;
 
 	/* ID3D11Resource */
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZEROMEM(&TextureDesc);
-	
+
+	// 최대 텍스처 사이즈 16384
 	TextureDesc.Width = iShadowMapCX;
 	TextureDesc.Height = iShadowMapCY;
 	TextureDesc.MipLevels = 1;
@@ -356,11 +357,11 @@ HRESULT CRenderer::Render_Deferred()
 		return E_FAIL;
 
 	_float4x4 LightViewMatrix;
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(37.f, 8.f, 87.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(30.f, 10.f, 80.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	if (FAILED(m_pShader->Bind_Matrix("g_LightViewMatrix", &LightViewMatrix)))
 		return E_FAIL;
 	_float4x4 LightProjMatrix;
-	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), 1280.f / 720.f, 0.1f, 1000.f));
+	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), 1280.f / 720.f, 0.1f, 1000.f));
 	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", &LightProjMatrix)))
 		return E_FAIL;
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
