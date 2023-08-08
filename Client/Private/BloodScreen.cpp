@@ -24,11 +24,9 @@ HRESULT CBloodScreen::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	// 윈도우 창에 꽉채우게 설정함.
 	m_fSizeX = g_iWinSizeX;
 	m_fSizeY = g_iWinSizeY;
 
-	// 윈도우창의 중간에 표시하게 설정.
 	m_fX = g_iWinSizeX * 0.5f;
 	m_fY = g_iWinSizeY * 0.5f;
 

@@ -8,11 +8,9 @@ vector			g_vColor;
 
 struct VS_IN
 {
-	/* 그리기 위한 정점정보 */
 	float3		vPosition : POSITION;
 	float2		vPSize : PSIZE;
-
-	/* 인스턴싱정보 (도형하나를 제어하기위한 행렬) */
+	
 	float4		vRight : TEXCOORD1;
 	float4		vUp : TEXCOORD2;
 	float4		vLook : TEXCOORD3;
@@ -25,17 +23,16 @@ struct VS_OUT
 	float2		vPSize : PSIZE;
 };
 
-/* 정점을 받고 변환하고 정점을 리턴한다. */
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT			Out = (VS_OUT)0;
 
 	matrix			TransformMatrix;
 	TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
-
+	
 	vector			vPosition;
 	vPosition = mul(vector(In.vPosition, 1.f), TransformMatrix);
-
+	
 	Out.vPosition = mul(vPosition, g_WorldMatrix);
 	Out.vPSize = float2(In.vPSize.x * length(In.vRight), In.vPSize.y * length(In.vUp));
 	
@@ -86,7 +83,6 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> Triangles)
 	Triangles.Append(Out[2]);
 	Triangles.Append(Out[3]);
 	Triangles.RestartStrip();
-	
 }
 
 struct PS_IN
@@ -95,7 +91,6 @@ struct PS_IN
 	float2		vTexUV : TEXCOORD0;
 };
 
-/* 픽셀을 받고 픽셀의 색을 결정하여 리턴한다. */
 float4	PS_MAIN(PS_IN In) : SV_TARGET0
 {
 	float4		vColor = (float4)0;

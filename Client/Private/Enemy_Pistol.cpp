@@ -85,7 +85,7 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 		if (1.f > fY)
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetY(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pNavigationCom->Get_CurrentCellY(vPos)));
 	}
-	
+
 	__super::Tick(dTimeDelta);
 
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
@@ -112,10 +112,23 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 		XMLoadFloat4x4(pBone->Get_CombinedTransformationMatrixPtr()) * m_pModelCom->Get_PivotMatrix() 
 		* XMMatrixTranslation(0.f, -0.2f, 0.35f));
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (nullptr != m_pRendererCom &&
+		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_LIGHTDEPTH, this);
+
 #ifdef _DEBUG
-	m_pRendererCom->Add_DebugGroup(m_pColliderCom);
-	m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
+		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
+		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
+		m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);
 #endif // _DEBUG
+	}
+
+	Safe_Release(pGameInstance);
 
 	return PlayEvent(dTimeDelta);
 }
@@ -136,7 +149,8 @@ void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 
 void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 {
-	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
+	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+		COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = CollisionDesc.pOtherOwner;
 
 	__super::OnCollisionStay(CollisionDesc);
@@ -144,7 +158,8 @@ void CEnemy_Pistol::OnCollisionStay(COLLISIONDESC CollisionDesc)
 
 void CEnemy_Pistol::OnCollisionExit(COLLISIONDESC CollisionDesc)
 {
-	if (COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
+	if (CollisionDesc.pMyCollider == m_pVisionColliderCom &&
+		COLLISIONDESC::COLTYPE_PLAYER == CollisionDesc.ColType)
 		m_pTargetPlayer = nullptr;
 }
 
@@ -166,6 +181,27 @@ HRESULT CEnemy_Pistol::Render()
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
 
 		m_pShaderCom->Begin(2);
+
+		m_pModelCom->Render(i);
+	}
+
+	return S_OK;
+}
+
+HRESULT CEnemy_Pistol::Render_LightDepth()
+{
+	if (FAILED(SetUp_ShadowShaderResources()))
+		return E_FAIL;
+
+	// 그림자 매핑 다른 렌더링은 똑같이 처리하면됨.
+	// 근데 일단 노말텍스처나 이런 머테리얼 바인딩은 필요없어보임.
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShadowShaderCom, "g_BoneMatrices", i);
+
+		m_pShadowShaderCom->Begin(0);
 
 		m_pModelCom->Render(i);
 	}
@@ -206,6 +242,14 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Shader)");
+		return E_FAIL;
+	}
+
+	/* For.Com_ShadowShader */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimMesh_Shadow"),
+		TEXT("Com_ShadowShader"), reinterpret_cast<CComponent**>(&m_pShadowShaderCom))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_ShadowShader)");
 		return E_FAIL;
 	}
 
@@ -323,6 +367,33 @@ HRESULT CEnemy_Pistol::SetUp_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CEnemy_Pistol::SetUp_ShadowShaderResources()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShadowShaderCom->Bind_RawValue("g_fFar", pGameInstance->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+		return E_FAIL;
+	// 빛이 바라보는 기준으로 그릴것이므로
+	// 빛기준으로 돌린 행렬을 던진다.
+	_float4x4 LightViewMatrix;
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(vPos + XMVectorSet(-20.f, 20.f, -20.f, 1.f), vPos, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", &LightViewMatrix)))
+		return E_FAIL;
+	_float4x4 LightProjMatrix;
+	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", &LightProjMatrix)))
+		return E_FAIL;
+	
+	return S_OK;
+}
+
 void CEnemy_Pistol::AnimationState(_double dTimeDelta)
 {
 	m_eCurrentAnimationFlag = m_pModelCom->Get_AnimationState();
@@ -433,6 +504,7 @@ void CEnemy_Pistol::Free()
 
 	Safe_Release(m_pPistol);
 	Safe_Release(m_pModelCom);
+	Safe_Release(m_pShadowShaderCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pVisionColliderCom);

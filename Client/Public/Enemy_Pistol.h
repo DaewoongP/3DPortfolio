@@ -30,11 +30,13 @@ public:
 	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
 	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_LightDepth() override;
 	virtual HRESULT Reset() override;
 
 private:
 	CModel*					m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
+	CShader*				m_pShadowShaderCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 	CCollider*				m_pVisionColliderCom = { nullptr };
 	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
@@ -69,6 +71,7 @@ private: /* Tick */
 	HRESULT Add_Parts(_uint iLevelIndex);
 	HRESULT SetUp_BehaviorTree();
 	HRESULT SetUp_ShaderResources();
+	HRESULT SetUp_ShadowShaderResources();
 
 	void AnimationState(_double dTimeDelta);
 	void Motion_Change(ANIMATIONFLAG eAnimationFlag);

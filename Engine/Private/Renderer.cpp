@@ -204,6 +204,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	Safe_Release(pInput_Device);
 #endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -357,13 +358,15 @@ HRESULT CRenderer::Render_Deferred()
 		return E_FAIL;
 
 	_float4x4 LightViewMatrix;
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(30.f, 10.f, 80.f, 1.f), XMVectorSet(40.f, 0.f, 90.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(80.f, 30.f, 100.f, 1.f), XMVectorSet(90.f, 0.f, 110.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	if (FAILED(m_pShader->Bind_Matrix("g_LightViewMatrix", &LightViewMatrix)))
 		return E_FAIL;
+	
 	_float4x4 LightProjMatrix;
 	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), 1280.f / 720.f, 0.1f, 1000.f));
 	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", &LightProjMatrix)))
 		return E_FAIL;
+
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);
 
@@ -460,6 +463,8 @@ HRESULT CRenderer::Sort_Blend()
 
 	_vector vCamPos = XMLoadFloat4(pPipeLine->Get_CamPosition());
 
+	Safe_Release(pPipeLine);
+
 	m_RenderObjects[RENDER_BLEND].sort([vCamPos](const CGameObject* pSour, const CGameObject* pDest) {
 		_vector vSourPos = pSour->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 		_vector vDestPos = pDest->Get_Transform()->Get_State(CTransform::STATE_POSITION);
@@ -468,8 +473,6 @@ HRESULT CRenderer::Sort_Blend()
 			return true;
 		return false;
 		});
-
-	Safe_Release(pPipeLine);
 
 	return S_OK;
 }

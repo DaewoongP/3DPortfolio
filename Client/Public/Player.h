@@ -65,7 +65,6 @@ public:
 	virtual void OnCollisionStay(COLLISIONDESC CollisionDesc) override;
 	virtual void OnCollisionExit(COLLISIONDESC CollisionDesc) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_LightDepth() override;
 	virtual HRESULT Reset() override;
 
 private:
@@ -155,7 +154,6 @@ private:
 	HRESULT Add_Component_Level(_uint iLevelIndex);
 	HRESULT Add_Parts(_uint iLevelIndex);
 	HRESULT SetUp_ShaderResources();
-	HRESULT SetUp_ShadowShaderResources();
 	HRESULT Initailize_Skills();
 
 	void Key_Input(_double dTimeDelta);

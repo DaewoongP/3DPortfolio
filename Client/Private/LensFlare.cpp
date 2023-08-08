@@ -115,10 +115,8 @@ HRESULT CLensFlare::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
-
 	Safe_Release(pGameInstance);
+
 	_float4 vColor = _float4(1.f, 0.f, 0.f, 0.5f);
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))
 		return E_FAIL;

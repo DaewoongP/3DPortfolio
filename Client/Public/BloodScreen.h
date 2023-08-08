@@ -2,13 +2,6 @@
 #include "UI.h"
 #include "Client_Defines.h"
 
-BEGIN(Engine)
-class CShader;
-class CTexture;
-class CRenderer;
-class CVIBuffer_Rect;
-END
-
 BEGIN(Client)
 
 class CBloodScreen final : public CUI

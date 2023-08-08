@@ -43,6 +43,35 @@ sampler PointSampler = sampler_state
     AddressV = WRAP;
 };
 
+matrix MyMatrixLookAtLH(float4 vEye, float4 vAt)
+{
+    matrix ViewMatrix = matrix(
+    1.f, 0.f, 0.f, 0.f, 
+    0.f, 1.f, 0.f, 0.f, 
+    0.f, 0.f, 1.f, 0.f, 
+    0.f, 0.f, 0.f, 1.f);
+    
+    vector vLook = float4(normalize(vAt.xyz - vEye.xyz), 0.f);
+    vector vRight = float4(normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)), 0.f);
+    vector vUp = float4(normalize(cross(vLook.xyz, vRight.xyz)), 0.f);
+    
+    ViewMatrix = matrix(vRight, vUp, vLook, float4(0.f, 0.f, 0.f, 1.f));
+    matrix TransposeViewMatrix = transpose(ViewMatrix);
+    
+    vector vPosition = float4(
+    -1.f * dot(vEye, vRight),
+    -1.f * dot(vEye, vUp),
+    -1.f * dot(vEye, vLook),
+    1.f);
+    
+    TransposeViewMatrix._41 = vPosition.x;
+    TransposeViewMatrix._42 = vPosition.y;
+    TransposeViewMatrix._43 = vPosition.z;
+    TransposeViewMatrix._44 = vPosition.w;
+
+    return TransposeViewMatrix;
+}
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -265,7 +294,10 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular + vEmissive);
 
     // 빛기준 포지션 정렬
-    vPosition = mul(vPosition, g_LightViewMatrix);
+    float4 vEye = vPosition + float4(-20.f, 20.f, -20.f, 1.f);
+    matrix LightViewMatrix = MyMatrixLookAtLH(vEye, vPosition);
+    
+    vPosition = mul(vPosition, LightViewMatrix);
 
     vector vUVPos = mul(vPosition, g_LightProjMatrix);
     float2 vDepthTexUV;

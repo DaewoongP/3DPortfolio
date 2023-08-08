@@ -237,9 +237,9 @@ _bool CCalculator::Timer(_double dAlarmTime, _double dTimeDelta)
 
 _fvector CCalculator::Get_RandomVectorInSphere(_float fRadius)
 {
-	_float fRandX = (rand() % 1000) * 0.001f;
-	_float fRandY = (rand() % 1000) * 0.001f;
-	_float fRandZ = (rand() % 1000) * 0.001f;
+	_float fRandX = (rand() % 1001) * 0.001f;
+	_float fRandY = (rand() % 1001) * 0.001f;
+	_float fRandZ = (rand() % 1001) * 0.001f;
 
 	_float3 vDir = _float3(fRandX, fRandY, fRandZ);
 	XMStoreFloat3(&vDir, XMVector3Normalize(XMLoadFloat3(&vDir)) * fRadius);

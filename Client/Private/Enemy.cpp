@@ -52,21 +52,7 @@ void CEnemy::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy::Late_Tick(_double dTimeDelta)
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (nullptr != m_pRendererCom &&
-		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
-	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-#ifdef _DEBUG
-		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
-#endif // _DEBUG
-	}
-	
 	__super::Late_Tick(dTimeDelta);
-
-	Safe_Release(pGameInstance);
 
 	return GAME_NOEVENT;
 }

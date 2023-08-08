@@ -42,26 +42,6 @@ HRESULT CBackGround::Initialize(void* pArg)
 void CBackGround::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-
-	/*CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_SPACE, CInput_Device::KEY_DOWN))
-	{
-		m_iBackGroundTextureIndex = 1;
-	}
-
-	if (pGameInstance->Get_DIKeyState(DIK_F10, CInput_Device::KEY_DOWN))
-	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE1))))
-		{
-			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_STAGE1");
-			Safe_Release(pGameInstance);
-			return;
-		}
-	}
-
-	Safe_Release(pGameInstance);*/
 }
 
 GAMEEVENT CBackGround::Late_Tick(_double dTimeDelta)

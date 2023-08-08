@@ -122,7 +122,10 @@ float4 PS_MAIN_ALPHA(PS_IN In) : SV_TARGET0
     vColor.rgb = In.vColor.rgb;
     vColor.a *= In.vColor.a;
 	
-    return vColor;
+    if (0.1f > vColor.a)
+        discard;
+	
+	return vColor;
 }
 
 technique11		DefaultTechnique

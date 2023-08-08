@@ -66,8 +66,6 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 		return;
 
 	m_pBounding->Tick(TransformMatrix);
-
-	DeadCollision();
 }
 
 HRESULT CCollider::Reset()
@@ -120,6 +118,7 @@ void CCollider::OnCollision(COLLISIONDESC::COLTYPE eCollisionType, COLLISIONDESC
 		CollisionDesc.pOtherCollider = pOtherCollider;
 		CollisionDesc.pMyCollider = this;
 		CollisionDesc.pOtherOwner = static_cast<CGameObject*>(pOtherCollider->Get_Owner());
+		
 		CollisionDesc.pOtherTransform = CollisionDesc.pOtherOwner->Get_Transform();
 
 		m_isDead.push_back(false);
@@ -174,7 +173,7 @@ void CCollider::ExitCollision(CCollider* pOtherCollider)
 
 	if (iter == m_Collisions.end())
 		return;
-
+	
 	static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(*iter);
 
 	m_Collisions.erase(iter);
@@ -193,7 +192,7 @@ void CCollider::DeadCollision()
 		if (true == m_isDead[i])
 		{
 			static_cast<CGameObject*>(m_pOwner)->OnCollisionExit(m_Collisions[i]);
-
+			
 			m_Collisions.erase(iter + i);
 			m_isDead.erase(iter2 + i);
 
