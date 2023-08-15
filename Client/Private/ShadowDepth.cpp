@@ -46,6 +46,7 @@ void CShadowDepth::Tick(_double dTimeDelta)
 
 		pGameInstance->Set_LightDepthMatrix(CPipeLine::D3DTS_VIEW, XMLoadFloat4x4(&m_DepthDesc.LightViewMatrix));
 		pGameInstance->Set_LightDepthMatrix(CPipeLine::D3DTS_PROJ, XMLoadFloat4x4(&m_DepthDesc.LightProjMatrix));
+		pGameInstance->Set_LightFar(m_DepthDesc.fLightFar);
 
 		Safe_Release(pGameInstance);
 	}

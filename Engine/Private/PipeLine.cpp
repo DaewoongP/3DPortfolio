@@ -59,6 +59,11 @@ _float* CPipeLine::Get_CamFar()
 	return &m_fCameraFar;
 }
 
+_float* CPipeLine::Get_LightFar()
+{
+	return &m_fLightFar;
+}
+
 void CPipeLine::Tick()
 {
 	for (_uint i = 0; i < D3DTS_END; i++)

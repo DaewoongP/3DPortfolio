@@ -13,6 +13,7 @@ public:
 		_float4x4		LightProjMatrix;
 		_float3			vCenter;
 		_float3			vExtents;
+		_float			fLightFar;
 	}SHADOWDEPTH;
 
 private:

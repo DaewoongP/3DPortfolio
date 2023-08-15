@@ -95,6 +95,8 @@ GAMEEVENT CBoss::Late_Tick(_double dTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 	{
+		// 보스는 따로 절두체 컬링 안함.
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 #ifdef _DEBUG
 		m_pRendererCom->Add_DebugGroup(m_pColliderCom);
 		m_pRendererCom->Add_DebugGroup(m_pVisionColliderCom);

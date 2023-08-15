@@ -50,11 +50,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		TEXT("Target_Specular"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 2;
-	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 2;
+	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 10;
+	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 10;
 
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
-		TEXT("Target_ShadowMap"), iShadowMapCX, iShadowMapCY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
+		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
 	/* ID3D11Resource */
@@ -232,16 +232,6 @@ HRESULT CRenderer::Render_LightDepth()
 	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_LightDepth"))))
 		return E_FAIL;
 
-	ID3D11DepthStencilView* pOriginal_DepthStencilView = { nullptr };
-	ID3D11RenderTargetView* pOriginal_RenderTargetView[8] = { nullptr };
-
-	// ±×¸± ·»´õÅ¸°Ù(Begin ¿¡¼­ »ý¼ºÇÔ), ¿ø·¡ ±íÀÌ ÀúÀå
-	m_pContext->OMGetRenderTargets(1, pOriginal_RenderTargetView, &pOriginal_DepthStencilView);
-	// ¹Þ¾Æ¿Â ·»´õÅ¸°Ù, ±íÀÌ ÀúÀåÇÒ DSV
-	m_pContext->OMSetRenderTargets(1, pOriginal_RenderTargetView, m_pDSV);
-	// depth 1·Î ÃÊ±âÈ­
-	m_pContext->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
-
 	// ±íÀÌ ·»´õ¸µ
 	for (auto& pGameObject : m_RenderObjects[RENDER_LIGHTDEPTH])
 	{
@@ -255,12 +245,6 @@ HRESULT CRenderer::Render_LightDepth()
 	
 	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
-
-	for (_uint i = 0; i < 8; ++i)
-	{
-		Safe_Release(pOriginal_RenderTargetView[i]);
-	}
-	Safe_Release(pOriginal_DepthStencilView);
 
 	return S_OK;
 }
@@ -365,6 +349,8 @@ HRESULT CRenderer::Render_Deferred()
 	Safe_AddRef(pPipeLine);
 
 	if (FAILED(m_pShader->Bind_RawValue("g_fCamFar", pPipeLine->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_RawValue("g_fLightFar", pPipeLine->Get_LightFar(), sizeof(_float))))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrixInv", pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW))))

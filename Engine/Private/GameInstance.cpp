@@ -339,6 +339,13 @@ void CGameInstance::Set_LightDepthMatrix(CPipeLine::D3DTRANSFORMSTATE eTransform
 	m_pPipeLine->Set_LightDepthMatrix(eTransformState, LightStateMatrix);
 }
 
+void CGameInstance::Set_LightFar(_float fLightFar)
+{
+	NULL_CHECK_RETURN_MSG(m_pPipeLine, , TEXT("PipeLine NULL"));
+
+	m_pPipeLine->Set_LightFar(fLightFar);
+}
+
 _float4x4* CGameInstance::Get_LightDepthFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState)
 {
 	NULL_CHECK_RETURN_MSG(m_pPipeLine, nullptr, TEXT("PipeLine NULL"));
@@ -386,6 +393,13 @@ _float* CGameInstance::Get_CamFar()
 	NULL_CHECK_RETURN_MSG(m_pPipeLine, nullptr, TEXT("PipeLine NULL"));
 
 	return m_pPipeLine->Get_CamFar();
+}
+
+_float* CGameInstance::Get_LightFar()
+{
+	NULL_CHECK_RETURN_MSG(m_pPipeLine, nullptr, TEXT("PipeLine NULL"));
+
+	return m_pPipeLine->Get_LightFar();
 }
 
 HRESULT CGameInstance::Get_MouseRay(ID3D11DeviceContext* pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4* vRayPos, _Inout_ _float4* vRayDir)

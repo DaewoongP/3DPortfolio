@@ -75,6 +75,7 @@ public: /* For.Input_Device*/
 public: /* For.PipeLine*/
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix TransformStateMatrix);
 	void Set_LightDepthMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix LightStateMatrix);
+	void Set_LightFar(_float fLightFar);
 	_float4x4* Get_LightDepthFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_matrix Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_float4x4* Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState);
@@ -82,6 +83,7 @@ public: /* For.PipeLine*/
 	_float4x4* Get_TransformFloat4x4_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_float4* Get_CamPosition();
 	_float* Get_CamFar();
+	_float* Get_LightFar();
 
 public: /* For. Calculator */
 	HRESULT Get_MouseRay(ID3D11DeviceContext * pContext, HWND hWnd, _fmatrix PickingWorldMatrix_Inverse, _Inout_ _float4 * vRayPos, _Inout_ _float4 * vRayDir);

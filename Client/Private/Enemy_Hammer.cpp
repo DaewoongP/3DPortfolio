@@ -183,6 +183,25 @@ HRESULT CEnemy_Hammer::Render()
 	return S_OK;
 }
 
+HRESULT CEnemy_Hammer::Render_LightDepth()
+{
+	if (FAILED(SetUp_ShadowShaderResources()))
+		return E_FAIL;
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShadowShaderCom, "g_BoneMatrices", i);
+
+		m_pShadowShaderCom->Begin(0);
+
+		m_pModelCom->Render(i);
+	}
+
+	return S_OK;
+}
+
 HRESULT CEnemy_Hammer::Reset()
 {
 	m_pModelCom->Reset_Animation(52);
@@ -214,6 +233,14 @@ HRESULT CEnemy_Hammer::Add_Component()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 	{
 		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_Shader)");
+		return E_FAIL;
+	}
+
+	/* For.Com_ShadowShader */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimMesh_Shadow"),
+		TEXT("Com_ShadowShader"), reinterpret_cast<CComponent**>(&m_pShadowShaderCom))))
+	{
+		MSG_BOX("Failed CEnemy_Hammer Add_Component : (Com_ShadowShader)");
 		return E_FAIL;
 	}
 
@@ -326,6 +353,27 @@ HRESULT CEnemy_Hammer::SetUp_ShaderResources()
 		return E_FAIL;
 	_float fRimWidth = 0.5f;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimWidth", &fRimWidth, sizeof(_float))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CEnemy_Hammer::SetUp_ShadowShaderResources()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShadowShaderCom->Bind_RawValue("g_fFar", pGameInstance->Get_LightFar(), sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+		return E_FAIL;
+
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_LightDepthFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_LightDepthFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -458,6 +506,7 @@ void CEnemy_Hammer::Free()
 	Safe_Release(m_pHammer);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pShadowShaderCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pVisionColliderCom);
 	Safe_Release(m_pBehaviorTreeCom);

@@ -188,6 +188,27 @@ HRESULT CEnemy_Sword::Render()
 	return S_OK;
 }
 
+HRESULT CEnemy_Sword::Render_LightDepth()
+{
+	if (FAILED(SetUp_ShadowShaderResources()))
+		return E_FAIL;
+
+	// 그림자 매핑 다른 렌더링은 똑같이 처리하면됨.
+	// 근데 일단 노말텍스처나 이런 머테리얼 바인딩은 필요없어보임.
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShadowShaderCom, "g_BoneMatrices", i);
+
+		m_pShadowShaderCom->Begin(0);
+
+		m_pModelCom->Render(i);
+	}
+
+	return S_OK;
+}
+
 HRESULT CEnemy_Sword::Reset()
 {
 	m_pModelCom->Reset_Animation(1);
@@ -219,6 +240,14 @@ HRESULT CEnemy_Sword::Add_Component(ENEMYDESC& EnemyDesc)
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Shader)");
+		return E_FAIL;
+	}
+
+	/* For.Com_ShadowShader */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimMesh_Shadow"),
+		TEXT("Com_ShadowShader"), reinterpret_cast<CComponent**>(&m_pShadowShaderCom))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_ShadowShader)");
 		return E_FAIL;
 	}
 
@@ -327,6 +356,29 @@ HRESULT CEnemy_Sword::SetUp_ShaderResources()
 		return E_FAIL;
 	_float fRimWidth = 0.5f;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimWidth", &fRimWidth, sizeof(_float))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CEnemy_Sword::SetUp_ShadowShaderResources()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(m_pShadowShaderCom->Bind_RawValue("g_fFar", pGameInstance->Get_LightFar(), sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
+		return E_FAIL;
+
+	// 빛이 바라보는 기준으로 그릴것이므로
+	// 빛기준으로 돌린 행렬을 던진다.
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_LightDepthFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_LightDepthFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -463,6 +515,7 @@ void CEnemy_Sword::Free()
 	Safe_Release(m_pSword);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pShadowShaderCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pVisionColliderCom);
 	Safe_Release(m_pBehaviorTreeCom);

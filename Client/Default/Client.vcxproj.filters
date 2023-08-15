@@ -588,7 +588,9 @@
     <ClInclude Include="..\Public\Client_Macro.h">
       <Filter>99. Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\ShadowDepth.h" />
+    <ClInclude Include="..\public\ShadowDepth.h">
+      <Filter>02. GameObjects\06. Trigger\ShadowDepth</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -919,7 +921,9 @@
     <ClCompile Include="..\private\HOS.cpp">
       <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\ShadowDepth.cpp" />
+    <ClCompile Include="..\private\ShadowDepth.cpp">
+      <Filter>02. GameObjects\06. Trigger\ShadowDepth</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">

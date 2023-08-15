@@ -122,18 +122,53 @@ HRESULT CLevel_Stage1::Ready_Layer_ShadowDepth(const _tchar* pLayerTag)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	// 0번 위치
 	CShadowDepth::SHADOWDEPTH DepthDesc;
 	ZEROMEM(&DepthDesc);
 	// box 30, 4, 70 / 190, 50, 250
 	// view eye 100, 50, 80 / at 140, 15, 120
 	DepthDesc.vCenter = _float3(110.f, 27.f, 160.f);
 	DepthDesc.vExtents = _float3(80.f, 23.f, 90.f);
-	XMStoreFloat4x4(&DepthDesc.LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(100.f, 30.f, 80.f, 1.f), XMVectorSet(140.f, 15.f, 120.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 1.f)));
-	XMStoreFloat4x4(&DepthDesc.LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), (_float)g_iWinSizeX / g_iWinSizeY, 1.f, 1000.f));
+	DepthDesc.fLightFar = 100.f;
+	XMStoreFloat4x4(&DepthDesc.LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(100.f, 40.f, 80.f, 1.f), XMVectorSet(140.f, 15.f, 120.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 1.f)));
+	// FOV값을 적게 줄수록 더 자세한 그림자표현이 가능해짐.
+	XMStoreFloat4x4(&DepthDesc.LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), (_float)g_iWinSizeX / g_iWinSizeY, 1.f, DepthDesc.fLightFar));
 	
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_ShadowDepth"), pLayerTag, TEXT("GameObject_ShadowDepth0"), &DepthDesc)))
 	{
 		MSG_BOX("Failed Add_GameObject : (GameObject_ShadowDepth0)");
+		return E_FAIL;
+	}
+
+	// 1번 위치
+	ZEROMEM(&DepthDesc);
+	// box 90, 360 / 220,500
+	// view eye 110, 50, 415 / at 140, 15, 120
+	DepthDesc.vCenter = _float3(155.f, 27.f, 430.f);
+	DepthDesc.vExtents = _float3(65.f, 23.f, 70.f);
+	DepthDesc.fLightFar = 100.f;
+	XMStoreFloat4x4(&DepthDesc.LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(110.f, 30.f, 415.f, 1.f), XMVectorSet(150.f, 0.f, 450.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 1.f)));
+	XMStoreFloat4x4(&DepthDesc.LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), (_float)g_iWinSizeX / g_iWinSizeY, 1.f, DepthDesc.fLightFar));
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_ShadowDepth"), pLayerTag, TEXT("GameObject_ShadowDepth1"), &DepthDesc)))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_ShadowDepth1)");
+		return E_FAIL;
+	}
+
+	// 2번 위치
+	ZEROMEM(&DepthDesc);
+	// box 560, 270 / 440, 90
+	// view eye 440, 50, 130 / at 490, 4, 190
+	DepthDesc.vCenter = _float3(500.f, 27.f, 180.f);
+	DepthDesc.vExtents = _float3(60.f, 23.f, 90.f);
+	DepthDesc.fLightFar = 100.f;
+	XMStoreFloat4x4(&DepthDesc.LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(440.f, 30.f, 130.f, 1.f), XMVectorSet(490.f, 4.f, 190.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 1.f)));
+	XMStoreFloat4x4(&DepthDesc.LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), (_float)g_iWinSizeX / g_iWinSizeY, 1.f, DepthDesc.fLightFar));
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_ShadowDepth"), pLayerTag, TEXT("GameObject_ShadowDepth2"), &DepthDesc)))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_ShadowDepth2)");
 		return E_FAIL;
 	}
 
