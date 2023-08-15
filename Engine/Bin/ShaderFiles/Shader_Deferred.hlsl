@@ -293,10 +293,6 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     
     Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular + vEmissive);
 
-    // 빛기준 포지션 정렬
-    float4 vEye = vPosition + float4(-20.f, 20.f, -20.f, 1.f);
-    matrix LightViewMatrix = MyMatrixLookAtLH(vEye, vPosition);
-    
     vPosition = mul(vPosition, g_LightViewMatrix);
 
     vector vUVPos = mul(vPosition, g_LightProjMatrix);
@@ -314,6 +310,9 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 		1.f < vProjTest.y||
         0.f > vProjTest.z ||
 		1.f < vProjTest.z)
+        Out.vColor = Out.vColor;
+    // 안개 부분에 그림자 생성 방지.
+    else if (fFogPower > 0.1f)
         Out.vColor = Out.vColor;
     // 투영행렬의 far를 다시곱해주어 포지션과 연산
     // 현재 픽셀의 깊이값과 해당하는 픽셀이 존재하는 빛기준의 텍스처 UV좌표 깊이값과 비교하여 처리한다.

@@ -253,6 +253,9 @@
     <Filter Include="02. GameObjects\06. Trigger\LevelChange\HOSPortal">
       <UniqueIdentifier>{782bbff6-c656-420a-be99-8ca1977ee2d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\06. Trigger\ShadowDepth">
+      <UniqueIdentifier>{201816ec-15fc-4e0d-9137-ab63e38953b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -582,6 +585,10 @@
     <ClInclude Include="..\public\HOS.h">
       <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_Macro.h">
+      <Filter>99. Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShadowDepth.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -912,6 +919,7 @@
     <ClCompile Include="..\private\HOS.cpp">
       <Filter>02. GameObjects\06. Trigger\LevelChange\HOSPortal</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\ShadowDepth.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">

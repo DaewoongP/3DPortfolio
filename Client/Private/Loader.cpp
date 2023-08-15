@@ -35,6 +35,7 @@
 #include "BulletSpark.h"
 #include "BulletTrail.h"
 #include "BlockEffect.h"
+#include "ShadowDepth.h"
 #include "BlinkTarget.h"
 #include "Enemy_Sword.h"
 #include "Boss_Shield.h"
@@ -941,6 +942,14 @@ HRESULT CLoader::Loading_For_Stage1()
 		CHOS::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_HOS)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_ShadowDepth */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShadowDepth"),
+		CShadowDepth::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShadowDepth)");
 		return E_FAIL;
 	}
 

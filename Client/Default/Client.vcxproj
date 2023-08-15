@@ -182,6 +182,7 @@
     <ClInclude Include="..\public\Boss_Sword.h" />
     <ClInclude Include="..\public\BulletSpark.h" />
     <ClInclude Include="..\public\BulletTrail.h" />
+    <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\public\Crosshair.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Blue_Snow.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\public\LensFlare.h" />
     <ClInclude Include="..\public\LevelChange_Trigger.h" />
     <ClInclude Include="..\public\Portal.h" />
+    <ClInclude Include="..\public\ShadowDepth.h" />
     <ClInclude Include="..\public\ShurikenParticle.h" />
     <ClInclude Include="..\public\ShurikenTrail.h" />
     <ClInclude Include="..\public\SwordTrail.h" />
@@ -311,6 +313,7 @@
     <ClCompile Include="..\private\LensFlare.cpp" />
     <ClCompile Include="..\private\LevelChange_Trigger.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
+    <ClCompile Include="..\private\ShadowDepth.cpp" />
     <ClCompile Include="..\private\ShurikenParticle.cpp" />
     <ClCompile Include="..\private\ShurikenTrail.cpp" />
     <ClCompile Include="..\private\SwordTrail.cpp" />

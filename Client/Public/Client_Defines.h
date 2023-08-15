@@ -9,6 +9,7 @@ namespace Client
 }
 
 #include "Client_Struct.h"
+#include "Client_Macro.h"
 
 extern HINSTANCE g_hInst;
 extern HWND g_hWnd;

@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Enemy.h"
 #include "ColProp.h"
+#include "ShadowDepth.h"
 #include "Level_loading.h"
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -20,6 +21,7 @@ HRESULT CLevel_Stage1::Initialize()
 
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Lights(TEXT("..\\..\\Resources\\GameData\\Light\\Stage1.Light")), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_ShadowDepth(TEXT("Layer_ShadowDepth")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy"), TEXT("..\\..\\Resources\\GameData\\Map\\Anim\\Stage1.AnimMap")), E_FAIL);
 	// 스태틱메쉬 레이어를 나누기 위해 일부러 안에서 레이어를 설정함.
@@ -109,6 +111,31 @@ HRESULT CLevel_Stage1::Ready_Lights(const _tchar* pFilePath)
 #ifdef _DEBUG
 	MSG_BOX("Light File Load Success");
 #endif // _DEBUG
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_Stage1::Ready_Layer_ShadowDepth(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CShadowDepth::SHADOWDEPTH DepthDesc;
+	ZEROMEM(&DepthDesc);
+	// box 30, 4, 70 / 190, 50, 250
+	// view eye 100, 50, 80 / at 140, 15, 120
+	DepthDesc.vCenter = _float3(110.f, 27.f, 160.f);
+	DepthDesc.vExtents = _float3(80.f, 23.f, 90.f);
+	XMStoreFloat4x4(&DepthDesc.LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(100.f, 30.f, 80.f, 1.f), XMVectorSet(140.f, 15.f, 120.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 1.f)));
+	XMStoreFloat4x4(&DepthDesc.LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(90.f), (_float)g_iWinSizeX / g_iWinSizeY, 1.f, 1000.f));
+	
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE1, TEXT("Prototype_GameObject_ShadowDepth"), pLayerTag, TEXT("GameObject_ShadowDepth0"), &DepthDesc)))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_ShadowDepth0)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 

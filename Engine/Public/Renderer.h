@@ -71,6 +71,7 @@ private:
 	_float4x4						m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 
 private: /* Light Depth Target */
+	_uint2							m_iShadowMapSize;
 	ID3D11DepthStencilView*			m_pDSV = { nullptr };
 	ID3D11Texture2D*				m_pShadowDepthTexture2D = { nullptr };
 

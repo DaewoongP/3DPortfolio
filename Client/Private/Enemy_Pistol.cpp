@@ -378,25 +378,18 @@ HRESULT CEnemy_Pistol::SetUp_ShadowShaderResources()
 	if (FAILED(m_pShadowShaderCom->Bind_RawValue("g_fFar", pGameInstance->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
-
 	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
+
 	// 빛이 바라보는 기준으로 그릴것이므로
 	// 빛기준으로 돌린 행렬을 던진다.
-	_float4x4 LightViewMatrix;
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float4 vLightPos;
-	XMStoreFloat4(&vLightPos, vPos + XMVectorSet(-5.f, 5.f, -5.f, 1.f));
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(vPos + XMVectorSet(-5.f, 5.f, -5.f, 1.f), vPos, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", &LightViewMatrix)))
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", pGameInstance->Get_LightDepthFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", pGameInstance->Get_LightDepthFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
-	_float4x4 LightProjMatrix;
-	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
-	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", &LightProjMatrix)))
-		return E_FAIL;
-	
+	Safe_Release(pGameInstance);
+
 	return S_OK;
 }
 

@@ -129,6 +129,11 @@ void CPlayer::Tick(_double dTimeDelta)
 		if (STATE_DEAD == m_eCurState)
 			m_eCurState = m_ePreState;
 	}
+
+	_float3 vDebugPos;
+	_vector vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	XMStoreFloat3(&vDebugPos, vCurPos);
+	cout << "x : " << vDebugPos.x << "y : " << vDebugPos.y << "z : " << vDebugPos.z << endl;
 #endif // _DEBUG
 
 	// 정확히 이위치가 맞는듯.

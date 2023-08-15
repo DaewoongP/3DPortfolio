@@ -77,7 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Get the screen size
     _int screenHeight = GetSystemMetrics(SM_CYSCREEN);
     // Set console position
-    SetConsoleWindowPosition(1920, 0);
+    SetConsoleWindowPosition(0, 0);
 #endif
 
     CMainApp* pMainApp = { nullptr };

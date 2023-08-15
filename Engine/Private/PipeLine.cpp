@@ -7,6 +7,7 @@ CPipeLine::CPipeLine()
 	for (_uint i = 0; i < D3DTS_END; ++i)
 	{
 		XMStoreFloat4x4(&m_TransformMatrix[i], XMMatrixIdentity());
+		XMStoreFloat4x4(&m_LightDepthMatrix[i], XMMatrixIdentity());
 		XMStoreFloat4x4(&m_TransformMatrix_Inverse[i], XMMatrixIdentity());
 	}
 
@@ -18,6 +19,11 @@ void CPipeLine::Set_Transform(D3DTRANSFORMSTATE eTransformState, _fmatrix Transf
 	XMStoreFloat4x4(&m_TransformMatrix[eTransformState], TransformStateMatrix);
 }
 
+void CPipeLine::Set_LightDepthMatrix(D3DTRANSFORMSTATE eTransformState, _fmatrix LightStateMatrix)
+{
+	XMStoreFloat4x4(&m_LightDepthMatrix[eTransformState], LightStateMatrix);
+}
+
 _matrix CPipeLine::Get_TransformMatrix(D3DTRANSFORMSTATE eTransformState)
 {	
 	return XMLoadFloat4x4(&m_TransformMatrix[eTransformState]);
@@ -26,6 +32,11 @@ _matrix CPipeLine::Get_TransformMatrix(D3DTRANSFORMSTATE eTransformState)
 _float4x4* CPipeLine::Get_TransformFloat4x4(D3DTRANSFORMSTATE eTransformState)
 {
 	return &m_TransformMatrix[eTransformState];
+}
+
+_float4x4* CPipeLine::Get_LightDepthFloat4x4(D3DTRANSFORMSTATE eTransformState)
+{
+	return &m_LightDepthMatrix[eTransformState];
 }
 
 _matrix CPipeLine::Get_TransformMatrix_Inverse(D3DTRANSFORMSTATE eTransformState)

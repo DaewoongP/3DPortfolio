@@ -49,17 +49,18 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Specular"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
-	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
-		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
-		return E_FAIL;
 
-	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 3;
-	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 3;
+	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 2;
+	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 2;
+
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_ShadowMap"), iShadowMapCX, iShadowMapCY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
+		return E_FAIL;
 
 	/* ID3D11Resource */
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZEROMEM(&TextureDesc);
-
+		
 	// 최대 텍스처 사이즈 16384
 	TextureDesc.Width = iShadowMapCX;
 	TextureDesc.Height = iShadowMapCY;
@@ -232,12 +233,12 @@ HRESULT CRenderer::Render_LightDepth()
 		return E_FAIL;
 
 	ID3D11DepthStencilView* pOriginal_DepthStencilView = { nullptr };
-	ID3D11RenderTargetView* pOriginal_RenderTargetView = { nullptr };
+	ID3D11RenderTargetView* pOriginal_RenderTargetView[8] = { nullptr };
 
 	// 그릴 렌더타겟(Begin 에서 생성함), 원래 깊이 저장
-	m_pContext->OMGetRenderTargets(1, &pOriginal_RenderTargetView, &pOriginal_DepthStencilView);
+	m_pContext->OMGetRenderTargets(1, pOriginal_RenderTargetView, &pOriginal_DepthStencilView);
 	// 받아온 렌더타겟, 깊이 저장할 DSV
-	m_pContext->OMSetRenderTargets(1, &pOriginal_RenderTargetView, m_pDSV);
+	m_pContext->OMSetRenderTargets(1, pOriginal_RenderTargetView, m_pDSV);
 	// depth 1로 초기화
 	m_pContext->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
 
@@ -255,7 +256,10 @@ HRESULT CRenderer::Render_LightDepth()
 	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
 
-	Safe_Release(pOriginal_RenderTargetView);
+	for (_uint i = 0; i < 8; ++i)
+	{
+		Safe_Release(pOriginal_RenderTargetView[i]);
+	}
 	Safe_Release(pOriginal_DepthStencilView);
 
 	return S_OK;
@@ -357,16 +361,6 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	_float4x4 LightViewMatrix;
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(80.f, 30.f, 100.f, 1.f), XMVectorSet(90.f, 0.f, 110.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	if (FAILED(m_pShader->Bind_Matrix("g_LightViewMatrix", &LightViewMatrix)))
-		return E_FAIL;
-	
-	_float4x4 LightProjMatrix;
-	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), 1280.f / 720.f, 0.1f, 1000.f));
-	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", &LightProjMatrix)))
-		return E_FAIL;
-
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);
 
@@ -376,6 +370,11 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrixInv", pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrixInv", pPipeLine->Get_TransformFloat4x4_Inverse(CPipeLine::D3DTS_PROJ))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Bind_Matrix("g_LightViewMatrix", pPipeLine->Get_LightDepthFloat4x4(CPipeLine::D3DTS_VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", pPipeLine->Get_LightDepthFloat4x4(CPipeLine::D3DTS_PROJ))))
 		return E_FAIL;
 
 	Safe_Release(pPipeLine);

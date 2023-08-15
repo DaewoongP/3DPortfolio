@@ -74,6 +74,8 @@ public: /* For.Input_Device*/
 
 public: /* For.PipeLine*/
 	void Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix TransformStateMatrix);
+	void Set_LightDepthMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix LightStateMatrix);
+	_float4x4* Get_LightDepthFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_matrix Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_float4x4* Get_TransformFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState);
 	_matrix Get_TransformMatrix_Inverse(CPipeLine::D3DTRANSFORMSTATE eTransformState);

@@ -16,6 +16,7 @@ public:
 
 	/* pMRTTag에 추가되어있는 렌더타겟들을 장치에 바인딩한다. */
 	HRESULT Begin_MRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag);
+	HRESULT Begin_MRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag, ID3D11DepthStencilView* pDepthStencilView);
 
 	/* 원래상태로 복구한다. (0번째에 백버퍼가 바인딩 된 상태로 돌려준다.) */
 	HRESULT End_MRT(ID3D11DeviceContext* pContext);

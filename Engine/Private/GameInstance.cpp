@@ -332,6 +332,20 @@ void CGameInstance::Set_Transform(CPipeLine::D3DTRANSFORMSTATE eTransformState, 
 	m_pPipeLine->Set_Transform(eTransformState, TransformStateMatrix);
 }
 
+void CGameInstance::Set_LightDepthMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState, _fmatrix LightStateMatrix)
+{
+	NULL_CHECK_RETURN_MSG(m_pPipeLine, , TEXT("PipeLine NULL"));
+
+	m_pPipeLine->Set_LightDepthMatrix(eTransformState, LightStateMatrix);
+}
+
+_float4x4* CGameInstance::Get_LightDepthFloat4x4(CPipeLine::D3DTRANSFORMSTATE eTransformState)
+{
+	NULL_CHECK_RETURN_MSG(m_pPipeLine, nullptr, TEXT("PipeLine NULL"));
+
+	return m_pPipeLine->Get_LightDepthFloat4x4(eTransformState);
+}
+
 _matrix CGameInstance::Get_TransformMatrix(CPipeLine::D3DTRANSFORMSTATE eTransformState)
 {
 	NULL_CHECK_RETURN_MSG(m_pPipeLine, _matrix(), TEXT("PipeLine NULL"));

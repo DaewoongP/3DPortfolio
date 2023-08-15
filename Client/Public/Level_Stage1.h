@@ -17,6 +17,7 @@ public:
 
 private:
 	HRESULT Ready_Lights(const _tchar* pFilePath);
+	HRESULT Ready_Layer_ShadowDepth(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Enemy(const _tchar* pLayerTag, const _tchar* pFilePath);
 	HRESULT Ready_Layer_Props(const _tchar* pFilePath);
