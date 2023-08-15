@@ -143,8 +143,11 @@ void CPistol::Attack(_vector vPosition, _vector vTargetPos)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+	
+	_float4 vInitialPos;
+	XMStoreFloat4(&vInitialPos, vPosition);
 
-	CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Weapon_Bullet"), nullptr);
+	CGameObject* pGameObject = pGameInstance->Clone_GameObject(TEXT("Prototype_GameObject_Weapon_Bullet"), &vInitialPos);
 
 	pGameObject->Set_Owner(nullptr);
 

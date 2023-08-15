@@ -27,6 +27,9 @@ HRESULT CBullet::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
 		return E_FAIL;
 
+	_float4 vInitPos = *reinterpret_cast<_float4*>(pArg);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(vInitPos.x, vInitPos.y, vInitPos.z, 1.f));
+
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 

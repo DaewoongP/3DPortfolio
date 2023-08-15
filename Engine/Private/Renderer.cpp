@@ -53,8 +53,8 @@ HRESULT CRenderer::Initialize_Prototype()
 		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
-	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 12;
-	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 12;
+	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 3;
+	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 3;
 
 	/* ID3D11Resource */
 	D3D11_TEXTURE2D_DESC	TextureDesc;

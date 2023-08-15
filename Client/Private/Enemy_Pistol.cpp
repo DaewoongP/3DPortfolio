@@ -115,10 +115,13 @@ GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (nullptr != m_pRendererCom &&
-		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
+	if (nullptr != m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		if (true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
+		{
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		}
+		// 그림자는 절두체 컬링 진행하지 않음.
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_LIGHTDEPTH, this);
 
 #ifdef _DEBUG
@@ -383,9 +386,12 @@ HRESULT CEnemy_Pistol::SetUp_ShadowShaderResources()
 	// 빛기준으로 돌린 행렬을 던진다.
 	_float4x4 LightViewMatrix;
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(vPos + XMVectorSet(-20.f, 20.f, -20.f, 1.f), vPos, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	_float4 vLightPos;
+	XMStoreFloat4(&vLightPos, vPos + XMVectorSet(-5.f, 5.f, -5.f, 1.f));
+	XMStoreFloat4x4(&LightViewMatrix, XMMatrixLookAtLH(vPos + XMVectorSet(-5.f, 5.f, -5.f, 1.f), vPos, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ViewMatrix", &LightViewMatrix)))
 		return E_FAIL;
+
 	_float4x4 LightProjMatrix;
 	XMStoreFloat4x4(&LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(120.f), (_float)g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
 	if (FAILED(m_pShadowShaderCom->Bind_Matrix("g_ProjMatrix", &LightProjMatrix)))

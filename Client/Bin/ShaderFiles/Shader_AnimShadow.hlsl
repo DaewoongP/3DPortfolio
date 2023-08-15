@@ -3,6 +3,7 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4x4 g_BoneMatrices[256];
 float g_fFar;
+float4 g_vLightPosition;
 
 struct VS_IN
 {
@@ -18,6 +19,7 @@ struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
     float4 vProjPos : TEXCOORD0;
+    float3 vOffSetLightPos : TEXCOORD1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -48,6 +50,7 @@ struct PS_IN
 {
     float4 vPosition : SV_POSITION;
     float4 vProjPos : TEXCOORD0;
+    float3 vOffSetLightPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -59,8 +62,8 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vLightDepth.r = In.vProjPos.w / g_fFar;
-    Out.vLightDepth.a = 1.f;
+
+    Out.vLightDepth.a = In.vProjPos.w / g_fFar;
 
     return Out;
 }

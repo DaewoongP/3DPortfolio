@@ -66,6 +66,8 @@ void CCollider::Tick(_fmatrix TransformMatrix)
 		return;
 
 	m_pBounding->Tick(TransformMatrix);
+
+	DeadCollision();
 }
 
 HRESULT CCollider::Reset()
