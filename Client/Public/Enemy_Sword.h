@@ -40,6 +40,8 @@ private:
 	CCollider*			m_pColliderCom = { nullptr };
 	CCollider*			m_pVisionColliderCom = { nullptr };
 	CBehaviorTree*		m_pBehaviorTreeCom = { nullptr };
+	class CBloodDirectional* m_pBloodEffect = { nullptr };
+	class CBloodParticle* m_pBloodParticle = { nullptr };
 
 private:
 	class CSword*			m_pSword = { nullptr };

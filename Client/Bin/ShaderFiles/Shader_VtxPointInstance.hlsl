@@ -128,6 +128,7 @@ float4 PS_MAIN_COLOR_DRIECTIONAL(PS_IN In) : SV_TARGET0
     float4 vTexture = g_Texture.Sample(LinearSampler, In.vTexUV);
     
     vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
+    vColor.a *= g_vColor.a;
     vColor.rgb = g_vColor.rgb;
     
     return vColor;

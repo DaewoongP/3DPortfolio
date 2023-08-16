@@ -34,6 +34,7 @@ private:
 	CTexture*		m_pEmissiveTextureCom = { nullptr };
 	CRenderer*		m_pRendererCom = { nullptr };
 	CCollider*		m_pColliderCom = { nullptr };
+	class CExplodeParticle* m_pExplodeParticle = { nullptr };
 
 private:
 	_double			m_dExplodeTimeAcc = { 0.0 };
@@ -43,6 +44,7 @@ private:
 private:
 	CExplodeRange*	m_pExplodeRange = { nullptr };
 	_bool			m_bCreatedRange = { false };
+	_bool			m_isExplodeParticle = { false };
 	_float			m_fExplodeSize = { 0.f };
 
 public:

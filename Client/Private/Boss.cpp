@@ -3,6 +3,8 @@
 #include "Boss_Sword.h"
 #include "Selector_Boss.h"
 #include "BloodScreen.h"
+#include "BloodParticle.h"
+#include "BloodDirectional.h"
 #include "Bomb.h"
 
 CBoss::CBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -120,6 +122,9 @@ void CBoss::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 			{
 				m_iHp -= 1;
 
+				m_pBloodParticle->Render_Effect(m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f));
+				m_pBloodEffect->Render_Effect(1.0, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f));
+
 				if (0 >= m_iHp)
 				{
 					CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -130,6 +135,7 @@ void CBoss::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 					Safe_Release(pGameInstance);
 
 					m_eGameEvent = GAME_OBJECT_DEAD;
+
 					if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))
 					{
 						m_pBloodScreenEffect->Render_Effect(2.0);
@@ -305,6 +311,22 @@ HRESULT CBoss::Add_Component()
 		TEXT("Com_EmissiveTexture"), reinterpret_cast<CComponent**>(&m_pEmissiveTextureCom))))
 	{
 		MSG_BOX("Failed CBoss Add_Component : (Com_EmissiveTexture)");
+		return E_FAIL;
+	}
+
+	/* For.Com_BloodEffect */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodDirectional"),
+		TEXT("Com_BloodEffect"), reinterpret_cast<CComponent**>(&m_pBloodEffect))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodEffect)");
+		return E_FAIL;
+	}
+
+	/* For.Com_BloodParticle */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodParticle"),
+		TEXT("Com_BloodParticle"), reinterpret_cast<CComponent**>(&m_pBloodParticle))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodParticle)");
 		return E_FAIL;
 	}
 
@@ -695,6 +717,9 @@ void CBoss::Free()
 	for (auto& pBomb : m_Bombs)
 		Safe_Release(pBomb);
 	m_Bombs.clear();
+
+	Safe_Release(m_pBloodEffect);
+	Safe_Release(m_pBloodParticle);
 
 	Safe_Release(m_pSword);
 	Safe_Release(m_pModelCom);

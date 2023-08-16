@@ -256,6 +256,12 @@
     <Filter Include="02. GameObjects\06. Trigger\ShadowDepth">
       <UniqueIdentifier>{201816ec-15fc-4e0d-9137-ab63e38953b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss\Bomb\ExplodeParticle">
+      <UniqueIdentifier>{1f976610-424d-4f8b-91f5-f65310b15a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\BloodeParticle">
+      <UniqueIdentifier>{2fca457b-b39e-4247-aa2e-00c8e7a1caca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -591,6 +597,12 @@
     <ClInclude Include="..\public\ShadowDepth.h">
       <Filter>02. GameObjects\06. Trigger\ShadowDepth</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ExplodeParticle.h">
+      <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BloodParticle.h">
+      <Filter>02. GameObjects\03. Effects\Instancing\BloodeParticle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -923,6 +935,12 @@
     </ClCompile>
     <ClCompile Include="..\private\ShadowDepth.cpp">
       <Filter>02. GameObjects\06. Trigger\ShadowDepth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ExplodeParticle.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BloodParticle.cpp">
+      <Filter>02. GameObjects\03. Effects\Instancing\BloodeParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

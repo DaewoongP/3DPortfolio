@@ -136,7 +136,12 @@ float4 PS_MAIN_TRAIL_COLOR(PS_IN In) : SV_TARGET0
 {
     float4 vColor = (float4) 0;
 	
-    vColor = g_vColor;
+    float4 vTexture = g_Texture.Sample(LinearSampler, In.vTexUV);
+    
+    vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
+    vColor.a *= abs(1 + In.vTexUV.x);
+    
+    vColor.rgb = g_vColor.rgb;
 
     return vColor;
 }

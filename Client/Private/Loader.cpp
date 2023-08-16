@@ -42,6 +42,8 @@
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
 #include "ShurikenTrail.h"
+#include "BloodParticle.h"
+#include "ExplodeParticle.h"
 #include "ShurikenParticle.h"
 #include "BloodDirectional.h"
 #include "GhostRunner_Logo.h"
@@ -427,6 +429,22 @@ HRESULT CLoader::Loading_For_Stage1()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/BloodScreen/T_BloodScreen_0%d.dds"), 6))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Screen)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Blood_Enemy */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Enemy"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Sentry_Decal.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Enemy)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_Component_Texture_Blood_Particle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Particle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Bubble_Opacity.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Enemy)");
 		return E_FAIL;
 	}
 
@@ -1002,7 +1020,15 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodScreen)");
 		return E_FAIL;
 	}
-
+		
+	/* For.Prototype_GameObject_BloodParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodParticle"),
+		CBloodParticle::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodParticle)");
+		return E_FAIL;
+	}
+		
 #ifdef _DEBUG
 
 	/* For.Prototype_GameObject_Blue_Snow */
@@ -1206,6 +1232,14 @@ HRESULT CLoader::Loading_For_Boss()
 		CBoss_Hp::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Hp)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_ExplodeParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_GameObject_ExplodeParticle"),
+		CExplodeParticle::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ExplodeParticle)");
 		return E_FAIL;
 	}
 

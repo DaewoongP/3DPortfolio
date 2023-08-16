@@ -49,6 +49,9 @@ HRESULT CSwordTrail::Render()
 
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
+		return E_FAIL;
 	
 	if (FAILED(m_pTrailBufferCom->Render("g_vColor", _float4(1.f, 0.1f, 0.1f, 0.3f), m_pShaderCom, 8)))
 		return E_FAIL;

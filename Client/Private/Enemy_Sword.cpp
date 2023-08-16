@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "Selector_FindTargetToDashAttack.h"
 #include "BloodScreen.h"
+#include "BloodDirectional.h"
+#include "BloodParticle.h"
 #include "Sword.h"
 
 CEnemy_Sword::CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -93,13 +95,16 @@ void CEnemy_Sword::Tick(_double dTimeDelta)
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	if (GAME_OBJECT_DEAD != m_eGameEvent)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
-	Safe_Release(pGameInstance);
+		Safe_Release(pGameInstance);
+	}
 }
 
 GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
@@ -145,6 +150,9 @@ void CEnemy_Sword::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 			{
 				m_pBloodScreenEffect->Render_Effect(2.0);
 			}
+
+			m_pBloodParticle->Render_Effect(m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f));
+			m_pBloodEffect->Render_Effect(1.0, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f));
 		}
 	}
 }
@@ -274,6 +282,22 @@ HRESULT CEnemy_Sword::Add_Component(ENEMYDESC& EnemyDesc)
 		TEXT("Com_VisionCollider"), reinterpret_cast<CComponent**>(&m_pVisionColliderCom), &SphereDesc)))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_VisionCollider)");
+		return E_FAIL;
+	}
+
+	/* For.Com_BloodEffect */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodDirectional"),
+		TEXT("Com_BloodEffect"), reinterpret_cast<CComponent**>(&m_pBloodEffect))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodEffect)");
+		return E_FAIL;
+	}
+	
+	/* For.Com_BloodParticle */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodParticle"),
+		TEXT("Com_BloodParticle"), reinterpret_cast<CComponent**>(&m_pBloodParticle))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodParticle)");
 		return E_FAIL;
 	}
 
@@ -511,6 +535,9 @@ CGameObject* CEnemy_Sword::Clone(void* pArg)
 void CEnemy_Sword::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pBloodEffect);
+	Safe_Release(m_pBloodParticle);
 
 	Safe_Release(m_pSword);
 	Safe_Release(m_pModelCom);

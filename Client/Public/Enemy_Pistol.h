@@ -41,6 +41,7 @@ private:
 	CCollider*				m_pVisionColliderCom = { nullptr };
 	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
 	class CBloodDirectional*	m_pBloodEffect = { nullptr };
+	class CBloodParticle*	m_pBloodParticle = { nullptr };
 
 private:
 	class CPistol*			m_pPistol = { nullptr };
@@ -62,9 +63,6 @@ private:
 	// 현재와 이전 상태를 비교해서 애니메이션 변경처리
 	STATE					m_ePreState = { STATE_END };
 	STATE					m_eCurState = { STATE_IDLE };
-
-private:
-	_bool					m_bBloodEffect = { false };
 
 private: /* Tick */
 	HRESULT Add_Component(ENEMYDESC& EnemyDesc);

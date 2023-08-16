@@ -1,5 +1,6 @@
 #include "..\Public\Bomb.h"
 #include "GameInstance.h"
+#include "ExplodeParticle.h"
 
 CBomb::CBomb(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -26,7 +27,7 @@ HRESULT CBomb::Initialize(void* pArg)
 	m_fExplodeSize = 50.f;
 	m_dExplodeTime = 3.0;
 	// 콜라이더를 띄우기 위한 시간.
-	m_dDeleteTime = m_dExplodeTime + 0.5;
+	m_dDeleteTime = m_dExplodeTime + 1.0;
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(100.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
@@ -40,7 +41,7 @@ HRESULT CBomb::Initialize(void* pArg)
 #ifdef _DEBUG
 	m_pColliderCom->Set_Color(DirectX::Colors::Red);
 #endif // _DEBUG
-
+	
 	return S_OK;
 }
 
@@ -82,6 +83,12 @@ GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 	}
 	if (m_dExplodeTimeAcc > m_dExplodeTime)
 	{
+		if (false == m_isExplodeParticle)
+		{
+			m_isExplodeParticle = true;
+			m_pExplodeParticle->Render_Effect(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+		}
+
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
@@ -177,6 +184,14 @@ HRESULT CBomb::Add_Components()
 		MSG_BOX("Failed CBoss Add_Component : (Com_EmissiveTexture)");
 		return E_FAIL;
 	}
+	
+	/* For.Com_ExplodeParticle */
+	if (FAILED(CComposite::Add_Component(LEVEL_BOSS, TEXT("Prototype_GameObject_ExplodeParticle"),
+		TEXT("Com_ExplodeParticle"), reinterpret_cast<CComponent**>(&m_pExplodeParticle))))
+	{
+		MSG_BOX("Failed CBoss Add_Component : (Com_ExplodeParticle)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -237,6 +252,7 @@ void CBomb::Free()
 	__super::Free();
 
 	Safe_Release(m_pExplodeRange);
+	Safe_Release(m_pExplodeParticle);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Selector_FindTargetToAttack.h"
 #include "BloodDirectional.h"
+#include "BloodParticle.h"
 #include "BloodScreen.h"
 #include "Pistol.h"
 
@@ -91,13 +92,16 @@ void CEnemy_Pistol::Tick(_double dTimeDelta)
 	m_pColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 	m_pVisionColliderCom->Tick(m_pTransformCom->Get_WorldMatrix());
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	if (GAME_OBJECT_DEAD != m_eGameEvent)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
 
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
-	Safe_Release(pGameInstance);
+		Safe_Release(pGameInstance);
+	}
 }
 
 GAMEEVENT CEnemy_Pistol::Late_Tick(_double dTimeDelta)
@@ -147,6 +151,9 @@ void CEnemy_Pistol::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		{
 			m_pBloodScreenEffect->Render_Effect(2.0);
 		}
+
+		m_pBloodParticle->Render_Effect(m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f));
+		m_pBloodEffect->Render_Effect(1.0, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 0.f));
 	}	
 }
 
@@ -222,7 +229,6 @@ HRESULT CEnemy_Pistol::Reset()
 	m_isWait = false;
 	m_isAttack = false;
 	m_isWalk = false;
-	m_bBloodEffect = false;
 
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
@@ -287,6 +293,14 @@ HRESULT CEnemy_Pistol::Add_Component(ENEMYDESC& EnemyDesc)
 		TEXT("Com_BloodEffect"), reinterpret_cast<CComponent**>(&m_pBloodEffect))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodEffect)");
+		return E_FAIL;
+	}
+
+	/* For.Com_BloodParticle */
+	if (FAILED(CComposite::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodParticle"),
+		TEXT("Com_BloodParticle"), reinterpret_cast<CComponent**>(&m_pBloodParticle))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodParticle)");
 		return E_FAIL;
 	}
 
@@ -453,12 +467,6 @@ GAMEEVENT CEnemy_Pistol::PlayEvent(_double dTimeDelta)
 {
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
-		if (false == m_bBloodEffect)
-		{
-			m_pBloodEffect->Render_Effect(0.2, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + XMVectorSet(0.f, 2.f, 0.f, 1.f));
-			m_bBloodEffect = true;
-		}
-		
 		m_eCurState = STATE_DEAD;
 		m_isDead = true;
 
@@ -500,6 +508,7 @@ void CEnemy_Pistol::Free()
 	__super::Free();
 
 	Safe_Release(m_pBloodEffect);
+	Safe_Release(m_pBloodParticle);
 
 	Safe_Release(m_pPistol);
 	Safe_Release(m_pModelCom);

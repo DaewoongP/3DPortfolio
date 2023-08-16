@@ -76,6 +76,46 @@ void CBloodScreen::Render_Effect(_double dRenderTime)
 	m_dRenderTime = dRenderTime;
 	m_dRenderTimeAcc = 0.0;
 	m_iTextureIndex = rand() % 6;
+
+	_float fRandSize = 1.f - (rand() % 3) / 10.f;
+	m_fSizeX = g_iWinSizeX * fRandSize;
+	m_fSizeY = g_iWinSizeY * fRandSize;
+
+	switch (rand() % 5)
+	{
+	case 0:
+		m_fX = 100.f;
+		m_fY = 100.f;
+		break;
+	case 1:
+		m_fX = g_iWinSizeX - 100.f;
+		m_fY = 100.f;
+		break;
+	case 2:
+		m_fX = 100.f;
+		m_fY = g_iWinSizeY - 100.f;
+		break;
+	case 3:
+		m_fX = g_iWinSizeX - 100.f;
+		m_fY = g_iWinSizeY - 100.f;
+		break;
+	case 4:
+		m_fX = g_iWinSizeX * 0.5f;
+		m_fY = g_iWinSizeY * 0.5f;
+		break;
+	default:
+		m_fX = g_iWinSizeX * 0.5f;
+		m_fY = g_iWinSizeY * 0.5f;
+		break;
+	}
+
+	m_pTransformCom->Set_Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		XMVectorSet(
+			m_fX - g_iWinSizeX * 0.5f,
+			-m_fY + g_iWinSizeY * 0.5f,
+			0.f,
+			1.f));
 }
 
 HRESULT CBloodScreen::Add_Components()
