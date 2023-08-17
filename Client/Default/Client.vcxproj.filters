@@ -414,9 +414,6 @@
     <ClInclude Include="..\public\Mouse.h">
       <Filter>02. GameObjects\05. UI\Logo\00. Mouse</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Level_Stage2.h">
-      <Filter>01. Levels\02. Stage2</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Level_Boss.h">
       <Filter>01. Levels\03. Boss</Filter>
     </ClInclude>
@@ -602,6 +599,9 @@
     </ClInclude>
     <ClInclude Include="..\public\BloodParticle.h">
       <Filter>02. GameObjects\03. Effects\Instancing\BloodeParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Stage2.h">
+      <Filter>01. Levels\02. Stage2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

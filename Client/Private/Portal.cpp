@@ -56,7 +56,7 @@ GAMEEVENT CPortal::Late_Tick(_double dTimeDelta)
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_BLEND, this);
 
 	return GAME_NOEVENT;
 }
