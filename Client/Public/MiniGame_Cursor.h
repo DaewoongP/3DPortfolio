@@ -5,12 +5,12 @@
 
 BEGIN(Client)
 
-class CMiniGame_Great final : public CUI
+class CMiniGame_Cursor final : public CUI
 {
 private:
-	explicit CMiniGame_Great(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	explicit CMiniGame_Great(const CMiniGame_Great& rhs);
-	virtual ~CMiniGame_Great() = default;
+	explicit CMiniGame_Cursor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	explicit CMiniGame_Cursor(const CMiniGame_Cursor& rhs);
+	virtual ~CMiniGame_Cursor() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -30,7 +30,7 @@ private:
 	_float Get_WindowPixelX(_float fPercent);
 
 public:
-	static CMiniGame_Great* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
+	static CMiniGame_Cursor* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 };

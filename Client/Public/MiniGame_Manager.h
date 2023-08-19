@@ -9,7 +9,7 @@ class CMiniGame_Manager final : public CBase
 	DECLARE_SINGLETON(CMiniGame_Manager)
 
 public:
-	enum STATE { STATE_PERFECT, STATE_GREAT, STATE_FAIL, STATE_END };
+	enum STATE { STATE_PERFECT, STATE_GREAT, STATE_FAIL, STATE_WAIT, STATE_END };
 
 private:
 	explicit CMiniGame_Manager() = default;
@@ -18,6 +18,11 @@ private:
 public:
 	void Set_Blocked(_bool isBlocked) { m_isBlocked = isBlocked; }
 	_double Get_CenterPercent() { return m_dCenterTime / m_dMaxFireTime; }
+	_double Get_FirePercent() { return m_dFireTimeAcc / m_dMaxFireTime; }
+	_double Get_PerfectOffsetTime() const { return m_dPerfectOffsetTime; }
+	_double Get_GreatOffsetTime() const { return m_dGreatOffsetTime; }
+	_double Get_MaxTime() const { return m_dMaxFireTime; }
+	STATE Get_State() const { return m_eState; }
 
 public:
 	HRESULT Initialize();
@@ -33,10 +38,17 @@ private:
 	_double				m_dGreatOffsetTime = { 0.0 };
 	// 최대 시간
 	_double				m_dMaxFireTime = { 0.0 };
+	// 쿨타임
+	_double				m_dCoolTime = { 0.0 };
+	_double				m_dCoolTimeAcc = { 0.0 };
+	_bool				m_isCoolTime = { false };
 
 private:
 	STATE				m_eState = { STATE_END };
 	_bool				m_isBlocked = { false };
+
+private:
+	void Reset_CenterTime(_double dCenterTime);
 
 public:
 	virtual void Free() override;

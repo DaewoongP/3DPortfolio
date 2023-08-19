@@ -14,6 +14,8 @@ CLevel_Stage2::CLevel_Stage2(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 HRESULT CLevel_Stage2::Initialize()
 {
+	m_pMiniGame_Manager->Initialize();
+
 	FAILED_CHECK_RETURN(__super::Initialize(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Player(TEXT("Layer_Player")), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Enemy(TEXT("Layer_Enemy")), E_FAIL);
@@ -99,6 +101,11 @@ HRESULT CLevel_Stage2::Ready_Layer_MiniGame(const _tchar* pLayerTag)
 		return E_FAIL;
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE2, TEXT("Prototype_GameObject_MiniGame_Cursor"), pLayerTag, TEXT("GameObject_MiniGame_Cursor"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MiniGame_Cursor)");
+		return E_FAIL;
+	}
 
 	Safe_Release(pGameInstance);
 

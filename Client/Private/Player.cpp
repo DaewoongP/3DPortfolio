@@ -135,7 +135,7 @@ void CPlayer::Tick(_double dTimeDelta)
 	XMStoreFloat3(&vDebugPos, vCurPos);
 	cout << "x : " << vDebugPos.x << "y : " << vDebugPos.y << "z : " << vDebugPos.z << endl;
 #endif // _DEBUG
-
+	
 	// 정확히 이위치가 맞는듯.
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{

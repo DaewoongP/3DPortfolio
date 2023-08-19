@@ -9,11 +9,12 @@ CMiniPlayer::CMiniPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CMiniPlayer::CMiniPlayer(const CMiniPlayer& rhs)
 	: CGameObject(rhs)
-
+	, m_pMiniGame_Manager(CMiniGame_Manager::GetInstance())
 #ifdef _DEBUG
 	, m_isMouseFixed(rhs.m_isMouseFixed)
 #endif // _DEBUG
 {
+	Safe_AddRef(m_pMiniGame_Manager);
 }
 
 HRESULT CMiniPlayer::Initialize_Prototype()
@@ -56,13 +57,6 @@ void CMiniPlayer::Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 
-	if (GAME_OBJECT_DEAD == m_eGameEvent)
-	{
-		m_pRendererCom->Set_GrayScale(true);
-		dTimeDelta *= 0.1f;
-		m_pTransformCom->ZeroVelocity();
-	}
-
 	__super::Tick(dTimeDelta);
 
 	CameraOffset(dTimeDelta);
@@ -77,9 +71,6 @@ GAMEEVENT CMiniPlayer::Late_Tick(_double dTimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
 	}
-
-	if (GAME_OBJECT_DEAD == m_eGameEvent)
-		return GAME_NOEVENT;
 
 	__super::Late_Tick(dTimeDelta);
 
@@ -224,6 +215,11 @@ void CMiniPlayer::Key_Input(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
+	{
+		m_pMiniGame_Manager->Set_Blocked(true);
+	}
+
 	_long		dwMouseMove = 0;
 
 #ifdef _DEBUG
@@ -296,6 +292,25 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 		m_eCurState = STATE_IDLE;
 	}
 
+	switch (m_pMiniGame_Manager->Get_State())
+	{
+	case CMiniGame_Manager::STATE_PERFECT:
+		m_eCurState = STATE_BLOCK;
+		break;
+	case CMiniGame_Manager::STATE_GREAT:
+		m_eCurState = STATE_BLOCK;
+		break;
+	case CMiniGame_Manager::STATE_FAIL:
+		m_eCurState = STATE_DEAD;
+		break;
+	case CMiniGame_Manager::STATE_WAIT:
+		m_eCurState = STATE_IDLE;
+		break;
+	default:
+		// pass
+		break;
+	}
+
 	Motion_Change(m_eCurrentAnimationFlag);
 
 	m_pModelCom->Play_Animation(dTimeDelta);
@@ -303,11 +318,6 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 
 void CMiniPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 {
-	if (false == (ANIM_PLAYING == eAnimationFlag || ANIM_FINISHED == eAnimationFlag))
-		return;
-	if (GAME_OBJECT_DEAD == m_eGameEvent)
-		m_eCurState = STATE_DEAD;
-
 	if (m_ePreState != m_eCurState)
 	{
 		switch (m_eCurState)
@@ -378,4 +388,5 @@ void CMiniPlayer::Free()
 	Safe_Release(m_pCameraCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pMiniGame_Manager);
 }

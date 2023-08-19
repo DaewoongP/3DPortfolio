@@ -184,6 +184,7 @@
     <ClInclude Include="..\public\BulletSpark.h" />
     <ClInclude Include="..\public\BulletTrail.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\public\MiniGame_Cursor.h" />
     <ClInclude Include="..\public\MiniGame_Perfect.h" />
     <ClInclude Include="..\public\Crosshair.h" />
     <ClInclude Include="..\Public\BackGround.h" />
@@ -324,6 +325,7 @@
     <ClCompile Include="..\private\LevelChange_Trigger.cpp" />
     <ClCompile Include="..\private\MiniBackGround.cpp" />
     <ClCompile Include="..\Private\MiniGame_Back.cpp" />
+    <ClCompile Include="..\private\MiniGame_Cursor.cpp" />
     <ClCompile Include="..\private\MiniGame_Great.cpp" />
     <ClCompile Include="..\private\MiniGame_Manager.cpp" />
     <ClCompile Include="..\private\MiniGame_Perfect.cpp" />

@@ -47,6 +47,7 @@
 #include "BloodParticle.h"
 #include "MiniGame_Great.h"
 #include "MiniBackGround.h"
+#include "MiniGame_Cursor.h"
 #include "ExplodeParticle.h"
 #include "MiniGame_Perfect.h"
 #include "ShurikenParticle.h"
@@ -1082,6 +1083,14 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Hit)");
 		return E_FAIL;
 	}
+	
+	/* For.Prototype_Component_Texture_Cursor */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cursor"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/MiniGame_Cursor.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Cursor)");
+		return E_FAIL;
+	}
 
 	lstrcpy(m_szLoading, TEXT("°´Ã¼ ·ÎµùÁß."));
 
@@ -1122,6 +1131,14 @@ HRESULT CLoader::Loading_For_Stage2()
 		CMiniGame_Perfect::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Perfect)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_MiniGame_Cursor */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Cursor"),
+		CMiniGame_Cursor::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Cursor)");
 		return E_FAIL;
 	}
 

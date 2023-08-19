@@ -1,19 +1,19 @@
-#include "../Public/MiniGame_Great.h"
+#include "..\Public\MiniGame_Cursor.h"
 #include "GameInstance.h"
 
-CMiniGame_Great::CMiniGame_Great(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMiniGame_Cursor::CMiniGame_Cursor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CMiniGame_Great::CMiniGame_Great(const CMiniGame_Great& rhs)
+CMiniGame_Cursor::CMiniGame_Cursor(const CMiniGame_Cursor& rhs)
 	: CUI(rhs)
 	, m_pMiniGame_Manager(CMiniGame_Manager::GetInstance())
 {
 	Safe_AddRef(m_pMiniGame_Manager);
 }
 
-HRESULT CMiniGame_Great::Initialize_Prototype()
+HRESULT CMiniGame_Cursor::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,39 +21,34 @@ HRESULT CMiniGame_Great::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CMiniGame_Great::Initialize(void* pArg)
+HRESULT CMiniGame_Cursor::Initialize(void* pArg)
 {
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	// X 최대 길이 640
-	_double dSizeXPercent = m_pMiniGame_Manager->Get_GreatOffsetTime() / m_pMiniGame_Manager->Get_MaxTime();
-
-	m_fSizeX = 640.f * _float(dSizeXPercent);
+	m_fSizeX = 64.f;
 	m_fSizeY = 64.f;
 
-	// 최소 g_iWinSizeX * 0.333f / 최대 g_iWinSizeX * 0.72f
-	m_fLeftX = g_iWinSizeX * 0.333f; 
-	m_fRightX = g_iWinSizeX * 0.72f;
+	m_fLeftX = g_iWinSizeX * 0.285f;
+	m_fRightX = g_iWinSizeX * 0.77f;
 	// 0.72 - 0.333f = 0.387
 	// 0.387가지고 0~100 표현
 	// 0.333f + percent * 0.387
-	m_fX = Get_WindowPixelX(0.5f);
-	m_fY = g_iWinSizeY * 0.815f;
+	m_fX = m_fRightX;
+	m_fY = g_iWinSizeY * 0.75f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	// z값 조절
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetZ(vPos, 0.05f));
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetZ(vPos, 0.01f));
 
 	return S_OK;
 }
 
-void CMiniGame_Great::Tick(_double dTimeDelta)
+void CMiniGame_Cursor::Tick(_double dTimeDelta)
 {
-	m_fX = Get_WindowPixelX(_float(m_pMiniGame_Manager->Get_CenterPercent()));
+	m_fX = Get_WindowPixelX(_float(m_pMiniGame_Manager->Get_FirePercent()));
 
 	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
@@ -62,7 +57,7 @@ void CMiniGame_Great::Tick(_double dTimeDelta)
 	__super::Tick(dTimeDelta);
 }
 
-GAMEEVENT CMiniGame_Great::Late_Tick(_double dTimeDelta)
+GAMEEVENT CMiniGame_Cursor::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
@@ -72,7 +67,7 @@ GAMEEVENT CMiniGame_Great::Late_Tick(_double dTimeDelta)
 	return GAME_NOEVENT;
 }
 
-HRESULT CMiniGame_Great::Render()
+HRESULT CMiniGame_Cursor::Render()
 {
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
@@ -87,7 +82,7 @@ HRESULT CMiniGame_Great::Render()
 	return S_OK;
 }
 
-HRESULT CMiniGame_Great::Add_Components()
+HRESULT CMiniGame_Cursor::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -114,7 +109,7 @@ HRESULT CMiniGame_Great::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cursor"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -124,7 +119,7 @@ HRESULT CMiniGame_Great::Add_Components()
 	return S_OK;
 }
 
-HRESULT CMiniGame_Great::SetUp_ShaderResources()
+HRESULT CMiniGame_Cursor::SetUp_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
@@ -135,45 +130,44 @@ HRESULT CMiniGame_Great::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-_float CMiniGame_Great::Get_WindowPixelX(_float fPercent)
+_float CMiniGame_Cursor::Get_WindowPixelX(_float fPercent)
 {
-	// 0.333f + percent * 0.387
 	return m_fLeftX + fPercent * (m_fRightX - m_fLeftX);
 }
 
-CMiniGame_Great* CMiniGame_Great::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMiniGame_Cursor* CMiniGame_Cursor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMiniGame_Great* pInstance = new CMiniGame_Great(pDevice, pContext);
+	CMiniGame_Cursor* pInstance = new CMiniGame_Cursor(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CMiniGame_Great");
+		MSG_BOX("Failed to Created CMiniGame_Cursor");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMiniGame_Great::Clone(void* pArg)
+CGameObject* CMiniGame_Cursor::Clone(void* pArg)
 {
-	CMiniGame_Great* pInstance = new CMiniGame_Great(*this);
+	CMiniGame_Cursor* pInstance = new CMiniGame_Cursor(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CMiniGame_Great");
+		MSG_BOX("Failed to Cloned CMiniGame_Cursor");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMiniGame_Great::Free()
+void CMiniGame_Cursor::Free()
 {
 	__super::Free();
 

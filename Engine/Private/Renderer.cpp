@@ -396,7 +396,8 @@ HRESULT CRenderer::Render_NonLight()
 
 HRESULT CRenderer::Render_Blend()
 {
-	Sort_Blend();
+	if (FAILED(Sort_Blend()))
+		return E_FAIL;
 
 	for (auto& pGameObject : m_RenderObjects[RENDER_BLEND])
 	{
@@ -428,6 +429,9 @@ HRESULT CRenderer::Render_Screen()
 
 HRESULT CRenderer::Render_UI()
 {
+	if (FAILED(Sort_UI()))
+		return E_FAIL;
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI])
 	{
 		if (nullptr != pGameObject)
@@ -455,6 +459,20 @@ HRESULT CRenderer::Sort_Blend()
 		_vector vDestPos = pDest->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 		// 내림차순 (멀리있는거부터 그림.)
 		if (XMVectorGetX(XMVector3Length(vSourPos - vCamPos)) > XMVectorGetX(XMVector3Length(vDestPos - vCamPos)))
+			return true;
+		return false;
+		});
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Sort_UI()
+{
+	m_RenderObjects[RENDER_UI].sort([](const CGameObject* pSour, const CGameObject* pDest) {
+		_float fSourZ = XMVectorGetZ(pSour->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		_float fDestZ = XMVectorGetZ(pDest->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+		// 내림차순 (멀리있는거부터 그림.)
+		if (fSourZ > fDestZ)
 			return true;
 		return false;
 		});

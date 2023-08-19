@@ -8,7 +8,9 @@ CMiniGame_Perfect::CMiniGame_Perfect(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 CMiniGame_Perfect::CMiniGame_Perfect(const CMiniGame_Perfect& rhs)
 	: CUI(rhs)
+	, m_pMiniGame_Manager(CMiniGame_Manager::GetInstance())
 {
+	Safe_AddRef(m_pMiniGame_Manager);
 }
 
 HRESULT CMiniGame_Perfect::Initialize_Prototype()
@@ -24,20 +26,39 @@ HRESULT CMiniGame_Perfect::Initialize(void* pArg)
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	m_fSizeX = 64.f;
+	// X 최대 길이 640
+	_double dSizeXPercent = m_pMiniGame_Manager->Get_PerfectOffsetTime() / m_pMiniGame_Manager->Get_MaxTime();
+
+	m_fSizeX = 640.f * _float(dSizeXPercent);
 	m_fSizeY = 64.f;
 
-	m_fX = g_iWinSizeX * 0.5f;
+	// 최소 g_iWinSizeX * 0.333f / 최대 g_iWinSizeX * 0.72f
+	m_fLeftX = g_iWinSizeX * 0.333f;
+	m_fRightX = g_iWinSizeX * 0.72f;
+	// 0.72 - 0.333f = 0.387
+	// 0.387가지고 0~100 표현
+	// 0.333f + percent * 0.387
+	m_fX = m_fLeftX;
 	m_fY = g_iWinSizeY * 0.815f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	// z값 조절
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetZ(vPos, 0.04f));
 
 	return S_OK;
 }
 
 void CMiniGame_Perfect::Tick(_double dTimeDelta)
 {
+	m_fX = Get_WindowPixelX(_float(m_pMiniGame_Manager->Get_CenterPercent()));
+
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		XMVectorSetX(vPos, m_fX - g_iWinSizeX * 0.5f));
+
 	__super::Tick(dTimeDelta);
 }
 
@@ -120,6 +141,11 @@ HRESULT CMiniGame_Perfect::SetUp_ShaderResources()
 	return S_OK;
 }
 
+_float CMiniGame_Perfect::Get_WindowPixelX(_float fPercent)
+{
+	return m_fLeftX + fPercent * (m_fRightX - m_fLeftX);
+}
+
 CMiniGame_Perfect* CMiniGame_Perfect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CMiniGame_Perfect* pInstance = new CMiniGame_Perfect(pDevice, pContext);
@@ -149,4 +175,6 @@ CGameObject* CMiniGame_Perfect::Clone(void* pArg)
 void CMiniGame_Perfect::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pMiniGame_Manager);
 }

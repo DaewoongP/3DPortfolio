@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Client_Defines.h"
+#include "MiniGame_Manager.h"
 
 BEGIN(Engine)
 class CModel;
@@ -36,6 +37,9 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	class CKatana*			m_pKatana = { nullptr };
+
+private:
+	CMiniGame_Manager*		m_pMiniGame_Manager = { nullptr };
 
 private:
 	_float					m_fMouseSensitivity = { 0.f };

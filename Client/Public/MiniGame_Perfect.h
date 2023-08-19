@@ -1,6 +1,7 @@
 #pragma once
 #include "UI.h"
 #include "Client_Defines.h"
+#include "MiniGame_Manager.h"
 
 BEGIN(Client)
 
@@ -19,8 +20,14 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	CMiniGame_Manager*		m_pMiniGame_Manager = { nullptr };
+	_float					m_fLeftX = { 0.f };
+	_float					m_fRightX = { 0.f };
+
+private:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
+	_float Get_WindowPixelX(_float fPercent);
 
 public:
 	static CMiniGame_Perfect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

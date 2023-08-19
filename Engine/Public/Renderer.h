@@ -43,6 +43,7 @@ private:
 	// 알파블렌딩 객체를 그릴때 깊이에 따라 순서 관리를 위한 함수.
 	// 카메라 위치를 기준으로 먼것부터 그려 처리함.
 	HRESULT Sort_Blend();
+	HRESULT Sort_UI();
 
 #ifdef _DEBUG
 private:

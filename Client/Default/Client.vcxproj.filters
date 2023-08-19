@@ -630,6 +630,9 @@
     <ClInclude Include="..\public\MiniGame_Perfect.h">
       <Filter>02. GameObjects\05. UI\MiniGame</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Cursor.h">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -985,6 +988,9 @@
       <Filter>02. GameObjects\05. UI\MiniGame</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MiniGame_Perfect.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Cursor.cpp">
       <Filter>02. GameObjects\05. UI\MiniGame</Filter>
     </ClCompile>
   </ItemGroup>
