@@ -28,6 +28,7 @@
 #include "Crosshair.h"
 #include "MiniEnemy.h"
 #include "LensFlare.h"
+#include "MiniPlayer.h"
 #include "SwordTrail.h"
 #include "Boss_Sword.h"
 #include "BackGround.h"
@@ -41,9 +42,13 @@
 #include "Boss_Shield.h"
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
+#include "MiniGame_Back.h"
 #include "ShurikenTrail.h"
 #include "BloodParticle.h"
+#include "MiniGame_Great.h"
+#include "MiniBackGround.h"
 #include "ExplodeParticle.h"
+#include "MiniGame_Perfect.h"
 #include "ShurikenParticle.h"
 #include "BloodDirectional.h"
 #include "GhostRunner_Logo.h"
@@ -1052,6 +1057,78 @@ HRESULT CLoader::Loading_For_Stage1()
 
 HRESULT CLoader::Loading_For_Stage2()
 {
+	lstrcpy(m_szLoading, TEXT("텍스처 로딩중."));
+
+	/* For.Prototype_Component_Texture_MiniBackGround */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniBackGround"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniBackGround.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_MiniBackGround)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_MiniBack */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniBack"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/MiniGame_Back.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_MiniBack)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_Component_Texture_Hit */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/MiniGame_Hit%d.dds"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Hit)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("객체 로딩중."));
+
+	/* For.Prototype_GameObject_MiniPlayer */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniPlayer"),
+		CMiniPlayer::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniPlayer)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_MiniBackGround */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniBackGround"),
+		CMiniBackGround::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniBackGround)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_MiniGame_Back */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Back"),
+		CMiniGame_Back::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Back)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_MiniGame_Great */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Great"),
+		CMiniGame_Great::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Great)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_MiniGame_Perfect */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Perfect"),
+		CMiniGame_Perfect::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Perfect)");
+		return E_FAIL;
+	}
+
+	lstrcpy(m_szLoading, TEXT("로딩 완료."));
+
+	m_isFinished = true;
+
 	return S_OK;
 }
 

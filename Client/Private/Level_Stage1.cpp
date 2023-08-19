@@ -43,7 +43,7 @@ HRESULT CLevel_Stage1::Initialize()
 void CLevel_Stage1::Tick(_double dTimeDelta)
 {
 	__super::Tick(dTimeDelta);
-
+#ifdef _DEBUG
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
@@ -51,13 +51,24 @@ void CLevel_Stage1::Tick(_double dTimeDelta)
 	{
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_BOSS))))
 		{
-			MSG_BOX("Failed Open LEVEL_LOADING to LEVEL_STAGE1");
+			MSG_BOX("Failed Open LEVEL_STAGE1 to LEVEL_BOSS");
+			Safe_Release(pGameInstance);
+			return;
+		}
+	}
+
+	if (pGameInstance->Get_DIKeyState(DIK_F8, CInput_Device::KEY_DOWN))
+	{
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE2))))
+		{
+			MSG_BOX("Failed Open LEVEL_STAGE1 to LEVEL_STAGE2");
 			Safe_Release(pGameInstance);
 			return;
 		}
 	}
 
 	Safe_Release(pGameInstance);
+#endif // _DEBUG
 }
 
 HRESULT CLevel_Stage1::Render()

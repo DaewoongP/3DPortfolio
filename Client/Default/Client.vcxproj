@@ -184,6 +184,7 @@
     <ClInclude Include="..\public\BulletSpark.h" />
     <ClInclude Include="..\public\BulletTrail.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\public\MiniGame_Perfect.h" />
     <ClInclude Include="..\public\Crosshair.h" />
     <ClInclude Include="..\Public\BackGround.h" />
     <ClInclude Include="..\public\Blue_Snow.h" />
@@ -204,6 +205,11 @@
     <ClInclude Include="..\public\Katana.h" />
     <ClInclude Include="..\public\LensFlare.h" />
     <ClInclude Include="..\public\LevelChange_Trigger.h" />
+    <ClInclude Include="..\public\MiniBackGround.h" />
+    <ClInclude Include="..\Public\MiniGame_Back.h" />
+    <ClInclude Include="..\public\MiniGame_Great.h" />
+    <ClInclude Include="..\public\MiniGame_Manager.h" />
+    <ClInclude Include="..\public\MiniPlayer.h" />
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\ShadowDepth.h" />
     <ClInclude Include="..\public\ShurikenParticle.h" />
@@ -316,6 +322,12 @@
     <ClCompile Include="..\private\Katana.cpp" />
     <ClCompile Include="..\private\LensFlare.cpp" />
     <ClCompile Include="..\private\LevelChange_Trigger.cpp" />
+    <ClCompile Include="..\private\MiniBackGround.cpp" />
+    <ClCompile Include="..\Private\MiniGame_Back.cpp" />
+    <ClCompile Include="..\private\MiniGame_Great.cpp" />
+    <ClCompile Include="..\private\MiniGame_Manager.cpp" />
+    <ClCompile Include="..\private\MiniGame_Perfect.cpp" />
+    <ClCompile Include="..\private\MiniPlayer.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\ShadowDepth.cpp" />
     <ClCompile Include="..\private\ShurikenParticle.cpp" />

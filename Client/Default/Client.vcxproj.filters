@@ -262,6 +262,15 @@
     <Filter Include="02. GameObjects\03. Effects\Instancing\BloodeParticle">
       <UniqueIdentifier>{2fca457b-b39e-4247-aa2e-00c8e7a1caca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\00. Player\MiniPlayer">
+      <UniqueIdentifier>{101e580e-1c14-4a15-80b6-9000307af4c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. MiniGameManager">
+      <UniqueIdentifier>{27b264ad-afd9-4601-b85e-e7772d94fe54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\MiniGame">
+      <UniqueIdentifier>{4dc35714-c657-43b5-ad80-51bf3fe582e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -603,6 +612,24 @@
     <ClInclude Include="..\public\Level_Stage2.h">
       <Filter>01. Levels\02. Stage2</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MiniPlayer.h">
+      <Filter>02. GameObjects\00. Player\MiniPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniBackGround.h">
+      <Filter>02. GameObjects\04. Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Manager.h">
+      <Filter>04. MiniGameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniGame_Back.h">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Great.h">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Perfect.h">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -941,6 +968,24 @@
     </ClCompile>
     <ClCompile Include="..\private\BloodParticle.cpp">
       <Filter>02. GameObjects\03. Effects\Instancing\BloodeParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniPlayer.cpp">
+      <Filter>02. GameObjects\00. Player\MiniPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniBackGround.cpp">
+      <Filter>02. GameObjects\04. Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Manager.cpp">
+      <Filter>04. MiniGameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniGame_Back.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Great.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Perfect.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

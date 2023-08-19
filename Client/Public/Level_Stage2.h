@@ -16,8 +16,12 @@ public:
 	virtual HRESULT Render();
 
 private:
+	class CMiniGame_Manager*	m_pMiniGame_Manager = { nullptr };
+
+private:
 	HRESULT Ready_Layer_Player(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Enemy(const _tchar* pLayerTag);
+	HRESULT Ready_Layer_MiniGame(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Props();
 	HRESULT Ready_Layer_BackGround(const _tchar* pLayerTag);
 
