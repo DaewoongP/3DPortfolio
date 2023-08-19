@@ -44,6 +44,9 @@ protected:
 	_float4x4		m_ViewMatrix;
 	_float4x4		m_ProjMatrix;
 
+protected:
+	HRESULT Change_Position(_float fX, _float fY);
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual void Free() override;

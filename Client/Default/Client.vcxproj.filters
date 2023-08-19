@@ -645,6 +645,9 @@
     <ClInclude Include="..\public\Sniper.h">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sniper\Sniper</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Score.h">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1010,6 +1013,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Sniper.cpp">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sniper\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Score.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

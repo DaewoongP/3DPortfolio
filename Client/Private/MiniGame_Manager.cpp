@@ -19,10 +19,15 @@ HRESULT CMiniGame_Manager::Add_Enemy(CEnemy_Sniper* pEnemy_Sniper)
 HRESULT CMiniGame_Manager::Initialize()
 {
 	m_dMaxFireTime = 1.5;
-	m_dCoolTime = 0.5;
+	m_dCoolTime = 0.7;
 	Reset_CenterTime(rand() % 1000 / 1000.0 * m_dMaxFireTime);
 
 	m_dWaitTime = 3.0;
+	m_eState = STATE_WAIT;
+
+	m_iMaxScore = 20;
+
+	m_isFirst = true;
 
 	return S_OK;
 }
@@ -34,6 +39,21 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 		m_dWaitTimeAcc += dTimeDelta;
 		return;
 	}
+
+	if (true == m_isFirst)
+	{
+		Reset_CenterTime(rand() % 1000 / 1000.0 * m_dMaxFireTime);
+		Select_RandomAttack();
+		m_dFireTimeAcc = 0.0;
+		m_isCoolTime = true;
+
+		m_isFirst = false;
+	}
+
+	Check_Score();
+
+	if (true == m_isGameFinished)
+		return;
 	
 	if (true == m_isCoolTime)
 	{
@@ -73,6 +93,7 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 			cout << "Perfect" << endl;
 #endif //_DEBUG
 			m_eState = STATE_PERFECT;
+			m_iScore += 3;
 			Delete_Bullet();
 		}
 		// 그레이트존 사이
@@ -83,6 +104,7 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 			cout << "Great" << endl;
 #endif //_DEBUG
 			m_eState = STATE_GREAT;
+			m_iScore += 1;
 			Delete_Bullet();
 		}
 		else
@@ -103,8 +125,8 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 void CMiniGame_Manager::Reset_CenterTime(_double dCenterTime)
 {
 	// 안전장치
-	if (dCenterTime < 0.3)
-		dCenterTime += 0.3;
+	if (dCenterTime < 0.5)
+		dCenterTime += 0.5;
 
 	m_dCenterTime = dCenterTime;
 	m_dPerfectOffsetTime = m_dMaxFireTime * 0.05;
@@ -113,14 +135,37 @@ void CMiniGame_Manager::Reset_CenterTime(_double dCenterTime)
 
 void CMiniGame_Manager::Select_RandomAttack()
 {
+	if (0 == m_Enemy_Snipers.size())
+		return;
+
 	_uint iRand = rand() % m_Enemy_Snipers.size();
-	m_Enemy_Snipers[iRand]->Attack(m_dCoolTime + m_dCenterTime + m_dPerfectOffsetTime * 1.5);
+	m_Enemy_Snipers[iRand]->Attack(m_dCoolTime + m_dCenterTime + m_dGreatOffsetTime);
 }
 
 void CMiniGame_Manager::Delete_Bullet()
 {
 	for (auto& pEnemy_Sniper : m_Enemy_Snipers)
 		pEnemy_Sniper->Delete_Bullet();
+}
+
+void CMiniGame_Manager::Check_Score()
+{
+	if (m_iScore < m_iMaxScore)
+		return;
+
+	Delete_Bullet();
+
+	for (auto& pEnemy_Sniper : m_Enemy_Snipers)
+	{
+		pEnemy_Sniper->Set_GameEvent(GAME_OBJECT_DEAD);
+		Safe_Release(pEnemy_Sniper);
+	}
+
+	m_Enemy_Snipers.clear();
+
+	m_iScore = m_iMaxScore;
+
+	m_isGameFinished = true;
 }
 
 void CMiniGame_Manager::Free()

@@ -211,6 +211,7 @@
     <ClInclude Include="..\Public\MiniGame_Back.h" />
     <ClInclude Include="..\public\MiniGame_Great.h" />
     <ClInclude Include="..\public\MiniGame_Manager.h" />
+    <ClInclude Include="..\public\MiniGame_Score.h" />
     <ClInclude Include="..\public\MiniPlayer.h" />
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\ShadowDepth.h" />
@@ -332,6 +333,7 @@
     <ClCompile Include="..\private\MiniGame_Great.cpp" />
     <ClCompile Include="..\private\MiniGame_Manager.cpp" />
     <ClCompile Include="..\private\MiniGame_Perfect.cpp" />
+    <ClCompile Include="..\private\MiniGame_Score.cpp" />
     <ClCompile Include="..\private\MiniPlayer.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\ShadowDepth.cpp" />

@@ -24,6 +24,7 @@ public:
 	_double Get_GreatOffsetTime() const { return m_dGreatOffsetTime; }
 	_double Get_MaxTime() const { return m_dMaxFireTime; }
 	STATE Get_State() const { return m_eState; }
+	_uint Get_Score() const { return m_iScore; }
 
 public:
 	HRESULT Initialize();
@@ -48,9 +49,14 @@ private:
 	_double				m_dWaitTime = { 0.0 };
 	_double				m_dWaitTimeAcc = { 0.0 };
 
+	_bool				m_isFirst = { false };
+
 private:
 	STATE				m_eState = { STATE_END };
+	_uint				m_iScore = { 0 };
+	_uint				m_iMaxScore = { 0 };
 	_bool				m_isBlocked = { false };
+	_bool				m_isGameFinished = { false };
 
 private:
 	vector<class CEnemy_Sniper*>	m_Enemy_Snipers;
@@ -59,6 +65,7 @@ private:
 	void Reset_CenterTime(_double dCenterTime);
 	void Select_RandomAttack();
 	void Delete_Bullet();
+	void Check_Score();
 
 public:
 	virtual void Free() override;

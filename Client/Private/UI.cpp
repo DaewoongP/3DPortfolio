@@ -62,6 +62,17 @@ HRESULT CUI::Render()
 	return S_OK;
 }
 
+HRESULT CUI::Change_Position(_float fX, _float fY)
+{
+	m_fX = fX;
+	m_fY = fY;
+
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+		XMVectorSet(m_fX - g_iWinSizeX * 0.5f, -m_fY + g_iWinSizeY * 0.5f, 0.f, 1.f));
+
+	return S_OK;
+}
+
 void CUI::Free()
 {
 	__super::Free();

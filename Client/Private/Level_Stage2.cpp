@@ -211,6 +211,12 @@ HRESULT CLevel_Stage2::Ready_Layer_MiniGame(const _tchar* pLayerTag)
 		return E_FAIL;
 	}
 
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_STAGE2, TEXT("Prototype_GameObject_MiniGame_Score"), pLayerTag, TEXT("GameObject_MiniGame_Score"))))
+	{
+		MSG_BOX("Failed Add_GameObject : (GameObject_MiniGame_Score)");
+		return E_FAIL;
+	}
+
 	Safe_Release(pGameInstance);
 
 	return S_OK;

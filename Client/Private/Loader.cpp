@@ -49,6 +49,7 @@
 #include "BloodParticle.h"
 #include "MiniGame_Great.h"
 #include "MiniBackGround.h"
+#include "MiniGame_Score.h"
 #include "MiniGame_Cursor.h"
 #include "ExplodeParticle.h"
 #include "MiniGame_Perfect.h"
@@ -1084,6 +1085,14 @@ HRESULT CLoader::Loading_For_Stage2()
 
 	lstrcpy(m_szLoading, TEXT("텍스처 로딩중."));
 
+	/* For.Prototype_Component_Texture_Number */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Number"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/Number/Num%d.dds"), 10))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Number)");
+		return E_FAIL;
+	}
+
 	/* For.Prototype_Component_Texture_MiniBackGround */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniBackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniBackGround.dds")))))
@@ -1179,6 +1188,14 @@ HRESULT CLoader::Loading_For_Stage2()
 		CMiniGame_Cursor::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Cursor)");
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_MiniGame_Score */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Score"),
+		CMiniGame_Score::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Score)");
 		return E_FAIL;
 	}
 
