@@ -1,5 +1,6 @@
 #include "../Public/MiniGame_Back.h"
 #include "GameInstance.h"
+#include "MiniGame_Manager.h"
 
 CMiniGame_Back::CMiniGame_Back(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -49,8 +50,14 @@ GAMEEVENT CMiniGame_Back::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (nullptr != m_pRendererCom)
+	CMiniGame_Manager* pMiniGame_Manager = CMiniGame_Manager::GetInstance();
+	Safe_AddRef(pMiniGame_Manager);
+
+	if (nullptr != m_pRendererCom &&
+		false == pMiniGame_Manager->IsFinished())
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
+
+	Safe_Release(pMiniGame_Manager);
 
 	return GAME_NOEVENT;
 }

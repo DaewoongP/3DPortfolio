@@ -277,6 +277,15 @@
     <Filter Include="02. GameObjects\01. Enemy\Enemy_Sniper\Sniper">
       <UniqueIdentifier>{30d9b0f7-f973-40ec-8321-7f8b7452a4ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. UI\MiniGame\Game">
+      <UniqueIdentifier>{00d48229-883b-4e70-bd06-9c35782acdc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\MiniGame\Score">
+      <UniqueIdentifier>{5e6cc5df-6333-4dd2-a0ef-6cee9b08e1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. UI\MiniGame\ScoreBoard">
+      <UniqueIdentifier>{33635902-23e9-48b3-87c2-8f699fdccdba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -627,26 +636,29 @@
     <ClInclude Include="..\public\MiniGame_Manager.h">
       <Filter>04. MiniGameManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MiniGame_Back.h">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MiniGame_Great.h">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MiniGame_Perfect.h">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MiniGame_Cursor.h">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Enemy_Sniper.h">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sniper</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Sniper.h">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sniper\Sniper</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Perfect.h">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniGame_Back.h">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Cursor.h">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniGame_Great.h">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\MiniGame_Score.h">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+      <Filter>02. GameObjects\05. UI\MiniGame\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniGame_ScoreBoard.h">
+      <Filter>02. GameObjects\05. UI\MiniGame\ScoreBoard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -996,26 +1008,29 @@
     <ClCompile Include="..\private\MiniGame_Manager.cpp">
       <Filter>04. MiniGameManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MiniGame_Back.cpp">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MiniGame_Great.cpp">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MiniGame_Perfect.cpp">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MiniGame_Cursor.cpp">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Enemy_Sniper.cpp">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sniper</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sniper.cpp">
       <Filter>02. GameObjects\01. Enemy\Enemy_Sniper\Sniper</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\MiniGame_Back.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Cursor.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Great.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_Perfect.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame\Game</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\MiniGame_Score.cpp">
-      <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+      <Filter>02. GameObjects\05. UI\MiniGame\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniGame_ScoreBoard.cpp">
+      <Filter>02. GameObjects\05. UI\MiniGame\ScoreBoard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

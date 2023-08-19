@@ -38,9 +38,9 @@ HRESULT CMiniPlayer::Initialize(void* pArg)
 	m_pModelCom->Set_AnimIndex(95);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 8.f, 0.f, 1.f));
-
+#ifdef _DEBUG
 	m_isMouseFixed = true;
-
+#endif
 	return S_OK;
 }
 

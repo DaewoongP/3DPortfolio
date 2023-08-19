@@ -40,7 +40,7 @@ HRESULT CTask_Summon::Summon_Pistol()
 	_tchar szObjectTag[MAX_STR] = TEXT("GameObject");
 	_tchar szIndex[MAX_STR] = TEXT("");
 
-	_itow_s(m_iObjectIndex, szIndex, 10);
+	_itow_s(m_iObjectIndex, szIndex, MAX_STR, 10);
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -83,7 +83,7 @@ HRESULT CTask_Summon::Summon_Hammer()
 	_tchar szObjectTag[MAX_STR] = TEXT("GameObject");
 	_tchar szIndex[MAX_STR] = TEXT("");
 
-	_itow_s(m_iObjectIndex, szIndex, 10);
+	_itow_s(m_iObjectIndex, szIndex, MAX_STR, 10);
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
@@ -126,7 +126,7 @@ HRESULT CTask_Summon::Summon_Sword()
 	_tchar szObjectTag[MAX_STR] = TEXT("GameObject");
 	_tchar szIndex[MAX_STR] = TEXT("");
 
-	_itow_s(m_iObjectIndex, szIndex, 10);
+	_itow_s(m_iObjectIndex, szIndex, MAX_STR, 10);
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);

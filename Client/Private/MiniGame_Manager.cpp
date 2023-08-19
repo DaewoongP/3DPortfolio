@@ -29,6 +29,8 @@ HRESULT CMiniGame_Manager::Initialize()
 
 	m_isFirst = true;
 
+	ZEROMEM(&m_vScore);
+
 	return S_OK;
 }
 
@@ -53,7 +55,11 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 	Check_Score();
 
 	if (true == m_isGameFinished)
+	{
+		m_eState = STATE_WAIT;
+		m_dCoolTimeAcc = 0.0;
 		return;
+	}
 	
 	if (true == m_isCoolTime)
 	{
@@ -78,6 +84,7 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 		Select_RandomAttack();
 		m_eState = STATE_FAIL;
 		m_isCoolTime = true;
+		++m_vScore.z;
 		return;
 	}
 	
@@ -94,6 +101,7 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 #endif //_DEBUG
 			m_eState = STATE_PERFECT;
 			m_iScore += 3;
+			++m_vScore.x;
 			Delete_Bullet();
 		}
 		// 그레이트존 사이
@@ -105,6 +113,7 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 #endif //_DEBUG
 			m_eState = STATE_GREAT;
 			m_iScore += 1;
+			++m_vScore.y;
 			Delete_Bullet();
 		}
 		else
@@ -113,6 +122,7 @@ void CMiniGame_Manager::Tick(_double dTimeDelta)
 			cout << "Failed" << endl;
 #endif //_DEBUG
 			m_eState = STATE_FAIL;
+			++m_vScore.z;
 		}
 
 		Reset_CenterTime(rand() % 1000 / 1000.0 * m_dMaxFireTime);

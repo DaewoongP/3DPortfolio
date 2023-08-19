@@ -412,6 +412,9 @@ HRESULT CEnemy_Sword::SetUp_ShadowShaderResources()
 
 void CEnemy_Sword::AnimationState(_double dTimeDelta)
 {
+	if (nullptr == m_pModelCom)
+		return;
+
 	m_eCurrentAnimationFlag = m_pModelCom->Get_AnimationState();
 
 	// 애니메이션이 종료 되었을때 따로 처리되는 명령이 없을 경우 IDLE처리

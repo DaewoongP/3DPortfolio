@@ -59,6 +59,7 @@
 #include "Black_BackGround.h"
 #include "Loading_OuterCycle.h"
 #include "Loading_InnerCycle.h"
+#include "MiniGame_ScoreBoard.h"
 #include "LevelChange_Trigger.h"
 
 #ifdef _DEBUG
@@ -1124,6 +1125,14 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Cursor)");
 		return E_FAIL;
 	}
+	
+	/* For.Prototype_Component_Texture_ScoreBoard */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ScoreBoard"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/ScoreBoard.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_ScoreBoard)");
+		return E_FAIL;
+	}
 
 	lstrcpy(m_szLoading, TEXT("°´Ã¼ ·ÎµùÁß."));
 
@@ -1196,6 +1205,14 @@ HRESULT CLoader::Loading_For_Stage2()
 		CMiniGame_Score::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Score)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_MiniGame_ScoreBoard */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_ScoreBoard"),
+		CMiniGame_ScoreBoard::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_ScoreBoard)");
 		return E_FAIL;
 	}
 

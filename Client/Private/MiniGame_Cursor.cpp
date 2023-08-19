@@ -61,7 +61,8 @@ GAMEEVENT CMiniGame_Cursor::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom &&
+		false == m_pMiniGame_Manager->IsFinished())
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;

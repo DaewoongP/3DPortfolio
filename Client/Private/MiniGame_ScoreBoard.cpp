@@ -1,19 +1,20 @@
-#include "../Public/MiniGame_Great.h"
+#include "..\Public\MiniGame_ScoreBoard.h"
 #include "GameInstance.h"
 
-CMiniGame_Great::CMiniGame_Great(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMiniGame_ScoreBoard::CMiniGame_ScoreBoard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CMiniGame_Great::CMiniGame_Great(const CMiniGame_Great& rhs)
+
+CMiniGame_ScoreBoard::CMiniGame_ScoreBoard(const CMiniGame_ScoreBoard& rhs)
 	: CUI(rhs)
 	, m_pMiniGame_Manager(CMiniGame_Manager::GetInstance())
 {
 	Safe_AddRef(m_pMiniGame_Manager);
 }
 
-HRESULT CMiniGame_Great::Initialize_Prototype()
+HRESULT CMiniGame_ScoreBoard::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -21,59 +22,41 @@ HRESULT CMiniGame_Great::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CMiniGame_Great::Initialize(void* pArg)
+
+HRESULT CMiniGame_ScoreBoard::Initialize(void* pArg)
 {
 	if (FAILED(Add_Components()))
 		return E_FAIL;
 
-	// X 최대 길이 640
-	_double dSizeXPercent = m_pMiniGame_Manager->Get_GreatOffsetTime() / m_pMiniGame_Manager->Get_MaxTime();
+	m_fSizeX = 512.f;
+	m_fSizeY = 512.f;
 
-	m_fSizeX = 640.f * _float(dSizeXPercent);
-	m_fSizeY = 64.f;
-
-	// 최소 g_iWinSizeX * 0.333f / 최대 g_iWinSizeX * 0.72f
-	m_fLeftX = g_iWinSizeX * 0.333f; 
-	m_fRightX = g_iWinSizeX * 0.72f;
-	// 0.72 - 0.333f = 0.387
-	// 0.387가지고 0~100 표현
-	// 0.333f + percent * 0.387
-	m_fX = Get_WindowPixelX(0.5f);
-	m_fY = g_iWinSizeY * 0.815f;
+	m_fX = g_iWinSizeX * 0.5f;
+	m_fY = g_iWinSizeY * 0.5f;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	// z값 조절
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSetZ(vPos, 0.05f));
-
 	return S_OK;
 }
 
-void CMiniGame_Great::Tick(_double dTimeDelta)
+void CMiniGame_ScoreBoard::Tick(_double dTimeDelta)
 {
-	m_fX = Get_WindowPixelX(_float(m_pMiniGame_Manager->Get_CenterPercent()));
-
-	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-		XMVectorSetX(vPos, m_fX - g_iWinSizeX * 0.5f));
-
 	__super::Tick(dTimeDelta);
 }
 
-GAMEEVENT CMiniGame_Great::Late_Tick(_double dTimeDelta)
+GAMEEVENT CMiniGame_ScoreBoard::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom &&
-		false == m_pMiniGame_Manager->IsFinished())
+		m_pMiniGame_Manager->IsFinished())
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;
 }
 
-HRESULT CMiniGame_Great::Render()
+HRESULT CMiniGame_ScoreBoard::Render()
 {
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
@@ -82,13 +65,37 @@ HRESULT CMiniGame_Great::Render()
 
 	m_pVIBufferCom->Render();
 
-	if (FAILED(__super::Render()))
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	_uint3 vScore = m_pMiniGame_Manager->Get_ScoreBoardVector();
+
+	_itow_s(vScore.x, m_szPerfect, MAX_STR, 10);
+	_itow_s(vScore.y, m_szGreat, MAX_STR, 10);
+	_itow_s(vScore.z, m_szFailed, MAX_STR, 10);
+
+	// perfect
+	if (FAILED(pGameInstance->Render_Font(TEXT("Font_135"), 
+		m_szPerfect,
+		_float2(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.25f))))
 		return E_FAIL;
+	// great
+	if (FAILED(pGameInstance->Render_Font(TEXT("Font_135"), 
+		m_szGreat,
+		_float2(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.4f))))
+		return E_FAIL;
+	// failed
+	if (FAILED(pGameInstance->Render_Font(TEXT("Font_135"), 
+		m_szFailed,
+		_float2(g_iWinSizeX * 0.5f, g_iWinSizeY * 0.55f))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	return S_OK;
 }
 
-HRESULT CMiniGame_Great::Add_Components()
+HRESULT CMiniGame_ScoreBoard::Add_Components()
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -115,7 +122,7 @@ HRESULT CMiniGame_Great::Add_Components()
 	}
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ScoreBoard"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 	{
 		MSG_BOX("Failed BackGround Add_Component : (Com_Texture)");
@@ -125,7 +132,7 @@ HRESULT CMiniGame_Great::Add_Components()
 	return S_OK;
 }
 
-HRESULT CMiniGame_Great::SetUp_ShaderResources()
+HRESULT CMiniGame_ScoreBoard::SetUp_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldFloat4x4())))
 		return E_FAIL;
@@ -136,45 +143,39 @@ HRESULT CMiniGame_Great::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-_float CMiniGame_Great::Get_WindowPixelX(_float fPercent)
+CMiniGame_ScoreBoard* CMiniGame_ScoreBoard::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	// 0.333f + percent * 0.387
-	return m_fLeftX + fPercent * (m_fRightX - m_fLeftX);
-}
-
-CMiniGame_Great* CMiniGame_Great::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CMiniGame_Great* pInstance = new CMiniGame_Great(pDevice, pContext);
+	CMiniGame_ScoreBoard* pInstance = new CMiniGame_ScoreBoard(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CMiniGame_Great");
+		MSG_BOX("Failed to Created CMiniGame_ScoreBoard");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMiniGame_Great::Clone(void* pArg)
+CGameObject* CMiniGame_ScoreBoard::Clone(void* pArg)
 {
-	CMiniGame_Great* pInstance = new CMiniGame_Great(*this);
+	CMiniGame_ScoreBoard* pInstance = new CMiniGame_ScoreBoard(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CMiniGame_Great");
+		MSG_BOX("Failed to Cloned CMiniGame_ScoreBoard");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMiniGame_Great::Free()
+void CMiniGame_ScoreBoard::Free()
 {
 	__super::Free();
 

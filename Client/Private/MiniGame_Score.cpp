@@ -29,7 +29,7 @@ HRESULT CMiniGame_Score::Initialize(void* pArg)
 	m_fSizeX = 64.f;
 	m_fSizeY = 128.f;
 
-	m_fX = g_iWinSizeY * 0.5f;
+	m_fX = g_iWinSizeX * 0.5f;
 	m_fY = g_iWinSizeY * 0.2f;
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -50,7 +50,8 @@ GAMEEVENT CMiniGame_Score::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	if (nullptr != m_pRendererCom)
+	if (nullptr != m_pRendererCom &&
+		false == m_pMiniGame_Manager->IsFinished())
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_UI, this);
 
 	return GAME_NOEVENT;

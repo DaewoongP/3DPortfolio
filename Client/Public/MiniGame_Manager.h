@@ -25,6 +25,8 @@ public:
 	_double Get_MaxTime() const { return m_dMaxFireTime; }
 	STATE Get_State() const { return m_eState; }
 	_uint Get_Score() const { return m_iScore; }
+	_uint3 Get_ScoreBoardVector() const { return m_vScore; }
+	_bool IsFinished() const { return m_isGameFinished; }
 
 public:
 	HRESULT Initialize();
@@ -50,6 +52,8 @@ private:
 	_double				m_dWaitTimeAcc = { 0.0 };
 
 	_bool				m_isFirst = { false };
+
+	_uint3				m_vScore;
 
 private:
 	STATE				m_eState = { STATE_END };
