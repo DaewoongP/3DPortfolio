@@ -16,6 +16,7 @@ private:
 	virtual ~CMiniGame_Manager() = default;
 
 public:
+	HRESULT Add_Enemy(class CEnemy_Sniper* pEnemy_Sniper);
 	void Set_Blocked(_bool isBlocked) { m_isBlocked = isBlocked; }
 	_double Get_CenterPercent() { return m_dCenterTime / m_dMaxFireTime; }
 	_double Get_FirePercent() { return m_dFireTimeAcc / m_dMaxFireTime; }
@@ -43,12 +44,21 @@ private:
 	_double				m_dCoolTimeAcc = { 0.0 };
 	_bool				m_isCoolTime = { false };
 
+	// 초기 대기시간
+	_double				m_dWaitTime = { 0.0 };
+	_double				m_dWaitTimeAcc = { 0.0 };
+
 private:
 	STATE				m_eState = { STATE_END };
 	_bool				m_isBlocked = { false };
 
 private:
+	vector<class CEnemy_Sniper*>	m_Enemy_Snipers;
+
+private:
 	void Reset_CenterTime(_double dCenterTime);
+	void Select_RandomAttack();
+	void Delete_Bullet();
 
 public:
 	virtual void Free() override;

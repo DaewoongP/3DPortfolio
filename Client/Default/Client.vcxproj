@@ -184,6 +184,7 @@
     <ClInclude Include="..\public\BulletSpark.h" />
     <ClInclude Include="..\public\BulletTrail.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\public\Enemy_Sniper.h" />
     <ClInclude Include="..\public\MiniGame_Cursor.h" />
     <ClInclude Include="..\public\MiniGame_Perfect.h" />
     <ClInclude Include="..\public\Crosshair.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="..\public\ShadowDepth.h" />
     <ClInclude Include="..\public\ShurikenParticle.h" />
     <ClInclude Include="..\public\ShurikenTrail.h" />
+    <ClInclude Include="..\public\Sniper.h" />
     <ClInclude Include="..\public\SwordTrail.h" />
     <ClInclude Include="..\public\Level_Boss.h" />
     <ClInclude Include="..\public\Level_Stage1.h" />
@@ -312,6 +314,7 @@
     <ClCompile Include="..\private\ColProp.cpp" />
     <ClCompile Include="..\private\Enemy_Hammer.cpp" />
     <ClCompile Include="..\private\Enemy_Pistol.cpp" />
+    <ClCompile Include="..\private\Enemy_Sniper.cpp" />
     <ClCompile Include="..\private\Enemy_Sword.cpp" />
     <ClCompile Include="..\private\ExplodeParticle.cpp" />
     <ClCompile Include="..\private\ExplodeRange.cpp" />
@@ -334,6 +337,7 @@
     <ClCompile Include="..\private\ShadowDepth.cpp" />
     <ClCompile Include="..\private\ShurikenParticle.cpp" />
     <ClCompile Include="..\private\ShurikenTrail.cpp" />
+    <ClCompile Include="..\private\Sniper.cpp" />
     <ClCompile Include="..\private\SwordTrail.cpp" />
     <ClCompile Include="..\private\Level_Boss.cpp" />
     <ClCompile Include="..\private\Level_Stage1.cpp" />

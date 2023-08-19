@@ -1,6 +1,8 @@
 #include "..\Public\MiniPlayer.h"
 #include "GameInstance.h"
 #include "Katana.h"
+#include "BlockEffect.h"
+#include "MiniGame_Manager.h"
 
 CMiniPlayer::CMiniPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -9,12 +11,11 @@ CMiniPlayer::CMiniPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CMiniPlayer::CMiniPlayer(const CMiniPlayer& rhs)
 	: CGameObject(rhs)
-	, m_pMiniGame_Manager(CMiniGame_Manager::GetInstance())
+
 #ifdef _DEBUG
 	, m_isMouseFixed(rhs.m_isMouseFixed)
 #endif // _DEBUG
 {
-	Safe_AddRef(m_pMiniGame_Manager);
 }
 
 HRESULT CMiniPlayer::Initialize_Prototype()
@@ -36,6 +37,8 @@ HRESULT CMiniPlayer::Initialize(void* pArg)
 
 	m_pModelCom->Set_AnimIndex(95);
 
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 8.f, 0.f, 1.f));
+
 	m_isMouseFixed = true;
 
 	return S_OK;
@@ -56,6 +59,9 @@ void CMiniPlayer::Tick(_double dTimeDelta)
 	Fix_Mouse();
 
 	AnimationState(dTimeDelta);
+
+	if (STATE_BLOCK == m_eCurState)
+		m_pKatana->Add_TrailRender();
 
 	__super::Tick(dTimeDelta);
 
@@ -169,6 +175,14 @@ HRESULT CMiniPlayer::Add_Component()
 		return E_FAIL;
 	}
 
+	/* For.Com_BlockEffect */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_GameObject_BlockEffect"),
+		TEXT("Com_BlockEffect"), reinterpret_cast<CComponent**>(&m_pBlockEffect))))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_BlockEffect)");
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -217,7 +231,15 @@ void CMiniPlayer::Key_Input(_double dTimeDelta)
 
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
 	{
-		m_pMiniGame_Manager->Set_Blocked(true);
+		if (STATE_IDLE == m_eCurState)
+		{
+			CMiniGame_Manager* pMiniGame_Manager = CMiniGame_Manager::GetInstance();
+			Safe_AddRef(pMiniGame_Manager);
+
+			pMiniGame_Manager->Set_Blocked(true);
+
+			Safe_Release(pMiniGame_Manager);
+		}
 	}
 
 	_long		dwMouseMove = 0;
@@ -229,28 +251,6 @@ void CMiniPlayer::Key_Input(_double dTimeDelta)
 		return;
 	}
 #endif // _DEBUG
-
-	// Mouse Move Vertical
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_Y))
-	{
-		_vector	vCamRight = XMVector3Normalize(m_pCameraCom->Get_TransformState(CTransform::STATE_RIGHT));
-
-		m_pTransformCom->Turn(vCamRight, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-
-		_vector vUp = m_pTransformCom->Get_State(CTransform::STATE_UP);
-
-		if (XMConvertToRadians(15.f) > XMVectorGetX(XMVector3Dot(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMVector3Normalize(vUp))))
-		{
-			m_pTransformCom->Turn(vCamRight, -1.f * dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-		}
-	}
-	// Mouse Move Horizontal
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMM_X))
-	{
-		_vector	vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-		m_pTransformCom->Turn(vUp, dwMouseMove * m_fMouseSensitivity, dTimeDelta);
-	}
 
 	Safe_Release(pGameInstance);
 }
@@ -292,7 +292,11 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 		m_eCurState = STATE_IDLE;
 	}
 
-	switch (m_pMiniGame_Manager->Get_State())
+	CMiniGame_Manager* pMiniGame_Manager = CMiniGame_Manager::GetInstance();
+	Safe_AddRef(pMiniGame_Manager);
+
+
+	switch (pMiniGame_Manager->Get_State())
 	{
 	case CMiniGame_Manager::STATE_PERFECT:
 		m_eCurState = STATE_BLOCK;
@@ -311,6 +315,8 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 		break;
 	}
 
+	Safe_Release(pMiniGame_Manager);
+
 	Motion_Change(m_eCurrentAnimationFlag);
 
 	m_pModelCom->Play_Animation(dTimeDelta);
@@ -327,6 +333,9 @@ void CMiniPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			break;
 		case STATE_BLOCK:
 			m_pModelCom->Set_AnimIndex(78 + rand() % 3, false);
+			_float4 vWeaponPos;
+			memcpy(&vWeaponPos, m_pKatana->Get_CombinedWorldMatrix().m[3], sizeof(_float4));
+			m_pBlockEffect->Render_Effect(XMLoadFloat4(&vWeaponPos) + m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 			break;
 		case STATE_DEAD:
 			m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
@@ -384,9 +393,10 @@ void CMiniPlayer::Free()
 
 	Safe_Release(m_pKatana);
 
+	Safe_Release(m_pBlockEffect);
+
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pCameraCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pRendererCom);
-	Safe_Release(m_pMiniGame_Manager);
 }

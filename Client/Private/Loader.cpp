@@ -15,6 +15,7 @@
 #include "Pistol.h"
 #include "Bullet.h"
 #include "Katana.h"
+#include "Sniper.h"
 #include "MiniMap.h"
 #include "ColProp.h"
 #include "Texture.h"
@@ -42,6 +43,7 @@
 #include "Boss_Shield.h"
 #include "Enemy_Pistol.h"
 #include "Enemy_Hammer.h"
+#include "Enemy_Sniper.h"
 #include "MiniGame_Back.h"
 #include "ShurikenTrail.h"
 #include "BloodParticle.h"
@@ -1058,6 +1060,28 @@ HRESULT CLoader::Loading_For_Stage1()
 
 HRESULT CLoader::Loading_For_Stage2()
 {
+	lstrcpy(m_szLoading, TEXT("모델 로딩중."));
+
+	_matrix PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	/* For.Prototype_Component_Model_Enemy_Sniper */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE2, TEXT("Prototype_Component_Model_Enemy_Sniper"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, TEXT("../../Resources/ParsingData/Anim/Enemy_Sniper.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Sniper)");
+		return E_FAIL;
+	}
+	
+	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	/* For.Prototype_Component_Model_Weapon_Sniper */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE2, TEXT("Prototype_Component_Model_Weapon_Sniper"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/NonAnim/Sorted/Weapon_Enemy_Sniper.dat"), PivotMatrix))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Sniper)");
+		return E_FAIL;
+	}
+
+	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE2, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props\\Stage2"), TEXT("Prototype_Component_NonAnimModel_"));
+
 	lstrcpy(m_szLoading, TEXT("텍스처 로딩중."));
 
 	/* For.Prototype_Component_Texture_MiniBackGround */
@@ -1102,6 +1126,22 @@ HRESULT CLoader::Loading_For_Stage2()
 		return E_FAIL;
 	}
 	
+	/* For.Prototype_GameObject_Enemy_Sniper*/
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Sniper"),
+		CEnemy_Sniper::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Sniper)");
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Weapon_Sniper */
+	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Sniper"),
+		CSniper::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Sniper)");
+		return E_FAIL;
+	}
+
 	/* For.Prototype_GameObject_MiniBackGround */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniBackGround"),
 		CMiniBackGround::Create(m_pDevice, m_pContext))))

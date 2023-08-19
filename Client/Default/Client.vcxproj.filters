@@ -271,6 +271,12 @@
     <Filter Include="02. GameObjects\05. UI\MiniGame">
       <UniqueIdentifier>{4dc35714-c657-43b5-ad80-51bf3fe582e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Sniper">
+      <UniqueIdentifier>{4305e572-5c0e-4c13-b300-62e638fca5af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Enemy_Sniper\Sniper">
+      <UniqueIdentifier>{30d9b0f7-f973-40ec-8321-7f8b7452a4ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -633,6 +639,12 @@
     <ClInclude Include="..\public\MiniGame_Cursor.h">
       <Filter>02. GameObjects\05. UI\MiniGame</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Enemy_Sniper.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sniper.h">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sniper\Sniper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -992,6 +1004,12 @@
     </ClCompile>
     <ClCompile Include="..\private\MiniGame_Cursor.cpp">
       <Filter>02. GameObjects\05. UI\MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Sniper.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sniper.cpp">
+      <Filter>02. GameObjects\01. Enemy\Enemy_Sniper\Sniper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
