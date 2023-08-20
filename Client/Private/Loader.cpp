@@ -29,6 +29,7 @@
 #include "Crosshair.h"
 #include "MiniEnemy.h"
 #include "LensFlare.h"
+#include "HitScreen.h"
 #include "MiniPlayer.h"
 #include "SwordTrail.h"
 #include "Boss_Sword.h"
@@ -55,6 +56,7 @@
 #include "MiniGame_Perfect.h"
 #include "ShurikenParticle.h"
 #include "BloodDirectional.h"
+#include "MiniIconParticle.h"
 #include "GhostRunner_Logo.h"
 #include "Black_BackGround.h"
 #include "Loading_OuterCycle.h"
@@ -1226,6 +1228,24 @@ HRESULT CLoader::Loading_For_Stage2()
 		return E_FAIL;
 	}
 	++m_iLoadingPercent;
+	
+	/* For.Prototype_Component_Texture_HitScreen */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HitScreen"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/HitScreen.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_HitScreen)");
+		return E_FAIL;
+	}
+	++m_iLoadingPercent;
+	
+	/* For.Prototype_Component_Texture_Icon_Mini*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Icon_Mini"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/Icon_Mini%d.dds"), 2))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Icon_Mini)");
+		return E_FAIL;
+	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("°´Ã¼ ·ÎµùÁß."));
 
@@ -1315,6 +1335,24 @@ HRESULT CLoader::Loading_For_Stage2()
 		CMiniGame_ScoreBoard::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_ScoreBoard)");
+		return E_FAIL;
+	}
+	++m_iLoadingPercent;
+	
+	/* For.Prototype_GameObject_MiniGame_HitScreen */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE2, TEXT("Prototype_GameObject_MiniGame_HitScreen"),
+		CHitScreen::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_HitScreen)");
+		return E_FAIL;
+	}
+	++m_iLoadingPercent;
+	
+	/* For.Prototype_GameObject_MiniIconParticle*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE2, TEXT("Prototype_GameObject_MiniIconParticle"),
+		CMiniIconParticle::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniIconParticle)");
 		return E_FAIL;
 	}
 	++m_iLoadingPercent;

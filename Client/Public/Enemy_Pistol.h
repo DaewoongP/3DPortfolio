@@ -34,18 +34,18 @@ public:
 	virtual HRESULT Reset() override;
 
 private:
-	CModel*					m_pModelCom = { nullptr };
-	CShader*				m_pShaderCom = { nullptr };
-	CShader*				m_pShadowShaderCom = { nullptr };
-	CCollider*				m_pColliderCom = { nullptr };
-	CCollider*				m_pVisionColliderCom = { nullptr };
-	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
+	CModel*						m_pModelCom = { nullptr };
+	CShader*					m_pShaderCom = { nullptr };
+	CShader*					m_pShadowShaderCom = { nullptr };
+	CCollider*					m_pColliderCom = { nullptr };
+	CCollider*					m_pVisionColliderCom = { nullptr };
+	CBehaviorTree*				m_pBehaviorTreeCom = { nullptr };
 	class CBloodDirectional*	m_pBloodEffect = { nullptr };
-	class CBloodParticle*	m_pBloodParticle = { nullptr };
+	class CBloodParticle*		m_pBloodParticle = { nullptr };
 	
 private:
-	class CPistol*			m_pPistol = { nullptr };
-	_float					m_fVisionRange = { 0.f };
+	class CPistol*				m_pPistol = { nullptr };
+	_float						m_fVisionRange = { 0.f };
 
 private: /* BehaviorTree */
 	const class CGameObject*	m_pTargetPlayer = { nullptr };
@@ -57,11 +57,11 @@ private: /* BehaviorTree */
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
-	ANIMATIONFLAG			m_eCurrentAnimationFlag = { ANIM_END };
+	ANIMATIONFLAG				m_eCurrentAnimationFlag = { ANIM_END };
 
 	// 현재와 이전 상태를 비교해서 애니메이션 변경처리
-	STATE					m_ePreState = { STATE_END };
-	STATE					m_eCurState = { STATE_IDLE };
+	STATE						m_ePreState = { STATE_END };
+	STATE						m_eCurState = { STATE_IDLE };
 
 private: /* Tick */
 	HRESULT Add_Component(ENEMYDESC& EnemyDesc);

@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "Katana.h"
 #include "BlockEffect.h"
+#include "HitScreen.h"
 #include "MiniGame_Manager.h"
 
 CMiniPlayer::CMiniPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -182,6 +183,14 @@ HRESULT CMiniPlayer::Add_Component()
 		MSG_BOX("Failed CPlayer Add_Component : (Com_BlockEffect)");
 		return E_FAIL;
 	}
+	
+	/* For.Com_HitScreenEffect */
+	if (FAILED(__super::Add_Component(LEVEL_STAGE2, TEXT("Prototype_GameObject_MiniGame_HitScreen"),
+		TEXT("Com_HitScreenEffect"), reinterpret_cast<CComponent**>(&m_pHitScreenEffect))))
+	{
+		MSG_BOX("Failed CPlayer Add_Component : (Com_HitScreenEffect)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -306,6 +315,7 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 		break;
 	case CMiniGame_Manager::STATE_FAIL:
 		m_eCurState = STATE_DEAD;
+		m_pHitScreenEffect->Render_Effect(0.2);
 		break;
 	case CMiniGame_Manager::STATE_WAIT:
 		m_eCurState = STATE_IDLE;
@@ -394,6 +404,7 @@ void CMiniPlayer::Free()
 	Safe_Release(m_pKatana);
 
 	Safe_Release(m_pBlockEffect);
+	Safe_Release(m_pHitScreenEffect);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pCameraCom);

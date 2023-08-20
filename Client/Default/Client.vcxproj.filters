@@ -238,9 +238,6 @@
     <Filter Include="02. GameObjects\03. Effects\Instancing\BulletSpark">
       <UniqueIdentifier>{341018e1-3e97-4769-9b40-40f4957cde23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\03. Effects\BloodScreen">
-      <UniqueIdentifier>{71a3bde5-802f-4c7b-94ca-39f28cd98af6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\03. Effects\Instancing\BloodDirectional">
       <UniqueIdentifier>{c711cf10-d0f9-4ddb-91bf-21a8f8172993}</UniqueIdentifier>
     </Filter>
@@ -258,9 +255,6 @@
     </Filter>
     <Filter Include="02. GameObjects\01. Enemy\Boss\Bomb\ExplodeParticle">
       <UniqueIdentifier>{1f976610-424d-4f8b-91f5-f65310b15a7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\03. Effects\Instancing\BloodeParticle">
-      <UniqueIdentifier>{2fca457b-b39e-4247-aa2e-00c8e7a1caca}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\00. Player\MiniPlayer">
       <UniqueIdentifier>{101e580e-1c14-4a15-80b6-9000307af4c7}</UniqueIdentifier>
@@ -285,6 +279,21 @@
     </Filter>
     <Filter Include="02. GameObjects\05. UI\MiniGame\ScoreBoard">
       <UniqueIdentifier>{33635902-23e9-48b3-87c2-8f699fdccdba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\ScreenEffect">
+      <UniqueIdentifier>{fe72d391-3c69-431b-8980-a0c34dca53d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\ScreenEffect\HitScreen">
+      <UniqueIdentifier>{7cad7bed-a386-44e3-b367-d4c5f9c338c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\ScreenEffect\BloodScreen">
+      <UniqueIdentifier>{71a3bde5-802f-4c7b-94ca-39f28cd98af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\MiniIconParticle">
+      <UniqueIdentifier>{4e4857a5-831e-4cce-a688-558aca09c746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Effects\Instancing\BloodParticle">
+      <UniqueIdentifier>{2fca457b-b39e-4247-aa2e-00c8e7a1caca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -598,7 +607,7 @@
       <Filter>02. GameObjects\03. Effects\Instancing\BulletSpark</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BloodScreen.h">
-      <Filter>02. GameObjects\03. Effects\BloodScreen</Filter>
+      <Filter>02. GameObjects\03. Effects\ScreenEffect\BloodScreen</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BloodDirectional.h">
       <Filter>02. GameObjects\03. Effects\Instancing\BloodDirectional</Filter>
@@ -622,7 +631,7 @@
       <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeParticle</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BloodParticle.h">
-      <Filter>02. GameObjects\03. Effects\Instancing\BloodeParticle</Filter>
+      <Filter>02. GameObjects\03. Effects\Instancing\BloodParticle</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_Stage2.h">
       <Filter>01. Levels\02. Stage2</Filter>
@@ -659,6 +668,12 @@
     </ClInclude>
     <ClInclude Include="..\public\MiniGame_ScoreBoard.h">
       <Filter>02. GameObjects\05. UI\MiniGame\ScoreBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HitScreen.h">
+      <Filter>02. GameObjects\03. Effects\ScreenEffect\HitScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniIconParticle.h">
+      <Filter>02. GameObjects\03. Effects\Instancing\MiniIconParticle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -976,7 +991,7 @@
       <Filter>02. GameObjects\03. Effects\Instancing\BulletSpark</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BloodScreen.cpp">
-      <Filter>02. GameObjects\03. Effects\BloodScreen</Filter>
+      <Filter>02. GameObjects\03. Effects\ScreenEffect\BloodScreen</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BloodDirectional.cpp">
       <Filter>02. GameObjects\03. Effects\Instancing\BloodDirectional</Filter>
@@ -997,7 +1012,7 @@
       <Filter>02. GameObjects\01. Enemy\Boss\Bomb\ExplodeParticle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BloodParticle.cpp">
-      <Filter>02. GameObjects\03. Effects\Instancing\BloodeParticle</Filter>
+      <Filter>02. GameObjects\03. Effects\Instancing\BloodParticle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MiniPlayer.cpp">
       <Filter>02. GameObjects\00. Player\MiniPlayer</Filter>
@@ -1031,6 +1046,12 @@
     </ClCompile>
     <ClCompile Include="..\private\MiniGame_ScoreBoard.cpp">
       <Filter>02. GameObjects\05. UI\MiniGame\ScoreBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HitScreen.cpp">
+      <Filter>02. GameObjects\03. Effects\ScreenEffect\HitScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniIconParticle.cpp">
+      <Filter>02. GameObjects\03. Effects\Instancing\MiniIconParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

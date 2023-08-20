@@ -193,5 +193,4 @@ CGameObject* CBloodScreen::Clone(void* pArg)
 void CBloodScreen::Free()
 {
 	__super::Free();
-
 }

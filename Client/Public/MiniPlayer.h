@@ -37,6 +37,7 @@ private:
 	CRenderer*				m_pRendererCom = { nullptr };
 	class CKatana*			m_pKatana = { nullptr };
 	class CBlockEffect*		m_pBlockEffect = { nullptr };
+	class CHitScreen*		m_pHitScreenEffect = { nullptr };
 
 private:
 	_float					m_fMouseSensitivity = { 0.f };

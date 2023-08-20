@@ -185,6 +185,7 @@
     <ClInclude Include="..\public\BulletTrail.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\public\Enemy_Sniper.h" />
+    <ClInclude Include="..\public\HitScreen.h" />
     <ClInclude Include="..\public\MiniGame_Cursor.h" />
     <ClInclude Include="..\public\MiniGame_Perfect.h" />
     <ClInclude Include="..\public\Crosshair.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="..\public\MiniGame_Manager.h" />
     <ClInclude Include="..\public\MiniGame_Score.h" />
     <ClInclude Include="..\public\MiniGame_ScoreBoard.h" />
+    <ClInclude Include="..\public\MiniIconParticle.h" />
     <ClInclude Include="..\public\MiniPlayer.h" />
     <ClInclude Include="..\public\Portal.h" />
     <ClInclude Include="..\public\ShadowDepth.h" />
@@ -323,6 +325,7 @@
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\private\GhostRunner_Logo.cpp" />
     <ClCompile Include="..\private\Hammer.cpp" />
+    <ClCompile Include="..\private\HitScreen.cpp" />
     <ClCompile Include="..\private\HOS.cpp" />
     <ClCompile Include="..\private\Indicator.cpp" />
     <ClCompile Include="..\private\Katana.cpp" />
@@ -336,6 +339,7 @@
     <ClCompile Include="..\private\MiniGame_Perfect.cpp" />
     <ClCompile Include="..\private\MiniGame_Score.cpp" />
     <ClCompile Include="..\private\MiniGame_ScoreBoard.cpp" />
+    <ClCompile Include="..\private\MiniIconParticle.cpp" />
     <ClCompile Include="..\private\MiniPlayer.cpp" />
     <ClCompile Include="..\private\Portal.cpp" />
     <ClCompile Include="..\private\ShadowDepth.cpp" />
