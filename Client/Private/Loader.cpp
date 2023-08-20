@@ -281,6 +281,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Crosshair)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Dash */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dash"),
@@ -297,7 +298,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Minimap)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_MiniEnemy*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniEnemy"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/MiniMap/hud_enemy_marker.png")))))
@@ -305,7 +307,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_MiniEnemy)");
 		return E_FAIL;
 	}
-	
+
 	/* For.Prototype_Component_Texture_Hook*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hook"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/GrapplingPoint/Grappling_point.png")))))
@@ -313,6 +315,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Hook)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Indicator */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Indicator"),
@@ -321,7 +324,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Indicator)");
 		return E_FAIL;
 	}
-	
+
 	/* For.Prototype_Component_Texture_Dead */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dead"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Dead/Dead.png")))))
@@ -329,7 +332,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Dead)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Blink_Main */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blink_Main"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Blink_Main.png")))))
@@ -337,7 +341,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blink_Main)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Surge_Main */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Surge_Main"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Surge_Main.png")))))
@@ -345,7 +350,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Surge_Main)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Blink_Target */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blink_Target"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Skills/Blink_Target.png")))))
@@ -353,7 +359,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blink_Target)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Trail"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_SwordElite_Katana_MotionBlur.dds")))))
@@ -361,7 +368,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Trail)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Smoke_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Trail"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/VFX_PNG/Textures/Uzi/T_Smoke_Trail_Thin_Wide.png")))))
@@ -369,7 +377,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Smoke_Trail)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Large_Smoke_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Large_Smoke_Trail"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/VFX_PNG/Textures/Uzi/T_Smoke_Trail_Large.png")))))
@@ -377,6 +386,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Large_Smoke_Trail)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_LensFlare */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_LensFlare"),
@@ -385,7 +395,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_LensFlare)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Block_Particle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Block_Particle"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/Tri%d.dds"), 6))))
@@ -393,7 +404,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Block_Particle)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Spark_Particle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Spark_Particle"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_VFX_StarSpark_01.dds")))))
@@ -401,7 +413,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Spark_Particle)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Circle_Particle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Circle_Particle"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_VFX_Circle_01.dds")))))
@@ -409,7 +422,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Circle_Particle)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Blood_Directional */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Directional"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Blood_Directional_0%d.dds"), 6))))
@@ -417,6 +431,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Directional)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_HOS_bg */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HOS_bg"),
@@ -425,6 +440,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_HOS_bg)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_HOS_in */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_HOS_in"),
@@ -433,6 +449,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_HOS_in)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Blood_Screen */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Screen"),
@@ -441,7 +458,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Screen)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Blood_Enemy */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Enemy"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Sentry_Decal.dds")))))
@@ -449,7 +467,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Enemy)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Blood_Particle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Blood_Particle"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/T_Bubble_Opacity.dds")))))
@@ -457,6 +476,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Blood_Enemy)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 #ifdef _DEBUG
 
@@ -481,6 +501,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Instance)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/*For.Prototype_Component_VIBuffer_Point_Color_Instance*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point_Color_Instance"),
@@ -489,7 +510,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Point_Color_Instance)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/*For.Prototype_Component_VIBuffer_Rect_Trail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect_Trail"),
 		CVIBuffer_Rect_Trail::Create(m_pDevice, m_pContext))))
@@ -497,6 +519,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_VIBuffer_Rect_Trail)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, -4.f, -0.5f);
 	/* For.Prototype_Component_Model_Player */
@@ -506,6 +529,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Player)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Katana */
@@ -515,6 +539,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Katana)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Shuriken */
@@ -524,6 +549,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Shuriken)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixScaling(1.f, 5.f, 20.f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Surge */
@@ -533,6 +559,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Surge)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Model_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Sky"),
@@ -541,6 +568,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	// 겐지
 	//PivotMatrix = XMMatrixScaling(1.2f, 1.2f, 1.2f) * XMMatrixRotationY(XMConvertToRadians(90.f));
@@ -560,6 +588,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Pistol)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Weapon_Pistol */
@@ -569,6 +598,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Pistol)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixScaling(0.05f, 0.05f, 0.4f);
 	/* For.Prototype_Component_Model_Bullet */
@@ -578,7 +608,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bullet)");
 		return E_FAIL;
 	}
-
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Sword */
@@ -588,6 +618,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Sword)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Enemy_Hammer */
@@ -597,6 +628,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Hammer)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Hammer */
@@ -606,6 +638,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Hammer)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(270.f));
 	/* For.Prototype_Component_Model_Wire */
@@ -615,10 +648,13 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Wire)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	// 모델 데이터들을 경로안에서 순회하며 프로토타입 생성.
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props"), TEXT("Prototype_Component_NonAnimModel_"));
+	m_iLoadingPercent += 10;
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE1, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\ColliderProps"), TEXT("Prototype_Component_NonAnimModel_"));
+	m_iLoadingPercent += 5;
 
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
@@ -630,6 +666,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxNorTex)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* Prototype_Component_Shader_VtxMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
@@ -639,6 +676,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxMesh)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* Prototype_Component_Shader_VtxORMMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxORMMesh"),
@@ -648,6 +686,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxORMMesh)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* Prototype_Component_Shader_VtxAnimMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -657,6 +696,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxAnimMesh)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* Prototype_Component_Shader_VtxPointInstance */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance"),
@@ -666,6 +706,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxPointInstance)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* Prototype_Component_Shader_VtxPointColorInstance */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointColorInstance"),
@@ -675,6 +716,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxPointColorInstance)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* Prototype_Component_Shader_AnimMesh_Shadow */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_AnimMesh_Shadow"),
@@ -684,6 +726,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_AnimMesh_Shadow)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("네비게이션정보 로딩 중."));
 
@@ -694,6 +737,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("충돌체 로딩 중."));
 
@@ -704,6 +748,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_Sphere)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Collider_AABB */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_AABB"),
@@ -712,6 +757,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_AABB)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Collider_OBB */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Collider_OBB"),
@@ -720,6 +766,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Collider_OBB)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("AI 로딩 중."));
 
@@ -730,6 +777,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_BehaviorTree)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
 
@@ -740,6 +788,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Player)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Katana */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Katana"),
@@ -748,6 +797,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Katana)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Shuriken */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Shuriken"),
@@ -756,6 +806,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Shuriken)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Surge */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Surge"),
@@ -764,6 +815,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Surge)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Enemy_Pistol */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Pistol"),
@@ -772,6 +824,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Pistol)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Weapon_Pistol */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Pistol"),
@@ -780,6 +833,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Pistol)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Enemy_Sword */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Sword"),
@@ -788,6 +842,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Sword)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Enemy_Hammer */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Hammer"),
@@ -796,6 +851,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Hammer)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Weapon_Hammer */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Hammer"),
@@ -804,6 +860,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Hammer)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Weapon_Sword */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Sword"),
@@ -812,6 +869,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Sword)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Weapon_Bullet */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Bullet"),
@@ -820,6 +878,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Bullet)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"),
@@ -828,6 +887,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Sky)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Prop */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Prop"),
@@ -836,6 +896,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Prop)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_ColProp */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ColProp"),
@@ -844,7 +905,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ColProp)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_Crosshair */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Crosshair"),
 		CCrosshair::Create(m_pDevice, m_pContext))))
@@ -852,7 +914,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Crosshair)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_UI_Dash */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dash"),
 		CUI_Dash::Create(m_pDevice, m_pContext))))
@@ -860,6 +923,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Dash)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_UI_Minimap */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Minimap"),
@@ -868,7 +932,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Minimap)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_UI_MiniEnemy */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MiniEnemy"),
 		CMiniEnemy::Create(m_pDevice, m_pContext))))
@@ -876,6 +941,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_MiniEnemy)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_UI_Hook */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Hook"),
@@ -884,7 +950,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Hook)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_Indicator */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Indicator"),
 		CIndicator::Create(m_pDevice, m_pContext))))
@@ -892,7 +959,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Indicator)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_UI_Dead*/
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Dead"),
 		CUI_Dead::Create(m_pDevice, m_pContext))))
@@ -900,6 +968,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_UI_Dead)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_MainSlot*/
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainSlot"),
@@ -908,7 +977,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MainSlot)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_BlinkTarget*/
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BlinkTarget"),
 		CBlinkTarget::Create(m_pDevice, m_pContext))))
@@ -916,6 +986,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BlinkTarget)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Wire */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wire"),
@@ -924,6 +995,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Wire)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_SwordTrail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_SwordTrail"),
@@ -932,7 +1004,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_SwordTrail)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_ShurikenTrail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_ShurikenTrail"),
 		CShurikenTrail::Create(m_pDevice, m_pContext))))
@@ -940,6 +1013,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShurikenTrail)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_LensFlare */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_LensFlare"),
@@ -948,7 +1022,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_LensFlare)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_LevelChange_Trigger */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_LevelChange_Trigger"),
 		CLevelChange_Trigger::Create(m_pDevice, m_pContext))))
@@ -956,6 +1031,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_LevelChange_Trigger)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_HOS_Portal */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_HOS_Portal"),
@@ -964,7 +1040,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_HOS_Portal)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_HOS */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_HOS"),
 		CHOS::Create(m_pDevice, m_pContext))))
@@ -972,6 +1049,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_HOS)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_ShadowDepth */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_ShadowDepth"),
@@ -980,6 +1058,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShadowDepth)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("이펙트 로딩 중."));
 	
@@ -990,6 +1069,7 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BlockEffect)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_BulletTrail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BulletTrail"),
@@ -998,7 +1078,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BulletTrail)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_BloodDirectional */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodDirectional"),
 		CBloodDirectional::Create(m_pDevice, m_pContext))))
@@ -1006,7 +1087,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodDirectional)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_BulletSpark */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BulletSpark"),
 		CBulletSpark::Create(m_pDevice, m_pContext))))
@@ -1014,7 +1096,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BulletSpark)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_ShurikenParticle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_ShurikenParticle"),
 		CShurikenParticle::Create(m_pDevice, m_pContext))))
@@ -1022,7 +1105,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ShurikenParticle)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_BloodScreen */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodScreen"),
 		CBloodScreen::Create(m_pDevice, m_pContext))))
@@ -1030,7 +1114,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodScreen)");
 		return E_FAIL;
 	}
-		
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_BloodParticle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_GameObject_BloodParticle"),
 		CBloodParticle::Create(m_pDevice, m_pContext))))
@@ -1038,7 +1123,8 @@ HRESULT CLoader::Loading_For_Stage1()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_BloodParticle)");
 		return E_FAIL;
 	}
-		
+	++m_iLoadingPercent;
+
 #ifdef _DEBUG
 
 	/* For.Prototype_GameObject_Blue_Snow */
@@ -1050,7 +1136,7 @@ HRESULT CLoader::Loading_For_Stage1()
 	}
 #endif // _DEBUG
 
-	if (100 > m_iLoadingPercent)
+	if (100 != m_iLoadingPercent)
 		m_iLoadingPercent = 100;
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
@@ -1072,7 +1158,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Sniper)");
 		return E_FAIL;
 	}
-	
+	m_iLoadingPercent += 5;
+
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
 	/* For.Prototype_Component_Model_Weapon_Sniper */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE2, TEXT("Prototype_Component_Model_Weapon_Sniper"),
@@ -1081,9 +1168,9 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Weapon_Sniper)");
 		return E_FAIL;
 	}
-
+	m_iLoadingPercent += 5;
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_STAGE2, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\Props\\Stage2"), TEXT("Prototype_Component_NonAnimModel_"));
-
+	m_iLoadingPercent += 20;
 	lstrcpy(m_szLoading, TEXT("텍스처 로딩중."));
 
 	/* For.Prototype_Component_Texture_Number */
@@ -1093,6 +1180,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Number)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_MiniBackGround */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniBackGround"),
@@ -1101,6 +1189,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_MiniBackGround)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_MiniBack */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_MiniBack"),
@@ -1109,6 +1198,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_MiniBack)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Hit */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Hit"),
@@ -1117,7 +1207,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Hit)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Cursor */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Cursor"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/MiniGame_Cursor.dds")))))
@@ -1125,7 +1216,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Cursor)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_ScoreBoard */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_ScoreBoard"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/MiniGame/ScoreBoard.dds")))))
@@ -1133,6 +1225,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_ScoreBoard)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩중."));
 
@@ -1143,7 +1236,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniPlayer)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_Enemy_Sniper*/
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Enemy_Sniper"),
 		CEnemy_Sniper::Create(m_pDevice, m_pContext))))
@@ -1151,6 +1245,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Enemy_Sniper)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Weapon_Sniper */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Sniper"),
@@ -1159,6 +1254,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Weapon_Sniper)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_MiniBackGround */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniBackGround"),
@@ -1167,7 +1263,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniBackGround)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_MiniGame_Back */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Back"),
 		CMiniGame_Back::Create(m_pDevice, m_pContext))))
@@ -1175,6 +1272,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Back)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_MiniGame_Great */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Great"),
@@ -1183,7 +1281,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Great)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_MiniGame_Perfect */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Perfect"),
 		CMiniGame_Perfect::Create(m_pDevice, m_pContext))))
@@ -1191,7 +1290,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Perfect)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_MiniGame_Cursor */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Cursor"),
 		CMiniGame_Cursor::Create(m_pDevice, m_pContext))))
@@ -1199,7 +1299,8 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Cursor)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_GameObject_MiniGame_Score */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_Score"),
 		CMiniGame_Score::Create(m_pDevice, m_pContext))))
@@ -1207,6 +1308,7 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_Score)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_MiniGame_ScoreBoard */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MiniGame_ScoreBoard"),
@@ -1215,6 +1317,10 @@ HRESULT CLoader::Loading_For_Stage2()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_MiniGame_ScoreBoard)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
+
+	if (100 != m_iLoadingPercent)
+		m_iLoadingPercent = 100;
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 
@@ -1237,7 +1343,8 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_Hp)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
 	/* For.Prototype_Component_Texture_Boss_HpBar*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boss_HpBar"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Boss/Boss_HpBar.png")))))
@@ -1245,6 +1352,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_HpBar)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Boss_Emissive */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Boss_Emissive"),
@@ -1253,6 +1361,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Boss_Emissive)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Bomb_Emissive */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Bomb_Emissive"),
@@ -1261,6 +1370,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Bomb_Emissive)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_Component_Texture_Bomb_Explode */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Texture_Bomb_Explode"),
@@ -1269,6 +1379,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Bomb_Explode)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("모델 로딩 중."));
 	// 객체의 초기 상태행렬 값을 피벗을 통해 처리.
@@ -1282,6 +1393,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Enemy_Bakunin)");
 		return E_FAIL;
 	}
+	m_iLoadingPercent += 3;
 
 	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Bakunin_Sword */
@@ -1291,6 +1403,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Sword)");
 		return E_FAIL;
 	}
+	m_iLoadingPercent += 3;
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Bakunin_Shield */
@@ -1300,6 +1413,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Shield)");
 		return E_FAIL;
 	}
+	m_iLoadingPercent += 3;
 
 	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	/* For.Prototype_Component_Model_Bakunin_Force_Field */
@@ -1309,6 +1423,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bakunin_Force_Field)");
 		return E_FAIL;
 	}
+	m_iLoadingPercent += 3;
 
 	PivotMatrix = XMMatrixScaling(10.f, 10.f, 10.f) * XMMatrixRotationY(XMConvertToRadians(90.f));
 	/* For.Prototype_Component_Model_Bomb */
@@ -1318,6 +1433,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Bomb)");
 		return E_FAIL;
 	}
+	m_iLoadingPercent += 3;
 
 	/* For.Prototype_Component_Model_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Sky"),
@@ -1326,9 +1442,10 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Model_Sky)");
 		return E_FAIL;
 	}
+	m_iLoadingPercent += 3;
 
 	Ready_Prototype_Component_ModelData(CModel::TYPE_NONANIM, LEVEL_BOSS, TEXT("..\\..\\Resources\\ParsingData\\NonAnim\\BossProps"), TEXT("Prototype_Component_NonAnimModel_"));
-
+	m_iLoadingPercent += 10;
 	lstrcpy(m_szLoading, TEXT("셰이더 로딩 중."));
 
 	/* Prototype_Component_Shader_VtxTexInstance */
@@ -1339,6 +1456,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Shader_VtxTexInstance)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("네비게이션정보 로딩 중."));
 
@@ -1349,6 +1467,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Navigation)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("AI 로딩 중."));
 
@@ -1359,6 +1478,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_Component_BehaviorTree)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	lstrcpy(m_szLoading, TEXT("객체 로딩 중."));
 	// 이미 만들어놓은 프로토타입은 추가 생성할 필요없음.
@@ -1370,6 +1490,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Boss_Sword */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Sword"),
@@ -1378,6 +1499,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Sword)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Boss_Shield */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Shield"),
@@ -1386,6 +1508,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Shield)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Bomb */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bomb"),
@@ -1394,6 +1517,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Bomb)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Boss_Hp */
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Hp"),
@@ -1402,6 +1526,7 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Hp)");
 		return E_FAIL;
 	}
+	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_ExplodeParticle */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_GameObject_ExplodeParticle"),
@@ -1410,6 +1535,9 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ExplodeParticle)");
 		return E_FAIL;
 	}
+	
+	if (100 != m_iLoadingPercent)
+		m_iLoadingPercent = 100;
 
 	lstrcpy(m_szLoading, TEXT("로딩 완료."));
 

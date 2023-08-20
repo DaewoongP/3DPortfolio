@@ -47,22 +47,6 @@ void CLevel_Stage2::Tick(_double dTimeDelta)
 	m_pMiniGame_Manager->Tick(dTimeDelta);
 
 	__super::Tick(dTimeDelta);
-#ifdef _DEBUG
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	if (pGameInstance->Get_DIKeyState(DIK_F7, CInput_Device::KEY_DOWN))
-	{
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_BOSS))))
-		{
-			MSG_BOX("Failed Open LEVEL_STAGE2 to LEVEL_BOSS");
-			Safe_Release(pGameInstance);
-			return;
-		}
-	}
-
-	Safe_Release(pGameInstance);
-#endif // _DEBUG
 
 	if (true == m_pMiniGame_Manager->IsFinished())
 	{
@@ -81,6 +65,23 @@ void CLevel_Stage2::Tick(_double dTimeDelta)
 
 		Safe_Release(pGameInstance);
 	}
+
+#ifdef _DEBUG
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (pGameInstance->Get_DIKeyState(DIK_F7, CInput_Device::KEY_DOWN))
+	{
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_BOSS))))
+		{
+			MSG_BOX("Failed Open LEVEL_STAGE2 to LEVEL_BOSS");
+			Safe_Release(pGameInstance);
+			return;
+		}
+	}
+
+	Safe_Release(pGameInstance);
+#endif // _DEBUG
 }
 
 HRESULT CLevel_Stage2::Render()
