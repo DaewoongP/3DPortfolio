@@ -26,7 +26,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	void Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix);
+	void Render_Effect(_matrix WorldMatrix);
 
 private:
 	CShader*					m_pShaderCom = { nullptr };
@@ -35,8 +35,7 @@ private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 
 private:
-	_double						m_dRenderTimeAcc = { 0.0 };
-	_double						m_dRenderTime = { 0.0 };
+	_bool						m_isRender = { false };
 
 private:
 	_float4x4*					m_WorldMatrix = { nullptr };

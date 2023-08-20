@@ -12,8 +12,6 @@ HRESULT CTask_Attack::Initialize(CBlackBoard* pBlackBoard)
 	m_pWeapon = static_cast<CPart*>(m_pBlackBoard->Find_Value(TEXT("Value_Weapon")));
 
 	m_pTransformCom = static_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
-	m_pLensFlare = static_cast<CLensFlare*>(m_pBlackBoard->Find_Value(TEXT("Value_LensFlare")));
-	m_LensMatrix = static_cast<_float4x4*>(m_pBlackBoard->Find_Value(TEXT("Value_LensMatrix")));
 
 	return S_OK;
 }
@@ -25,10 +23,9 @@ CBehavior::STATE CTask_Attack::Tick(_double dTimeDelta)
 	
 	m_dRunningAcc += dTimeDelta;
 	
-	if (m_dRunningAcc < *m_dAttackCoolTime)
+	if (m_dRunningAcc <= *m_dAttackCoolTime)
 	{
-		XMStoreFloat4x4(&m_OutMatrix, XMLoadFloat4x4(m_LensMatrix) * m_pTransformCom->Get_WorldMatrix());
-		m_pLensFlare->Render_Effect(0.2, &m_OutMatrix);
+		
 		return STATE_SUCCESS;
 	}
 	

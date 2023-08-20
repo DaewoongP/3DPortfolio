@@ -42,12 +42,12 @@ GAMEEVENT CLensFlare::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
-	m_dRenderTimeAcc += dTimeDelta;
-
-	if (m_dRenderTimeAcc < m_dRenderTime)
+	if (m_isRender)
 	{
 		if (nullptr != m_pRendererCom)
 			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+
+		m_isRender = false;
 	}
 
 	return GAME_NOEVENT;
@@ -68,12 +68,10 @@ HRESULT CLensFlare::Render()
 	return S_OK;
 }
 
-void CLensFlare::Render_Effect(_double dRenderTime, _float4x4* pWorldMatrix)
+void CLensFlare::Render_Effect(_matrix WorldMatrix)
 {
-	m_dRenderTime = dRenderTime;
-	m_dRenderTimeAcc = 0.0;
-
-	m_pTransformCom->Set_WorldMatrix(XMLoadFloat4x4(pWorldMatrix));
+	m_isRender = true;
+	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 }
 
 HRESULT CLensFlare::Add_Components()

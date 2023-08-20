@@ -5,6 +5,7 @@
 #include "BloodDirectional.h"
 #include "BloodParticle.h"
 #include "Sword.h"
+#include "LensFlare.h"
 
 CEnemy_Sword::CEnemy_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -109,6 +110,17 @@ void CEnemy_Sword::Tick(_double dTimeDelta)
 
 GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 {
+	if (nullptr != m_pTargetPlayer)
+	{
+		const CBone* pBone = m_pModelCom->Get_Bone(TEXT("head_end"));
+		_matrix LensOffsetMatrix = XMMatrixScaling(1.f, 1.f, 1.f) * 
+			XMLoadFloat4x4(pBone->Get_CombinedTransformationMatrixPtr()) * 
+			m_pModelCom->Get_PivotMatrix() *
+			XMMatrixTranslation(0.f, -0.5f, 0.3f);
+
+		m_pLensFlareEffect->Render_Effect(LensOffsetMatrix * m_pTransformCom->Get_WorldMatrix());
+	}
+
 	AnimationState(dTimeDelta);
 
 	__super::Late_Tick(dTimeDelta);

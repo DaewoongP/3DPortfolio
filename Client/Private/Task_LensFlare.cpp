@@ -20,9 +20,7 @@ CBehavior::STATE CTask_LensFlare::Tick(_double dTimeDelta)
 		nullptr == m_pLensFlare)
 		return STATE_FAILED;
 
-	XMStoreFloat4x4(&m_OutMatrix, XMLoadFloat4x4(m_LensMatrix) * m_pTransformCom->Get_WorldMatrix());
-
-	m_pLensFlare->Render_Effect(0.2, &m_OutMatrix);
+	m_pLensFlare->Render_Effect(XMLoadFloat4x4(m_LensMatrix) * m_pTransformCom->Get_WorldMatrix());
 
 	return STATE_SUCCESS;
 }

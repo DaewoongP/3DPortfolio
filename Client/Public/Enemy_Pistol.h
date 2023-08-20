@@ -42,7 +42,7 @@ private:
 	CBehaviorTree*			m_pBehaviorTreeCom = { nullptr };
 	class CBloodDirectional*	m_pBloodEffect = { nullptr };
 	class CBloodParticle*	m_pBloodParticle = { nullptr };
-
+	
 private:
 	class CPistol*			m_pPistol = { nullptr };
 	_float					m_fVisionRange = { 0.f };
@@ -54,7 +54,6 @@ private: /* BehaviorTree */
 	_double						m_dAttackCoolTime = { 0.0 };
 	_double						m_dPatrolWaitTime = { 0.0 };
 	_bool						m_isWait = { false };
-	_float4x4					m_LensOffsetMatrix;
 
 private:
 	// 현재 실행되고 있는 애니메이션 상태.
