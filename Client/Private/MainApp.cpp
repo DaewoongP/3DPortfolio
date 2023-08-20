@@ -47,8 +47,8 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 	}
 
-	/*if (FAILED(m_pGameInstance->Add_Sounds(TEXT("../../Resources/Sounds/"))))
-		return E_FAIL;*/
+	if (FAILED(m_pGameInstance->Add_Sounds(TEXT("../../Resources/Sounds/"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -71,7 +71,7 @@ HRESULT CMainApp::Render()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f))))
+	if (FAILED(m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 0.f, 1.f))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Clear_DepthStencil_View()))
 		return E_FAIL;

@@ -166,12 +166,11 @@ private:
 	void Block(_double dTimeDelta);
 
 	_bool Check_Hook(_double dTimeDelta);
-
 	void CameraMove(_double dTimeDelta);
-
 	void SwapWeapon();
-
 	void Check_Fall();
+
+	void SoundState(_double dTimeDelta);
 
 private:
 	void CameraOffset(_double dTimeDelta);

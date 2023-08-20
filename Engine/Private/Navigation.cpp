@@ -23,6 +23,11 @@ _float CNavigation::Get_CurrentCellY(_fvector vPosition) const
 		-1.f * XMVectorGetW(vCurrentPlane)) / XMVectorGetY(vCurrentPlane);
 }
 
+CELLFLAG CNavigation::Get_CurrentCellFlag() const
+{
+	return m_Cells[m_NaviDesc.iCurrentIndex]->Get_CellFlag();
+}
+
 CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {

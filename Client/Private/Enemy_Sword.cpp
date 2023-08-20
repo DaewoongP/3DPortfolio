@@ -494,7 +494,17 @@ void CEnemy_Sword::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 void CEnemy_Sword::Attack()
 {
 	if (STATE_DASH == m_eCurState)
+	{
 		m_pSword->Attack();
+
+		if (m_eCurState != m_ePreState)
+		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+			pGameInstance->Play_Sound(TEXT("Enemy_Dash.ogg"), CSound_Manager::SOUND_ELITE, 0.3f, true);
+			Safe_Release(pGameInstance);
+		}
+	}
 }
 
 GAMEEVENT CEnemy_Sword::PlayEvent(_double dTimeDelta)

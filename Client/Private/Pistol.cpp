@@ -156,12 +156,13 @@ void CPistol::Attack(_vector vPosition, _vector vTargetPos)
 
 	m_Bullets.emplace(TEXT("GameObject_Bullet"), pGameObject);
 
-	Safe_Release(pGameInstance);
-	
 	_vector vPistolOffset = XMVectorSet(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
 
 	static_cast<CBullet*>(pGameObject)->Set_Type(COLLISIONDESC::COLTYPE_ENEMYWEAPON);
 	static_cast<CBullet*>(pGameObject)->Fire(vPistolOffset, vTargetPos);
+	pGameInstance->Play_Sound(TEXT("Pistol_Shot.ogg"), CSound_Manager::SOUND_PISTOL, 0.3f, true);
+
+	Safe_Release(pGameInstance);
 }
 
 void CPistol::Bullet_Late_Tick(_double dTimeDelta)

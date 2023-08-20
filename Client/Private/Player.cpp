@@ -129,11 +129,6 @@ void CPlayer::Tick(_double dTimeDelta)
 		if (STATE_DEAD == m_eCurState)
 			m_eCurState = m_ePreState;
 	}
-
-	_float3 vDebugPos;
-	_vector vCurPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	XMStoreFloat3(&vDebugPos, vCurPos);
-	cout << "x : " << vDebugPos.x << "y : " << vDebugPos.y << "z : " << vDebugPos.z << endl;
 #endif // _DEBUG
 	
 	// 정확히 이위치가 맞는듯.
@@ -170,6 +165,8 @@ void CPlayer::Tick(_double dTimeDelta)
 
 GAMEEVENT CPlayer::Late_Tick(_double dTimeDelta)
 {
+	SoundState(dTimeDelta);
+
 #ifdef _DEBUG
 	if (m_isInvisible)
 		m_eGameEvent = GAME_NOEVENT;
@@ -757,7 +754,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (STATE_HOOK != m_eCurState && pGameInstance->Get_DIMouseState(CInput_Device::DIMK_RBUTTON, CInput_Device::KEY_DOWN))
 	{
 		m_eCurState = STATE_HOOK;
-		Check_Hook(dTimeDelta);
+		if (true == Check_Hook(dTimeDelta))
+			pGameInstance->Play_Sound(TEXT("Hook.ogg"), CSound_Manager::SOUND_HOOK, 0.3f, true);
 	}
 	// attack, Lbutton, Lclick
 	if (pGameInstance->Get_DIMouseState(CInput_Device::DIMK_LBUTTON, CInput_Device::KEY_DOWN))
@@ -778,12 +776,24 @@ void CPlayer::Key_Input(_double dTimeDelta)
 				STATE_CLIMB != m_eCurState &&
 				STATE_WEAPON != m_eCurState &&
 				STATE_BLINK != m_eCurState)
+			{
 				m_eCurState = STATE_ATTACK;
-
-			if (STATE_ATTACK == m_eCurState && 
+			}
+			
+			if (STATE_ATTACK == m_eCurState &&
 				WEAPON_SHURIKEN == m_eCurWeapon)
+			{
 				m_pShuriken->Attack(XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)));
-
+				pGameInstance->Play_Sound(TEXT("Shuriken_Default.ogg"), CSound_Manager::SOUND_SWORD, 0.3f, true);
+			}
+			
+			if (STATE_ATTACK == m_eCurState &&
+				WEAPON_KATANA == m_eCurWeapon &&
+				m_ePreState != m_eCurState)
+			{
+				pGameInstance->Play_Sound(TEXT("Sword_Default.ogg"), CSound_Manager::SOUND_SWORD, 0.3f, true);
+			}
+			
 			XMStoreFloat3(&m_vAttackPositon, m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 
 			if (STATE_ATTACK == m_eCurState &&
@@ -803,6 +813,8 @@ void CPlayer::Key_Input(_double dTimeDelta)
 						88 == iCurrnetAnimIndex ||
 						89 == iCurrnetAnimIndex)
 						m_pModelCom->Set_AnimIndex(84 + rand() % 3, false);
+
+					pGameInstance->Play_Sound(TEXT("Sword_Default.ogg"), CSound_Manager::SOUND_SWORD, 0.3f, true);
 				}
 			}
 		}
@@ -1102,6 +1114,8 @@ void CPlayer::Block(_double dTimeDelta)
 		m_BlockEnemyWeapons.clear();
 		return;
 	}
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 	
 	for (auto iter = m_BlockEnemyWeapons.begin(); iter != m_BlockEnemyWeapons.end();)
 	{
@@ -1113,13 +1127,14 @@ void CPlayer::Block(_double dTimeDelta)
 			_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 			_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 			pBullet->Fire(vPos, vPos + vLook);
-
+			pGameInstance->Play_Sound(TEXT("Parrying_Bullet.ogg"), CSound_Manager::SOUND_SWORD, 0.3f, true);
 			iter = m_BlockEnemyWeapons.erase(iter);
 		}
 		else if (wcswcs((*iter)->Get_Tag(), TEXT("Sword")))
 		{
 			CSword* pSword = static_cast<CSword*>((const_cast<CGameObject*>(*iter)));
 			pSword->Blocked();
+			pGameInstance->Play_Sound(TEXT("Parrying_Sword.ogg"), CSound_Manager::SOUND_SWORD, 0.4f, true);
 			iter = m_BlockEnemyWeapons.erase(iter);
 		}
 		else
@@ -1128,6 +1143,8 @@ void CPlayer::Block(_double dTimeDelta)
 			iter = m_BlockEnemyWeapons.erase(iter);
 		}
 	}
+	
+	Safe_Release(pGameInstance);
 	
 	_float4 vWeaponPos;
 	if (WEAPON_SHURIKEN == m_eCurWeapon)
@@ -1398,6 +1415,10 @@ void CPlayer::Dash(_double dTimeDelta)
 	// 누르질 않음.
 	if (false == m_Dash.isUsed)
 		return;
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	pGameInstance->Play_Sound(TEXT("Dash.ogg"), CSound_Manager::SOUND_DASH, 0.3f);
+	Safe_Release(pGameInstance);
 	
 	m_Dash.dCurTime += dTimeDelta;
 	m_pTransformCom->Set_LimitVelocity(m_Dash.fLimitVelocity);
@@ -1430,6 +1451,9 @@ void CPlayer::Blink(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 	
+	if (false == m_isBlink)
+		pGameInstance->Play_Sound(TEXT("Blink_Charge.ogg"), CSound_Manager::SOUND_SKILL, 0.3f);
+
 	pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
 	m_pTransformCom->ZeroVelocity();
 	m_isBlink = true;
@@ -1479,6 +1503,7 @@ void CPlayer::Blink(_double dTimeDelta)
 		}
 
 		m_eCurState = STATE_ATTACK;
+		pGameInstance->Play_Sound(TEXT("Blink.ogg"), CSound_Manager::SOUND_SKILL, 0.3f, true);
 
 		// Finish
 		m_dBlinkTimeAcc = 0.0;
@@ -1543,6 +1568,11 @@ void CPlayer::SwapWeapon()
 
 	if (WEAPON_KATANA == m_eCurWeapon)
 	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+		pGameInstance->Play_Sound(TEXT("Change_Sword.ogg"), CSound_Manager::SOUND_SWORD, 0.3f, true);
+		Safe_Release(pGameInstance);
+
 		if (FAILED(__super::Delete_Component(TEXT("Part_Shuriken"))))
 			return;
 
@@ -1553,6 +1583,11 @@ void CPlayer::SwapWeapon()
 
 	if (WEAPON_SHURIKEN == m_eCurWeapon)
 	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+		pGameInstance->Play_Sound(TEXT("Change_Shuriken.ogg"), CSound_Manager::SOUND_SWORD, 0.3f, true);
+		Safe_Release(pGameInstance);
+		
 		if (FAILED(__super::Delete_Component(TEXT("Part_Katana"))))
 			return;
 
@@ -1591,6 +1626,30 @@ HRESULT CPlayer::Add_Notifies()
 		return E_FAIL;*/
 
 	return S_OK;
+}
+
+void CPlayer::SoundState(_double dTimeDelta)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (STATE_RUN == m_eCurState)
+	{
+		if (true == pGameInstance->Timer(0.25, dTimeDelta) &&
+			false == m_pTransformCom->IsJumping())
+		{
+			pGameInstance->Play_Sound(TEXT("Step.ogg"), CSound_Manager::SOUND_STEP, 0.3f, true);
+		}
+	}
+	else if (STATE_CROUCH == m_eCurState)
+	{
+		if (CELL_SLIDE == m_pNavigationCom->Get_CurrentCellFlag())
+			pGameInstance->Play_Sound(TEXT("Slide.ogg"), CSound_Manager::SOUND_STEP, 0.3f);
+	}
+	else
+		pGameInstance->Stop_Sound(CSound_Manager::SOUND_STEP);
+
+	Safe_Release(pGameInstance);
 }
 
 HRESULT CPlayer::SetUp_Collider(const _tchar* pColliderFilePath)

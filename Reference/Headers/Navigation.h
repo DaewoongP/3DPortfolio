@@ -18,6 +18,7 @@ public:
 
 public:
 	_float	Get_CurrentCellY(_fvector vPosition) const;
+	CELLFLAG Get_CurrentCellFlag() const;
 
 private:
 	explicit CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -13,7 +13,7 @@ HRESULT CLevel_Boss::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	pGameInstance->Play_BGM(TEXT("Boss.ogg"), 0.3f);
+	pGameInstance->Play_BGM(TEXT("Boss.ogg"), 0.2f);
 
 	Safe_Release(pGameInstance);
 

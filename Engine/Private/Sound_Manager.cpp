@@ -35,8 +35,13 @@ HRESULT CSound_Manager::Play_Sound(const _tchar* pSoundTag, SOUNDCHANNEL eChanne
 	FMOD::Sound* pSound = Find_Sound(pSoundTag);
 
 	if (nullptr == pSound)
+	{
+#ifdef _DEBUG
+		MSG_BOX("Failed Find_Sound");
+#endif // _DEBUG
 		return E_FAIL;
-
+	}
+	
 	if (0 > eChannel ||
 		SOUND_END <= eChannel)
 		return E_FAIL;

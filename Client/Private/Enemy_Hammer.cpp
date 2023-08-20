@@ -487,6 +487,14 @@ void CEnemy_Hammer::Attack()
 
 	_float fCurrentFramePercent = m_pModelCom->Get_CurrentFramePercent();
 
+	if (0.2f < fCurrentFramePercent)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+		pGameInstance->Play_Sound(TEXT("Hammer_Attack.ogg"), CSound_Manager::SOUND_HAMMER, 0.3f);
+		Safe_Release(pGameInstance);
+	}
+
 	if (0.3f < fCurrentFramePercent)
 		m_pHammer->Attack();
 }
