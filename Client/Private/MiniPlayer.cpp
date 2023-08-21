@@ -304,18 +304,23 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 	CMiniGame_Manager* pMiniGame_Manager = CMiniGame_Manager::GetInstance();
 	Safe_AddRef(pMiniGame_Manager);
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
 
 	switch (pMiniGame_Manager->Get_State())
 	{
 	case CMiniGame_Manager::STATE_PERFECT:
 		m_eCurState = STATE_BLOCK;
+		pGameInstance->Play_Sound(TEXT("Parrying_Sword.ogg"), CSound_Manager::SOUND_SWORD, 0.3f);
 		break;
 	case CMiniGame_Manager::STATE_GREAT:
 		m_eCurState = STATE_BLOCK;
+		pGameInstance->Play_Sound(TEXT("Parrying_Bullet.ogg"), CSound_Manager::SOUND_SKILL, 0.3f);
 		break;
 	case CMiniGame_Manager::STATE_FAIL:
 		m_eCurState = STATE_DEAD;
 		m_pHitScreenEffect->Render_Effect(0.2);
+		pGameInstance->Play_Sound(TEXT("Player_Death.ogg"), CSound_Manager::SOUND_PLAYER, 0.3f);
 		break;
 	case CMiniGame_Manager::STATE_WAIT:
 		m_eCurState = STATE_IDLE;
@@ -324,6 +329,8 @@ void CMiniPlayer::AnimationState(_double dTimeDelta)
 		// pass
 		break;
 	}
+
+	Safe_Release(pGameInstance);
 
 	Safe_Release(pMiniGame_Manager);
 
@@ -346,6 +353,7 @@ void CMiniPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 			_float4 vWeaponPos;
 			memcpy(&vWeaponPos, m_pKatana->Get_CombinedWorldMatrix().m[3], sizeof(_float4));
 			m_pBlockEffect->Render_Effect(XMLoadFloat4(&vWeaponPos) + m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+			
 			break;
 		case STATE_DEAD:
 			m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);

@@ -1,5 +1,6 @@
 #include "..\Public\MiniGame_Manager.h"
 #include "Enemy_Sniper.h"
+#include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CMiniGame_Manager)
 
@@ -11,7 +12,7 @@ HRESULT CMiniGame_Manager::Add_Enemy(CEnemy_Sniper* pEnemy_Sniper)
 	m_Enemy_Snipers.push_back(pEnemy_Sniper);
 	Safe_AddRef(pEnemy_Sniper);
 
-	Select_RandomAttack();
+	//Select_RandomAttack();
 
 	return S_OK;
 }
@@ -150,6 +151,11 @@ void CMiniGame_Manager::Select_RandomAttack()
 
 	_uint iRand = rand() % m_Enemy_Snipers.size();
 	m_Enemy_Snipers[iRand]->Attack(m_dCoolTime + m_dCenterTime + m_dGreatOffsetTime);
+
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+	pGameInstance->Play_Sound(TEXT("Pistol_Shot%d.ogg"), 4, CSound_Manager::SOUND_PISTOL, 0.3f, true);
+	Safe_Release(pGameInstance);
 }
 
 void CMiniGame_Manager::Delete_Bullet()

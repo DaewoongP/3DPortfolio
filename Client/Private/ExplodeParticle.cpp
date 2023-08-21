@@ -123,7 +123,7 @@ void CExplodeParticle::Reset_Particle(PARTICLE& Particle)
 	Particle.dAge = { 0.0 };
 	Particle.dLifeTime = { 1.0 };
 	Particle.isAlive = true;
-	XMStoreFloat4(&Particle.vVelocity, pGameInstance->Get_RandomVectorInSphere(10.f));
+	XMStoreFloat4(&Particle.vVelocity, pGameInstance->Get_RandomVectorInSphere(100.f));
 	Particle.vVelocity.y = 20.f;
 	Particle.vAccel = _float4(0.f, -30.f, 0.f, 0.f);
 
@@ -148,7 +148,7 @@ HRESULT CExplodeParticle::Add_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	m_iParticleNum = { 30 };
+	m_iParticleNum = { 100 };
 	m_Particles.resize(m_iParticleNum);
 
 	/* For.Com_VIBuffer */

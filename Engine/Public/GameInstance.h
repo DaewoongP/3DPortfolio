@@ -114,6 +114,8 @@ public: /* For.Light_Manager */
 public: /* For.Sound_Manager */
 	HRESULT Add_Sounds(const _tchar * szSoundFilePath);
 	HRESULT Play_Sound(const _tchar * szSoundTag, CSound_Manager::SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay = false);
+	// 랜덤으로 실행할 사운드 개수와 태그 입력
+	HRESULT Play_Sound(const _tchar * pSoundTag, _uint iNumSounds, CSound_Manager::SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay = false);
 	HRESULT Play_BGM(const _tchar * szSoundTag, _float fVolume);
 	HRESULT Stop_Sound(CSound_Manager::SOUNDCHANNEL eChannel);
 	HRESULT Pause_Sound(CSound_Manager::SOUNDCHANNEL eChannel);

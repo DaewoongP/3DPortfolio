@@ -1,0 +1,7 @@
+--- UE viewer path---
+C:\Program Files (x86)\Steam\steamapps\common\Ghostrunner
+
+Sound Check
+
+---AES key---
+0xAFADFEEBF975A84C57D106D94FB0E9795D54835B3B5392C3F263366105DF50B3

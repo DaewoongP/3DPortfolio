@@ -152,6 +152,11 @@ void CEnemy_Hammer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	if (CollisionDesc.pMyCollider == m_pColliderCom &&
 		COLLISIONDESC::COLTYPE_PLAYERWEAPON == CollisionDesc.ColType)
 	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+		pGameInstance->Play_Sound(TEXT("Enemy_Death%d.ogg"), 9, CSound_Manager::SOUND_HAMMER, 0.3f, true);
+		Safe_Release(pGameInstance);
+
 		m_eGameEvent = GAME_OBJECT_DEAD;
 
 		if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))

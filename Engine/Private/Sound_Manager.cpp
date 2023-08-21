@@ -81,6 +81,17 @@ HRESULT CSound_Manager::Play_Sound(const _tchar* pSoundTag, SOUNDCHANNEL eChanne
 	return S_OK;
 }
 
+HRESULT CSound_Manager::Play_Sound(const _tchar* pSoundTag, _uint iNumSounds, SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay)
+{
+	_tchar	szSoundName[MAX_STR] = TEXT("");
+	wsprintf(szSoundName, pSoundTag, rand() % iNumSounds);
+
+	if (FAILED(Play_Sound(szSoundName, eChannel, fVolume, bForcePlay)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CSound_Manager::Play_BGM(const _tchar* pSoundTag, _float fVolume)
 {
 	FMOD::Sound* pSound = Find_Sound(pSoundTag);

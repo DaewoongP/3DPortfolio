@@ -12,7 +12,7 @@ public:
 	enum SOUNDCHANNEL { SOUND_BGM,
 		SOUND_STEP,	SOUND_SWORD, SOUND_HOOK,
 		SOUND_DASH,	SOUND_SKILL, SOUND_PISTOL,
-		SOUND_HAMMER, SOUND_ELITE,
+		SOUND_HAMMER, SOUND_ELITE, SOUND_PLAYER,
 		SOUND_END
 	};
 
@@ -38,6 +38,8 @@ public:
 	// forceplay 활성화하면 현재 재생중인 사운드 무시하고 실행함.
 	// default 매개변수 설정하는것을 추천함.
 	HRESULT Play_Sound(const _tchar* pSoundTag, SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay = false);
+	// 랜덤으로 실행할 사운드 개수와 태그 입력
+	HRESULT Play_Sound(const _tchar* pSoundTag, _uint iNumSounds, SOUNDCHANNEL eChannel, _float fVolume, _bool bForcePlay = false);
 	HRESULT Play_BGM(const _tchar* pSoundTag, _float fVolume);
 	HRESULT Stop_Sound(SOUNDCHANNEL eChannel);
 	HRESULT Pause_Sound(SOUNDCHANNEL eChannel);

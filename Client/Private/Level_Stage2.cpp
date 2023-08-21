@@ -29,6 +29,8 @@ HRESULT CLevel_Stage2::Initialize()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	pGameInstance->Play_BGM(TEXT("Stage2.ogg"), 0.2f);
+
 	CLayer* pLayer = pGameInstance->Find_Layer(LEVEL_STAGE2, TEXT("Layer_Enemy"));
 	const unordered_map<const _tchar*, class CGameObject*> AllObjects = pLayer->Get_AllGameObject();
 

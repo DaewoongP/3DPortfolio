@@ -160,7 +160,7 @@ void CPistol::Attack(_vector vPosition, _vector vTargetPos)
 
 	static_cast<CBullet*>(pGameObject)->Set_Type(COLLISIONDESC::COLTYPE_ENEMYWEAPON);
 	static_cast<CBullet*>(pGameObject)->Fire(vPistolOffset, vTargetPos);
-	pGameInstance->Play_Sound(TEXT("Pistol_Shot.ogg"), CSound_Manager::SOUND_PISTOL, 0.3f, true);
+	pGameInstance->Play_Sound(TEXT("Pistol_Shot%d.ogg"), 4, CSound_Manager::SOUND_PISTOL, 0.3f, true);
 
 	Safe_Release(pGameInstance);
 }

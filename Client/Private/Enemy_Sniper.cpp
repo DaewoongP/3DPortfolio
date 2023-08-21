@@ -338,6 +338,14 @@ GAMEEVENT CEnemy_Sniper::PlayEvent(_double dTimeDelta)
 {
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
+		if (false == m_isDead)
+		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+			pGameInstance->Play_Sound(TEXT("Enemy_Death%d.ogg"), 9, CSound_Manager::SOUND_PISTOL, 0.3f, true);
+			Safe_Release(pGameInstance);
+		}
+
 		m_eCurState = STATE_DEAD;
 		m_isDead = true;
 

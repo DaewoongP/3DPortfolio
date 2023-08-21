@@ -157,6 +157,11 @@ void CEnemy_Sword::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 		}
 		else
 		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+			pGameInstance->Play_Sound(TEXT("Enemy_Death%d.ogg"), 9, CSound_Manager::SOUND_SWORD, 0.3f, true);
+			Safe_Release(pGameInstance);
+
 			m_eGameEvent = GAME_OBJECT_DEAD;
 			if (wcswcs(CollisionDesc.pOtherOwner->Get_Tag(), TEXT("Katana")))
 			{

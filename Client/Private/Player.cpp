@@ -131,7 +131,6 @@ void CPlayer::Tick(_double dTimeDelta)
 	}
 #endif // _DEBUG
 	
-	// 정확히 이위치가 맞는듯.
 	if (GAME_OBJECT_DEAD == m_eGameEvent)
 	{
 		m_pRendererCom->Set_GrayScale(true);
@@ -222,6 +221,7 @@ void CPlayer::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 	if (CollisionDesc.pMyCollider == m_pColliderCom &&
 		!lstrcmp(CollisionDesc.pOtherOwner->Get_LayerTag(), TEXT("Layer_EnemyWeapon")))
 	{
+		pGameInstance->Play_Sound(TEXT("Player_Death.ogg"), CSound_Manager::SOUND_PLAYER, 0.3f, true);
 		m_eGameEvent = GAME_OBJECT_DEAD;
 	}
 
