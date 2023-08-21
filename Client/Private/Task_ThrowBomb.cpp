@@ -25,12 +25,19 @@ CBehavior::STATE CTask_ThrowBomb::Tick(_double dTimeDelta)
 	_vector vTargetPos = pTarget->Get_Transform()->Get_State(CTransform::STATE_POSITION);
 	vTargetPos = XMVectorSetY(vTargetPos, 0.f);
 
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	for (_uint i = 0; i < 7; ++i)
 	{
+		pGameInstance->Play_Sound(TEXT("Boss_ThrowBomb%d.ogg"), 4, CSound_Manager::SOUND_BOSS, 0.3f, true);
+
 		_vector vRand = XMVectorSet(((rand() % 181) - 90.f), 0.f, ((rand() % 181) - 90.f), 0.f);
 
 		static_cast<CBoss*>(m_pOwner)->Throw_Bomb(vTargetPos + vRand);
 	}
+
+	Safe_Release(pGameInstance);
 	
 	return STATE_SUCCESS;
 }

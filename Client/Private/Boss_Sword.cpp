@@ -1,5 +1,6 @@
 #include "..\Public\Boss_Sword.h"
 #include "GameInstance.h"
+#include "Boss_SwordTrail.h"
 #include "Boss.h"
 
 CBoss_Sword::CBoss_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -31,6 +32,31 @@ HRESULT CBoss_Sword::Initialize(void* pArg)
 
 	if (FAILED(Add_Components()))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CBoss_Sword::Initialize_Level(_uint iLevelIndex)
+{
+	XMStoreFloat4x4(&m_SwordHighLocalMatrix, XMLoadFloat4x4(m_pModelCom->Get_PivotFloat4x4Ptr()) * XMMatrixTranslation(0.f, 0.f, 2.f));
+	XMStoreFloat4x4(&m_SwordLowLocalMatrix, XMLoadFloat4x4(m_pModelCom->Get_PivotFloat4x4Ptr()) * XMMatrixTranslation(0.f, 0.f, 0.f));
+
+	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
+	ZEROMEM(&TrailDesc);
+	TrailDesc.iTrailNum = 20;
+	TrailDesc.fMinVertexDistance = 0.1f;
+	TrailDesc.pHighLocalMatrix = &m_SwordHighLocalMatrix;
+	TrailDesc.pLowLocalMatrix = &m_SwordLowLocalMatrix;
+	TrailDesc.pPivotMatrix = m_pModelCom->Get_PivotFloat4x4Ptr();
+	TrailDesc.pWorldMatrix = &m_CombinedWorldMatrix;
+
+	/* For.Com_Trail */
+	if (FAILED(__super::Add_Component(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss_SwordTrail"),
+		TEXT("Com_Trail"), (CComponent**)&m_pSwordTrail, &TrailDesc)))
+	{
+		MSG_BOX("Failed CKatana Add_Component : (Com_Trail)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -159,9 +185,16 @@ void CBoss_Sword::Attack()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
+	pGameInstance->Play_Sound(TEXT("Boss_Pattern.ogg"), CSound_Manager::SOUND_BOSS, 0.4f);
+
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PARRYING, m_pColliderCom);
 
 	Safe_Release(pGameInstance);
+}
+
+void CBoss_Sword::Add_TrailRender()
+{
+	m_pSwordTrail->Add_Render();
 }
 
 CBoss_Sword* CBoss_Sword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -193,6 +226,8 @@ CGameObject* CBoss_Sword::Clone(void* pArg)
 void CBoss_Sword::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pSwordTrail);
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);

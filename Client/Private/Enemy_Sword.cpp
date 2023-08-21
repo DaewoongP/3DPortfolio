@@ -502,13 +502,10 @@ void CEnemy_Sword::Attack()
 	{
 		m_pSword->Attack();
 
-		if (m_eCurState != m_ePreState)
-		{
-			CGameInstance* pGameInstance = CGameInstance::GetInstance();
-			Safe_AddRef(pGameInstance);
-			pGameInstance->Play_Sound(TEXT("Enemy_Dash.ogg"), CSound_Manager::SOUND_ELITE, 0.3f, true);
-			Safe_Release(pGameInstance);
-		}
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+		pGameInstance->Play_Sound(TEXT("Enemy_Dash.ogg"), CSound_Manager::SOUND_ELITE, 0.3f);
+		Safe_Release(pGameInstance);
 	}
 }
 

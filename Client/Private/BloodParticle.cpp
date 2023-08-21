@@ -107,7 +107,7 @@ HRESULT CBloodParticle::Add_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	m_iParticleNum = { 50 };
+	m_iParticleNum = { 80 };
 	m_Particles.resize(m_iParticleNum);
 
 	/* For.Com_VIBuffer */

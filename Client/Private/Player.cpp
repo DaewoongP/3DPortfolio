@@ -325,6 +325,13 @@ void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 		// 보스 패링 패턴.
 		if (0 < m_BlockEnemyWeapons.size())
 			m_eGameEvent = GAME_OBJECT_DEAD;
+		else
+		{
+			CGameInstance* pGameInstance = CGameInstance::GetInstance();
+			Safe_AddRef(pGameInstance);
+			pGameInstance->Play_Sound(TEXT("Parrying_Sword.ogg"), CSound_Manager::SOUND_SWORD, 0.4f, true);
+			Safe_Release(pGameInstance);
+		}
 	}
 }
 

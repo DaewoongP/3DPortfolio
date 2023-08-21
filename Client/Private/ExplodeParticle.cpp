@@ -48,22 +48,30 @@ void CExplodeParticle::Tick(_double dTimeDelta)
 	{
 		Particle.dAge += dTimeDelta;
 
-		if (Particle.dAge > Particle.dLifeTime)
+		if (Particle.dAge < Particle.dGenTime)
+		{
+			Reset_Particle(Particle);
+
+			CVIBuffer_Point_Color_Instance::COLORINSTANCE ColorInstance;
+			ColorInstance.InstanceLocalMatrix = Particle.WorldMatrix;
+			ColorInstance.vInstanceColor = Particle.vColor;
+			ParticleInstances.push_back(ColorInstance);
+			continue;
+		}
+
+		if (Particle.dAge > Particle.dLifeTime + Particle.dGenTime)
 			Particle.isAlive = false;
 
 		Particle.vColor.w = 1.f - _float(Particle.dAge / Particle.dLifeTime);
 
 		_float4 vPos;
 		memcpy(&vPos, Particle.WorldMatrix.m[3], sizeof(_float4));
-		_vector vVelocity = XMLoadFloat4(&Particle.vVelocity);
-		_vector vAccel = XMLoadFloat4(&Particle.vAccel);
+		
+		Particle.fAngle += _float(Particle.fAngleSpeed * dTimeDelta);
+		vPos.y += _float(Particle.vVelocity.y * dTimeDelta);
+		XMStoreFloat4(&vPos, XMVectorSet(Particle.fCircleSize * cosf(Particle.fAngle), vPos.y, Particle.fCircleSize * sinf(Particle.fAngle), 1.f));
 
-		vVelocity += vAccel * _float(dTimeDelta);
-		XMStoreFloat4(&Particle.vVelocity, vVelocity);
-
-		XMStoreFloat4(&vPos, XMLoadFloat4(&vPos) + vVelocity * _float(dTimeDelta));
-
-		XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
+		XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 
 		CVIBuffer_Point_Color_Instance::COLORINSTANCE ColorInstance;
 		ColorInstance.InstanceLocalMatrix = Particle.WorldMatrix;
@@ -121,13 +129,18 @@ void CExplodeParticle::Reset_Particle(PARTICLE& Particle)
 
 	Particle.vColor = _float4(0.71875f, 0.81709f, 0.96875f, 1.f);
 	Particle.dAge = { 0.0 };
-	Particle.dLifeTime = { 1.0 };
+	Particle.dLifeTime = { 2.0 };
+	Particle.dGenTime = rand() % 1000 / 1000.0;
 	Particle.isAlive = true;
-	XMStoreFloat4(&Particle.vVelocity, pGameInstance->Get_RandomVectorInSphere(100.f));
-	Particle.vVelocity.y = 20.f;
-	Particle.vAccel = _float4(0.f, -30.f, 0.f, 0.f);
+	Particle.fAngle = _float(rand() % 361);
+	Particle.fAngleSpeed = XMConvertToRadians(90.f);
+	Particle.vVelocity = _float4(0.f, 30.f, 0.f, 0.f);
+	Particle.fCircleSize = _float(rand() % 26);
+	
+	_float3 vPos;
+	XMStoreFloat3(&vPos, XMVectorSet(Particle.fCircleSize * cosf(Particle.fAngle), 0.f, Particle.fCircleSize * sinf(Particle.fAngle), 1.f));
 
-	XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(5.f, 5.f, 5.f));
+	XMStoreFloat4x4(&Particle.WorldMatrix, XMMatrixScaling(2.f, 2.f, 2.f) * XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 
 	Safe_Release(pGameInstance);
 }
@@ -148,7 +161,7 @@ HRESULT CExplodeParticle::Add_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	m_iParticleNum = { 100 };
+	m_iParticleNum = { 300 };
 	m_Particles.resize(m_iParticleNum);
 
 	/* For.Com_VIBuffer */

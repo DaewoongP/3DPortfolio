@@ -295,6 +295,9 @@
     <Filter Include="02. GameObjects\03. Effects\Instancing\BloodParticle">
       <UniqueIdentifier>{2fca457b-b39e-4247-aa2e-00c8e7a1caca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\01. Enemy\Boss\Sword\Boss_SwordTrail">
+      <UniqueIdentifier>{eea1b388-5e77-40e1-ba55-9034e6b4758f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -675,6 +678,9 @@
     <ClInclude Include="..\public\MiniIconParticle.h">
       <Filter>02. GameObjects\03. Effects\Instancing\MiniIconParticle</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Boss_SwordTrail.h">
+      <Filter>02. GameObjects\01. Enemy\Boss\Sword\Boss_SwordTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1052,6 +1058,9 @@
     </ClCompile>
     <ClCompile Include="..\private\MiniIconParticle.cpp">
       <Filter>02. GameObjects\03. Effects\Instancing\MiniIconParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_SwordTrail.cpp">
+      <Filter>02. GameObjects\01. Enemy\Boss\Sword\Boss_SwordTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

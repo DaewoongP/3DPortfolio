@@ -181,6 +181,7 @@
     <ClInclude Include="..\public\Boss_Hp.h" />
     <ClInclude Include="..\public\Boss_Shield.h" />
     <ClInclude Include="..\public\Boss_Sword.h" />
+    <ClInclude Include="..\public\Boss_SwordTrail.h" />
     <ClInclude Include="..\public\BulletSpark.h" />
     <ClInclude Include="..\public\BulletTrail.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
@@ -308,6 +309,7 @@
     <ClCompile Include="..\private\Boss_Hp.cpp" />
     <ClCompile Include="..\private\Boss_Shield.cpp" />
     <ClCompile Include="..\private\Boss_Sword.cpp" />
+    <ClCompile Include="..\private\Boss_SwordTrail.cpp" />
     <ClCompile Include="..\private\BulletSpark.cpp" />
     <ClCompile Include="..\private\BulletTrail.cpp" />
     <ClCompile Include="..\private\Crosshair.cpp" />

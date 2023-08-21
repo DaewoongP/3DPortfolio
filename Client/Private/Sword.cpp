@@ -56,7 +56,7 @@ HRESULT CSword::Initialize_Level(_uint iLevelIndex)
 
 	CVIBuffer_Rect_Trail::TRAILDESC TrailDesc;
 	ZEROMEM(&TrailDesc);
-	TrailDesc.iTrailNum = 10;
+	TrailDesc.iTrailNum = 30;
 	TrailDesc.fMinVertexDistance = 0.1f;
 	TrailDesc.pHighLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailFrontIndex);
 	TrailDesc.pLowLocalMatrix = m_pModelCom->Get_BoneCombinedTransformationMatrixPtr(iTrailBackIndex);
@@ -194,6 +194,8 @@ HRESULT CSword::SetUp_ShaderResources()
 
 void CSword::Attack()
 {
+	m_pSwordTrail->Add_Render();
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 

@@ -21,6 +21,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Initialize_Level(_uint iLevelIndex) override;
 	virtual HRESULT Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
@@ -31,11 +32,17 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CRenderer*			m_pRendererCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
+	class CBoss_SwordTrail* m_pSwordTrail = { nullptr };
+
+private:
+	_float4x4			m_SwordLowLocalMatrix;
+	_float4x4			m_SwordHighLocalMatrix;
 
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
 	void Attack();
+	void Add_TrailRender();
 
 public:
 	static CBoss_Sword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

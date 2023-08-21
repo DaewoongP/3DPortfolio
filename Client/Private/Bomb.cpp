@@ -83,14 +83,24 @@ GAMEEVENT CBomb::Late_Tick(_double dTimeDelta)
 	}
 	if (m_dExplodeTimeAcc > m_dExplodeTime)
 	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+
 		if (false == m_isExplodeParticle)
 		{
 			m_isExplodeParticle = true;
 			m_pExplodeParticle->Render_Effect(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
-		}
+			_vector vCamPos = XMLoadFloat4(pGameInstance->Get_CamPosition());
+			_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+			_float fLength = XMVectorGetX(XMVector3Length(vCamPos - vPos));
+			_float fSound;
+			if (fLength != 0.f)
+				fSound = 0.2f * (1 + 1 / fLength);
+			else
+				fSound = 0.5f;
 
-		CGameInstance* pGameInstance = CGameInstance::GetInstance();
-		Safe_AddRef(pGameInstance);
+			pGameInstance->Play_Sound(TEXT("Boss_BombExplosion%d.ogg"), 2, CSound_Manager::SOUND_ETC, fSound, true);
+		}
 
 		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYWEAPON, m_pColliderCom);
 

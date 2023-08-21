@@ -53,6 +53,7 @@
 #include "MiniGame_Score.h"
 #include "MiniGame_Cursor.h"
 #include "ExplodeParticle.h"
+#include "Boss_SwordTrail.h"
 #include "MiniGame_Perfect.h"
 #include "ShurikenParticle.h"
 #include "BloodDirectional.h"
@@ -1573,7 +1574,16 @@ HRESULT CLoader::Loading_For_Boss()
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_ExplodeParticle)");
 		return E_FAIL;
 	}
-	
+	++m_iLoadingPercent;
+
+	/* For.Prototype_GameObject_Boss_SwordTrail */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss_SwordTrail"),
+		CBoss_SwordTrail::Create(m_pDevice, m_pContext))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_SwordTrail)");
+		return E_FAIL;
+	}
+
 	if (100 != m_iLoadingPercent)
 		m_iLoadingPercent = 100;
 

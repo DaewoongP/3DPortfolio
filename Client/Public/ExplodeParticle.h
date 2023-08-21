@@ -21,9 +21,12 @@ public:
 		_float4		vAccel;
 		_float4		vVelocity;
 		_float4x4	WorldMatrix;
+		_float		fAngleSpeed;
 		_float		fAngle;
+		_float		fCircleSize;
 		_double		dAge;
 		_double		dLifeTime;
+		_double		dGenTime;
 	}PARTICLE;
 
 private:

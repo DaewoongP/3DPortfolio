@@ -1,17 +1,17 @@
-#include "..\Public\SwordTrail.h"
+#include "..\Public\Boss_SwordTrail.h"
 #include "GameInstance.h"
 
-CSwordTrail::CSwordTrail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBoss_SwordTrail::CBoss_SwordTrail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
 }
 
-CSwordTrail::CSwordTrail(const CSwordTrail& rhs)
+CBoss_SwordTrail::CBoss_SwordTrail(const CBoss_SwordTrail& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CSwordTrail::Initialize_Prototype()
+HRESULT CBoss_SwordTrail::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
@@ -19,7 +19,7 @@ HRESULT CSwordTrail::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CSwordTrail::Initialize(void* pArg)
+HRESULT CBoss_SwordTrail::Initialize(void* pArg)
 {
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(0.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))
@@ -31,35 +31,43 @@ HRESULT CSwordTrail::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CSwordTrail::Tick(_double dTimeDelta)
+void CBoss_SwordTrail::Tick(_double dTimeDelta)
 {
 	m_pTrailBufferCom->Tick();
 
 	__super::Tick(dTimeDelta);
 }
 
-GAMEEVENT CSwordTrail::Late_Tick(_double dTimeDelta)
+GAMEEVENT CBoss_SwordTrail::Late_Tick(_double dTimeDelta)
 {
 	__super::Late_Tick(dTimeDelta);
 
 	return GAME_NOEVENT;
 }
 
-HRESULT CSwordTrail::Render()
+HRESULT CBoss_SwordTrail::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture")))
 		return E_FAIL;
-	
-	if (FAILED(m_pTrailBufferCom->Render("g_vColor", _float4(1.f, 0.1f, 0.1f, 0.3f), m_pShaderCom, 8)))
+
+	if (FAILED(m_pTrailBufferCom->Render("g_vColor", _float4(0.1f, 0.1f, 1.f, 0.3f), m_pShaderCom, 8)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CSwordTrail::Add_Components(void* pArg)
+void CBoss_SwordTrail::Add_Render()
+{
+	if (nullptr != m_pRendererCom)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
+	}
+}
+
+HRESULT CBoss_SwordTrail::Add_Components(void* pArg)
 {
 	/* For.Com_Renderer */
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"),
@@ -96,41 +104,33 @@ HRESULT CSwordTrail::Add_Components(void* pArg)
 	return S_OK;
 }
 
-void CSwordTrail::Add_Render()
+CBoss_SwordTrail* CBoss_SwordTrail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	if (nullptr != m_pRendererCom)
-	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
-	}
-}
-
-CSwordTrail* CSwordTrail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CSwordTrail* pInstance = new CSwordTrail(pDevice, pContext);
+	CBoss_SwordTrail* pInstance = new CBoss_SwordTrail(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created CSwordTrail");
+		MSG_BOX("Failed to Created CBoss_SwordTrail");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSwordTrail::Clone(void* pArg)
+CGameObject* CBoss_SwordTrail::Clone(void* pArg)
 {
-	CSwordTrail* pInstance = new CSwordTrail(*this);
+	CBoss_SwordTrail* pInstance = new CBoss_SwordTrail(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned CSwordTrail");
+		MSG_BOX("Failed to Cloned CBoss_SwordTrail");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSwordTrail::Free()
+void CBoss_SwordTrail::Free()
 {
 	__super::Free();
 

@@ -93,6 +93,12 @@ GAMEEVENT CBoss::Late_Tick(_double dTimeDelta)
 
 	AnimationState(dTimeDelta);
 
+	if (STATE_ATTACK1 == m_eCurState ||
+		STATE_ATTACK2 == m_eCurState)
+	{
+		m_pSword->Add_TrailRender();
+	}
+
 	__super::Late_Tick(dTimeDelta);
 
 	if (nullptr != m_pRendererCom)
@@ -194,7 +200,7 @@ HRESULT CBoss::Reset()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	//pGameInstance->Clear_Layer(LEVEL_BOSS, TEXT("Layer_Enemy"));
+	pGameInstance->Clear_Layer(LEVEL_BOSS, TEXT("Layer_Enemy"));
 	pGameInstance->Clear_DeadObjects(LEVEL_BOSS, TEXT("Layer_Enemy"));
 
 	Safe_Release(pGameInstance);
@@ -380,7 +386,7 @@ HRESULT CBoss::SetUp_BehaviorTree()
 	/* Task Fly */
 	m_fFlyHeight = 15.f;
 	pBlackBoard->Add_Value(TEXT("Value_FlyHeight"), &m_fFlyHeight);
-	m_fFlySpeed = 3.f;
+	m_fFlySpeed = 5.f;
 	pBlackBoard->Add_Value(TEXT("Value_FlySpeed"), &m_fFlySpeed);
 	pBlackBoard->Add_Value(TEXT("Value_isFly"), &m_isFly);
 	/* RandomChoose_Move */
@@ -391,12 +397,12 @@ HRESULT CBoss::SetUp_BehaviorTree()
 	m_dMoveTime = 2.0;
 	pBlackBoard->Add_Value(TEXT("Value_MoveTime"), &m_dMoveTime);
 	/* Task Landing */
-	m_dLandingSpeed = 6.0;
+	m_dLandingSpeed = 10.0;
 	pBlackBoard->Add_Value(TEXT("Value_LandingSpeed"), &m_dLandingSpeed);
 	/* Task Charge */
 	m_dChargeReadyTime = 1.0;
 	pBlackBoard->Add_Value(TEXT("Value_ChargeReadyTime"), &m_dChargeReadyTime);
-	m_dChargeSpeed = 15.0;
+	m_dChargeSpeed = 20.0;
 	pBlackBoard->Add_Value(TEXT("Value_ChargeSpeed"), &m_dChargeSpeed);
 	pBlackBoard->Add_Value(TEXT("Value_isCharge"), &m_isCharge);
 	/* Task AttackSequence */

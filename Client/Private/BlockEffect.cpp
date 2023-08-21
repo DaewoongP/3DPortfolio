@@ -140,7 +140,7 @@ HRESULT CBlockEffect::Add_Components()
 		TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
 
-	m_iParticleNum = { 30 };
+	m_iParticleNum = { 40 };
 	m_Particles.resize(m_iParticleNum);
 
 	/* For.Com_VIBuffer */
