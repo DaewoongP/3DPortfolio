@@ -19,8 +19,6 @@ vector g_vLightDir;
 vector g_vLightPos;
 float g_fLightRange;
 float g_fSpotPower;
-bool g_isGrayScale;
-bool g_isRedScale;
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
@@ -318,19 +316,6 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     // 현재 픽셀의 깊이값과 해당하는 픽셀이 존재하는 빛기준의 텍스처 UV좌표 깊이값과 비교하여 처리한다.
     else if (vPosition.z > vLightDepth.r * g_fLightFar)
         Out.vColor.rgb *= 0.5f;
-    
-    if (true == g_isGrayScale)
-    {
-        float fGrayScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3.f;
-        Out.vColor = fGrayScale;
-    }
-    
-    if (true == g_isRedScale)
-    {
-        float fRedScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3.f;
-        Out.vColor.yz = fRedScale / 2.f;
-        Out.vColor.x = fRedScale;
-    }
 
     return Out;
 }

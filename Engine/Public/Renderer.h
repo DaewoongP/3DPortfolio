@@ -36,6 +36,7 @@ private:
 	HRESULT Render_Deferred();
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
+	HRESULT Render_PostProcessing();
 	HRESULT Render_Screen();
 	HRESULT Render_UI();
 
@@ -44,6 +45,7 @@ private:
 	// 카메라 위치를 기준으로 먼것부터 그려 처리함.
 	HRESULT Sort_Blend();
 	HRESULT Sort_UI();
+	HRESULT Add_Components();
 
 #ifdef _DEBUG
 private:
@@ -66,10 +68,14 @@ private:
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 
-private:
-	class CVIBuffer_Rect*			m_pVIBuffer = { nullptr };
-	class CShader*					m_pShader = { nullptr };
+private: /* Deferred Shader */
+	class CVIBuffer_Rect*			m_pDeferredBuffer = { nullptr };
+	class CShader*					m_pDeferredShader = { nullptr };
 	_float4x4						m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+
+private: /* Post Processing */
+	class CVIBuffer_Rect*			m_pPostProcessingBuffer = { nullptr };
+	class CShader*					m_pPostProcessingShader = { nullptr };
 
 private: /* Light Depth Target */
 	_uint2							m_iShadowMapSize;
