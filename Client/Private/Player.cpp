@@ -877,7 +877,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		Safe_Release(pGameInstance);
 		return;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_F2, CInput_Device::KEY_DOWN))
+	if (pGameInstance->Get_DIKeyState(DIK_F3, CInput_Device::KEY_DOWN))
 	{
 		if (m_isInvisible)
 			m_isInvisible = false;

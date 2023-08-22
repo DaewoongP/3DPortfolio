@@ -81,7 +81,7 @@ void CBloodScreen::Render_Effect(_double dRenderTime)
 	m_fSizeX = g_iWinSizeX * fRandSize;
 	m_fSizeY = g_iWinSizeY * fRandSize;
 
-	switch (rand() % 5)
+	switch (rand() % 4)
 	{
 	case 0:
 		m_fX = 100.f;
@@ -98,14 +98,6 @@ void CBloodScreen::Render_Effect(_double dRenderTime)
 	case 3:
 		m_fX = g_iWinSizeX - 100.f;
 		m_fY = g_iWinSizeY - 100.f;
-		break;
-	case 4:
-		m_fX = g_iWinSizeX * 0.5f;
-		m_fY = g_iWinSizeY * 0.5f;
-		break;
-	default:
-		m_fX = g_iWinSizeX * 0.5f;
-		m_fY = g_iWinSizeY * 0.5f;
 		break;
 	}
 

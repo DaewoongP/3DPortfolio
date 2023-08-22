@@ -117,7 +117,7 @@ GAMEEVENT CEnemy_Hammer::Late_Tick(_double dTimeDelta)
 		_matrix LensOffsetMatrix = XMMatrixScaling(1.f, 1.f, 1.f) *
 			XMLoadFloat4x4(pBone->Get_CombinedTransformationMatrixPtr()) * 
 			m_pModelCom->Get_PivotMatrix() *
-			XMMatrixTranslation(0.f, -0.2f, 0.4f);
+			XMMatrixTranslation(0.f, -0.5f, 0.4f);
 
 		m_pLensFlareEffect->Render_Effect(LensOffsetMatrix * m_pTransformCom->Get_WorldMatrix());
 	}

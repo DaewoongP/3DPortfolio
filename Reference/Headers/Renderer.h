@@ -34,6 +34,7 @@ private:
 	HRESULT Render_NonBlend();
 	HRESULT Render_Lights();
 	HRESULT Render_Deferred();
+	HRESULT Render_Effect();
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
 	HRESULT Render_Bloom();

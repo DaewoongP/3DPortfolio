@@ -7,13 +7,14 @@ texture2D g_BlurTexture;
 
 bool g_isGrayScale, g_isRedScale, g_isBlur;
 
-float BlurWeights[13] =
+float BlurWeights[19] =
 {
-    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231,
-    1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+    0.0011, 0.0123, 0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.8712, 0.9231,
+    0.9986, 0.9231, 0.8712, 0.7261, 0.4868, 0.278, 0.1353, 0.0561, 0.0123, 0.0011
 };
-float Total = 6.2108;
+float g_fTotal = 6.2108;
 float g_iWinSizeX = 1280.f;
+float g_iWinSizeY = 720.f;
 
 sampler LinearSampler = sampler_state
 {
@@ -108,22 +109,25 @@ PS_OUT_BLUR PS_MAIN_BLUR(PS_IN In)
     vector vOriginColor = g_PostProcessingTexture.Sample(LinearSampler, In.vTexUV);
     
     vector vBlurColor = 0;
+
+    float2 vUV = (float2) 0;
     
-    float2 t = In.vTexUV;
-    float2 uv = 0;
-    float tu = 1.f / g_iWinSizeX;
+    float fTexU = 1.f / g_iWinSizeX;
+    float fTexV = 1.f / g_iWinSizeY;
     
-    for (int i = -6; i < 6; ++i)
+    int iBlurWeights = 9;
+    
+    for (int i = -iBlurWeights; i < iBlurWeights; ++i)
     {
-        uv = t + float2(tu * i, 0);
-        vBlurColor += BlurWeights[6 + i] * g_BloomTexture.Sample(LinearSampler, uv);
+        vUV = In.vTexUV + float2(fTexU * i, fTexV * i);
+        vBlurColor += BlurWeights[iBlurWeights + i] * g_BloomTexture.Sample(LinearSampler, vUV);
     }
     
-    vBlurColor /= Total;
+    vBlurColor /= g_fTotal;
     
     vector vBloom = pow(pow(abs(vBlurColor), 2.2f) + pow(abs(vBloomOriginColor), 2.2f), 1.f / 2.2f);
 
-    //Out.vColor = pow(abs(vOriginColor), 2.2f);
+    Out.vColor = pow(abs(vOriginColor), 2.2f);
     vBloom = pow(abs(vBloom), 2.2f);
     
     Out.vColor += vBloom;
@@ -144,12 +148,12 @@ PS_OUT_BLOOM PS_MAIN_BLOOM(PS_IN In)
 
     Out.vColor = g_PostProcessingTexture.Sample(LinearSampler, In.vTexUV);
 
-    float3 vRGBWeight = float3(0.9126f, 0.7152f, 0.0722f);
+    //float3 vRGBWeight = float3(0.9126f, 0.7152f, 0.0722f);
     
-    float brightness = dot(Out.vColor.rgb, vRGBWeight);
+    //float brightness = dot(Out.vColor.rgb, vRGBWeight);
     
-    if (0.8f > brightness)
-        discard;
+    //if (0.5f > brightness)
+    //    discard;
     
     Out.vColor = float4(Out.vColor.rgb, 1.f);
     

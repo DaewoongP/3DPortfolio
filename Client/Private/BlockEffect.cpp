@@ -177,7 +177,7 @@ HRESULT CBlockEffect::SetUp_ShaderResources()
 
 	Safe_Release(pGameInstance);
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", rand() % 6)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 1 + rand() % 3)))
 		return E_FAIL;
 
 	_float4 vColor = _float4(1.f, 0.64705f, 0.f, 1.f);
