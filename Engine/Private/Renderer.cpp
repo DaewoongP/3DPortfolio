@@ -32,11 +32,6 @@ HRESULT CRenderer::Initialize_Prototype()
 	m_pContext->RSGetViewports(&iNumViews, &ViewportDesc);
 
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
-		TEXT("Target_PostProcessing"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
-		return E_FAIL;
-
-
-	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Diffuse"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
@@ -55,47 +50,24 @@ HRESULT CRenderer::Initialize_Prototype()
 		TEXT("Target_Specular"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	_uint		iShadowMapCX = (_uint)ViewportDesc.Width * 10;
-	_uint		iShadowMapCY = (_uint)ViewportDesc.Height * 10;
-
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
-
-	/* ID3D11Resource */
-	D3D11_TEXTURE2D_DESC	TextureDesc;
-	ZEROMEM(&TextureDesc);
-		
-	// 최대 텍스처 사이즈 16384
-	TextureDesc.Width = iShadowMapCX;
-	TextureDesc.Height = iShadowMapCY;
-	TextureDesc.MipLevels = 1;
-	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	TextureDesc.SampleDesc.Quality = 0;
-	TextureDesc.SampleDesc.Count = 1;
-
-	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	TextureDesc.CPUAccessFlags = 0;
-	TextureDesc.MiscFlags = 0;
-
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pShadowDepthTexture2D)))
-		return E_FAIL;
-	
-	/* DepthStencil */
-	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
-	ZEROMEM(&DepthStencilViewDesc);
-	DepthStencilViewDesc.Flags = 0;
-	DepthStencilViewDesc.Format = TextureDesc.Format;
-	DepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	DepthStencilViewDesc.Texture2D.MipSlice = 0;
-
-	if (FAILED(m_pDevice->CreateDepthStencilView(m_pShadowDepthTexture2D, &DepthStencilViewDesc, &m_pDSV)))
+	if (FAILED(Create_DepthTexture((_uint)ViewportDesc.Width * 10, (_uint)ViewportDesc.Height * 10)))
 		return E_FAIL;
 
-	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_PostProcessing"), TEXT("Target_PostProcessing"))))
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_PostProcessing"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_Effect"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_Bloom"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_Blur"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
@@ -111,6 +83,14 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Lights"), TEXT("Target_Specular"))))
 		return E_FAIL; 
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_LightDepth"), TEXT("Target_ShadowMap"))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_PostProcessing"), TEXT("Target_PostProcessing"))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Effects"), TEXT("Target_Effect"))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom"))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur"))))
 		return E_FAIL;
 
 	if (FAILED(Add_Components()))
@@ -138,6 +118,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_ShadowMap"), 240.f, 400.f, 160.f, 160.f)))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_PostProcessing"), 240.f, 560.f, 160.f, 160.f)))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Bloom"), 400.f, 80.f, 160.f, 160.f)))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Blur"), 400.f, 240.f, 160.f, 160.f)))
 		return E_FAIL;
 #endif // _DEBUG
 
@@ -192,7 +176,11 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	if (FAILED(m_pRenderTarget_Manager->End_PreMRT(m_pContext)))
 		return E_FAIL;
-
+	
+	if (FAILED(Render_Bloom()))
+		return E_FAIL;
+	if (FAILED(Render_Blur()))
+		return E_FAIL;
 	if (FAILED(Render_PostProcessing()))
 		return E_FAIL;
 
@@ -337,7 +325,6 @@ HRESULT CRenderer::Render_Lights()
 
 HRESULT CRenderer::Render_Deferred()
 {
-	/* Diffuse * Shader + Specular */
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Diffuse"), m_pDeferredShader, "g_DiffuseTexture")))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Shade"), m_pDeferredShader, "g_ShadeTexture")))
@@ -418,9 +405,63 @@ HRESULT CRenderer::Render_Blend()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Bloom()
+{
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Bloom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_PostProcessing"), m_pPostProcessingShader, "g_PostProcessingTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	m_pPostProcessingShader->Begin(2);
+
+	m_pPostProcessingBuffer->Render();
+
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Blur()
+{
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur"))))
+		return E_FAIL;
+
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_PostProcessing"), m_pPostProcessingShader, "g_PostProcessingTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Bloom"), m_pPostProcessingShader, "g_BloomTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	m_pPostProcessingShader->Begin(1);
+
+	m_pPostProcessingBuffer->Render();
+
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_PostProcessing()
 {
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_PostProcessing"), m_pPostProcessingShader, "g_PostProcessingTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Blur"), m_pPostProcessingShader, "g_BlurTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -435,6 +476,22 @@ HRESULT CRenderer::Render_PostProcessing()
 
 
 	Safe_Release(pPipeLine);
+
+#ifdef _DEBUG
+	CInput_Device* pInput_Device = CInput_Device::GetInstance();
+	Safe_AddRef(pInput_Device);
+	if (pInput_Device->Get_DIKeyState(DIK_F2, CInput_Device::KEY_DOWN))
+	{
+		if (true == m_isBlur)
+			m_isBlur = false;
+		else
+			m_isBlur = true;
+	}
+	Safe_Release(pInput_Device);
+	// Blur
+	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isBlur", &m_isBlur, sizeof(_bool))))
+		return E_FAIL;
+#endif // _DEBUG
 
 	// GrayScale
 	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isGrayScale", &m_isGrayScale, sizeof(_bool))))
@@ -534,6 +591,43 @@ HRESULT CRenderer::Add_Components()
 
 	m_pPostProcessingBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pPostProcessingBuffer)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Create_DepthTexture(_uint iSizeX, _uint iSizeY)
+{
+	/* ID3D11Resource */
+	D3D11_TEXTURE2D_DESC	TextureDesc;
+	ZEROMEM(&TextureDesc);
+
+	// 최대 텍스처 사이즈 16384
+	TextureDesc.Width = iSizeX;
+	TextureDesc.Height = iSizeY;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+
+	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	TextureDesc.CPUAccessFlags = 0;
+	TextureDesc.MiscFlags = 0;
+
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pShadowDepthTexture2D)))
+		return E_FAIL;
+
+	/* DepthStencil */
+	D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc;
+	ZEROMEM(&DepthStencilViewDesc);
+	DepthStencilViewDesc.Flags = 0;
+	DepthStencilViewDesc.Format = TextureDesc.Format;
+	DepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	DepthStencilViewDesc.Texture2D.MipSlice = 0;
+	if (FAILED(m_pDevice->CreateDepthStencilView(m_pShadowDepthTexture2D, &DepthStencilViewDesc, &m_pDSV)))
 		return E_FAIL;
 
 	return S_OK;

@@ -36,6 +36,8 @@ private:
 	HRESULT Render_Deferred();
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
+	HRESULT Render_Bloom();
+	HRESULT Render_Blur();
 	HRESULT Render_PostProcessing();
 	HRESULT Render_Screen();
 	HRESULT Render_UI();
@@ -46,6 +48,7 @@ private:
 	HRESULT Sort_Blend();
 	HRESULT Sort_UI();
 	HRESULT Add_Components();
+	HRESULT Create_DepthTexture(_uint iSizeX, _uint iSizeY);
 
 #ifdef _DEBUG
 private:
@@ -58,6 +61,7 @@ private:
 private:
 	list<class CComponent*>			m_DebugObject;
 	_bool							m_isDebugRender = { true };
+	_bool							m_isBlur = { false };
 #endif // _DEBUG
 
 private:

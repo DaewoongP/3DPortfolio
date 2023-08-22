@@ -91,47 +91,52 @@ struct PS_IN
 	float2		vTexUV : TEXCOORD0;
 };
 
-float4	PS_MAIN(PS_IN In) : SV_TARGET0
+struct PS_OUT
 {
-	float4		vColor = (float4)0;
+	float4		vColor : SV_TARGET0;
+};
 
-	vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
+PS_OUT PS_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
 
-	if (vColor.a > 0.1f)
-        vColor = vColor * g_vColor;
+    Out.vColor = g_Texture.Sample(LinearSampler, In.vTexUV);
+
+    if (Out.vColor.a > 0.1f)
+        Out.vColor = Out.vColor * g_vColor;
 	else
 		discard;
 
-	return vColor;
+	return Out;
 }
 
-float4 PS_MAIN_COLOR(PS_IN In) : SV_TARGET0
+PS_OUT PS_MAIN_COLOR(PS_IN In)
 {
-    float4 vColor = (float4) 0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vTexture = g_Texture.Sample(LinearSampler, In.vTexUV);
     
-    vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
+    Out.vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
 	
     //if (0.1f > vColor.a)
     //    discard;
 	
-    vColor.rgb = g_vColor.rgb;
+    Out.vColor.rgb = g_vColor.rgb;
     
-    return vColor;
+    return Out;
 }
 
-float4 PS_MAIN_COLOR_DRIECTIONAL(PS_IN In) : SV_TARGET0
+PS_OUT PS_MAIN_COLOR_DRIECTIONAL(PS_IN In)
 {
-    float4 vColor = (float4) 0;
+    PS_OUT Out = (PS_OUT) 0;
     
     float4 vTexture = g_Texture.Sample(LinearSampler, In.vTexUV);
     
-    vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
-    vColor.a *= g_vColor.a;
-    vColor.rgb = g_vColor.rgb;
+    Out.vColor.a = (vTexture.r + vTexture.g + vTexture.b) / 3.f;
+    Out.vColor.a *= g_vColor.a;
+    Out.vColor.rgb = g_vColor.rgb;
     
-    return vColor;
+    return Out;
 }
 
 technique11		DefaultTechnique

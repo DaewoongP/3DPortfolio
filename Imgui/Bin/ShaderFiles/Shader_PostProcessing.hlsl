@@ -2,8 +2,18 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D g_PostProcessingTexture;
+texture2D g_BloomTexture;
+texture2D g_BlurTexture;
 
-bool g_isGrayScale, g_isRedScale;
+bool g_isGrayScale, g_isRedScale, g_isBlur;
+
+float BlurWeights[13] =
+{
+    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231,
+    1, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+};
+float Total = 6.2108;
+float g_iWinSizeX = 1280.f;
 
 sampler LinearSampler = sampler_state
 {
@@ -61,8 +71,14 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_PostProcessingTexture.Sample(LinearSampler, In.vTexUV);
+    vector vOriginColor = g_PostProcessingTexture.Sample(LinearSampler, In.vTexUV);
+    vector vBlurColor = g_BlurTexture.Sample(LinearSampler, In.vTexUV);
     
+    if (true == g_isBlur)
+        Out.vColor = vOriginColor + vBlurColor;
+    else
+        Out.vColor = vOriginColor;
+
     if (true == g_isGrayScale)
     {
         float fGrayScale = (Out.vColor.x + Out.vColor.y + Out.vColor.z) / 3.f;
@@ -76,6 +92,67 @@ PS_OUT PS_MAIN(PS_IN In)
         Out.vColor.x = fRedScale;
     }
         
+    return Out;
+}
+
+struct PS_OUT_BLUR
+{
+    float4 vColor : SV_TARGET0;
+};
+
+PS_OUT_BLUR PS_MAIN_BLUR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vBloomOriginColor = g_BloomTexture.Sample(LinearSampler, In.vTexUV);
+    vector vOriginColor = g_PostProcessingTexture.Sample(LinearSampler, In.vTexUV);
+    
+    vector vBlurColor = 0;
+    
+    float2 t = In.vTexUV;
+    float2 uv = 0;
+    float tu = 1.f / g_iWinSizeX;
+    
+    for (int i = -6; i < 6; ++i)
+    {
+        uv = t + float2(tu * i, 0);
+        vBlurColor += BlurWeights[6 + i] * g_BloomTexture.Sample(LinearSampler, uv);
+    }
+    
+    vBlurColor /= Total;
+    
+    vector vBloom = pow(pow(abs(vBlurColor), 2.2f) + pow(abs(vBloomOriginColor), 2.2f), 1.f / 2.2f);
+
+    //Out.vColor = pow(abs(vOriginColor), 2.2f);
+    vBloom = pow(abs(vBloom), 2.2f);
+    
+    Out.vColor += vBloom;
+    
+    Out.vColor = pow(abs(Out.vColor), 1.f / 2.2f);
+ 
+    return Out;
+}
+
+struct PS_OUT_BLOOM
+{
+    float4 vColor : SV_TARGET0;
+};
+
+PS_OUT_BLOOM PS_MAIN_BLOOM(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_PostProcessingTexture.Sample(LinearSampler, In.vTexUV);
+
+    float3 vRGBWeight = float3(0.9126f, 0.7152f, 0.0722f);
+    
+    float brightness = dot(Out.vColor.rgb, vRGBWeight);
+    
+    if (0.8f > brightness)
+        discard;
+    
+    Out.vColor = float4(Out.vColor.rgb, 1.f);
+    
     return Out;
 }
 
@@ -127,5 +204,29 @@ technique11 DefaultTechnique
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
         DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass Blur
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Depth_Disable, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_BLUR();
+    }
+
+    pass Bloom
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Depth_Disable, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM();
     }
 }
