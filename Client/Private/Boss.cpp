@@ -1,6 +1,7 @@
 #include "..\Public\Boss.h"
 #include "GameInstance.h"
 #include "Boss_Sword.h"
+#include "Boss_Shield.h"
 #include "Selector_Boss.h"
 #include "BloodScreen.h"
 #include "BloodParticle.h"
@@ -77,12 +78,14 @@ void CBoss::Tick(_double dTimeDelta)
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMY, m_pColliderCom);	
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_ENEMYVISION, m_pVisionColliderCom);
 
-	if (0.7f > m_pModelCom->Get_CurrentNotifySpeed())
-		m_pSword->Attack();
-
-	Knockback(dTimeDelta);
-
 	Safe_Release(pGameInstance);
+
+	if (0.7f > m_pModelCom->Get_CurrentNotifySpeed())
+	{
+		m_pSword->Attack();
+	}
+	
+	Knockback(dTimeDelta);
 
 	Tick_Bomb(dTimeDelta);
 }
@@ -333,6 +336,14 @@ HRESULT CBoss::Add_Component()
 		TEXT("Com_BloodParticle"), reinterpret_cast<CComponent**>(&m_pBloodParticle))))
 	{
 		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_BloodParticle)");
+		return E_FAIL;
+	}
+	
+	/* For.Com_Shield */
+	if (FAILED(CComposite::Add_Component(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss_Shield"),
+		TEXT("Com_Shield"), reinterpret_cast<CComponent**>(&m_pShield))))
+	{
+		MSG_BOX("Failed CEnemy_Pistol Add_Component : (Com_Shield)");
 		return E_FAIL;
 	}
 
@@ -653,6 +664,7 @@ void CBoss::Knockback(_double dTimeDelta)
 		XMStoreFloat3(&AABBDesc.vPosition, vColPos);
 		m_pKnockBackColliderCom->Set_BoundingDesc(&AABBDesc);
 		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_KNOCKBACK, m_pKnockBackColliderCom);
+		m_pShield->Add_Render(m_pTransformCom->Get_State(CTransform::STATE_LOOK), m_pTransformCom->Get_State(CTransform::STATE_POSITION), 0.5);
 
 		Safe_Release(pGameInstance);
 	}
@@ -728,6 +740,7 @@ void CBoss::Free()
 	Safe_Release(m_pBloodParticle);
 
 	Safe_Release(m_pSword);
+	Safe_Release(m_pShield);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);

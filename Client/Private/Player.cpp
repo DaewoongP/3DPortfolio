@@ -57,6 +57,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eCurrentSkill = SKILL_BLINK;
+	m_pRendererCom->Set_Bloom(true);
 
 	return S_OK;
 }
@@ -119,6 +120,14 @@ void CPlayer::Tick(_double dTimeDelta)
 	Fix_Mouse();
 
 	SwapWeapon();
+
+	_float3 vVelocity = m_pTransformCom->Get_Velocity();
+	if (3.f < XMVectorGetX(XMVector3Length(XMLoadFloat3(&vVelocity))))
+	{
+		m_pRendererCom->Set_MotionBlur(true);
+	}
+	else
+		m_pRendererCom->Set_MotionBlur(false);
 
 	AnimationState(dTimeDelta);
 

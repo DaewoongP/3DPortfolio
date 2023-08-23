@@ -53,7 +53,7 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_ShadowMap"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
-	if (FAILED(Create_DepthTexture((_uint)ViewportDesc.Width * 10, (_uint)ViewportDesc.Height * 10)))
+	if (FAILED(Create_DepthTexture((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
 		return E_FAIL;
 
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
@@ -62,12 +62,20 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Effect"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
-
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_SSAO"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Bloom"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Blur"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_DepthOfField"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
+		TEXT("Target_Final"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
@@ -88,9 +96,15 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Effects"), TEXT("Target_Effect"))))
 		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_SSAO"), TEXT("Target_SSAO"))))
+		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom"))))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur"))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_DepthOfField"), TEXT("Target_DepthOfField"))))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Add_MRT(TEXT("MRT_Final"), TEXT("Target_Final"))))
 		return E_FAIL;
 
 	if (FAILED(Add_Components()))
@@ -119,11 +133,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_PostProcessing"), 240.f, 560.f, 160.f, 160.f)))
 		return E_FAIL;
-	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Effect"), 400.f, 80.f, 160.f, 160.f)))
+	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Blur"), 400.f, 80.f, 160.f, 160.f)))
 		return E_FAIL;
-	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Bloom"), 400.f, 240.f, 160.f, 160.f)))
+	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_SSAO"), 400.f, 240.f, 160.f, 160.f)))
 		return E_FAIL;
-	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_Blur"), 400.f, 400.f, 160.f, 160.f)))
+	if (FAILED(m_pRenderTarget_Manager->Ready_Debug(TEXT("Target_DepthOfField"), 400.f, 400.f, 160.f, 160.f)))
 		return E_FAIL;
 #endif // _DEBUG
 
@@ -169,6 +183,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 		return E_FAIL;
 	if (FAILED(Render_Lights()))
 		return E_FAIL;
+	if (FAILED(Render_SSAO()))
+		return E_FAIL;
 	if (FAILED(Render_Deferred()))
 		return E_FAIL;
 	
@@ -184,12 +200,16 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	if (FAILED(m_pRenderTarget_Manager->End_PreMRT(m_pContext)))
 		return E_FAIL;
-	
+
+	if (FAILED(Render_DepthOfField()))
+		return E_FAIL;
 	if (FAILED(Render_Bloom()))
 		return E_FAIL;
 	if (FAILED(Render_Blur()))
 		return E_FAIL;
 	if (FAILED(Render_PostProcessing()))
+		return E_FAIL;
+	if (FAILED(Render_MotionBlur()))
 		return E_FAIL;
 
 	if (FAILED(Render_Screen()))
@@ -243,6 +263,16 @@ HRESULT CRenderer::Render_LightDepth()
 	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_LightDepth"))))
 		return E_FAIL;
 
+	ID3D11DepthStencilView* pOriginal_DepthStencilView = { nullptr };
+	ID3D11RenderTargetView* pOriginal_RenderTargetView = { nullptr };
+
+	// ±×¸± ·»´õÅ¸°Ù(Begin ¿¡¼­ »ı¼ºÇÔ), ¿ø·¡ ±íÀÌ ÀúÀå
+	m_pContext->OMGetRenderTargets(1, &pOriginal_RenderTargetView, &pOriginal_DepthStencilView);
+	// ¹Ş¾Æ¿Â ·»´õÅ¸°Ù, ±íÀÌ ÀúÀåÇÒ DSV
+	m_pContext->OMSetRenderTargets(1, &pOriginal_RenderTargetView, m_pDSV);
+	// depth 1·Î ÃÊ±âÈ­
+	m_pContext->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
+
 	// ±íÀÌ ·»´õ¸µ
 	for (auto& pGameObject : m_RenderObjects[RENDER_LIGHTDEPTH])
 	{
@@ -253,9 +283,12 @@ HRESULT CRenderer::Render_LightDepth()
 	}
 
 	m_RenderObjects[RENDER_LIGHTDEPTH].clear();
-	
+
 	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
 		return E_FAIL;
+
+	Safe_Release(pOriginal_RenderTargetView);
+	Safe_Release(pOriginal_DepthStencilView);
 
 	return S_OK;
 }
@@ -331,6 +364,34 @@ HRESULT CRenderer::Render_Lights()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_SSAO()
+{
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_SSAO"))))
+		return E_FAIL;
+
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Normal"), m_pDeferredShader, "g_NormalTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Depth"), m_pDeferredShader, "g_DepthTexture")))
+		return E_FAIL;
+
+	CPipeLine* pPipeLine = CPipeLine::GetInstance();
+	Safe_AddRef(pPipeLine);
+
+	if (FAILED(m_pDeferredShader->Bind_RawValue("g_fCamFar", pPipeLine->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	Safe_Release(pPipeLine);
+
+	m_pDeferredShader->Begin(4);
+
+	m_pDeferredBuffer->Render();
+
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Deferred()
 {
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Diffuse"), m_pDeferredShader, "g_DiffuseTexture")))
@@ -345,6 +406,8 @@ HRESULT CRenderer::Render_Deferred()
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_ShadowMap"), m_pDeferredShader, "g_LightDepthTexture")))
 		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_SSAO"), m_pDeferredShader, "g_SSAOTexture")))
+		return E_FAIL;
 
 	if (FAILED(m_pDeferredShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -355,6 +418,9 @@ HRESULT CRenderer::Render_Deferred()
 
 	CPipeLine* pPipeLine = CPipeLine::GetInstance();
 	Safe_AddRef(pPipeLine);
+
+	if (FAILED(m_pDeferredShader->Bind_RawValue("g_isSSAO", &m_isBloom, sizeof(_bool))))
+		return E_FAIL;
 
 	if (FAILED(m_pDeferredShader->Bind_RawValue("g_fCamFar", pPipeLine->Get_CamFar(), sizeof(_float))))
 		return E_FAIL;
@@ -373,7 +439,7 @@ HRESULT CRenderer::Render_Deferred()
 
 	Safe_Release(pPipeLine);
 
-	m_pDeferredShader->Begin(4);
+	m_pDeferredShader->Begin(5);
 
 	m_pDeferredBuffer->Render();
 
@@ -433,12 +499,47 @@ HRESULT CRenderer::Render_Blend()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_DepthOfField()
+{
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_DepthOfField"))))
+		return E_FAIL;
+
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_PostProcessing"), m_pPostProcessingShader, "g_PostProcessingTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Depth"), m_pPostProcessingShader, "g_DepthTexture")))
+		return E_FAIL;
+
+	CPipeLine* pPipeLine = CPipeLine::GetInstance();
+	Safe_AddRef(pPipeLine);
+
+	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_fCamFar", pPipeLine->Get_CamFar(), sizeof(_float))))
+		return E_FAIL;
+
+	Safe_Release(pPipeLine);
+
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	m_pPostProcessingShader->Begin(3);
+
+	m_pPostProcessingBuffer->Render();
+
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Bloom()
 {
 	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Bloom"))))
 		return E_FAIL;
 
-	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Effect"), m_pPostProcessingShader, "g_PostProcessingTexture")))
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Effect"), m_pPostProcessingShader, "g_EffectTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -463,7 +564,7 @@ HRESULT CRenderer::Render_Blur()
 	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Blur"))))
 		return E_FAIL;
 
-	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Effect"), m_pPostProcessingShader, "g_PostProcessingTexture")))
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Effect"), m_pPostProcessingShader, "g_EffectTexture")))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Bloom"), m_pPostProcessingShader, "g_BloomTexture")))
 		return E_FAIL;
@@ -487,9 +588,14 @@ HRESULT CRenderer::Render_Blur()
 
 HRESULT CRenderer::Render_PostProcessing()
 {
+	if (FAILED(m_pRenderTarget_Manager->Begin_MRT(m_pContext, TEXT("MRT_Final"))))
+		return E_FAIL;
+
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_PostProcessing"), m_pPostProcessingShader, "g_PostProcessingTexture")))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Blur"), m_pPostProcessingShader, "g_BlurTexture")))
+		return E_FAIL;
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_DepthOfField"), m_pPostProcessingShader, "g_DepthOfFieldTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -499,27 +605,22 @@ HRESULT CRenderer::Render_PostProcessing()
 	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	CPipeLine* pPipeLine = CPipeLine::GetInstance();
-	Safe_AddRef(pPipeLine);
-
-
-	Safe_Release(pPipeLine);
-
 #ifdef _DEBUG
 	CInput_Device* pInput_Device = CInput_Device::GetInstance();
 	Safe_AddRef(pInput_Device);
 	if (pInput_Device->Get_DIKeyState(DIK_F2, CInput_Device::KEY_DOWN))
 	{
-		if (true == m_isBlur)
-			m_isBlur = false;
+		if (true == m_isBloom)
+			m_isBloom = false;
 		else
-			m_isBlur = true;
+			m_isBloom = true;
 	}
 	Safe_Release(pInput_Device);
-	// Blur
-	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isBlur", &m_isBlur, sizeof(_bool))))
-		return E_FAIL;
+	
 #endif // _DEBUG
+	// Blur
+	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isBloom", &m_isBloom, sizeof(_bool))))
+		return E_FAIL;
 
 	// GrayScale
 	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isGrayScale", &m_isGrayScale, sizeof(_bool))))
@@ -529,6 +630,32 @@ HRESULT CRenderer::Render_PostProcessing()
 		return E_FAIL;
 
 	m_pPostProcessingShader->Begin(0);
+
+	m_pPostProcessingBuffer->Render();
+
+	if (FAILED(m_pRenderTarget_Manager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_MotionBlur()
+{
+	if (FAILED(m_pRenderTarget_Manager->Bind_ShaderResourceView(TEXT("Target_Final"), m_pPostProcessingShader, "g_FinalTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	//MotionBlur
+	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isMotionBlur", &m_isMotionBlur, sizeof(_bool))))
+		return E_FAIL;
+
+	m_pPostProcessingShader->Begin(4);
 
 	m_pPostProcessingBuffer->Render();
 

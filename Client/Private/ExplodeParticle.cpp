@@ -39,7 +39,7 @@ void CExplodeParticle::Tick(_double dTimeDelta)
 {
 	if (false == m_isRender)
 		return;
-
+	
 	__super::Tick(dTimeDelta);
 
 	vector<CVIBuffer_Point_Color_Instance::COLORINSTANCE>		ParticleInstances;
@@ -62,7 +62,16 @@ void CExplodeParticle::Tick(_double dTimeDelta)
 		if (Particle.dAge > Particle.dLifeTime + Particle.dGenTime)
 			Particle.isAlive = false;
 
-		Particle.vColor.w = 1.f - _float(Particle.dAge / Particle.dLifeTime);
+		if (false == Particle.isAlive)
+		{
+			CVIBuffer_Point_Color_Instance::COLORINSTANCE ColorInstance;
+			ColorInstance.InstanceLocalMatrix = Particle.WorldMatrix;
+			ColorInstance.vInstanceColor = Particle.vColor;
+			ParticleInstances.push_back(ColorInstance);
+			continue;
+		}
+
+		Particle.vColor.w = 1.f - _float((Particle.dAge - Particle.dGenTime) / Particle.dLifeTime);
 
 		_float4 vPos;
 		memcpy(&vPos, Particle.WorldMatrix.m[3], sizeof(_float4));
@@ -107,7 +116,7 @@ HRESULT CExplodeParticle::Render()
 	if (FAILED(SetUp_ShaderResources()))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
+	m_pShaderCom->Begin(1);
 
 	m_pVIBufferCom->Render();
 
@@ -129,12 +138,12 @@ void CExplodeParticle::Reset_Particle(PARTICLE& Particle)
 
 	Particle.vColor = _float4(0.71875f, 0.81709f, 0.96875f, 1.f);
 	Particle.dAge = { 0.0 };
-	Particle.dLifeTime = { 2.0 };
-	Particle.dGenTime = rand() % 1000 / 1000.0;
+	Particle.dLifeTime = { 1.0 };
+	Particle.dGenTime = rand() % 501 / 1000.0;
 	Particle.isAlive = true;
 	Particle.fAngle = _float(rand() % 361);
 	Particle.fAngleSpeed = XMConvertToRadians(90.f);
-	Particle.vVelocity = _float4(0.f, 30.f, 0.f, 0.f);
+	Particle.vVelocity = _float4(0.f, 50.f, 0.f, 0.f);
 	Particle.fCircleSize = _float(rand() % 26);
 	
 	_float3 vPos;

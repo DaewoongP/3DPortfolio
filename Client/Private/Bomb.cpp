@@ -27,7 +27,7 @@ HRESULT CBomb::Initialize(void* pArg)
 	m_fExplodeSize = 50.f;
 	m_dExplodeTime = 3.0;
 	// 콜라이더를 띄우기 위한 시간.
-	m_dDeleteTime = m_dExplodeTime + 1.0;
+	m_dDeleteTime = m_dExplodeTime + 1.5;
 
 	CTransform::TRANSFORMDESC TransformDesc = CTransform::TRANSFORMDESC(100.0, XMConvertToRadians(0.0f));
 	if (FAILED(__super::Initialize(pArg, &TransformDesc)))

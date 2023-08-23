@@ -57,6 +57,7 @@ private:
 
 private: /* Parts */
 	class CBoss_Sword*			m_pSword = { nullptr };
+	class CBoss_Shield*			m_pShield = { nullptr };
 	vector<CGameObject*>		m_Bombs;
 
 private: /* BehaviorTree */

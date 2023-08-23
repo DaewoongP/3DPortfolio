@@ -2,6 +2,10 @@
 #include "Task.h"
 #include "Client_Defines.h"
 
+BEGIN(Engine)
+class CTransform;
+END
+
 BEGIN(Client)
 
 class CTask_AttackSequence2 final : public CTask
@@ -18,6 +22,7 @@ public:
 private:
 	_double*			m_dAttackSequence2Time = { nullptr };
 	_bool*				m_isAttackSequence2 = { nullptr }; 
+	CTransform*			m_pTransformCom = { nullptr };
 
 public:
 	static CTask_AttackSequence2* Create(class CBlackBoard* pBlackBoard);

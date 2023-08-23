@@ -123,7 +123,7 @@ PS_OUT PS_MAIN_EMISSIVE(PS_IN In)
     else
         vNormal = float3(In.vNormal.xyz * 0.5f + 0.5f);
 
-    Out.vDiffuse = vDiffuse;
+    Out.vDiffuse = g_vEmissive;
     
     Out.vDiffuse.a = 1.f;
 

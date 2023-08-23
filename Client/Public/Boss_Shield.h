@@ -6,12 +6,11 @@ BEGIN(Engine)
 class CModel;
 class CShader;
 class CRenderer;
-class CCollider;
 END
 
 BEGIN(Client)
 
-class CBoss_Shield final : public CPart
+class CBoss_Shield final : public CGameObject
 {
 private:
 	explicit CBoss_Shield(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -21,7 +20,6 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual HRESULT Initialize_ParentMatrix(PARENTMATRIXDESC ParentDesc) override;
 	virtual void Tick(_double dTimeDelta) override;
 	virtual GAMEEVENT Late_Tick(_double dTimeDelta) override;
 	virtual HRESULT Render() override;
@@ -30,13 +28,16 @@ private:
 	CModel*				m_pModelCom = { nullptr };
 	CShader*			m_pShaderCom = { nullptr };
 	CRenderer*			m_pRendererCom = { nullptr };
-	CCollider*			m_pColliderCom = { nullptr };
+
+private:
+	_double				m_dRenderTime = { 0.0 };
+	_double				m_dRenderTimeAcc = { 0.0 };
+	_float4				m_vEmissiveColor;
 
 public:
 	HRESULT Add_Components();
 	HRESULT SetUp_ShaderResources();
-	void Attack();
-	void Blocked();
+	void Add_Render(_vector vLook, _vector vPos, _double dRenderTime);
 
 public:
 	static CBoss_Shield* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);

@@ -1444,7 +1444,7 @@ HRESULT CLoader::Loading_For_Boss()
 	}
 	m_iLoadingPercent += 3;
 
-	PivotMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	PivotMatrix = XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
 	/* For.Prototype_Component_Model_Bakunin_Shield */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_Component_Model_Bakunin_Shield"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, TEXT("../../Resources/ParsingData/Anim/Bakunin_ArmShield.dat"), PivotMatrix))))
@@ -1541,7 +1541,7 @@ HRESULT CLoader::Loading_For_Boss()
 	++m_iLoadingPercent;
 
 	/* For.Prototype_GameObject_Boss_Shield */
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Boss_Shield"),
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_BOSS, TEXT("Prototype_GameObject_Boss_Shield"),
 		CBoss_Shield::Create(m_pDevice, m_pContext))))
 	{
 		MSG_BOX("Failed Add_Prototype : (Prototype_GameObject_Boss_Shield)");

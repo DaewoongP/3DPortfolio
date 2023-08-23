@@ -52,7 +52,6 @@ DepthStencilState DSS_Depth_Disable
 	DepthWriteMask = zero;
 };
 
-
 /* Blend State */
 BlendState BS_Default
 {

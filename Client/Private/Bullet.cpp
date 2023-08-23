@@ -73,7 +73,7 @@ GAMEEVENT CBullet::Late_Tick(_double dTimeDelta)
 
 	if (nullptr != m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 		m_pBulletTrail->Render_Effect();
 #ifdef _DEBUG
 		m_pColliderCom->Set_Color(DirectX::Colors::Red);

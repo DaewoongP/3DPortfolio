@@ -13,8 +13,10 @@ private:
 	virtual ~CRenderer() = default;
 
 public:
+	void Set_Bloom(_bool isBloom) { m_isBloom = isBloom; }
 	void Set_RedScale(_bool isRedScale) { m_isRedScale = isRedScale; }
 	void Set_GrayScale(_bool isGrayScale) { m_isGrayScale = isGrayScale; }
+	void Set_MotionBlur(_bool isMotionBlur) { m_isMotionBlur = isMotionBlur; }
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -33,10 +35,13 @@ private:
 	HRESULT Render_LightDepth();
 	HRESULT Render_NonBlend();
 	HRESULT Render_Lights();
+	HRESULT Render_SSAO();
 	HRESULT Render_Deferred();
 	HRESULT Render_Effect();
 	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
+	HRESULT Render_MotionBlur();
+	HRESULT Render_DepthOfField();
 	HRESULT Render_Bloom();
 	HRESULT Render_Blur();
 	HRESULT Render_PostProcessing();
@@ -62,12 +67,14 @@ private:
 private:
 	list<class CComponent*>			m_DebugObject;
 	_bool							m_isDebugRender = { true };
-	_bool							m_isBlur = { false };
 #endif // _DEBUG
+	
 
 private:
 	_bool							m_isGrayScale = { false };
 	_bool							m_isRedScale = { false };
+	_bool							m_isBloom = { false };
+	_bool							m_isMotionBlur = { false };
 
 private:
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };

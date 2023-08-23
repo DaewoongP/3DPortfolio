@@ -67,7 +67,7 @@ GAMEEVENT CWire::Late_Tick(_double dTimeDelta)
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vPos);
 		m_pTransformCom->LookAt(XMLoadFloat4(&m_vHookPos));
 
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONLIGHT, this);
 	}
 
 	return GAME_NOEVENT;

@@ -14,6 +14,7 @@ texture2D g_DepthTexture;
 texture2D g_SpecularTexture;
 texture2D g_EmissiveTexture;
 texture2D g_LightDepthTexture;
+texture2D g_SSAOTexture;
 
 vector g_vLightDir;
 vector g_vLightPos;
@@ -249,6 +250,72 @@ PS_OUT_LIGHT PS_MAIN_SPOTLIGHT(PS_IN In)
     return Out;
 }
 
+float g_fRadius = 0.001f;
+float g_fFalloff = 0.000002f;
+float g_fStrength = 0.7f;
+float g_fTotStrength = 1.38f;
+float g_fInvSamples = 1.f / 8.f;
+
+float3 g_vRandom[8] =
+{
+    float3(0.2024537f, 0.841204f, -0.9060141f),
+    float3(-0.2200423f, 0.6282339f, -0.8275437f),
+    float3(0.3677659f, 0.1086345f, -0.446777f),
+    float3(0.8775856f, 0.4617546f, -0.6427765f),
+    
+    float3(0.5372024f, 0.208414f, 0.9060141f),
+    float3(-0.0422203f, 0.8236239f, 0.8275437f),
+    float3(0.3596776f, 0.3108645f, 0.446777f),
+    float3(0.8568775f, 0.4466175f, 0.6427765f),
+};
+
+struct PS_OUT_SSAO
+{
+    float4 vAmbient : SV_TARGET0;
+};
+
+float3 randomNormal(float2 tex)
+{
+    float noiseX = frac(sin(dot(tex, float2(15.8989f, 76.132f) * 1.f) * 46336.23745f));
+    float noiseY = frac(sin(dot(tex, float2(11.9899f, 62.223f) * 2.f) * 34748.34744f));
+    float noiseZ = frac(sin(dot(tex, float2(13.3238f, 63.122f) * 3.f) * 59998.47362f));
+    
+    return normalize(float3(noiseX, noiseY, noiseZ));
+}
+
+PS_OUT_SSAO PS_MAIN_SSAO(PS_IN In)
+{
+    PS_OUT_SSAO Out = (PS_OUT_SSAO) 0;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexUV);
+    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+
+    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexUV);
+    float fViewZ = vDepthDesc.y * g_fCamFar;
+    
+    float3 vRay;
+    float3 vReflect;
+    float2 vRandomUV;
+    float fOccNorm;
+    int iColor = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        vRay = reflect(randomNormal(In.vTexUV), g_vRandom[i]);
+        vReflect = normalize(reflect(vRay, vNormal.xyz)) * g_fRadius;
+        vReflect.x *= -1.f;
+        vRandomUV = In.vTexUV + vReflect.xy;
+        fOccNorm = g_DepthTexture.Sample(PointSampler, vRandomUV).x;
+        
+        if (fOccNorm <= vDepthDesc.x + 0.0003f)
+            ++iColor;
+    }
+    Out.vAmbient = 1.f - abs((iColor / 8.f) - 1.f);
+    
+    return Out;
+}
+
+bool g_isSSAO;
+
 PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -286,10 +353,11 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
     vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
     vector vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
+    vector vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexUV);
     //vSpecular = (vector) 0;
-    vSpecular *= 0.5f;
-    
-    Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade + vSpecular + vEmissive);
+    vSpecular *= 0.1f;
+    vSSAO = 1.f;
+    Out.vColor = fFogPower * vFogColor + (1.f - fFogPower) * (vDiffuse * vShade * vSSAO + vSpecular + vEmissive);
 
     vPosition = mul(vPosition, g_LightViewMatrix);
 
@@ -314,7 +382,7 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         Out.vColor = Out.vColor;
     // 투영행렬의 far를 다시곱해주어 포지션과 연산
     // 현재 픽셀의 깊이값과 해당하는 픽셀이 존재하는 빛기준의 텍스처 UV좌표 깊이값과 비교하여 처리한다.
-    else if (vPosition.z > vLightDepth.r * g_fLightFar)
+    else if (vPosition.z - 0.1f > vLightDepth.r * g_fLightFar)
         Out.vColor.rgb *= 0.5f;
 
     return Out;
@@ -402,15 +470,24 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Depth_Disable, 0);
-        // 점광원은 여러개로 처리될 수 있기 때문에 알파블렌드를 활용하여 픽셀의 색상값을 계속 더해주어
-        // 하나의 렌더타겟에 모든값이 저장될 수 있도록 다중 광원을 처리해야한다.
-        // 따라서 가지고있는 픽셀의 색상값을 그대로 가져와서 ADD 처리 해야함.
         SetBlendState(BS_BlendOne, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
         HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
         DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
         PixelShader = compile ps_5_0 PS_MAIN_SPOTLIGHT();
+    }
+
+    pass SSAO
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Depth_Disable, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL /*compile gs_5_0 GS_MAIN()*/;
+        HullShader = NULL /*compile hs_5_0 HS_MAIN()*/;
+        DomainShader = NULL /*compile ds_5_0 DS_MAIN()*/;
+        PixelShader = compile ps_5_0 PS_MAIN_SSAO();
     }
 
     pass Deferred

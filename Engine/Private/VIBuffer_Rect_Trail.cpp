@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "PipeLine.h"
+#include "Calculator.h"
 
 CVIBuffer_Rect_Trail::CVIBuffer_Rect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -195,24 +196,24 @@ void CVIBuffer_Rect_Trail::Tick()
 	XMStoreFloat3(&pData[1].vPosition, vHighWorldPos);
 
 	// Catmull - Rom 스플라인 보간
-	for (_uint i = 0; i < (m_iNumVertices / 2) - 4; ++i)
+	/*for (_uint i = 0; i < (m_iNumVertices / 2) - 4; ++i)
 	{
-		XMStoreFloat3(&pData[(i + 2) * 2].vPosition, 
+		XMStoreFloat3(&pData[(i + 2) * 2].vPosition,
 			XMVectorCatmullRom(
-				XMLoadFloat3(&pData[i * 2].vPosition),
+				vLowWorldPos,
 				XMLoadFloat3(&pData[(i + 1) * 2].vPosition),
 				XMLoadFloat3(&pData[(i + 3) * 2].vPosition),
-				XMLoadFloat3(&pData[(i + 4) * 2].vPosition),
+				XMLoadFloat3(&pData[m_iNumVertices - 2].vPosition),
 				0.5f));
 
 		XMStoreFloat3(&pData[(i + 2) * 2 + 1].vPosition,
 			XMVectorCatmullRom(
-				XMLoadFloat3(&pData[i * 2 + 1].vPosition),
+				vHighWorldPos,
 				XMLoadFloat3(&pData[(i + 1) * 2 + 1].vPosition),
 				XMLoadFloat3(&pData[(i + 3) * 2 + 1].vPosition),
-				XMLoadFloat3(&pData[(i + 4) * 2 + 1].vPosition),
+				XMLoadFloat3(&pData[m_iNumVertices - 1].vPosition),
 				0.5f));
-	}
+	}*/
 
 	m_pContext->Unmap(m_pVB, 0);
 

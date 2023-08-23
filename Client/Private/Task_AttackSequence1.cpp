@@ -1,4 +1,6 @@
 #include "..\Public\Task_AttackSequence1.h"
+#include "GameInstance.h"
+#include "GameObject.h"
 
 HRESULT CTask_AttackSequence1::Initialize(CBlackBoard* pBlackBoard)
 {
@@ -7,6 +9,7 @@ HRESULT CTask_AttackSequence1::Initialize(CBlackBoard* pBlackBoard)
 
 	m_dAttackSequence1Time = static_cast<_double*>(m_pBlackBoard->Find_Value(TEXT("Value_AttackSequence1Time")));
 	m_isAttackSequence1 = static_cast<_bool*>(m_pBlackBoard->Find_Value(TEXT("Value_isAttackSequence1")));
+	m_pTransformCom = static_cast<CTransform*>(m_pBlackBoard->Find_Value(TEXT("Value_Transform")));
 
 	return S_OK;
 }
@@ -30,7 +33,12 @@ CBehavior::STATE CTask_AttackSequence1::Tick(_double dTimeDelta)
 	}
 	
 	*m_isAttackSequence1 = true;
-	
+
+	CGameObject* pTarget = *reinterpret_cast<CGameObject**>(m_pBlackBoard->Find_Value(TEXT("Value_Target")));
+	if (nullptr == pTarget)
+		return STATE_FAILED;
+
+	m_pTransformCom->LookAt(pTarget->Get_Transform()->Get_State(CTransform::STATE_POSITION), true);
 
 	return STATE_RUNNING;
 }
