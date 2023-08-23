@@ -393,6 +393,7 @@ HRESULT CPlayer::Reset()
 
 	m_pRendererCom->Set_GrayScale(false);
 	m_pRendererCom->Set_RedScale(false);
+	m_pRendererCom->Set_BlueScale(false);
 
 	m_eCurState = STATE_IDLE;
 	m_iSkillStack = 0;
@@ -840,14 +841,20 @@ void CPlayer::Key_Input(_double dTimeDelta)
 	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_DOWN))
 	{
 		m_pTransformCom->ZeroVelocity();
+		m_fBlueScaleLevel = 1.f;
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_Z))
 	{
 		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 0.1);
+		m_fBlueScaleLevel -= _float(dTimeDelta) * 10.f;
+		if (m_fBlueScaleLevel < 0.5f)
+			m_fBlueScaleLevel = 0.5f;
+		m_pRendererCom->Set_BlueScale(true, _float4(m_fBlueScaleLevel, m_fBlueScaleLevel, 1.f, 1.f));
 	}
 	if (pGameInstance->Get_DIKeyState(DIK_Z, CInput_Device::KEY_UP))
 	{
 		pGameInstance->Set_SlowedTime(TEXT("MainTimer"), 1.0);
+		m_pRendererCom->Set_BlueScale(false);
 	}
 
 	// Swap Skill

@@ -628,6 +628,11 @@ HRESULT CRenderer::Render_PostProcessing()
 	// RedScale
 	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isRedScale", &m_isRedScale, sizeof(_bool))))
 		return E_FAIL;
+	// BlueScale
+	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_isBlueScale", &m_isBlueScale, sizeof(_bool))))
+		return E_FAIL;
+	if (FAILED(m_pPostProcessingShader->Bind_RawValue("g_vBlueScaleLevel", &m_vBlueScaleLevel, sizeof(_float4))))
+		return E_FAIL;
 
 	m_pPostProcessingShader->Begin(0);
 

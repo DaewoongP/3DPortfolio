@@ -90,6 +90,7 @@ private:
 	CCollider*				m_pBlinkColliderCom = { nullptr };
 
 private:
+	_float					m_fBlueScaleLevel = { 0.f };
 	_float3					m_vInitRotation;
 	_float4					m_vInitPosition;
 	// 마우스 감도

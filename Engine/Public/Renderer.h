@@ -15,6 +15,11 @@ private:
 public:
 	void Set_Bloom(_bool isBloom) { m_isBloom = isBloom; }
 	void Set_RedScale(_bool isRedScale) { m_isRedScale = isRedScale; }
+	void Set_BlueScale(_bool isBlueScale, _float4 vBlueScaleLevel) { 
+		m_isBlueScale = isBlueScale;
+		m_vBlueScaleLevel = vBlueScaleLevel;
+	}
+	void Set_BlueScale(_bool isBlueScale) { m_isBlueScale = isBlueScale; }
 	void Set_GrayScale(_bool isGrayScale) { m_isGrayScale = isGrayScale; }
 	void Set_MotionBlur(_bool isMotionBlur) { m_isMotionBlur = isMotionBlur; }
 
@@ -73,6 +78,8 @@ private:
 private:
 	_bool							m_isGrayScale = { false };
 	_bool							m_isRedScale = { false };
+	_bool							m_isBlueScale = { false };
+	_float4							m_vBlueScaleLevel;
 	_bool							m_isBloom = { false };
 	_bool							m_isMotionBlur = { false };
 

@@ -9,8 +9,9 @@ texture2D g_DepthTexture;
 texture2D g_DepthOfFieldTexture;
 texture2D g_FinalTexture;
 
-bool g_isGrayScale, g_isRedScale, g_isBloom, g_isMotionBlur;
+bool g_isGrayScale, g_isRedScale, g_isBlueScale, g_isBloom, g_isMotionBlur;
 float g_fCamFar;
+float4 g_vBlueScaleLevel;
 
 // 가우시안 필터 1차원 배열형태
 float BlurWeights[23] =
@@ -104,7 +105,12 @@ PS_OUT PS_MAIN(PS_IN In)
         Out.vColor.yz = fRedScale / 2.f;
         Out.vColor.x = fRedScale;
     }
-        
+    
+    if (true == g_isBlueScale)
+    {
+        Out.vColor *= g_vBlueScaleLevel;
+    }
+    
     return Out;
 }
 
