@@ -43,6 +43,7 @@ public: /* For.Timer_Manager */
 public: /* For.Level_Manager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel * pNewLevel);
 	_uint Get_CurrentLevelIndex() const;
+	class CLevel* Get_CurrentLevel();
 	HRESULT Render_Level();
 
 public: /* For.Object_Manager */

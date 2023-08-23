@@ -1,7 +1,7 @@
 #include "..\Public\LevelChange_Trigger.h"
 #include "GameInstance.h"
-#include "Level_Loading.h"
 #include "Portal.h"
+#include "Level_Stage1.h"
 
 CLevelChange_Trigger::CLevelChange_Trigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CTrigger(pDevice, pContext)
@@ -59,15 +59,12 @@ GAMEEVENT CLevelChange_Trigger::Late_Tick(_double dTimeDelta)
 
 void CLevelChange_Trigger::OnCollisionEnter(COLLISIONDESC CollisionDesc)
 {
+
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE2))))
-	{
-		MSG_BOX("Failed Open LEVEL_STAGE1 to LEVEL_STAGE2");
-		Safe_Release(pGameInstance);
-		return;
-	}
+	CLevel* pLevel = pGameInstance->Get_CurrentLevel();
+	dynamic_cast<CLevel_Stage1*>(pLevel)->Set_NextLevel();
 
 	Safe_Release(pGameInstance);
 }

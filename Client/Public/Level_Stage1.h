@@ -11,6 +11,9 @@ private:
 	virtual ~CLevel_Stage1() = default;
 
 public:
+	void Set_NextLevel() { m_isNextLevel = true; }
+
+public:
 	virtual HRESULT Initialize();
 	virtual void Tick(_double dTimeDelta);
 	virtual HRESULT Render();
@@ -27,6 +30,9 @@ private:
 
 	HRESULT Ready_Layer_Camera(const _tchar* pLayerTag);
 	HRESULT Ready_Layer_Debug(const _tchar* pLayerTag);
+
+private:
+	_bool		m_isNextLevel = { false };
 
 public:
 	static CLevel_Stage1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

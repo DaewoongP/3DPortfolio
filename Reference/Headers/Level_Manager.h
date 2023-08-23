@@ -13,6 +13,7 @@ private:
 
 public:
 	_uint Get_CurrentLevelIndex() const { return m_iLevelIndex; }
+	class CLevel* Get_CurrentLevel() { return m_pCurrentLevel; }
 
 public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);

@@ -69,6 +69,21 @@ void CLevel_Stage1::Tick(_double dTimeDelta)
 
 	Safe_Release(pGameInstance);
 #endif // _DEBUG
+
+	if (true == m_isNextLevel)
+	{
+		CGameInstance* pGameInstance = CGameInstance::GetInstance();
+		Safe_AddRef(pGameInstance);
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVELID::LEVEL_STAGE2))))
+		{
+			MSG_BOX("Failed Open LEVEL_STAGE1 to LEVEL_BOSS");
+			Safe_Release(pGameInstance);
+			return;
+		}
+
+		Safe_Release(pGameInstance);
+	}
 }
 
 HRESULT CLevel_Stage1::Render()
