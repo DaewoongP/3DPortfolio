@@ -208,7 +208,7 @@ PS_OUT_DOF PS_MAIN_DOF(PS_IN In)
     
     if (vDepthDesc.y > 0.2f)
     {
-        iBlurWeights = 7;
+        iBlurWeights = 5;
         
         for (int i = -iBlurWeights; i < iBlurWeights; ++i)
         {

@@ -277,6 +277,14 @@ HRESULT CLoader::Loading_For_Stage1()
 
 	lstrcpy(m_szLoading, TEXT("텍스쳐 로딩 중."));
 
+	/* For.Prototype_Component_Texture_Noise */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Noise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Textures/DissolveMask.dds")))))
+	{
+		MSG_BOX("Failed Add_Prototype : (Prototype_Component_Texture_Noise)");
+		return E_FAIL;
+	}
+
 	/* For.Prototype_Component_Texture_Crosshair */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Crosshair"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../../Resources/Game_UI/HUD/GR/Crosshair/crosshair.png")))))

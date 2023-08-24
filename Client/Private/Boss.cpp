@@ -184,9 +184,10 @@ HRESULT CBoss::Render()
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i);
-
+		
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
-		m_pShaderCom->Begin(2);
+
+		m_pShaderCom->Begin(m_iRenderPass);
 
 		m_pModelCom->Render(i);
 	}
@@ -695,7 +696,12 @@ GAMEEVENT CBoss::PlayEvent(_double dTimeDelta)
 		m_dDeadAnimAcc += dTimeDelta;
 
 		if (m_dDeadTime < m_dDeadAnimAcc)
-			return GAME_OBJECT_DEAD;
+		{
+			m_iRenderPass = 3;
+			m_fDissolveTimeAcc += _float(dTimeDelta);
+			if (1.f < m_fDissolveTimeAcc)
+				return GAME_OBJECT_DEAD;
+		}
 		//if (ANIM_FINISHED == m_eCurrentAnimationFlag)
 	}
 

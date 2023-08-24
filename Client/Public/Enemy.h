@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 
 BEGIN(Engine)
+class CTexture;
 class CRenderer;
 class CNavigation;
 END
@@ -38,6 +39,7 @@ public:
 	virtual HRESULT Reset() override;
 
 protected:
+	CTexture*				m_pDissolveTexture = { nullptr };
 	CRenderer*				m_pRendererCom = { nullptr };
 	CNavigation*			m_pNavigationCom = { nullptr };
 	class CLensFlare*		m_pLensFlareEffect = { nullptr };
@@ -45,6 +47,11 @@ protected:
 
 protected:
 	ENEMYDESC				m_EnemyDesc;
+
+protected:
+	_float 					m_fDissolveTimeAcc = { 0.f };
+	_float					m_fThickness = { 0.f };
+	_uint					m_iRenderPass = { 0 };
 
 private: /* Tick */
 	HRESULT Add_Component();
@@ -56,4 +63,3 @@ public:
 };
 
 END
-

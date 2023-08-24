@@ -57,8 +57,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_eCurrentSkill = SKILL_BLINK;
-	m_pRendererCom->Set_Bloom(true);
-
+	
 	return S_OK;
 }
 

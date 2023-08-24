@@ -56,8 +56,12 @@ HRESULT CLevel_Loading::Initialize(LEVELID eNextLevelID)
 
 	pGameInstance->Stop_AllSound();
 
+	m_pRenderer = dynamic_cast<CRenderer*>(pGameInstance->Clone_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer")));
+
+	m_pRenderer->Set_Bloom(false);
+
 	Safe_Release(pGameInstance);
-	
+
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevelID);
 
 	if(nullptr == m_pLoader)
@@ -85,12 +89,15 @@ void CLevel_Loading::Tick(_double dTimeDelta)
 			break;
 		case LEVEL_STAGE1:
 			pLevel = CLevel_Stage1::Create(m_pDevice, m_pContext);
+			m_pRenderer->Set_Bloom(true);
 			break;
 		case LEVEL_STAGE2:
 			pLevel = CLevel_Stage2::Create(m_pDevice, m_pContext);
+			m_pRenderer->Set_Bloom(true);
 			break;
 		case LEVEL_BOSS:
 			pLevel = CLevel_Boss::Create(m_pDevice, m_pContext);
+			m_pRenderer->Set_Bloom(true);
 			break;
 		}
 
@@ -216,4 +223,5 @@ void CLevel_Loading::Free()
 	__super::Free();
 
 	Safe_Release(m_pLoader);
+	Safe_Release(m_pRenderer);
 }

@@ -128,11 +128,12 @@ GAMEEVENT CEnemy_Sword::Late_Tick(_double dTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (nullptr != m_pRendererCom &&
-		true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
+	if (nullptr != m_pRendererCom)
 	{
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_LIGHTDEPTH, this);
+		if (true == pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 3.f))
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this);
+		if (2 == m_iRenderPass)
+			m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_LIGHTDEPTH, this);
 
 #ifdef _DEBUG
 		m_pRendererCom->Add_DebugGroup(m_pNavigationCom);
@@ -205,7 +206,7 @@ HRESULT CEnemy_Sword::Render()
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, TextureType_DIFFUSE);
 		m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, TextureType_NORMALS);
 
-		m_pShaderCom->Begin(2);
+		m_pShaderCom->Begin(m_iRenderPass);
 
 		m_pModelCom->Render(i);
 	}
@@ -399,6 +400,14 @@ HRESULT CEnemy_Sword::SetUp_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimWidth", &fRimWidth, sizeof(_float))))
 		return E_FAIL;
 
+	if (FAILED(m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveTimeAcc", &m_fDissolveTimeAcc, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fThickness", &m_fThickness, sizeof(_float))))
+		return E_FAIL;
+	
 	Safe_Release(pGameInstance);
 
 	return S_OK;
@@ -438,6 +447,8 @@ void CEnemy_Sword::AnimationState(_double dTimeDelta)
 	if (ANIM_FINISHED == m_eCurrentAnimationFlag &&
 		m_ePreState == m_eCurState)
 	{
+		if (STATE_DEAD == m_eCurState)
+			return;
 		m_isDash = false;
 		m_isBlocked = false;
 		m_eCurState = STATE_IDLE;
@@ -517,7 +528,12 @@ GAMEEVENT CEnemy_Sword::PlayEvent(_double dTimeDelta)
 		m_isDead = true;
 
 		if (ANIM_FINISHED == m_eCurrentAnimationFlag)
-			return GAME_OBJECT_DEAD;
+		{
+			m_iRenderPass = 3;
+			m_fDissolveTimeAcc += _float(dTimeDelta);
+			if (1.f < m_fDissolveTimeAcc)
+				return GAME_OBJECT_DEAD;
+		}
 	}
 
 	return GAME_NOEVENT;

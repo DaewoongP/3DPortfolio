@@ -172,7 +172,7 @@ HRESULT CLevel_Stage1::Ready_Layer_ShadowDepth(const _tchar* pLayerTag)
 	// view eye 110, 50, 415 / at 140, 15, 120
 	DepthDesc.vCenter = _float3(155.f, 27.f, 430.f);
 	DepthDesc.vExtents = _float3(65.f, 23.f, 70.f);
-	DepthDesc.fLightFar = 150.f;
+	DepthDesc.fLightFar = 120.f;
 	XMStoreFloat4x4(&DepthDesc.LightViewMatrix, XMMatrixLookAtLH(XMVectorSet(110.f, 30.f, 415.f, 1.f), XMVectorSet(150.f, 0.f, 450.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 1.f)));
 	XMStoreFloat4x4(&DepthDesc.LightProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.f), (_float)g_iWinSizeX / g_iWinSizeY, 1.f, DepthDesc.fLightFar));
 

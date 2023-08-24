@@ -2,6 +2,10 @@
 #include "Level.h"
 #include "Client_Defines.h"
 
+BEGIN(Engine)
+class CRenderer;
+END
+
 BEGIN(Client)
 
 class CLevel_Loading final : public CLevel
@@ -19,6 +23,9 @@ private:
 	// 다음 레벨을 구성하기위한 쓰레드 생성 객체
 	class CLoader*			m_pLoader = { nullptr };
 	LEVELID					m_eNextLevelID = { LEVEL_END };
+
+private:
+	class CRenderer*		m_pRenderer = { nullptr };
 
 private:
 	HRESULT Loading_Logo(const _tchar* pLayerTag);

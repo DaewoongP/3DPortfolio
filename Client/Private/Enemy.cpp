@@ -31,6 +31,10 @@ HRESULT CEnemy::Initialize(void* pArg)
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_fThickness = 0.1f;
+	m_iRenderPass = 2;
+	m_fDissolveTimeAcc = 0.f;
+
 	return S_OK;
 }
 
@@ -90,6 +94,9 @@ HRESULT CEnemy::Reset()
 	m_pTransformCom->Rotation(m_EnemyDesc.vRotation);
 	m_EnemyDesc.vPosition.y = m_pNavigationCom->Get_CurrentCellY(XMLoadFloat4(&m_EnemyDesc.vPosition));
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMLoadFloat4(&m_EnemyDesc.vPosition));
+	m_fThickness = 0.1f;
+	m_iRenderPass = 2;
+	m_fDissolveTimeAcc = 0.f;
 
 	if (FAILED(__super::Reset()))
 		return E_FAIL;
@@ -122,6 +129,14 @@ HRESULT CEnemy::Add_Component()
 		MSG_BOX("Failed CEnemy Add_Component : (Com_BloodScreen)");
 		return E_FAIL;
 	}
+	
+	/* For.Com_DissolveTextrue */
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Noise"),
+		TEXT("Com_DissolveTextrue"), reinterpret_cast<CComponent**>(&m_pDissolveTexture))))
+	{
+		MSG_BOX("Failed CEnemy Add_Component : (Com_DissolveTextrue)");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -148,6 +163,7 @@ void CEnemy::Free()
 
 	Safe_Release(m_pLensFlareEffect);
 	Safe_Release(m_pBloodScreenEffect);
+	Safe_Release(m_pDissolveTexture);
 
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pRendererCom);
