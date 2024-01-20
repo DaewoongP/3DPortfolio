@@ -80,8 +80,8 @@ HRESULT CMainApp::Render()
 	if (FAILED(m_pGameInstance->Render_Level()))
 		return E_FAIL;
 #ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(0.f, 680.f))))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Render_Font(TEXT("Font_135"), m_szFPS, _float2(0.f, 680.f))))
+		return E_FAIL;*/
 #endif // _DEBUG
 	if (FAILED(m_pGameInstance->Present()))
 		return E_FAIL;

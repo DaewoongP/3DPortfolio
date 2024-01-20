@@ -57,7 +57,7 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
-		TEXT("Target_PostProcessing"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		TEXT("Target_PostProcessing"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.5f, 0.5f, 0.5f, 1.f))))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Add_RenderTarget(m_pDevice, m_pContext,
 		TEXT("Target_Effect"), (_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height, DXGI_FORMAT_B8G8R8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
@@ -231,6 +231,20 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (true == m_isDebugRender)
 	{
 		if (FAILED(Render_Debug()))
+			return E_FAIL;
+	}
+
+	if (pInput_Device->Get_DIKeyState(DIK_F3, CInput_Device::KEY_DOWN))
+	{
+		if (true == m_isDebugRenderTarget)
+			m_isDebugRenderTarget = false;
+		else
+			m_isDebugRenderTarget = true;
+	}
+
+	if (true == m_isDebugRenderTarget)
+	{
+		if (FAILED(Render_DebugTarget()))
 			return E_FAIL;
 	}
 
@@ -796,9 +810,6 @@ HRESULT CRenderer::Create_DepthTexture(_uint iSizeX, _uint iSizeY)
 #ifdef _DEBUG
 HRESULT CRenderer::Render_Debug()
 {
-	if (nullptr == m_pRenderTarget_Manager)
-		return E_FAIL;
-
 	for (auto& pDebugCom : m_DebugObject)
 	{
 		if (nullptr != pDebugCom &&
@@ -815,6 +826,13 @@ HRESULT CRenderer::Render_Debug()
 	if (FAILED(m_pDeferredShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_DebugTarget()
+{
+	if (nullptr == m_pRenderTarget_Manager)
+		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Render_Debug(TEXT("MRT_GameObjects"), m_pDeferredShader, m_pDeferredBuffer)))
 		return E_FAIL;
 	if (FAILED(m_pRenderTarget_Manager->Render_Debug(TEXT("MRT_Lights"), m_pDeferredShader, m_pDeferredBuffer)))

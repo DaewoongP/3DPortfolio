@@ -312,6 +312,16 @@ void CPlayer::OnCollisionExit(COLLISIONDESC CollisionDesc)
 				break;
 			}
 		}
+
+		// 위와 아래코드는 동일
+
+		/*auto iter = find(m_InRangeEnemyColliders.begin(), 
+			m_InRangeEnemyColliders.end(), 
+			CollisionDesc.pOtherCollider);
+
+		if (iter != m_InRangeEnemyColliders.end())
+			m_InRangeEnemyColliders.erase(iter);*/
+
 	}
 
 	if (CollisionDesc.pMyCollider == m_pBlockColliderCom &&
@@ -892,7 +902,7 @@ void CPlayer::Key_Input(_double dTimeDelta)
 		Safe_Release(pGameInstance);
 		return;
 	}
-	if (pGameInstance->Get_DIKeyState(DIK_F3, CInput_Device::KEY_DOWN))
+	if (pGameInstance->Get_DIKeyState(DIK_F4, CInput_Device::KEY_DOWN))
 	{
 		if (m_isInvisible)
 			m_isInvisible = false;
@@ -1039,7 +1049,8 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 				m_pModelCom->Set_AnimIndex(147, false);
 			break;
 		case STATE_DEAD:
-			m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
+			if (false == m_isInvisible)
+				m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
 			break;
 		case STATE_BLINK:
 			m_pModelCom->Set_AnimIndex(118, false);
@@ -1196,8 +1207,8 @@ void CPlayer::Add_Collisions()
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
-
-	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
+	if (!m_isInvisible)
+		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pVisionColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pBlockColliderCom);
 
@@ -1538,9 +1549,6 @@ void CPlayer::Blink(_double dTimeDelta)
 
 HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 {
-	// 몇번 애니메이션 인덱스에 어떤 파일 경로를 넣을건지
-	// 아니면 파일 저장자체를 (인덱스, 벡터<노티파이구조체> 정보) 이런식으로 감싸서 저장하고
-	// 여기서 Read file해서 "특정 애니메이션 인덱스", "벡터" 를 인자값으로 넘겨주자
 	_uint				iAnimationIndex = { 0 };
 	_uint				iAnimationFrames = { 0 };
 	vector<NOTIFY>		Notifies;
@@ -1552,15 +1560,13 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 
 	_ulong	dwByte = 0;
 
-	// Current Animation Index
 	ReadFile(hFile, &iAnimationIndex, sizeof(_uint), &dwByte, nullptr);
-	// Animation's NumFrames
 	ReadFile(hFile, &iAnimationFrames, sizeof(_uint), &dwByte, nullptr);
 
 	for (_uint i = 0; i < iAnimationFrames; ++i)
 	{
 		NOTIFY Notify;
-		// Notify Save
+		
 		ReadFile(hFile, &Notify, sizeof(NOTIFY), &dwByte, nullptr);
 
 		Notifies.push_back(Notify);
@@ -1568,7 +1574,7 @@ HRESULT CPlayer::SetUp_AnimationNotifies(const _tchar* pNotifyFilePath)
 
 	CloseHandle(hFile);
 
-	// for문 돌면서 read file. 하면서 값다 처리.
+	// 모델 객체에 적용해야하는 애니메이션 인덱스 번호와 노티파이 구조체를 넘겨줌.
 	if (FAILED(m_pModelCom->SetUp_AnimationNotifies(iAnimationIndex, Notifies)))
 		return E_FAIL;
 

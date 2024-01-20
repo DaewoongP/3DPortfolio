@@ -26,9 +26,11 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const _tchar* pProt
 {
 	if (nullptr != Find_Prototype(iLevelIndex, pPrototypeTag))
 	{
-		Safe_Release(pPrototype);
+		/*Safe_Release(pPrototype);
 		MSG_BOX("Already have Prototype In CComponent_Manager");
-		return E_FAIL;
+		return E_FAIL;*/
+		// 잠시 기소서 작성을 위해 중복 프로토타입 있어도 무시
+		return S_OK;
 	}
 
 	NULL_CHECK_RETURN_MSG(pPrototype, E_FAIL, TEXT("Prototype Component NULL"));
