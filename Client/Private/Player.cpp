@@ -1049,8 +1049,12 @@ void CPlayer::Motion_Change(ANIMATIONFLAG eAnimationFlag)
 				m_pModelCom->Set_AnimIndex(147, false);
 			break;
 		case STATE_DEAD:
+#ifdef _DEBUG
 			if (false == m_isInvisible)
 				m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
+#else
+			m_pModelCom->Set_AnimIndex(169 + rand() % 10, false);
+#endif // _DEBUG
 			break;
 		case STATE_BLINK:
 			m_pModelCom->Set_AnimIndex(118, false);
@@ -1207,8 +1211,12 @@ void CPlayer::Add_Collisions()
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
+#ifdef _DEBUG
 	if (!m_isInvisible)
 		pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
+#else
+	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYER, m_pColliderCom);
+#endif // _DEBUG
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pVisionColliderCom);
 	pGameInstance->Add_Collider(COLLISIONDESC::COLTYPE_PLAYERVISION, m_pBlockColliderCom);
 
